@@ -1,2 +1,4 @@
 
+PROJECT( GITWRAP )
+
 ADD_SUBDIRECTORY( libGitWrap )
