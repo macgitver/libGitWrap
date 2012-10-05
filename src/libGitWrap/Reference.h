@@ -22,50 +22,50 @@
 namespace Git
 {
 
-	class ObjectId;
-	class Repository;
+    class ObjectId;
+    class Repository;
 
-	namespace Internal
-	{
-		class ReferencePrivate;
-	}
+    namespace Internal
+    {
+        class ReferencePrivate;
+    }
 
-	/**
-	 * @ingroup		GitWrap
-	 * @brief		Represents a git reference
-	 *
-	 */
-	class GITWRAP_API Reference
-	{
-	public:
-		enum Type
-		{
-			Direct, Symbolic, Invalid = -1
-		};
+    /**
+     * @ingroup     GitWrap
+     * @brief       Represents a git reference
+     *
+     */
+    class GITWRAP_API Reference
+    {
+    public:
+        enum Type
+        {
+            Direct, Symbolic, Invalid = -1
+        };
 
-	public:
-		Reference();
-		Reference( Internal::ReferencePrivate* p );
-		Reference( const Reference& other );
-		~Reference();
-		Reference& operator=( const Reference& other );
+    public:
+        Reference();
+        Reference( Internal::ReferencePrivate* p );
+        Reference( const Reference& other );
+        ~Reference();
+        Reference& operator=( const Reference& other );
 
-	public:
-		bool isValid() const;
-		bool destroy( Result& result GITWRAP_DEFAULT_TLSRESULT );
-		QString name() const;
+    public:
+        bool isValid() const;
+        bool destroy( Result& result GITWRAP_DEFAULT_TLSRESULT );
+        QString name() const;
 
-		Type type( Result& result GITWRAP_DEFAULT_TLSRESULT ) const;
-		ObjectId objectId( Result& result GITWRAP_DEFAULT_TLSRESULT ) const;
-		QString target( Result& result GITWRAP_DEFAULT_TLSRESULT ) const;
+        Type type( Result& result GITWRAP_DEFAULT_TLSRESULT ) const;
+        ObjectId objectId( Result& result GITWRAP_DEFAULT_TLSRESULT ) const;
+        QString target( Result& result GITWRAP_DEFAULT_TLSRESULT ) const;
 
-		Repository repository( Result& result GITWRAP_DEFAULT_TLSRESULT ) const;
-		Reference resolved( Result& result GITWRAP_DEFAULT_TLSRESULT );
-		ObjectId resolveToObjectId( Result& result GITWRAP_DEFAULT_TLSRESULT );
+        Repository repository( Result& result GITWRAP_DEFAULT_TLSRESULT ) const;
+        Reference resolved( Result& result GITWRAP_DEFAULT_TLSRESULT );
+        ObjectId resolveToObjectId( Result& result GITWRAP_DEFAULT_TLSRESULT );
 
-	private:
-		Internal::GitPtr< Internal::ReferencePrivate > d;
-	};
+    private:
+        Internal::GitPtr< Internal::ReferencePrivate > d;
+    };
 
 }
 

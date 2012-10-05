@@ -20,168 +20,168 @@
 namespace Git
 {
 
-	BEGIN_INTERNAL_IMPL()
+    BEGIN_INTERNAL_IMPL()
 
-	ConfigPrivate::ConfigPrivate( git_config* cfg )
-		: mCfg( cfg )
-	{
-	}
+    ConfigPrivate::ConfigPrivate( git_config* cfg )
+        : mCfg( cfg )
+    {
+    }
 
-	ConfigPrivate::~ConfigPrivate()
-	{
-		git_config_free( mCfg );
-	}
+    ConfigPrivate::~ConfigPrivate()
+    {
+        git_config_free( mCfg );
+    }
 
-	END_INTERNAL_IMPL()
+    END_INTERNAL_IMPL()
 
-	Config::Config()
-	{
-	}
+    Config::Config()
+    {
+    }
 
-	Config::Config( Internal::ConfigPrivate* cfg )
-		: d( cfg )
-	{
-	}
+    Config::Config( Internal::ConfigPrivate* cfg )
+        : d( cfg )
+    {
+    }
 
-	Config::Config( const Config& other )
-		: d( other.d )
-	{
-	}
+    Config::Config( const Config& other )
+        : d( other.d )
+    {
+    }
 
-	Config::~Config()
-	{
-	}
+    Config::~Config()
+    {
+    }
 
-	Config& Config::operator=( const Config& other )
-	{
-		d = other.d;
-		return * this;
-	}
+    Config& Config::operator=( const Config& other )
+    {
+        d = other.d;
+        return * this;
+    }
 
-	QString Config::globalFilePath()
-	{
-		QString filePath;
-		char path[ 2048 ];
+    QString Config::globalFilePath()
+    {
+        QString filePath;
+        char path[ 2048 ];
 
-		int rc = git_config_find_system( path, 2048 - 1 );
-		if( rc >= 0 )
-		{
-			filePath = QString::fromLocal8Bit( path );
-		}
+        int rc = git_config_find_system( path, 2048 - 1 );
+        if( rc >= 0 )
+        {
+            filePath = QString::fromLocal8Bit( path );
+        }
 
-		return filePath;
-	}
+        return filePath;
+    }
 
-	QString Config::userFilePath()
-	{
-		QString filePath;
-		char path[ 2048 ];
+    QString Config::userFilePath()
+    {
+        QString filePath;
+        char path[ 2048 ];
 
-		int rc = git_config_find_global( path, 2048 - 1 );
-		if( rc >= 0 )
-		{
-			filePath = QString::fromLocal8Bit( path );
-		}
+        int rc = git_config_find_global( path, 2048 - 1 );
+        if( rc >= 0 )
+        {
+            filePath = QString::fromLocal8Bit( path );
+        }
 
-		return filePath;
-	}
+        return filePath;
+    }
 
-	Config Config::global()
-	{
-		char path[ 2048 ];
+    Config Config::global()
+    {
+        char path[ 2048 ];
 
-		int rc = git_config_find_system( path, 2048 - 1 );
-		if( rc < 0 )
-		{
-			return Config();
-		}
+        int rc = git_config_find_system( path, 2048 - 1 );
+        if( rc < 0 )
+        {
+            return Config();
+        }
 
-		git_config* cfg = NULL;
-		rc = git_config_open_ondisk( &cfg, path );
-		if( rc < 0 )
-		{
-			return Config();
-		}
+        git_config* cfg = NULL;
+        rc = git_config_open_ondisk( &cfg, path );
+        if( rc < 0 )
+        {
+            return Config();
+        }
 
-		return new Internal::ConfigPrivate( cfg );
-	}
+        return new Internal::ConfigPrivate( cfg );
+    }
 
-	Config Config::user()
-	{
-		char path[ 2048 ];
+    Config Config::user()
+    {
+        char path[ 2048 ];
 
-		int rc = git_config_find_global( path, 2048 - 1 );
-		if( rc < 0 )
-		{
-			return Config();
-		}
+        int rc = git_config_find_global( path, 2048 - 1 );
+        if( rc < 0 )
+        {
+            return Config();
+        }
 
-		git_config* cfg = NULL;
-		rc = git_config_open_ondisk( &cfg, path );
-		if( rc < 0 )
-		{
-			return Config();
-		}
+        git_config* cfg = NULL;
+        rc = git_config_open_ondisk( &cfg, path );
+        if( rc < 0 )
+        {
+            return Config();
+        }
 
-		return new Internal::ConfigPrivate( cfg );
-	}
+        return new Internal::ConfigPrivate( cfg );
+    }
 
-	Config Config::file( const QString& fileName )
-	{
-		git_config* cfg = NULL;
+    Config Config::file( const QString& fileName )
+    {
+        git_config* cfg = NULL;
 
-		int rc = git_config_open_ondisk( &cfg, fileName.toLocal8Bit().constData() );
+        int rc = git_config_open_ondisk( &cfg, fileName.toLocal8Bit().constData() );
 
-		if( rc < 0 )
-		{
-			return Config();
-		}
+        if( rc < 0 )
+        {
+            return Config();
+        }
 
-		return new Internal::ConfigPrivate( cfg );
-	}
+        return new Internal::ConfigPrivate( cfg );
+    }
 
-	Config Config::create()
-	{
-		git_config* cfg = NULL;
-		int rc = git_config_new( &cfg );
+    Config Config::create()
+    {
+        git_config* cfg = NULL;
+        int rc = git_config_new( &cfg );
 
-		if( rc < 0 )
-		{
-			return Config();
-		}
+        if( rc < 0 )
+        {
+            return Config();
+        }
 
-		return new Internal::ConfigPrivate( cfg );
-	}
+        return new Internal::ConfigPrivate( cfg );
+    }
 
-	bool Config::addFile( const QString& fileName, int priority )
-	{
-		if( !d || fileName.isEmpty() )
-		{
-			return false;
-		}
+    bool Config::addFile( const QString& fileName, int priority )
+    {
+        if( !d || fileName.isEmpty() )
+        {
+            return false;
+        }
 
-		int rc = git_config_add_file_ondisk( d->mCfg, fileName.toLocal8Bit().constData(), priority );
-		if( rc < 0 )
-		{
-			return false;
-		}
+        int rc = git_config_add_file_ondisk( d->mCfg, fileName.toLocal8Bit().constData(), priority );
+        if( rc < 0 )
+        {
+            return false;
+        }
 
-		return true;
-	}
+        return true;
+    }
 
-	static int read_config_cb( const char* key, const char* value, void* data )
-	{
-		ConfigValues* cv = (ConfigValues*) data;
-		cv->insert( QString::fromUtf8( key ), QString::fromUtf8( value ) );
-		return 0;
-	}
+    static int read_config_cb( const char* key, const char* value, void* data )
+    {
+        ConfigValues* cv = (ConfigValues*) data;
+        cv->insert( QString::fromUtf8( key ), QString::fromUtf8( value ) );
+        return 0;
+    }
 
-	ConfigValues Config::values()
-	{
-		ConfigValues values;
-		git_config_foreach( d->mCfg, &read_config_cb, (void*) &values );
-		return values;
-	}
+    ConfigValues Config::values()
+    {
+        ConfigValues values;
+        git_config_foreach( d->mCfg, &read_config_cb, (void*) &values );
+        return values;
+    }
 
 }
 

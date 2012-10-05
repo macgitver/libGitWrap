@@ -22,221 +22,221 @@
 namespace Git
 {
 
-	namespace Internal
-	{
+    namespace Internal
+    {
 
-		RemotePrivate::RemotePrivate( RepositoryPrivate* repo, git_remote* remote )
-			: RepoObject( repo )
-			, mRemote( remote )
-		{
-			Q_ASSERT( remote );
-		}
+        RemotePrivate::RemotePrivate( RepositoryPrivate* repo, git_remote* remote )
+            : RepoObject( repo )
+            , mRemote( remote )
+        {
+            Q_ASSERT( remote );
+        }
 
-		RemotePrivate::~RemotePrivate()
-		{
-			git_remote_free( mRemote );
-		}
+        RemotePrivate::~RemotePrivate()
+        {
+            git_remote_free( mRemote );
+        }
 
-	}
+    }
 
-	Remote::Remote()
-	{
-	}
+    Remote::Remote()
+    {
+    }
 
-	Remote::Remote( Internal::RemotePrivate* _d )
-		: d( _d )
-	{
-	}
+    Remote::Remote( Internal::RemotePrivate* _d )
+        : d( _d )
+    {
+    }
 
-	Remote::Remote( const Remote& other )
-		: d( other.d )
-	{
-	}
+    Remote::Remote( const Remote& other )
+        : d( other.d )
+    {
+    }
 
-	Remote::~Remote()
-	{
-	}
+    Remote::~Remote()
+    {
+    }
 
-	Remote& Remote::operator=( const Remote& other )
-	{
-		d = other.d;
-		return * this;
-	}
+    Remote& Remote::operator=( const Remote& other )
+    {
+        d = other.d;
+        return * this;
+    }
 
-	bool Remote::isValid() const
-	{
-		return d;
-	}
+    bool Remote::isValid() const
+    {
+        return d;
+    }
 
-	bool Remote::save( Result& result )
-	{
-		if( !result )
-		{
-			return false;
-		}
-		if( !d )
-		{
-			result.setInvalidObject();
-			return false;
-		}
+    bool Remote::save( Result& result )
+    {
+        if( !result )
+        {
+            return false;
+        }
+        if( !d )
+        {
+            result.setInvalidObject();
+            return false;
+        }
 
-		result = git_remote_save( d->mRemote );
-		return result;
-	}
+        result = git_remote_save( d->mRemote );
+        return result;
+    }
 
-	QString Remote::name() const
-	{
-		if( !d )
-		{
-			GitWrap::lastResult().setInvalidObject();
-			return QString();
-		}
+    QString Remote::name() const
+    {
+        if( !d )
+        {
+            GitWrap::lastResult().setInvalidObject();
+            return QString();
+        }
 
-		return QString::fromUtf8( git_remote_name( d->mRemote ) );
-	}
+        return QString::fromUtf8( git_remote_name( d->mRemote ) );
+    }
 
-	QString Remote::url() const
-	{
-		if( !d )
-		{
-			GitWrap::lastResult().setInvalidObject();
-			return QString();
-		}
+    QString Remote::url() const
+    {
+        if( !d )
+        {
+            GitWrap::lastResult().setInvalidObject();
+            return QString();
+        }
 
-		return QString::fromUtf8( git_remote_url( d->mRemote ) );
-	}
+        return QString::fromUtf8( git_remote_url( d->mRemote ) );
+    }
 
-	bool Remote::setFetchSpec( const QString& spec, Result& result )
-	{
-		if( !result )
-		{
-			return false;
-		}
-		if( !d )
-		{
-			result.setInvalidObject();
-			return false;
-		}
+    bool Remote::setFetchSpec( const QString& spec, Result& result )
+    {
+        if( !result )
+        {
+            return false;
+        }
+        if( !d )
+        {
+            result.setInvalidObject();
+            return false;
+        }
 
-		result = git_remote_set_fetchspec( d->mRemote, spec.toUtf8().constData() );
-		return result;
-	}
+        result = git_remote_set_fetchspec( d->mRemote, spec.toUtf8().constData() );
+        return result;
+    }
 
-	bool Remote::setPushSpec( const QString& spec, Result& result )
-	{
-		if( !result )
-		{
-			return false;
-		}
-		if( !d )
-		{
-			result.setInvalidObject();
-			return false;
-		}
+    bool Remote::setPushSpec( const QString& spec, Result& result )
+    {
+        if( !result )
+        {
+            return false;
+        }
+        if( !d )
+        {
+            result.setInvalidObject();
+            return false;
+        }
 
-		result = git_remote_set_pushspec( d->mRemote, spec.toUtf8().constData() );
-		return result;
-	}
+        result = git_remote_set_pushspec( d->mRemote, spec.toUtf8().constData() );
+        return result;
+    }
 
-	RefSpec Remote::fetchSpec() const
-	{
-		if( !d )
-		{
-			GitWrap::lastResult().setInvalidObject();
-			return RefSpec();
-		}
+    RefSpec Remote::fetchSpec() const
+    {
+        if( !d )
+        {
+            GitWrap::lastResult().setInvalidObject();
+            return RefSpec();
+        }
 
-		return Internal::mkRefSpec( git_remote_fetchspec( d->mRemote ) );
-	}
+        return Internal::mkRefSpec( git_remote_fetchspec( d->mRemote ) );
+    }
 
-	RefSpec Remote::pushSpec() const
-	{
-		if( !d )
-		{
-			GitWrap::lastResult().setInvalidObject();
-			return RefSpec();
-		}
+    RefSpec Remote::pushSpec() const
+    {
+        if( !d )
+        {
+            GitWrap::lastResult().setInvalidObject();
+            return RefSpec();
+        }
 
-		return Internal::mkRefSpec( git_remote_pushspec( d->mRemote ) );
-	}
+        return Internal::mkRefSpec( git_remote_pushspec( d->mRemote ) );
+    }
 
-	bool Remote::isValidUrl( const QString& url )
-	{
-		return git_remote_valid_url( url.toUtf8().constData() );
-	}
+    bool Remote::isValidUrl( const QString& url )
+    {
+        return git_remote_valid_url( url.toUtf8().constData() );
+    }
 
-	bool Remote::isSupportedUrl( const QString& url )
-	{
-		return git_remote_supported_url( url.toUtf8().constData() );
-	}
+    bool Remote::isSupportedUrl( const QString& url )
+    {
+        return git_remote_supported_url( url.toUtf8().constData() );
+    }
 
 
-	bool Remote::connect( bool forFetch, Result& result )
-	{
-		if( !result )
-		{
-			return false;
-		}
+    bool Remote::connect( bool forFetch, Result& result )
+    {
+        if( !result )
+        {
+            return false;
+        }
 
-		if( !d )
-		{
-			result.setInvalidObject();
-			return false;
-		}
+        if( !d )
+        {
+            result.setInvalidObject();
+            return false;
+        }
 
-		result = git_remote_connect( d->mRemote, forFetch ? GIT_DIR_FETCH : GIT_DIR_PUSH );
-		return result;
-	}
+        result = git_remote_connect( d->mRemote, forFetch ? GIT_DIR_FETCH : GIT_DIR_PUSH );
+        return result;
+    }
 
-	void Remote::disconnect( Result& result )
-	{
-		if( !result )
-		{
-			return;
-		}
+    void Remote::disconnect( Result& result )
+    {
+        if( !result )
+        {
+            return;
+        }
 
-		if( !d )
-		{
-			result.setInvalidObject();
-			return;
-		}
+        if( !d )
+        {
+            result.setInvalidObject();
+            return;
+        }
 
-		git_remote_disconnect( d->mRemote );
-	}
+        git_remote_disconnect( d->mRemote );
+    }
 
-	bool Remote::download( Result& result )
-	{
-		if( !result )
-		{
-			return false;
-		}
+    bool Remote::download( Result& result )
+    {
+        if( !result )
+        {
+            return false;
+        }
 
-		if( !d )
-		{
-			result.setInvalidObject();
-			return false;
-		}
+        if( !d )
+        {
+            result.setInvalidObject();
+            return false;
+        }
 
-		result = git_remote_download( d->mRemote, &d->mBytes, &d->mStats );
-		return result;
-	}
+        result = git_remote_download( d->mRemote, &d->mBytes, &d->mStats );
+        return result;
+    }
 
-	bool Remote::updateTips( Result& result )
-	{
-		if( !result )
-		{
-			return false;
-		}
+    bool Remote::updateTips( Result& result )
+    {
+        if( !result )
+        {
+            return false;
+        }
 
-		if( !d )
-		{
-			result.setInvalidObject();
-			return false;
-		}
+        if( !d )
+        {
+            result.setInvalidObject();
+            return false;
+        }
 
-		result = git_remote_update_tips( d->mRemote );
-		return result;
-	}
+        result = git_remote_update_tips( d->mRemote );
+        return result;
+    }
 
 }
 

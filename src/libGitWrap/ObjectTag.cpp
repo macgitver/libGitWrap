@@ -22,23 +22,23 @@
 namespace Git
 {
 
-	ObjectTag::ObjectTag()
-	{
-	}
+    ObjectTag::ObjectTag()
+    {
+    }
 
-	ObjectTag::ObjectTag( Internal::ObjectPrivate* _d )
-		: Object( _d )
-	{
-		Result r;
-		if( ( type( r ) != otTag ) || !r )
-		{
-			d = NULL;
-		}
-	}
+    ObjectTag::ObjectTag( Internal::ObjectPrivate* _d )
+        : Object( _d )
+    {
+        Result r;
+        if( ( type( r ) != otTag ) || !r )
+        {
+            d = NULL;
+        }
+    }
 
-	ObjectTag::ObjectTag( const ObjectTag& o )
-		: Object( o )
-	{
-	}
+    ObjectTag::ObjectTag( const ObjectTag& o )
+        : Object( o )
+    {
+    }
 
 }

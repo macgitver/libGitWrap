@@ -21,54 +21,54 @@
 namespace Git
 {
 
-	namespace Internal
-	{
+    namespace Internal
+    {
 
-		BasicObject::BasicObject()
-		{
-		}
+        BasicObject::BasicObject()
+        {
+        }
 
-		BasicObject::~BasicObject()
-		{
-		}
+        BasicObject::~BasicObject()
+        {
+        }
 
-		void BasicObject::ref()
-		{
-			mRefCounter.ref();
-		}
+        void BasicObject::ref()
+        {
+            mRefCounter.ref();
+        }
 
-		void BasicObject::deref()
-		{
-			if( !mRefCounter.deref() )
-			{
-				delete this;
-			}
-		}
+        void BasicObject::deref()
+        {
+            if( !mRefCounter.deref() )
+            {
+                delete this;
+            }
+        }
 
-		RepoObject::RepoObject( RepositoryPrivate* repo )
-			: mRepo( repo )
-		{
-			Q_ASSERT( mRepo );
-			if( mRepo )
-			{
-				mRepo->ref();
-			}
-		}
+        RepoObject::RepoObject( RepositoryPrivate* repo )
+            : mRepo( repo )
+        {
+            Q_ASSERT( mRepo );
+            if( mRepo )
+            {
+                mRepo->ref();
+            }
+        }
 
-		RepoObject::~RepoObject()
-		{
-			if( mRepo )
-			{
-				mRepo->deref();
-				mRepo = NULL;
-			}
-		}
+        RepoObject::~RepoObject()
+        {
+            if( mRepo )
+            {
+                mRepo->deref();
+                mRepo = NULL;
+            }
+        }
 
-		RepositoryPrivate* RepoObject::repo() const
-		{
-			return mRepo;
-		}
+        RepositoryPrivate* RepoObject::repo() const
+        {
+            return mRepo;
+        }
 
-	}
+    }
 
 }

@@ -36,88 +36,88 @@
 namespace Git
 {
 
-	namespace Internal
-	{
+    namespace Internal
+    {
 
-		template< class T >
-		class GitPtr
-		{
-		public:
-			GitPtr();
-			GitPtr( const GitPtr< T >& o );
-			GitPtr( T* o );
-			~GitPtr();
+        template< class T >
+        class GitPtr
+        {
+        public:
+            GitPtr();
+            GitPtr( const GitPtr< T >& o );
+            GitPtr( T* o );
+            ~GitPtr();
 
-			GitPtr< T >& operator=( const GitPtr< T >& o );
-			bool operator==( const GitPtr< T >& o ) const;
-			bool operator==( T* o ) const;
+            GitPtr< T >& operator=( const GitPtr< T >& o );
+            bool operator==( const GitPtr< T >& o ) const;
+            bool operator==( T* o ) const;
 
-			T* operator->();
-			const T* operator->() const;
+            T* operator->();
+            const T* operator->() const;
 
-			T* operator*();
-			const T* operator*() const;
+            T* operator*();
+            const T* operator*() const;
 
-			operator bool() const;
-			operator T*();
-			operator const T*() const;
+            operator bool() const;
+            operator T*();
+            operator const T*() const;
 
-		private:
-			T* d;
-		};
+        private:
+            T* d;
+        };
 
-	}
+    }
 
-	enum ObjectType
-	{
-		otTree,
-		otCommit,
-		otBlob,
-		otTag,
+    enum ObjectType
+    {
+        otTree,
+        otCommit,
+        otBlob,
+        otTag,
 
-		otAny = -1
-	};
+        otAny = -1
+    };
 
-	enum TreeEntryAttributes
-	{
-		UnkownAttr			= 0,
-		TreeAttr			= 0040000,
-		FileAttr			= 0100644,
-		FileExecutableAttr	= 0100755,
-		GitLinkAttr			= 0120000,
-		SubmoduleAttr		= 0160000
-	};
+    enum TreeEntryAttributes
+    {
+        UnkownAttr          = 0,
+        TreeAttr            = 0040000,
+        FileAttr            = 0100644,
+        FileExecutableAttr  = 0100755,
+        GitLinkAttr         = 0120000,
+        SubmoduleAttr       = 0160000
+    };
 
-	enum FileStatus	// These are 1:1 to libgit2 for now
-	{
-		StatusCurrent				= 0,
+    enum FileStatus	// These are 1:1 to libgit2 for now
+    {
+        StatusCurrent               = 0,
 
-		StatusIndexNew				= (1 << 0),
-		StatusIndexModified			= (1 << 1),
-		StatusIndexDeleted			= (1 << 2),
+        StatusIndexNew              = (1 << 0),
+        StatusIndexModified         = (1 << 1),
+        StatusIndexDeleted          = (1 << 2),
 
-		StatusWorkingTreeNew		= (1 << 3),
-		StatusWorkingTreeModified	= (1 << 4),
-		StatusWorkingTreeDeleted	= (1 << 5),
+        StatusWorkingTreeNew        = (1 << 3),
+        StatusWorkingTreeModified   = (1 << 4),
+        StatusWorkingTreeDeleted    = (1 << 5),
 
-		StatusIgnored				= (1 << 6)
-	};
+        StatusIgnored               = (1 << 6)
+    };
 
-	typedef QFlags< FileStatus > FileStati;
+    typedef QFlags< FileStatus > FileStati;
 
-	typedef QHash< QString, FileStati > StatusHash;
+    typedef QHash< QString, FileStati > StatusHash;
 
-	class Result;
+    class Result;
 
-	class GITWRAP_API GitWrap
-	{
-	public:
-		GitWrap();
-		~GitWrap();
+    class GITWRAP_API GitWrap
+    {
+    public:
+        GitWrap();
+        ~GitWrap();
 
-	public:
-		static Result& lastResult();
-	};
+    public:
+        static Result& lastResult();
+    };
 }
 
 #endif

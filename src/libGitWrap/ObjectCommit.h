@@ -30,85 +30,85 @@
 namespace Git
 {
 
-	class Reference;
-	class ObjectTree;
+    class Reference;
+    class ObjectTree;
 
-	/**
-	 * @ingroup		GitWrap
-	 * @brief		Represents a git commit object.
-	 *
-	 */
-	class GITWRAP_API ObjectCommit : public Object
-	{
-	public:
-		ObjectCommit();
-		ObjectCommit( Internal::ObjectPrivate* _d );
-		ObjectCommit( const ObjectCommit& o );
+    /**
+     * @ingroup     GitWrap
+     * @brief       Represents a git commit object.
+     *
+     */
+    class GITWRAP_API ObjectCommit : public Object
+    {
+    public:
+        ObjectCommit();
+        ObjectCommit( Internal::ObjectPrivate* _d );
+        ObjectCommit( const ObjectCommit& o );
 
-	public:
-		bool operator==( const Git::ObjectCommit& commit ) const
-		{
-			Result r;
-			return isEqual( commit, r ) && r;
-		}
+    public:
+        bool operator==( const Git::ObjectCommit& commit ) const
+        {
+            Result r;
+            return isEqual( commit, r ) && r;
+        }
 
-		bool operator!=( const Git::ObjectCommit& commit ) const
-		{
-			Result r;
-			return !isEqual( commit, r ) && r;
-		}
+        bool operator!=( const Git::ObjectCommit& commit ) const
+        {
+            Result r;
+            return !isEqual( commit, r ) && r;
+        }
 
-	public:
-		ObjectTree tree( Result& result GITWRAP_DEFAULT_TLSRESULT );
-		ObjectId treeId( Result& result GITWRAP_DEFAULT_TLSRESULT );
+    public:
+        ObjectTree tree( Result& result GITWRAP_DEFAULT_TLSRESULT );
+        ObjectId treeId( Result& result GITWRAP_DEFAULT_TLSRESULT );
 
-		ObjectIdList parentCommitIds( Result& result GITWRAP_DEFAULT_TLSRESULT ) const;
-		QList< ObjectCommit > parentCommits( Result& result GITWRAP_DEFAULT_TLSRESULT ) const;
-		ObjectCommit parentCommit( unsigned int index, Result& result GITWRAP_DEFAULT_TLSRESULT ) const;
-		ObjectId parentCommitId( unsigned int index, Result& result GITWRAP_DEFAULT_TLSRESULT ) const;
-		unsigned int numParentCommits() const;
+        ObjectIdList parentCommitIds( Result& result GITWRAP_DEFAULT_TLSRESULT ) const;
+        QList< ObjectCommit > parentCommits( Result& result GITWRAP_DEFAULT_TLSRESULT ) const;
+        ObjectCommit parentCommit( unsigned int index, Result& result GITWRAP_DEFAULT_TLSRESULT ) const;
+        ObjectId parentCommitId( unsigned int index, Result& result GITWRAP_DEFAULT_TLSRESULT ) const;
+        unsigned int numParentCommits() const;
 
-		bool isParentOf( const Git::ObjectCommit& child, Result& result GITWRAP_DEFAULT_TLSRESULT ) const;
-		bool isChildOf( const Git::ObjectCommit& parent, Result& result GITWRAP_DEFAULT_TLSRESULT ) const;
-		bool isEqual( const Git::ObjectCommit& commit, Result& result GITWRAP_DEFAULT_TLSRESULT ) const;
+        bool isParentOf( const Git::ObjectCommit& child, Result& result GITWRAP_DEFAULT_TLSRESULT ) const;
+        bool isChildOf( const Git::ObjectCommit& parent, Result& result GITWRAP_DEFAULT_TLSRESULT ) const;
+        bool isEqual( const Git::ObjectCommit& commit, Result& result GITWRAP_DEFAULT_TLSRESULT ) const;
 
-		Signature author( Result& result GITWRAP_DEFAULT_TLSRESULT ) const;
-		Signature committer( Result& result GITWRAP_DEFAULT_TLSRESULT ) const;
+        Signature author( Result& result GITWRAP_DEFAULT_TLSRESULT ) const;
+        Signature committer( Result& result GITWRAP_DEFAULT_TLSRESULT ) const;
 
-		QString message( Result& result GITWRAP_DEFAULT_TLSRESULT ) const;
-		QString shortMessage( Result& result GITWRAP_DEFAULT_TLSRESULT ) const;
+        QString message( Result& result GITWRAP_DEFAULT_TLSRESULT ) const;
+        QString shortMessage( Result& result GITWRAP_DEFAULT_TLSRESULT ) const;
 
-		Reference createBranch( const QString& name, bool force,
-								Result& result GITWRAP_DEFAULT_TLSRESULT );
+        Reference createBranch( const QString& name, bool force,
+                                Result& result GITWRAP_DEFAULT_TLSRESULT );
 
-		DiffList diffFromParent( unsigned int index, Result& result GITWRAP_DEFAULT_TLSRESULT );
-		DiffList diffFromAllParents( Result& result GITWRAP_DEFAULT_TLSRESULT );
-	};
+        DiffList diffFromParent( unsigned int index, Result& result GITWRAP_DEFAULT_TLSRESULT );
+        DiffList diffFromAllParents( Result& result GITWRAP_DEFAULT_TLSRESULT );
+    };
 
-	/**
-	 * @ingroup		GitWrap
-	 * @brief		qHash() for Git::ObjectCommit
-	 */
-	inline uint qHash( const ObjectCommit& c )
-	{
-		Result r;
-		return qHash( c.id( r ) );
-	}
+    /**
+     * @ingroup     GitWrap
+     * @brief       qHash() for Git::ObjectCommit
+     */
+    inline uint qHash( const ObjectCommit& c )
+    {
+        Result r;
+        return qHash( c.id( r ) );
+    }
 
 }
 
 // Should we keep this? If yes, we should provide them for all GitWrap-classes.
 /**
- * @ingroup		GitWrap
- * @brief		Debug-Stream support of Git::ObjectCommit
- * @param[in]	debug	The Debug-Stream to output into
- * @param[in]	commit	The commit object to output
- * @return		The Debug-Stream
+ * @ingroup     GitWrap
+ * @brief       Debug-Stream support of Git::ObjectCommit
+ * @param[in]   debug   The Debug-Stream to output into
+ * @param[in]   commit  The commit object to output
+ * @return      The Debug-Stream
  */
 inline QDebug operator<<( QDebug debug, const Git::ObjectCommit& commit )
 {
-	Git::Result r;
-	return debug << "Commit(id=" << commit.id( r ) << ";author=" << commit.author( r ) << ")";
+    Git::Result r;
+    return debug << "Commit(id=" << commit.id( r ) << ";author=" << commit.author( r ) << ")";
 }
 
 #endif

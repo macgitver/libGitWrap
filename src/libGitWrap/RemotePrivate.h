@@ -23,27 +23,27 @@
 namespace Git
 {
 
-	BEGIN_INTERNAL_DECL()
+    BEGIN_INTERNAL_DECL()
 
     /**
-	 * @internal
-	 * @ingroup GitWrap
+     * @internal
+     * @ingroup GitWrap
      * @brief The RemotePrivate class
      *
      */
-	class RemotePrivate : public RepoObject
-	{
-	public:
-		RemotePrivate( RepositoryPrivate* repo, git_remote* remote );
-		~RemotePrivate();
+    class RemotePrivate : public RepoObject
+    {
+    public:
+        RemotePrivate( RepositoryPrivate* repo, git_remote* remote );
+        ~RemotePrivate();
 
-	public:
-		git_remote*			mRemote;
-		git_off_t			mBytes;
-		git_indexer_stats	mStats;
-	};
+    public:
+        git_remote*         mRemote;
+        git_off_t           mBytes;
+        git_indexer_stats   mStats;
+    };
 
-	END_INTERNAL_DECL()
+    END_INTERNAL_DECL()
 
 }
 

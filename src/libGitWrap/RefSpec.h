@@ -25,36 +25,36 @@ namespace Git
 {
 
     /**
-	 * @ingroup		GitWrap
-	 * @brief		Specification for references
+     * @ingroup     GitWrap
+     * @brief       Specification for references
      *
-	 * A RefSpec tells git what branches are to be synchronized in a fetch or a push operation.
-	 *
-	 * Each remote has two lists of refspecs, one for fetching (`remote.<name>.fetchspec`) and for
-	 * pulling (`remote.<name>.pullspec`) defaulting to the fetchspec.
-	 *
-	 * @note		`libgit2` currently supports only one fetchspec and only one pullspec per
-	 *				remote.
-	 *
-	 * @todo		The force flag is still missing. `libgit2` meanwhile supports reading the force
-	 *				flag.
-	 *
+     * A RefSpec tells git what branches are to be synchronized in a fetch or a push operation.
+     *
+     * Each remote has two lists of refspecs, one for fetching (`remote.<name>.fetchspec`) and for
+     * pulling (`remote.<name>.pullspec`) defaulting to the fetchspec.
+     *
+     * @note        `libgit2` currently supports only one fetchspec and only one pullspec per
+     *              remote.
+     *
+     * @todo        The force flag is still missing. `libgit2` meanwhile supports reading the force
+     *              flag.
+     *
      */
-	class RefSpec
-	{
-	public:
-		RefSpec();
-		RefSpec( const RefSpec& other );
-		RefSpec( const QString& source, const QString& destination );
+    class RefSpec
+    {
+    public:
+        RefSpec();
+        RefSpec( const RefSpec& other );
+        RefSpec( const QString& source, const QString& destination );
 
-	public:
-		QString source() const;
-		QString destination() const;
+    public:
+        QString source() const;
+        QString destination() const;
 
-	private:
-		QString mSrc;
-		QString mDst;
-	};
+    private:
+        QString mSrc;
+        QString mDst;
+    };
 
 }
 

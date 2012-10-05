@@ -22,98 +22,98 @@
 namespace Git
 {
 
-	BackgroundClone::BackgroundClone()
-	{
-		mPrepared = false;
-	}
+    BackgroundClone::BackgroundClone()
+    {
+        mPrepared = false;
+    }
 
-	void BackgroundClone::setFrom( const QString& url, const QString& path )
-	{
-		mUrl = url;
-		mPath = path;
-	}
+    void BackgroundClone::setFrom( const QString& url, const QString& path )
+    {
+        mUrl = url;
+        mPath = path;
+    }
 
-	void BackgroundClone::setRemoteName( const QString& remoteName )
-	{
-		mRemoteName = remoteName;
-	}
+    void BackgroundClone::setRemoteName( const QString& remoteName )
+    {
+        mRemoteName = remoteName;
+    }
 
-	void BackgroundClone::setType( bool bare, bool mirror, bool checkout )
-	{
-		mBare = bare;
-		mMirror = mirror;
-		mCheckout = checkout;
-	}
+    void BackgroundClone::setType( bool bare, bool mirror, bool checkout )
+    {
+        mBare = bare;
+        mMirror = mirror;
+        mCheckout = checkout;
+    }
 
-	void BackgroundClone::setBranch( const QString& name, bool onlyThisOne )
-	{
-		mCheckoutBranch = name;
-		mFetchOnlyBranch = onlyThisOne;
-	}
+    void BackgroundClone::setBranch( const QString& name, bool onlyThisOne )
+    {
+        mCheckoutBranch = name;
+        mFetchOnlyBranch = onlyThisOne;
+    }
 
-	void BackgroundClone::setSubmodule( bool init, bool recursive )
-	{
-		mInitSubmodules = init;
-		mInitSubmodulesRecursive = recursive;
-	}
+    void BackgroundClone::setSubmodule( bool init, bool recursive )
+    {
+        mInitSubmodules = init;
+        mInitSubmodulesRecursive = recursive;
+    }
 
-	Repository BackgroundClone::repository()
-	{
-		if( !mPrepared )
-		{
-			prepare();
-		}
-		return mRepo;
-	}
+    Repository BackgroundClone::repository()
+    {
+        if( !mPrepared )
+        {
+            prepare();
+        }
+        return mRepo;
+    }
 
-	bool BackgroundClone::prepare()
-	{
-		Result r;
+    bool BackgroundClone::prepare()
+    {
+        Result r;
 
-		if( !mPrepared )
-		{
-			mRepo = Repository::create( mPath, mBare, r );
-			mPrepared = true;
-		}
+        if( !mPrepared )
+        {
+            mRepo = Repository::create( mPath, mBare, r );
+            mPrepared = true;
+        }
 
-		return mRepo.isValid();
-	}
+        return mRepo.isValid();
+    }
 
-	bool BackgroundClone::execute()
-	{
-		Result r;
+    bool BackgroundClone::execute()
+    {
+        Result r;
 
-		if( !mPrepared )
-		{
-			if( !prepare() )
-			{
-				return false;
-			}
-		}
-		if( !mRepo.isValid() )
-		{
-			return false;
-		}
+        if( !mPrepared )
+        {
+            if( !prepare() )
+            {
+                return false;
+            }
+        }
+        if( !mRepo.isValid() )
+        {
+            return false;
+        }
 
-		QString refSpec = QLatin1String( "+refs/heads/*:refs/remotes/%1/*" );
+        QString refSpec = QLatin1String( "+refs/heads/*:refs/remotes/%1/*" );
 
-		Remote remote = mRepo.createRemote( mRemoteName, mUrl, refSpec.arg( mRemoteName ), r );
+        Remote remote = mRepo.createRemote( mRemoteName, mUrl, refSpec.arg( mRemoteName ), r );
 
-		if( !remote.isValid() )
-		{
-			return false;
-		}
+        if( !remote.isValid() )
+        {
+            return false;
+        }
 
-		remote.save( r );
+        remote.save( r );
 
-		BackgroundFetch* fetch = new BackgroundFetch();
-		fetch->setRepository( mRepo );
-		fetch->setRemote( remote );
+        BackgroundFetch* fetch = new BackgroundFetch();
+        fetch->setRepository( mRepo );
+        fetch->setRemote( remote );
 
-		worker()->queue( fetch );
+        worker()->queue( fetch );
 
-		return true;
-	}
+        return true;
+    }
 
 
 }

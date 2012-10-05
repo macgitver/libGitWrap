@@ -22,50 +22,50 @@
 namespace Git
 {
 
-	namespace Internal
-	{
-		class RevisionWalkerPrivate;
-	}
+    namespace Internal
+    {
+        class RevisionWalkerPrivate;
+    }
 
-	class ObjectId;
-	class Reference;
+    class ObjectId;
+    class Reference;
 
-	/**
-	 * @ingroup		GitWrap
-	 * @brief		Provides access to a git repository's history
-	 *
-	 */
-	class GITWRAP_API RevisionWalker
-	{
-	public:
-		RevisionWalker();
-		RevisionWalker( Internal::RevisionWalkerPrivate* _d );
-		~RevisionWalker();
-		RevisionWalker& operator=( const RevisionWalker& other );
+    /**
+     * @ingroup     GitWrap
+     * @brief       Provides access to a git repository's history
+     *
+     */
+    class GITWRAP_API RevisionWalker
+    {
+    public:
+        RevisionWalker();
+        RevisionWalker( Internal::RevisionWalkerPrivate* _d );
+        ~RevisionWalker();
+        RevisionWalker& operator=( const RevisionWalker& other );
 
-	public:
-		bool isValid() const;
+    public:
+        bool isValid() const;
 
-		void reset( Result& result GITWRAP_DEFAULT_TLSRESULT );
+        void reset( Result& result GITWRAP_DEFAULT_TLSRESULT );
 
-		void push( const ObjectId& id, Result& result GITWRAP_DEFAULT_TLSRESULT  );
-		void push( const Reference& ref, Result& result GITWRAP_DEFAULT_TLSRESULT );
-		void pushRef( const QString& name, Result& result GITWRAP_DEFAULT_TLSRESULT );
-		void pushHead( Result& result GITWRAP_DEFAULT_TLSRESULT );
+        void push( const ObjectId& id, Result& result GITWRAP_DEFAULT_TLSRESULT  );
+        void push( const Reference& ref, Result& result GITWRAP_DEFAULT_TLSRESULT );
+        void pushRef( const QString& name, Result& result GITWRAP_DEFAULT_TLSRESULT );
+        void pushHead( Result& result GITWRAP_DEFAULT_TLSRESULT );
 
-		void hide( const ObjectId& id, Result& result GITWRAP_DEFAULT_TLSRESULT );
-		void hide( const Reference& ref, Result& result GITWRAP_DEFAULT_TLSRESULT );
-		void hideRef( const QString& name, Result& result GITWRAP_DEFAULT_TLSRESULT );
-		void hideHead( Result& result GITWRAP_DEFAULT_TLSRESULT );
+        void hide( const ObjectId& id, Result& result GITWRAP_DEFAULT_TLSRESULT );
+        void hide( const Reference& ref, Result& result GITWRAP_DEFAULT_TLSRESULT );
+        void hideRef( const QString& name, Result& result GITWRAP_DEFAULT_TLSRESULT );
+        void hideHead( Result& result GITWRAP_DEFAULT_TLSRESULT );
 
-		bool next( ObjectId& oidNext, Result& result GITWRAP_DEFAULT_TLSRESULT );
-		QVector< ObjectId > all( Result& result GITWRAP_DEFAULT_TLSRESULT );
+        bool next( ObjectId& oidNext, Result& result GITWRAP_DEFAULT_TLSRESULT );
+        QVector< ObjectId > all( Result& result GITWRAP_DEFAULT_TLSRESULT );
 
-		void setSorting( bool topological, bool timed, Result& result GITWRAP_DEFAULT_TLSRESULT );
+        void setSorting( bool topological, bool timed, Result& result GITWRAP_DEFAULT_TLSRESULT );
 
-	private:
-		Internal::GitPtr< Internal::RevisionWalkerPrivate > d;
-	};
+    private:
+        Internal::GitPtr< Internal::RevisionWalkerPrivate > d;
+    };
 
 }
 

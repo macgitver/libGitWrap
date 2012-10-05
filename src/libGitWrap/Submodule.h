@@ -22,62 +22,62 @@
 namespace Git
 {
 
-	namespace Internal
-	{
-		class RepositoryPrivate;
-	}
+    namespace Internal
+    {
+        class RepositoryPrivate;
+    }
 
-	class ObjectId;
-	class Repository;
+    class ObjectId;
+    class Repository;
 
     /**
-	 * @ingroup		GitWrap
-	 * @brief		Represents a git submodule
-	 *
+     * @ingroup     GitWrap
+     * @brief       Represents a git submodule
+     *
      */
-	class GITWRAP_API Submodule
-	{
-	public:
-		enum IgnoreStrategy
-		{
-			None,
-			Dirty,
-			Untracked,
-			All
-		};
+    class GITWRAP_API Submodule
+    {
+    public:
+        enum IgnoreStrategy
+        {
+            None,
+            Dirty,
+            Untracked,
+            All
+        };
 
-		enum UpdateStrategy
-		{
-			Checkout,
-			Rebase,
-			Merge,
-			Ignore
-		};
+        enum UpdateStrategy
+        {
+            Checkout,
+            Rebase,
+            Merge,
+            Ignore
+        };
 
-	public:
-		Submodule( Internal::RepositoryPrivate* repo, const QString& name );
-		Submodule( const Submodule& other );
-		Submodule();
-		~Submodule();
+    public:
+        Submodule( Internal::RepositoryPrivate* repo, const QString& name );
+        Submodule( const Submodule& other );
+        Submodule();
+        ~Submodule();
 
-		Submodule& operator=( const Submodule& other );
+        Submodule& operator=( const Submodule& other );
 
-	public:
-		bool isValid();
+    public:
+        bool isValid();
 
-	public:
-		QString name() const;
-		QString path() const;
-		QString url() const;
-		bool fetchRecursive() const;
-		IgnoreStrategy ignoreStrategy() const;
-		UpdateStrategy updateStrategy() const;
-		ObjectId currentSHA1() const;
+    public:
+        QString name() const;
+        QString path() const;
+        QString url() const;
+        bool fetchRecursive() const;
+        IgnoreStrategy ignoreStrategy() const;
+        UpdateStrategy updateStrategy() const;
+        ObjectId currentSHA1() const;
 
-	private:
-		Internal::GitPtr< Internal::RepositoryPrivate >	mRepo;
-		QString						mName;
-	};
+    private:
+        Internal::GitPtr< Internal::RepositoryPrivate > mRepo;
+        QString mName;
+    };
 
 }
 

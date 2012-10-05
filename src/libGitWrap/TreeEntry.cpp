@@ -21,109 +21,109 @@
 namespace Git
 {
 
-	BEGIN_INTERNAL_IMPL()
+    BEGIN_INTERNAL_IMPL()
 
-	TreeEntryPrivate::TreeEntryPrivate( const git_tree_entry* entry, bool unmanaged )
-		: mEntry( entry )
-		, mUnmanaged( unmanaged )
-	{
-		Q_ASSERT( mEntry );
-	}
+    TreeEntryPrivate::TreeEntryPrivate( const git_tree_entry* entry, bool unmanaged )
+        : mEntry( entry )
+        , mUnmanaged( unmanaged )
+    {
+        Q_ASSERT( mEntry );
+    }
 
-	TreeEntryPrivate::~TreeEntryPrivate()
-	{
-		if( !mUnmanaged )
-		{
-			git_tree_entry_free( const_cast< git_tree_entry* >( mEntry ) );
-		}
-	}
+    TreeEntryPrivate::~TreeEntryPrivate()
+    {
+        if( !mUnmanaged )
+        {
+            git_tree_entry_free( const_cast< git_tree_entry* >( mEntry ) );
+        }
+    }
 
-	END_INTERNAL_IMPL()
+    END_INTERNAL_IMPL()
 
-	TreeEntry::TreeEntry()
-	{
-	}
+    TreeEntry::TreeEntry()
+    {
+    }
 
-	TreeEntry::TreeEntry( const TreeEntry& other )
-		: d( other.d )
-	{
-	}
+    TreeEntry::TreeEntry( const TreeEntry& other )
+        : d( other.d )
+    {
+    }
 
-	TreeEntry::TreeEntry( Internal::TreeEntryPrivate* _d )
-		: d( _d )
-	{
-	}
+    TreeEntry::TreeEntry( Internal::TreeEntryPrivate* _d )
+        : d( _d )
+    {
+    }
 
-	TreeEntry::~TreeEntry()
-	{
-	}
+    TreeEntry::~TreeEntry()
+    {
+    }
 
-	TreeEntry& TreeEntry::operator=( const TreeEntry& other )
-	{
-		d = other.d;
-		return * this;
-	}
+    TreeEntry& TreeEntry::operator=( const TreeEntry& other )
+    {
+        d = other.d;
+        return * this;
+    }
 
-	bool TreeEntry::isValid() const
-	{
-		return d;
-	}
+    bool TreeEntry::isValid() const
+    {
+        return d;
+    }
 
 
-	TreeEntry TreeEntry::clone() const
-	{
-		if( !d )
-		{
-			return TreeEntry();
-		}
+    TreeEntry TreeEntry::clone() const
+    {
+        if( !d )
+        {
+            return TreeEntry();
+        }
 
-		git_tree_entry* entry = git_tree_entry_dup( d->mEntry );
-		Q_ASSERT( entry );
+        git_tree_entry* entry = git_tree_entry_dup( d->mEntry );
+        Q_ASSERT( entry );
 
-		return new Internal::TreeEntryPrivate( entry );
-	}
+        return new Internal::TreeEntryPrivate( entry );
+    }
 
-	ObjectId TreeEntry::sha1() const
-	{
-		if( !d )
-		{
-			return ObjectId();
-		}
+    ObjectId TreeEntry::sha1() const
+    {
+        if( !d )
+        {
+            return ObjectId();
+        }
 
-		const git_oid* oid = git_tree_entry_id( d->mEntry );
-		if( !oid )
-		{
-			return ObjectId();
-		}
+        const git_oid* oid = git_tree_entry_id( d->mEntry );
+        if( !oid )
+        {
+            return ObjectId();
+        }
 
-		return ObjectId::fromRaw( oid->id );
-	}
+        return ObjectId::fromRaw( oid->id );
+    }
 
-	QString TreeEntry::name() const
-	{
-		if( !d )
-		{
-			return QString();
-		}
+    QString TreeEntry::name() const
+    {
+        if( !d )
+        {
+            return QString();
+        }
 
-		const char* szName = git_tree_entry_name( d->mEntry );
+        const char* szName = git_tree_entry_name( d->mEntry );
 
-		if( !szName )
-		{
-			return QString();
-		}
+        if( !szName )
+        {
+            return QString();
+        }
 
-		return QString::fromUtf8( szName );
-	}
+        return QString::fromUtf8( szName );
+    }
 
-	ObjectType TreeEntry::type() const
-	{
-		if( !d )
-		{
-			return otAny;
-		}
+    ObjectType TreeEntry::type() const
+    {
+        if( !d )
+        {
+            return otAny;
+        }
 
-		return Internal::gitotype2ObjectType( git_tree_entry_type( d->mEntry ) );
-	}
+        return Internal::gitotype2ObjectType( git_tree_entry_type( d->mEntry ) );
+    }
 
 }

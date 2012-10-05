@@ -21,21 +21,21 @@
 namespace Git
 {
 
-	ObjectBlob::ObjectBlob()
-	{
-	}
+    ObjectBlob::ObjectBlob()
+    {
+    }
 
-	ObjectBlob::ObjectBlob( Internal::ObjectPrivate* _d )
-		: Object( _d )
-	{
-		Result r;
-		Q_UNUSED( r );
-		Q_ASSERT( type(r) == otBlob );
-	}
+    ObjectBlob::ObjectBlob( Internal::ObjectPrivate* _d )
+        : Object( _d )
+    {
+        Result r;
+        Q_UNUSED( r );
+        Q_ASSERT( type(r) == otBlob );
+    }
 
-	ObjectBlob::ObjectBlob( const ObjectBlob& o )
-		: Object( o )
-	{
-	}
+    ObjectBlob::ObjectBlob( const ObjectBlob& o )
+        : Object( o )
+    {
+    }
 
 }

@@ -22,43 +22,43 @@
 namespace Git
 {
 
-	class Repository;
+    class Repository;
 
-	namespace Internal
-	{
-		class IndexPrivate;
-	}
+    namespace Internal
+    {
+        class IndexPrivate;
+    }
 
-	/**
-	 * @ingroup		GitWrap
-	 * @brief		Provides access to the git index.
-	 *
-	 */
-	class GITWRAP_API Index
-	{
-	public:
-		explicit Index( Internal::IndexPrivate* _d );
+    /**
+     * @ingroup     GitWrap
+     * @brief       Provides access to the git index.
+     *
+     */
+    class GITWRAP_API Index
+    {
+    public:
+        explicit Index( Internal::IndexPrivate* _d );
 
-	public:
-		Index( const Index& other );
-		Index();
-		~Index();
+    public:
+        Index( const Index& other );
+        Index();
+        ~Index();
 
-	public:
-		Index& operator=( const Index& other );
+    public:
+        Index& operator=( const Index& other );
 
-	public:
-		bool isValid() const;
+    public:
+        bool isValid() const;
 
-		void read( Result& result GITWRAP_DEFAULT_TLSRESULT );
-		void write( Result& result GITWRAP_DEFAULT_TLSRESULT );
+        void read( Result& result GITWRAP_DEFAULT_TLSRESULT );
+        void write( Result& result GITWRAP_DEFAULT_TLSRESULT );
 
-		int count( Result& result GITWRAP_DEFAULT_TLSRESULT ) const;
-		Repository repository( Result& result GITWRAP_DEFAULT_TLSRESULT ) const;
+        int count( Result& result GITWRAP_DEFAULT_TLSRESULT ) const;
+        Repository repository( Result& result GITWRAP_DEFAULT_TLSRESULT ) const;
 
-	private:
-		Internal::GitPtr< Internal::IndexPrivate > d;
-	};
+    private:
+        Internal::GitPtr< Internal::IndexPrivate > d;
+    };
 
 }
 

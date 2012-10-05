@@ -23,25 +23,25 @@
 namespace Git
 {
 
-	BEGIN_INTERNAL_DECL()
+    BEGIN_INTERNAL_DECL()
 
     /**
-	 * @internal
-	 * @ingroup		GitWrap
-	 * @brief		The RevisionWalkerPrivate class
+     * @internal
+     * @ingroup     GitWrap
+     * @brief       The RevisionWalkerPrivate class
      *
      */
-	class RevisionWalkerPrivate : public RepoObject
-	{
-	public:
-		RevisionWalkerPrivate( RepositoryPrivate* repo, git_revwalk* walker );
-		~RevisionWalkerPrivate();
+    class RevisionWalkerPrivate : public RepoObject
+    {
+    public:
+        RevisionWalkerPrivate( RepositoryPrivate* repo, git_revwalk* walker );
+        ~RevisionWalkerPrivate();
 
-	public:
-		git_revwalk*		mWalker;
-	};
+    public:
+        git_revwalk* mWalker;
+    };
 
-	END_INTERNAL_DECL()
+    END_INTERNAL_DECL()
 
 }
 

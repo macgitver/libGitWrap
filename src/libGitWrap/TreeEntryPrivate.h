@@ -23,25 +23,25 @@
 namespace Git
 {
 
-	BEGIN_INTERNAL_DECL()
+    BEGIN_INTERNAL_DECL()
 
-	/**
-	 * @internal
-	 * @ingroup		GitWrap
-	 * @brief		The TreeEntryPrivate class
-	 */
-	class TreeEntryPrivate : public BasicObject
-	{
-	public:
-		TreeEntryPrivate( const git_tree_entry* entry, bool unmanaged = false );
-		~TreeEntryPrivate();
+    /**
+     * @internal
+     * @ingroup     GitWrap
+     * @brief       The TreeEntryPrivate class
+     */
+    class TreeEntryPrivate : public BasicObject
+    {
+    public:
+        TreeEntryPrivate( const git_tree_entry* entry, bool unmanaged = false );
+        ~TreeEntryPrivate();
 
-	public:
-		const git_tree_entry*	mEntry;
-		bool					mUnmanaged;
-	};
+    public:
+        const git_tree_entry*   mEntry;
+        bool                    mUnmanaged;
+    };
 
-	END_INTERNAL_DECL()
+    END_INTERNAL_DECL()
 
 }
 

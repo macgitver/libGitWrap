@@ -19,56 +19,56 @@
 namespace Git
 {
 
-	BackgroundTask::BackgroundTask()
-	{
-		mThread = NULL;
-	}
+    BackgroundTask::BackgroundTask()
+    {
+        mThread = NULL;
+    }
 
-	bool BackgroundTask::run( BackgroundThead* bthread )
-	{
-		mThread = bthread;
-		return execute();
-	}
+    bool BackgroundTask::run( BackgroundThead* bthread )
+    {
+        mThread = bthread;
+        return execute();
+    }
 
-	BackgroundThead* BackgroundTask::worker()
-	{
-		return mThread;
-	}
+    BackgroundThead* BackgroundTask::worker()
+    {
+        return mThread;
+    }
 
-	BackgroundThead::BackgroundThead()
-	{
-	}
+    BackgroundThead::BackgroundThead()
+    {
+    }
 
-	void BackgroundThead::queue( BackgroundTask* task )
-	{
-		QMutexLocker locker( &mLock );
+    void BackgroundThead::queue( BackgroundTask* task )
+    {
+        QMutexLocker locker( &mLock );
 
-		task->moveToThread( this );
-		mTasks.enqueue( task );
-	}
+        task->moveToThread( this );
+        mTasks.enqueue( task );
+    }
 
-	void BackgroundThead::run()
-	{
-		QMutexLocker locker( &mLock );
-		bool cont = true;
+    void BackgroundThead::run()
+    {
+        QMutexLocker locker( &mLock );
+        bool cont = true;
 
-		while( cont && !mTasks.isEmpty() )
-		{
-			BackgroundTask* task = mTasks.dequeue();
-			locker.unlock();
+        while( cont && !mTasks.isEmpty() )
+        {
+            BackgroundTask* task = mTasks.dequeue();
+            locker.unlock();
 
-			cont = task->run( this );
-			task->deleteLater();
+            cont = task->run( this );
+            task->deleteLater();
 
-			locker.relock();
-		}
+            locker.relock();
+        }
 
-		while( !mTasks.isEmpty() )
-		{
-			mTasks.dequeue()->deleteLater();
-		}
+        while( !mTasks.isEmpty() )
+        {
+            mTasks.dequeue()->deleteLater();
+        }
 
-		deleteLater();
-	}
+        deleteLater();
+    }
 
 }
