@@ -26,50 +26,48 @@
 namespace Git
 {
 
-	class BackgroundThead;
+    class BackgroundThead;
 
     /**
+     * @ingroup GitWrap
      * @brief The BackgroundTask class provides a common background worker thread.
      *
-     * @ingroup GitWrap
-     * @{
      */
-	class GITWRAP_API BackgroundTask : public QObject
-	{
-		Q_OBJECT
-	public:
-		BackgroundTask();
+    class GITWRAP_API BackgroundTask : public QObject
+    {
+        Q_OBJECT
+    public:
+        BackgroundTask();
 
-	public:
-		bool run( BackgroundThead* bthread );
+    public:
+        bool run( BackgroundThead* bthread );
 
-	protected:
-		virtual bool execute() = 0;
+    protected:
+        virtual bool execute() = 0;
 
-		BackgroundThead* worker();
+        BackgroundThead* worker();
 
-	private:
-		BackgroundThead*		mThread;
-	};
+    private:
+        BackgroundThead* mThread;
+    };
 
-	class GITWRAP_API BackgroundThead : public QThread
-	{
-		Q_OBJECT
-	public:
-		BackgroundThead();
+    class GITWRAP_API BackgroundThead : public QThread
+    {
+        Q_OBJECT
+    public:
+        BackgroundThead();
 
-	public:
-		void queue( BackgroundTask* task );
+    public:
+        void queue( BackgroundTask* task );
 
-	protected:
-		void run();
+    protected:
+        void run();
 
-	private:
-		QMutex						mLock;
-		QQueue< BackgroundTask* >	mTasks;
-	};
+    private:
+        QMutex                      mLock;
+        QQueue< BackgroundTask* >   mTasks;
+    };
 
-    /**@}*/
 }
 
 #endif

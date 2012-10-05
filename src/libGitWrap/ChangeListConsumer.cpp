@@ -19,24 +19,24 @@
 namespace Git
 {
 
-	ChangeListConsumer::ChangeListConsumer()
-	{
-	}
+    ChangeListConsumer::ChangeListConsumer()
+    {
+    }
 
-	ChangeListConsumer::~ChangeListConsumer()
-	{
-	}
+    ChangeListConsumer::~ChangeListConsumer()
+    {
+    }
 
-	bool ChangeListConsumer::raw( const QString& oldPath, const QString& newPath, Type type,
-								  unsigned int similarity, bool isBinary )
-	{
-		Q_UNUSED( oldPath );
-		Q_UNUSED( newPath );
-		Q_UNUSED( type );
-		Q_UNUSED( similarity );
-		Q_UNUSED( isBinary );
+    bool ChangeListConsumer::raw( const QString& oldPath, const QString& newPath, Type type,
+                                  unsigned int similarity, bool isBinary )
+    {
+        Q_UNUSED( oldPath );
+        Q_UNUSED( newPath );
+        Q_UNUSED( type );
+        Q_UNUSED( similarity );
+        Q_UNUSED( isBinary );
 
-		return false;
-	}
+        return false;
+    }
 
 }

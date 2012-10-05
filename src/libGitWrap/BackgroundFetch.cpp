@@ -20,42 +20,42 @@
 namespace Git
 {
 
-	BackgroundFetch::BackgroundFetch()
-	{
-	}
+    BackgroundFetch::BackgroundFetch()
+    {
+    }
 
-	void BackgroundFetch::setRepository( Repository repo )
-	{
-		mRepo = repo;
-	}
+    void BackgroundFetch::setRepository( Repository repo )
+    {
+        mRepo = repo;
+    }
 
-	void BackgroundFetch::setRemote( Remote remote )
-	{
-		mRemote = remote;
-	}
+    void BackgroundFetch::setRemote( Remote remote )
+    {
+        mRemote = remote;
+    }
 
-	bool BackgroundFetch::execute()
-	{
-		Result r;
+    bool BackgroundFetch::execute()
+    {
+        Result r;
 
-		if( !mRemote.connect( true, r ) )
-		{
-			return false;
-		}
+        if( !mRemote.connect( true, r ) )
+        {
+            return false;
+        }
 
-		if( !mRemote.download( r ) )
-		{
-			return false;
-		}
+        if( !mRemote.download( r ) )
+        {
+            return false;
+        }
 
-		if( !mRemote.updateTips( r ) )
-		{
-			return false;
-		}
+        if( !mRemote.updateTips( r ) )
+        {
+            return false;
+        }
 
-		mRemote.disconnect( r );
-		return true;
-	}
+        mRemote.disconnect( r );
+        return true;
+    }
 
 }
 

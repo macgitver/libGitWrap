@@ -25,17 +25,17 @@ namespace Git
 {
 
     /**
-	 * @ingroup		GitWrap
-	 * @brief		Provides access to git BLOB (Binary Large Object) objects
-	 *
-	 */
-	class GITWRAP_API ObjectBlob : public Object
-	{
-	public:
-		ObjectBlob();
-		ObjectBlob( Internal::ObjectPrivate* _d );
-		ObjectBlob( const ObjectBlob& o );
-	};
+     * @ingroup     GitWrap
+     * @brief       Provides access to git BLOB (Binary Large Object) objects
+     *
+     */
+    class GITWRAP_API ObjectBlob : public Object
+    {
+    public:
+        ObjectBlob();
+        ObjectBlob( Internal::ObjectPrivate* _d );
+        ObjectBlob( const ObjectBlob& o );
+    };
 
 }
 

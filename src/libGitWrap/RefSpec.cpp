@@ -20,47 +20,47 @@
 namespace Git
 {
 
-	namespace Internal
-	{
+    namespace Internal
+    {
 
-		RefSpec mkRefSpec( const git_refspec* refspec )
-		{
-			if( !refspec )
-			{
-				return RefSpec();
-			}
+        RefSpec mkRefSpec( const git_refspec* refspec )
+        {
+            if( !refspec )
+            {
+                return RefSpec();
+            }
 
-			QString src = QString::fromUtf8( git_refspec_src( refspec ) );
-			QString dst = QString::fromUtf8( git_refspec_dst( refspec ) );
-			return RefSpec( src, dst );
-		}
+            QString src = QString::fromUtf8( git_refspec_src( refspec ) );
+            QString dst = QString::fromUtf8( git_refspec_dst( refspec ) );
+            return RefSpec( src, dst );
+        }
 
-	}
+    }
 
-	RefSpec::RefSpec()
-	{
-	}
+    RefSpec::RefSpec()
+    {
+    }
 
-	RefSpec::RefSpec( const RefSpec& other )
-		: mSrc( other.mSrc )
-		, mDst( other.mDst )
-	{
-	}
+    RefSpec::RefSpec( const RefSpec& other )
+        : mSrc( other.mSrc )
+        , mDst( other.mDst )
+    {
+    }
 
-	RefSpec::RefSpec( const QString& source, const QString& destination )
-		: mSrc( source )
-		, mDst( destination )
-	{
-	}
+    RefSpec::RefSpec( const QString& source, const QString& destination )
+        : mSrc( source )
+        , mDst( destination )
+    {
+    }
 
-	QString RefSpec::source() const
-	{
-		return mSrc;
-	}
+    QString RefSpec::source() const
+    {
+        return mSrc;
+    }
 
-	QString RefSpec::destination() const
-	{
-		return mDst;
-	}
+    QString RefSpec::destination() const
+    {
+        return mDst;
+    }
 
 }

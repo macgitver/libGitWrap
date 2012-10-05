@@ -22,25 +22,25 @@
 namespace Git
 {
 
-	BEGIN_INTERNAL_DECL()
+    BEGIN_INTERNAL_DECL()
 
     /**
-	 * @internal
-	 * @ingroup		GitWrap
-	 * @brief		The ReferencePrivate class
+     * @internal
+     * @ingroup     GitWrap
+     * @brief       The ReferencePrivate class
      *
      */
-	class ReferencePrivate : public RepoObject
-	{
-	public:
-		ReferencePrivate( RepositoryPrivate* repo, git_reference* ref );
-		~ReferencePrivate();
+    class ReferencePrivate : public RepoObject
+    {
+    public:
+        ReferencePrivate( RepositoryPrivate* repo, git_reference* ref );
+        ~ReferencePrivate();
 
-	public:
-		git_reference*		mRef;
-	};
+    public:
+        git_reference*  mRef;
+    };
 
-	END_INTERNAL_DECL()
+    END_INTERNAL_DECL()
 
 }
 

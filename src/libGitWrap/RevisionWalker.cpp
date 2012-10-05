@@ -22,263 +22,263 @@
 namespace Git
 {
 
-	BEGIN_INTERNAL_IMPL()
+    BEGIN_INTERNAL_IMPL()
 
-	RevisionWalkerPrivate::RevisionWalkerPrivate( RepositoryPrivate* repo, git_revwalk* walker )
-		: RepoObject( repo )
-		, mWalker( walker )
-	{
-		Q_ASSERT( walker );
-	}
+    RevisionWalkerPrivate::RevisionWalkerPrivate( RepositoryPrivate* repo, git_revwalk* walker )
+        : RepoObject( repo )
+        , mWalker( walker )
+    {
+        Q_ASSERT( walker );
+    }
 
-	RevisionWalkerPrivate::~RevisionWalkerPrivate()
-	{
-		git_revwalk_free( mWalker );
-	}
+    RevisionWalkerPrivate::~RevisionWalkerPrivate()
+    {
+        git_revwalk_free( mWalker );
+    }
 
-	END_INTERNAL_IMPL()
+    END_INTERNAL_IMPL()
 
-	RevisionWalker::RevisionWalker()
-	{
-	}
+    RevisionWalker::RevisionWalker()
+    {
+    }
 
-	RevisionWalker::RevisionWalker( Internal::RevisionWalkerPrivate* _d )
-		: d( _d )
-	{
-	}
+    RevisionWalker::RevisionWalker( Internal::RevisionWalkerPrivate* _d )
+        : d( _d )
+    {
+    }
 
-	RevisionWalker::~RevisionWalker()
-	{
-	}
+    RevisionWalker::~RevisionWalker()
+    {
+    }
 
-	RevisionWalker& RevisionWalker::operator=( const RevisionWalker& other )
-	{
-		d = other.d;
-		return * this;
-	}
+    RevisionWalker& RevisionWalker::operator=( const RevisionWalker& other )
+    {
+        d = other.d;
+        return * this;
+    }
 
-	bool RevisionWalker::isValid() const
-	{
-		return d;
-	}
+    bool RevisionWalker::isValid() const
+    {
+        return d;
+    }
 
-	void RevisionWalker::reset( Result& result )
-	{
-		if( !result )
-		{
-			return;
-		}
+    void RevisionWalker::reset( Result& result )
+    {
+        if( !result )
+        {
+            return;
+        }
 
-		if( !d )
-		{
-			result.setInvalidObject();
-			return;
-		}
+        if( !d )
+        {
+            result.setInvalidObject();
+            return;
+        }
 
-		git_revwalk_reset( d->mWalker );
-	}
+        git_revwalk_reset( d->mWalker );
+    }
 
-	void RevisionWalker::push( const ObjectId& id, Result& result )
-	{
-		if( !result )
-		{
-			return;
-		}
+    void RevisionWalker::push( const ObjectId& id, Result& result )
+    {
+        if( !result )
+        {
+            return;
+        }
 
-		if( !d )
-		{
-			result.setInvalidObject();
-			return;
-		}
+        if( !d )
+        {
+            result.setInvalidObject();
+            return;
+        }
 
-		result = git_revwalk_push( d->mWalker, (const git_oid*) id.raw() );
-	}
+        result = git_revwalk_push( d->mWalker, (const git_oid*) id.raw() );
+    }
 
-	void RevisionWalker::push( const Reference& ref, Result& result )
-	{
+    void RevisionWalker::push( const Reference& ref, Result& result )
+    {
 
-		if( !result )
-		{
-			return;
-		}
+        if( !result )
+        {
+            return;
+        }
 
-		if( !d )
-		{
-			result.setInvalidObject();
-			return;
-		}
+        if( !d )
+        {
+            result.setInvalidObject();
+            return;
+        }
 
-		pushRef( ref.name(), result );
-	}
+        pushRef( ref.name(), result );
+    }
 
-	void RevisionWalker::pushRef( const QString& name, Result& result )
-	{
-		if( !result )
-		{
-			return;
-		}
+    void RevisionWalker::pushRef( const QString& name, Result& result )
+    {
+        if( !result )
+        {
+            return;
+        }
 
-		if( !d )
-		{
-			result.setInvalidObject();
-			return;
-		}
+        if( !d )
+        {
+            result.setInvalidObject();
+            return;
+        }
 
-		result = git_revwalk_push_ref( d->mWalker, name.toUtf8().constData() );
-	}
+        result = git_revwalk_push_ref( d->mWalker, name.toUtf8().constData() );
+    }
 
-	void RevisionWalker::pushHead( Result& result )
-	{
-		if( !result )
-		{
-			return;
-		}
+    void RevisionWalker::pushHead( Result& result )
+    {
+        if( !result )
+        {
+            return;
+        }
 
-		if( !d )
-		{
-			result.setInvalidObject();
-			return;
-		}
+        if( !d )
+        {
+            result.setInvalidObject();
+            return;
+        }
 
-		result = git_revwalk_push_head( d->mWalker );
-	}
+        result = git_revwalk_push_head( d->mWalker );
+    }
 
-	void RevisionWalker::hide( const ObjectId& id, Result& result )
-	{
-		if( !result )
-		{
-			return;
-		}
+    void RevisionWalker::hide( const ObjectId& id, Result& result )
+    {
+        if( !result )
+        {
+            return;
+        }
 
-		if( !d )
-		{
-			result.setInvalidObject();
-			return;
-		}
+        if( !d )
+        {
+            result.setInvalidObject();
+            return;
+        }
 
-		result = git_revwalk_hide( d->mWalker, (const git_oid*) id.raw() );
-	}
+        result = git_revwalk_hide( d->mWalker, (const git_oid*) id.raw() );
+    }
 
-	void RevisionWalker::hide( const Reference& ref, Result& result )
-	{
-		if( !result )
-		{
-			return;
-		}
+    void RevisionWalker::hide( const Reference& ref, Result& result )
+    {
+        if( !result )
+        {
+            return;
+        }
 
-		if( !d )
-		{
-			result.setInvalidObject();
-			return;
-		}
+        if( !d )
+        {
+            result.setInvalidObject();
+            return;
+        }
 
-		hideRef( ref.name(), result );
-	}
+        hideRef( ref.name(), result );
+    }
 
-	void RevisionWalker::hideRef( const QString& name, Result& result )
-	{
-		if( !result )
-		{
-			return;
-		}
+    void RevisionWalker::hideRef( const QString& name, Result& result )
+    {
+        if( !result )
+        {
+            return;
+        }
 
-		if( !d )
-		{
-			result.setInvalidObject();
-			return;
-		}
+        if( !d )
+        {
+            result.setInvalidObject();
+            return;
+        }
 
-		result = git_revwalk_hide_ref( d->mWalker, name.toUtf8().constData() );
-	}
+        result = git_revwalk_hide_ref( d->mWalker, name.toUtf8().constData() );
+    }
 
-	void RevisionWalker::hideHead( Result& result )
-	{
-		if( !result )
-		{
-			return;
-		}
+    void RevisionWalker::hideHead( Result& result )
+    {
+        if( !result )
+        {
+            return;
+        }
 
-		if( !d )
-		{
-			result.setInvalidObject();
-			return;
-		}
+        if( !d )
+        {
+            result.setInvalidObject();
+            return;
+        }
 
-		result = git_revwalk_hide_head( d->mWalker );
-	}
+        result = git_revwalk_hide_head( d->mWalker );
+    }
 
-	bool RevisionWalker::next( ObjectId& oidNext, Result& result )
-	{
-		if( !result )
-		{
-			return false;
-		}
+    bool RevisionWalker::next( ObjectId& oidNext, Result& result )
+    {
+        if( !result )
+        {
+            return false;
+        }
 
-		if( !d )
-		{
-			result.setInvalidObject();
-			return false;
-		}
+        if( !d )
+        {
+            result.setInvalidObject();
+            return false;
+        }
 
-		git_oid oid;
-		Result tmp( git_revwalk_next( &oid, d->mWalker ) );
-		if( tmp.errorCode() == GIT_ITEROVER )
-		{
-			return false;
-		}
-		if( !tmp )
-		{
-			result = tmp;
-			return false;
-		}
+        git_oid oid;
+        Result tmp( git_revwalk_next( &oid, d->mWalker ) );
+        if( tmp.errorCode() == GIT_ITEROVER )
+        {
+            return false;
+        }
+        if( !tmp )
+        {
+            result = tmp;
+            return false;
+        }
 
-		oidNext = ObjectId::fromRaw( oid.id );
-		return true;
-	}
+        oidNext = ObjectId::fromRaw( oid.id );
+        return true;
+    }
 
-	QVector< ObjectId > RevisionWalker::all( Result& result )
-	{
-		QVector< ObjectId > ids;
+    QVector< ObjectId > RevisionWalker::all( Result& result )
+    {
+        QVector< ObjectId > ids;
 
-		if( !result )
-		{
-			return ids;
-		}
+        if( !result )
+        {
+            return ids;
+        }
 
-		if( !d )
-		{
-			return ids;
-		}
+        if( !d )
+        {
+            return ids;
+        }
 
-		ObjectId id;
-		while( next( id, result ) )
-		{
-			if( !result )
-			{
-				return QVector< ObjectId >();
-			}
-			ids.append( id );
-		}
+        ObjectId id;
+        while( next( id, result ) )
+        {
+            if( !result )
+            {
+                return QVector< ObjectId >();
+            }
+            ids.append( id );
+        }
 
-		return ids;
-	}
+        return ids;
+    }
 
-	void RevisionWalker::setSorting( bool topological, bool timed, Result& result )
-	{
-		if( !result )
-		{
-			return;
-		}
+    void RevisionWalker::setSorting( bool topological, bool timed, Result& result )
+    {
+        if( !result )
+        {
+            return;
+        }
 
-		if( !d )
-		{
-			return;
-		}
+        if( !d )
+        {
+            return;
+        }
 
-		git_revwalk_sorting( d->mWalker,
-							 ( topological ? GIT_SORT_TOPOLOGICAL : 0 ) |
-							 ( timed ? GIT_SORT_TIME : 0 ) );
-	}
+        git_revwalk_sorting( d->mWalker,
+                             ( topological ? GIT_SORT_TOPOLOGICAL : 0 ) |
+                             ( timed ? GIT_SORT_TIME : 0 ) );
+    }
 
 }
 

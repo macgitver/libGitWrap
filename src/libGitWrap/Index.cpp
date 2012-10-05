@@ -23,138 +23,138 @@
 namespace Git
 {
 
-	BEGIN_INTERNAL_IMPL()
+    BEGIN_INTERNAL_IMPL()
 
-	IndexPrivate::IndexPrivate( RepositoryPrivate* repo, git_index* index )
-		: RepoObject( repo )
-		, mIndex( index )
-	{
-		Q_ASSERT( index );
-	}
+    IndexPrivate::IndexPrivate( RepositoryPrivate* repo, git_index* index )
+        : RepoObject( repo )
+        , mIndex( index )
+    {
+        Q_ASSERT( index );
+    }
 
-	IndexPrivate::~IndexPrivate()
-	{
-		Q_ASSERT( mRepo );
-		if( mRepo->mIndex == this )
-		{
-			mRepo->mIndex = NULL;
-		}
+    IndexPrivate::~IndexPrivate()
+    {
+        Q_ASSERT( mRepo );
+        if( mRepo->mIndex == this )
+        {
+            mRepo->mIndex = NULL;
+        }
 
-		if( mIndex )
-		{
-			git_index_free( mIndex );
-		}
-	}
+        if( mIndex )
+        {
+            git_index_free( mIndex );
+        }
+    }
 
-	END_INTERNAL_IMPL()
+    END_INTERNAL_IMPL()
 
-	Index::Index()
-	{
-	}
+    Index::Index()
+    {
+    }
 
-	Index::Index( Internal::IndexPrivate* _d )
-		: d( _d )
-	{
-	}
+    Index::Index( Internal::IndexPrivate* _d )
+        : d( _d )
+    {
+    }
 
-	Index::Index( const Index& o )
-		: d( o.d )
-	{
-	}
+    Index::Index( const Index& o )
+        : d( o.d )
+    {
+    }
 
-	Index::~Index()
-	{
-	}
+    Index::~Index()
+    {
+    }
 
-	Index& Index::operator=( const Index& other )
-	{
-		d = other.d;
-		return *this;
-	}
+    Index& Index::operator=( const Index& other )
+    {
+        d = other.d;
+        return *this;
+    }
 
-	bool Index::isValid() const
-	{
-		return d;
-	}
+    bool Index::isValid() const
+    {
+        return d;
+    }
 
-	int Index::count( Result& result ) const
-	{
-		if( !result )
-		{
-			return 0;
-		}
+    int Index::count( Result& result ) const
+    {
+        if( !result )
+        {
+            return 0;
+        }
 
-		if( !d )
-		{
-			result.setInvalidObject();
-			return 0;
-		}
-		return git_index_entrycount( d->mIndex );
-	}
+        if( !d )
+        {
+            result.setInvalidObject();
+            return 0;
+        }
+        return git_index_entrycount( d->mIndex );
+    }
 
-	Repository Index::repository( Result& result ) const
-	{
-		if( !result )
-		{
-			return Repository();
-		}
+    Repository Index::repository( Result& result ) const
+    {
+        if( !result )
+        {
+            return Repository();
+        }
 
-		if( !d )
-		{
-			result.setInvalidObject();
-			return Repository();
-		}
+        if( !d )
+        {
+            result.setInvalidObject();
+            return Repository();
+        }
 
-		return Repository( d->repo() );
-	}
+        return Repository( d->repo() );
+    }
 
-	/**
-	 * @brief			Read the index from storage
-	 *
-	 * Refills this index object with data obtained from hard disc. Any local modifications to this
-	 * index object will be lost.
-	 *
-	 * @param[in,out]	result	A Result object; see @ref GitWrapErrorHandling
-	 *
-	 */
-	void Index::read( Result& result )
-	{
-		if( !result )
-		{
-			return;
-		}
+    /**
+     * @brief           Read the index from storage
+     *
+     * Refills this index object with data obtained from hard disc. Any local modifications to this
+     * index object will be lost.
+     *
+     * @param[in,out]   result  A Result object; see @ref GitWrapErrorHandling
+     *
+     */
+    void Index::read( Result& result )
+    {
+        if( !result )
+        {
+            return;
+        }
 
-		if( !d )
-		{
-			result.setInvalidObject();
-			return;
-		}
+        if( !d )
+        {
+            result.setInvalidObject();
+            return;
+        }
 
-		result = git_index_read( d->mIndex );
-	}
+        result = git_index_read( d->mIndex );
+    }
 
-	/**
-	 * @brief			Write the index to storage
-	 *
-	 * Writes this index object to the hard disc.
-	 *
-	 * @param[in,out]	result	A Result object; see @ref GitWrapErrorHandling
-	 *
-	 */
-	void Index::write( Result& result )
-	{
-		if( !result )
-		{
-			return;
-		}
+    /**
+     * @brief           Write the index to storage
+     *
+     * Writes this index object to the hard disc.
+     *
+     * @param[in,out]   result  A Result object; see @ref GitWrapErrorHandling
+     *
+     */
+    void Index::write( Result& result )
+    {
+        if( !result )
+        {
+            return;
+        }
 
-		if( !d )
-		{
-			result.setInvalidObject();
-			return;
-		}
+        if( !d )
+        {
+            result.setInvalidObject();
+            return;
+        }
 
-		result = git_index_write( d->mIndex );
-	}
+        result = git_index_write( d->mIndex );
+    }
 
 }

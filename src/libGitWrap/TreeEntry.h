@@ -22,38 +22,38 @@
 namespace Git
 {
 
-	namespace Internal
-	{
-		class TreeEntryPrivate;
-	}
+    namespace Internal
+    {
+        class TreeEntryPrivate;
+    }
 
-	class ObjectId;
+    class ObjectId;
 
-	/**
-	 * @ingroup		GitWrap
-	 * @brief		Represents an entry in a git tree
-	 */
-	class GITWRAP_API TreeEntry
-	{
-	public:
-		TreeEntry();
-		TreeEntry( Internal::TreeEntryPrivate* _d );
-		TreeEntry( const TreeEntry& other );
-		~TreeEntry();
-		TreeEntry& operator=( const TreeEntry& other );
+    /**
+     * @ingroup     GitWrap
+     * @brief       Represents an entry in a git tree
+     */
+    class GITWRAP_API TreeEntry
+    {
+    public:
+        TreeEntry();
+        TreeEntry( Internal::TreeEntryPrivate* _d );
+        TreeEntry( const TreeEntry& other );
+        ~TreeEntry();
+        TreeEntry& operator=( const TreeEntry& other );
 
-	public:
-		bool isValid() const;
+    public:
+        bool isValid() const;
 
-		TreeEntry clone() const;
+        TreeEntry clone() const;
 
-		ObjectId sha1() const;
-		QString name() const;
-		ObjectType type() const;
+        ObjectId sha1() const;
+        QString name() const;
+        ObjectType type() const;
 
-	private:
-		Internal::GitPtr< Internal::TreeEntryPrivate > d;
-	};
+    private:
+        Internal::GitPtr< Internal::TreeEntryPrivate > d;
+    };
 
 }
 

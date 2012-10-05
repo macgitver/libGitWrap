@@ -25,42 +25,42 @@
 namespace Git
 {
 
-	class DiffList;
+    class DiffList;
 
-	/**
-	 * @ingroup		GitWrap
-	 * @brief		Represents a git tree object
-	 *
-	 */
-	class GITWRAP_API ObjectTree : public Object
-	{
-	public:
-		ObjectTree();
-		ObjectTree( Internal::ObjectPrivate* _d );
-		ObjectTree( const ObjectTree& o );
+    /**
+     * @ingroup     GitWrap
+     * @brief       Represents a git tree object
+     *
+     */
+    class GITWRAP_API ObjectTree : public Object
+    {
+    public:
+        ObjectTree();
+        ObjectTree( Internal::ObjectPrivate* _d );
+        ObjectTree( const ObjectTree& o );
 
-	public:
-		ObjectTree subPath( const QString& pathName, Result& result GITWRAP_DEFAULT_TLSRESULT ) const;
+    public:
+        ObjectTree subPath( const QString& pathName, Result& result GITWRAP_DEFAULT_TLSRESULT ) const;
 
-		DiffList diffToTree( ObjectTree newTree, Result& result GITWRAP_DEFAULT_TLSRESULT );
-		DiffList diffToIndex( Result& result GITWRAP_DEFAULT_TLSRESULT );
-		DiffList diffToWorkingDir( Result& result GITWRAP_DEFAULT_TLSRESULT );
+        DiffList diffToTree( ObjectTree newTree, Result& result GITWRAP_DEFAULT_TLSRESULT );
+        DiffList diffToIndex( Result& result GITWRAP_DEFAULT_TLSRESULT );
+        DiffList diffToWorkingDir( Result& result GITWRAP_DEFAULT_TLSRESULT );
 
-		size_t entryCount() const;
-		TreeEntry entryAt( size_t index ) const;
-		TreeEntry entry( const QString& fileName ) const;
+        size_t entryCount() const;
+        TreeEntry entryAt( size_t index ) const;
+        TreeEntry entry( const QString& fileName ) const;
 
-	public:
-		inline TreeEntry operator[]( size_t index ) const
-		{
-			return entryAt( index );
-		}
+    public:
+        inline TreeEntry operator[]( size_t index ) const
+        {
+            return entryAt( index );
+        }
 
-		inline TreeEntry operator[]( const QString& fileName ) const
-		{
-			return entry( fileName );
-		}
-	};
+        inline TreeEntry operator[]( const QString& fileName ) const
+        {
+            return entry( fileName );
+        }
+    };
 
 }
 

@@ -23,25 +23,25 @@
 namespace Git
 {
 
-	BEGIN_INTERNAL_DECL()
+    BEGIN_INTERNAL_DECL()
 
     /**
-	 * @internal
-	 * @ingroup GitWrap
+     * @internal
+     * @ingroup GitWrap
      * @brief The IndexPrivate class
-	 *
+     *
      */
-	class IndexPrivate : public RepoObject
-	{
-	public:
-		IndexPrivate( RepositoryPrivate* repo, git_index* index );
-		~IndexPrivate();
+    class IndexPrivate : public RepoObject
+    {
+    public:
+        IndexPrivate( RepositoryPrivate* repo, git_index* index );
+        ~IndexPrivate();
 
-	public:
-		git_index*			mIndex;
-	};
+    public:
+        git_index*  mIndex;
+    };
 
-	END_INTERNAL_DECL()
+    END_INTERNAL_DECL()
 }
 
 #endif

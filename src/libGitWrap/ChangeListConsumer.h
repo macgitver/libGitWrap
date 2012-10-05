@@ -22,35 +22,35 @@
 namespace Git
 {
 
-	/**
-	 * @ingroup		GitWrap
-	 * @brief		Callback interface to consume a list of differences
-	 *
-	 */
-	class GITWRAP_API ChangeListConsumer
-	{
-	public:
-		enum Type
-		{
-			FileUnmodified,
-			FileAdded,
-			FileDeleted,
-			FileModified,
-			FileRenamed,
-			FileCopied,
-			FileIgnored,
-			FileUntracked
-		};
+    /**
+     * @ingroup     GitWrap
+     * @brief       Callback interface to consume a list of differences
+     *
+     */
+    class GITWRAP_API ChangeListConsumer
+    {
+    public:
+        enum Type
+        {
+            FileUnmodified,
+            FileAdded,
+            FileDeleted,
+            FileModified,
+            FileRenamed,
+            FileCopied,
+            FileIgnored,
+            FileUntracked
+        };
 
-	public:
-		ChangeListConsumer();
-		virtual ~ChangeListConsumer();
+    public:
+        ChangeListConsumer();
+        virtual ~ChangeListConsumer();
 
-	public:
-		virtual bool raw( const QString& oldPath, const QString& newPath, Type type,
-						  unsigned int similarity, bool isBinary );
+    public:
+        virtual bool raw( const QString& oldPath, const QString& newPath, Type type,
+                          unsigned int similarity, bool isBinary );
 
-	};
+    };
 
 }
 

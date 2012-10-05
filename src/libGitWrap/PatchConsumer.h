@@ -1,4 +1,4 @@
-/*
+   /*
  * MacGitver
  * Copyright (C) 2012 Sascha Cunz <sascha@babbelbox.org>
  *
@@ -23,40 +23,40 @@ namespace Git
 {
 
     /**
-	 * @ingroup		GitWrap
-	 * @brief		Callback interface to consume a list of differences
+     * @ingroup     GitWrap
+     * @brief       Callback interface to consume a list of differences
      *
      */
-	class GITWRAP_API PatchConsumer
-	{
-	public:
-		enum Type
-		{
-			FileUnmodified,
-			FileAdded,
-			FileDeleted,
-			FileModified,
-			FileRenamed,
-			FileCopied,
-			FileIgnored,
-			FileUntracked
-		};
+    class GITWRAP_API PatchConsumer
+    {
+    public:
+        enum Type
+        {
+            FileUnmodified,
+            FileAdded,
+            FileDeleted,
+            FileModified,
+            FileRenamed,
+            FileCopied,
+            FileIgnored,
+            FileUntracked
+        };
 
-	public:
-		PatchConsumer();
-		virtual ~PatchConsumer();
+    public:
+        PatchConsumer();
+        virtual ~PatchConsumer();
 
-	public:
-		virtual bool startFile( const QString& oldPath, const QString& newPath, Type type,
-								unsigned int similarity, bool isBinary );
+    public:
+        virtual bool startFile( const QString& oldPath, const QString& newPath, Type type,
+                                unsigned int similarity, bool isBinary );
 
-		virtual bool startHunk( int newStart, int newLines, int oldStart, int oldLines,
-								const QString& header );
+        virtual bool startHunk( int newStart, int newLines, int oldStart, int oldLines,
+                                const QString& header );
 
-		virtual bool appendContext( const QString& content );
-		virtual bool appendAddition( const QString& content );
-		virtual bool appendDeletion( const QString& content );
-	};
+        virtual bool appendContext( const QString& content );
+        virtual bool appendAddition( const QString& content );
+        virtual bool appendDeletion( const QString& content );
+    };
 
 }
 

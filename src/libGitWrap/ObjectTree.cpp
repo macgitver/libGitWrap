@@ -26,174 +26,174 @@
 namespace Git
 {
 
-	ObjectTree::ObjectTree()
-	{
-	}
+    ObjectTree::ObjectTree()
+    {
+    }
 
-	ObjectTree::ObjectTree( Internal::ObjectPrivate* _d )
-		: Object( _d )
-	{
-		Result r;
-		if( ( type( r ) != otTree ) || !r )
-		{
-			d = NULL;
-		}
-	}
+    ObjectTree::ObjectTree( Internal::ObjectPrivate* _d )
+        : Object( _d )
+    {
+        Result r;
+        if( ( type( r ) != otTree ) || !r )
+        {
+            d = NULL;
+        }
+    }
 
-	ObjectTree::ObjectTree( const ObjectTree& o )
-		: Object( o )
-	{
-	}
+    ObjectTree::ObjectTree( const ObjectTree& o )
+        : Object( o )
+    {
+    }
 
-	ObjectTree ObjectTree::subPath( const QString& pathName, Result& result ) const
-	{
-		if( !result )
-		{
-			return ObjectTree();
-		}
+    ObjectTree ObjectTree::subPath( const QString& pathName, Result& result ) const
+    {
+        if( !result )
+        {
+            return ObjectTree();
+        }
 
-		if( !d )
-		{
-			result.setInvalidObject();
-			return ObjectTree();
-		}
+        if( !d )
+        {
+            result.setInvalidObject();
+            return ObjectTree();
+        }
 
-		git_tree* d2 = (git_tree*) d->mObj;
+        git_tree* d2 = (git_tree*) d->mObj;
 
-		const git_tree_entry* entry = git_tree_entry_byname( d2, pathName.toUtf8().constData() );
-		if( !entry )
-		{
-			return ObjectTree();
-		}
+        const git_tree_entry* entry = git_tree_entry_byname( d2, pathName.toUtf8().constData() );
+        if( !entry )
+        {
+            return ObjectTree();
+        }
 
-		git_object* subObject = 0;
-		result = git_tree_entry_to_object( &subObject, d->repo()->mRepo, entry );
-		if( !result )
-		{
-			return ObjectTree();
-		}
+        git_object* subObject = 0;
+        result = git_tree_entry_to_object( &subObject, d->repo()->mRepo, entry );
+        if( !result )
+        {
+            return ObjectTree();
+        }
 
-		if( git_object_type( subObject ) != GIT_OBJ_TREE )
-		{
-			git_object_free( subObject );
-			return ObjectTree();
-		}
+        if( git_object_type( subObject ) != GIT_OBJ_TREE )
+        {
+            git_object_free( subObject );
+            return ObjectTree();
+        }
 
-		return new Internal::ObjectPrivate( d->repo(), subObject );
-	}
+        return new Internal::ObjectPrivate( d->repo(), subObject );
+    }
 
-	DiffList ObjectTree::diffToTree( ObjectTree newTree, Result& result )
-	{
-		if( !result )
-		{
-			return DiffList();
-		}
+    DiffList ObjectTree::diffToTree( ObjectTree newTree, Result& result )
+    {
+        if( !result )
+        {
+            return DiffList();
+        }
 
-		if( !d )
-		{
-			result.setInvalidObject();
-			return DiffList();
-		}
+        if( !d )
+        {
+            result.setInvalidObject();
+            return DiffList();
+        }
 
-		git_tree* gitTree = (git_tree*) d->mObj;
-		git_tree* gitNewTree = (git_tree*) newTree.d->mObj;
+        git_tree* gitTree = (git_tree*) d->mObj;
+        git_tree* gitNewTree = (git_tree*) newTree.d->mObj;
 
-		git_diff_list* diffList = NULL;
-		result = git_diff_tree_to_tree( d->repo()->mRepo, NULL, gitTree, gitNewTree, &diffList );
-		if( !result )
-		{
-			return DiffList();
-		}
+        git_diff_list* diffList = NULL;
+        result = git_diff_tree_to_tree( d->repo()->mRepo, NULL, gitTree, gitNewTree, &diffList );
+        if( !result )
+        {
+            return DiffList();
+        }
 
-		return DiffList( new Internal::DiffListPrivate( d->repo(), diffList ) );
-	}
+        return DiffList( new Internal::DiffListPrivate( d->repo(), diffList ) );
+    }
 
-	DiffList ObjectTree::diffToIndex( Result& result )
-	{
-		if( !result )
-		{
-			return DiffList();
-		}
+    DiffList ObjectTree::diffToIndex( Result& result )
+    {
+        if( !result )
+        {
+            return DiffList();
+        }
 
-		if( !d )
-		{
-			result.setInvalidObject();
-			return DiffList();
-		}
+        if( !d )
+        {
+            result.setInvalidObject();
+            return DiffList();
+        }
 
-		git_tree* gitTree = (git_tree*) d->mObj;
+        git_tree* gitTree = (git_tree*) d->mObj;
 
-		git_diff_list* diffList = NULL;
-		result = git_diff_index_to_tree( d->repo()->mRepo, NULL, gitTree, &diffList );
-		if( !result )
-		{
-			return DiffList();
-		}
+        git_diff_list* diffList = NULL;
+        result = git_diff_index_to_tree( d->repo()->mRepo, NULL, gitTree, &diffList );
+        if( !result )
+        {
+            return DiffList();
+        }
 
-		return DiffList( new Internal::DiffListPrivate( d->repo(), diffList ) );
-	}
+        return DiffList( new Internal::DiffListPrivate( d->repo(), diffList ) );
+    }
 
-	DiffList ObjectTree::diffToWorkingDir( Result& result )
-	{
-		if( !result )
-		{
-			return DiffList();
-		}
+    DiffList ObjectTree::diffToWorkingDir( Result& result )
+    {
+        if( !result )
+        {
+            return DiffList();
+        }
 
-		if( !d )
-		{
-			result.setInvalidObject();
-			return DiffList();
-		}
+        if( !d )
+        {
+            result.setInvalidObject();
+            return DiffList();
+        }
 
-		git_tree* gitTree = (git_tree*) d->mObj;
+        git_tree* gitTree = (git_tree*) d->mObj;
 
-		git_diff_list* diffList = NULL;
-		result = git_diff_workdir_to_tree( d->repo()->mRepo, NULL, gitTree, &diffList );
-		if( !result )
-		{
-			return DiffList();
-		}
+        git_diff_list* diffList = NULL;
+        result = git_diff_workdir_to_tree( d->repo()->mRepo, NULL, gitTree, &diffList );
+        if( !result )
+        {
+            return DiffList();
+        }
 
-		return DiffList( new Internal::DiffListPrivate( d->repo(), diffList ) );
-	}
+        return DiffList( new Internal::DiffListPrivate( d->repo(), diffList ) );
+    }
 
-	size_t ObjectTree::entryCount() const
-	{
-		if( !d )
-		{
-			return 0;
-		}
+    size_t ObjectTree::entryCount() const
+    {
+        if( !d )
+        {
+            return 0;
+        }
 
-		git_tree* gitTree = (git_tree*) d->mObj;
-		return git_tree_entrycount( gitTree );
-	}
+        git_tree* gitTree = (git_tree*) d->mObj;
+        return git_tree_entrycount( gitTree );
+    }
 
-	TreeEntry ObjectTree::entryAt( size_t index ) const
-	{
-		if( !d )
-		{
-			return TreeEntry();
-		}
+    TreeEntry ObjectTree::entryAt( size_t index ) const
+    {
+        if( !d )
+        {
+            return TreeEntry();
+        }
 
-		git_tree* gitTree = (git_tree*) d->mObj;
+        git_tree* gitTree = (git_tree*) d->mObj;
 
-		const git_tree_entry* entry = git_tree_entry_byindex( gitTree, index );
-		return new Internal::TreeEntryPrivate( entry );
-	}
+        const git_tree_entry* entry = git_tree_entry_byindex( gitTree, index );
+        return new Internal::TreeEntryPrivate( entry );
+    }
 
-	TreeEntry ObjectTree::entry( const QString& fileName ) const
-	{
-		if( !d )
-		{
-			return TreeEntry();
-		}
+    TreeEntry ObjectTree::entry( const QString& fileName ) const
+    {
+        if( !d )
+        {
+            return TreeEntry();
+        }
 
-		git_tree* gitTree = (git_tree*) d->mObj;
+        git_tree* gitTree = (git_tree*) d->mObj;
 
-		const git_tree_entry* entry = git_tree_entry_byname( gitTree,
-															 fileName.toUtf8().constData() );
-		return new Internal::TreeEntryPrivate( entry );
-	}
+        const git_tree_entry* entry = git_tree_entry_byname( gitTree,
+                                                             fileName.toUtf8().constData() );
+        return new Internal::TreeEntryPrivate( entry );
+    }
 
 }

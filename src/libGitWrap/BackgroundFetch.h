@@ -26,30 +26,28 @@ namespace Git
 {
 
     /**
+     * @ingroup GitWrap
      * @brief The BackgroundFetch class provides functionality to fetch a repository in a background thread.
      *
-     * @ingroup GitWrap
-     * @{
      */
-	class GITWRAP_API BackgroundFetch : public BackgroundTask
-	{
-		Q_OBJECT
-	public:
-		BackgroundFetch();
+    class GITWRAP_API BackgroundFetch : public BackgroundTask
+    {
+        Q_OBJECT
+    public:
+        BackgroundFetch();
 
-	public:
-		void setRepository( Repository repo );
-		void setRemote( Remote remote );
+    public:
+        void setRepository( Repository repo );
+        void setRemote( Remote remote );
 
-	public:
-		bool execute();
+    public:
+        bool execute();
 
-	private:
-		Repository	mRepo;
-		Remote		mRemote;
-	};
+    private:
+        Repository  mRepo;
+        Remote      mRemote;
+    };
 
-    /**@}*/
 }
 
 #endif

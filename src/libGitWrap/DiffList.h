@@ -22,46 +22,46 @@
 namespace Git
 {
 
-	class Repository;
-	class ChangeListConsumer;
-	class PatchConsumer;
+    class Repository;
+    class ChangeListConsumer;
+    class PatchConsumer;
 
-	namespace Internal
-	{
-		class DiffListPrivate;
-	}
+    namespace Internal
+    {
+        class DiffListPrivate;
+    }
 
-	/**
-	 * @ingroup		GitWrap
-	 * @brief		List of differences between to objects
-	 *
-	 */
-	class GITWRAP_API DiffList
-	{
-	public:
-		explicit DiffList( Internal::DiffListPrivate* _d );
+    /**
+     * @ingroup     GitWrap
+     * @brief       List of differences between to objects
+     *
+     */
+    class GITWRAP_API DiffList
+    {
+    public:
+        explicit DiffList( Internal::DiffListPrivate* _d );
 
-	public:
-		DiffList( const DiffList& other );
-		DiffList();
-		~DiffList();
+    public:
+        DiffList( const DiffList& other );
+        DiffList();
+        ~DiffList();
 
-	public:
-		DiffList& operator=( const DiffList& other );
+    public:
+        DiffList& operator=( const DiffList& other );
 
-	public:
-		bool isValid() const;
-		Repository repository( Result& result GITWRAP_DEFAULT_TLSRESULT ) const;
+    public:
+        bool isValid() const;
+        Repository repository( Result& result GITWRAP_DEFAULT_TLSRESULT ) const;
 
-		bool mergeOnto( DiffList other, Result& result GITWRAP_DEFAULT_TLSRESULT ) const;
+        bool mergeOnto( DiffList other, Result& result GITWRAP_DEFAULT_TLSRESULT ) const;
 
-		bool consumePatch( PatchConsumer* consumer, Result& result GITWRAP_DEFAULT_TLSRESULT ) const;
-		bool consumeChangeList( ChangeListConsumer* consumer,
-								Result& result GITWRAP_DEFAULT_TLSRESULT ) const;
+        bool consumePatch( PatchConsumer* consumer, Result& result GITWRAP_DEFAULT_TLSRESULT ) const;
+        bool consumeChangeList( ChangeListConsumer* consumer,
+                                Result& result GITWRAP_DEFAULT_TLSRESULT ) const;
 
-	private:
-		Internal::GitPtr< Internal::DiffListPrivate > d;
-	};
+    private:
+        Internal::GitPtr< Internal::DiffListPrivate > d;
+    };
 
 }
 

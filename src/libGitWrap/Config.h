@@ -22,43 +22,43 @@
 namespace Git
 {
 
-	namespace Internal
-	{
-		class ConfigPrivate;
-	}
+    namespace Internal
+    {
+        class ConfigPrivate;
+    }
 
-	typedef QHash< QString, QString > ConfigValues;
+    typedef QHash< QString, QString > ConfigValues;
 
     /**
-	 * @ingroup		GitWrap
-	 * @brief		Provides access git configuration files
-	 *
+     * @ingroup     GitWrap
+     * @brief       Provides access git configuration files
+     *
      */
-	class GITWRAP_API Config
-	{
-	public:
-		Config();
-		Config( Internal::ConfigPrivate* cfg );
-		Config( const Config& other );
-		~Config();
-		Config& operator=( const Config& other );
+    class GITWRAP_API Config
+    {
+    public:
+        Config();
+        Config( Internal::ConfigPrivate* cfg );
+        Config( const Config& other );
+        ~Config();
+        Config& operator=( const Config& other );
 
-	public:
-		bool addFile( const QString& fileName, int priority );
+    public:
+        bool addFile( const QString& fileName, int priority );
 
-		ConfigValues values();
+        ConfigValues values();
 
-	public:
-		static QString globalFilePath();
-		static QString userFilePath();
-		static Config global();
-		static Config user();
-		static Config file( const QString& fileName );
-		static Config create();
+    public:
+        static QString globalFilePath();
+        static QString userFilePath();
+        static Config global();
+        static Config user();
+        static Config file( const QString& fileName );
+        static Config create();
 
-	private:
-		Internal::GitPtr< Internal::ConfigPrivate > d;
-	};
+    private:
+        Internal::GitPtr< Internal::ConfigPrivate > d;
+    };
 
 }
 

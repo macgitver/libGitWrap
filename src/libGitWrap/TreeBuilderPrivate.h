@@ -23,24 +23,24 @@
 namespace Git
 {
 
-	BEGIN_INTERNAL_DECL()
+    BEGIN_INTERNAL_DECL()
 
-	/**
-	 * @internal
-	 * @ingroup		GitWrap
-	 * @brief		The TreeBuilderPrivate class
-	 */
-	class TreeBuilderPrivate : public RepoObject
-	{
-	public:
-		TreeBuilderPrivate( RepositoryPrivate* repo, git_treebuilder* builder );
-		~TreeBuilderPrivate();
+    /**
+     * @internal
+     * @ingroup     GitWrap
+     * @brief       The TreeBuilderPrivate class
+     */
+    class TreeBuilderPrivate : public RepoObject
+    {
+    public:
+        TreeBuilderPrivate( RepositoryPrivate* repo, git_treebuilder* builder );
+        ~TreeBuilderPrivate();
 
-	public:
-		git_treebuilder*	mBuilder;
-	};
+    public:
+        git_treebuilder* mBuilder;
+    };
 
-	END_INTERNAL_DECL()
+    END_INTERNAL_DECL()
 
 }
 

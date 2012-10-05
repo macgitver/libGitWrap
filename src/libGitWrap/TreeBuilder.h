@@ -22,41 +22,41 @@
 namespace Git
 {
 
-	namespace Internal
-	{
-		class TreeBuilderPrivate;
-	}
+    namespace Internal
+    {
+        class TreeBuilderPrivate;
+    }
 
-	class TreeEntry;
-	class ObjectId;
+    class TreeEntry;
+    class ObjectId;
 
-	/**
-	 * @ingroup		GitWrap
-	 * @brief		Tool for creating tree objects
-	 */
-	class GITWRAP_API TreeBuilder
-	{
-	public:
-		TreeBuilder();
-		TreeBuilder( Internal::TreeBuilderPrivate* _d );
-		TreeBuilder( const TreeBuilder& other );
-		~TreeBuilder();
-		TreeBuilder& operator=( const TreeBuilder& other );
+    /**
+     * @ingroup     GitWrap
+     * @brief       Tool for creating tree objects
+     */
+    class GITWRAP_API TreeBuilder
+    {
+    public:
+        TreeBuilder();
+        TreeBuilder( Internal::TreeBuilderPrivate* _d );
+        TreeBuilder( const TreeBuilder& other );
+        ~TreeBuilder();
+        TreeBuilder& operator=( const TreeBuilder& other );
 
-	public:
-		bool isValid() const;
+    public:
+        bool isValid() const;
 
-		void clear( Result& result GITWRAP_DEFAULT_TLSRESULT );
+        void clear( Result& result GITWRAP_DEFAULT_TLSRESULT );
 
-		TreeEntry get( const QString& name, Result& result GITWRAP_DEFAULT_TLSRESULT );
-		bool insert( const QString& fileName, TreeEntryAttributes type, const ObjectId& oid,
-					 Result& result GITWRAP_DEFAULT_TLSRESULT );
-		bool remove( const QString& fileName, Result& result GITWRAP_DEFAULT_TLSRESULT );
-		ObjectId write( Result& result GITWRAP_DEFAULT_TLSRESULT );
+        TreeEntry get( const QString& name, Result& result GITWRAP_DEFAULT_TLSRESULT );
+        bool insert( const QString& fileName, TreeEntryAttributes type, const ObjectId& oid,
+                     Result& result GITWRAP_DEFAULT_TLSRESULT );
+        bool remove( const QString& fileName, Result& result GITWRAP_DEFAULT_TLSRESULT );
+        ObjectId write( Result& result GITWRAP_DEFAULT_TLSRESULT );
 
-	private:
-		Internal::GitPtr< Internal::TreeBuilderPrivate > d;
-	};
+    private:
+        Internal::GitPtr< Internal::TreeBuilderPrivate > d;
+    };
 
 }
 

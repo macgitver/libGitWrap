@@ -23,25 +23,25 @@
 namespace Git
 {
 
-	BEGIN_INTERNAL_DECL()
+    BEGIN_INTERNAL_DECL()
 
     /**
-	 * @internal
-	 * @ingroup		GitWrap
-	 * @brief		The DiffListPrivate class
-	 *
-	 */
-	class DiffListPrivate : public RepoObject
-	{
-	public:
-		DiffListPrivate( RepositoryPrivate* repo, git_diff_list* difflist );
-		~DiffListPrivate();
+     * @internal
+     * @ingroup     GitWrap
+     * @brief       The DiffListPrivate class
+     *
+     */
+    class DiffListPrivate : public RepoObject
+    {
+    public:
+        DiffListPrivate( RepositoryPrivate* repo, git_diff_list* difflist );
+        ~DiffListPrivate();
 
-	public:
-		git_diff_list*	mDiffList;
-	};
+    public:
+        git_diff_list*	mDiffList;
+    };
 
-	END_INTERNAL_DECL()
+    END_INTERNAL_DECL()
 
 }
 

@@ -22,24 +22,24 @@
 namespace Git
 {
 
-	BEGIN_INTERNAL_DECL()
+    BEGIN_INTERNAL_DECL()
 
     /**
-	 * @internal	GitWrap
-	 * @brief		The ObjectPrivate class
-	 *
-	 */
-	class ObjectPrivate : public RepoObject
-	{
-	public:
-		ObjectPrivate( RepositoryPrivate* repo, git_object* o );
-		~ObjectPrivate();
+     * @internal    GitWrap
+     * @brief       The ObjectPrivate class
+     *
+     */
+    class ObjectPrivate : public RepoObject
+    {
+    public:
+        ObjectPrivate( RepositoryPrivate* repo, git_object* o );
+        ~ObjectPrivate();
 
-	public:
-		git_object*			mObj;
-	};
+    public:
+        git_object* mObj;
+    };
 
-	END_INTERNAL_DECL()
+    END_INTERNAL_DECL()
 
 }
 

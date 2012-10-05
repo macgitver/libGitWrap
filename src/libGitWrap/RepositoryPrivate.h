@@ -25,27 +25,27 @@
 namespace Git
 {
 
-	namespace Internal
-	{
+    namespace Internal
+    {
 
-		/**
-		 * @internal
-		 * @ingroup GitWrap
-		 * @brief The RepositoryPrivate class
-		 *
-		 */
-		class RepositoryPrivate : public BasicObject
-		{
-		public:
-			RepositoryPrivate( git_repository* repo );
-			~RepositoryPrivate();
+        /**
+         * @internal
+         * @ingroup GitWrap
+         * @brief The RepositoryPrivate class
+         *
+         */
+        class RepositoryPrivate : public BasicObject
+        {
+        public:
+            RepositoryPrivate( git_repository* repo );
+            ~RepositoryPrivate();
 
-		public:
-			git_repository*			mRepo;
-			IndexPrivate*			mIndex;
-		};
+        public:
+            git_repository* mRepo;
+            IndexPrivate*   mIndex;
+        };
 
-	}
+    }
 
 }
 
