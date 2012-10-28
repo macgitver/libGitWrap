@@ -72,10 +72,21 @@ namespace Git
         bool fetchRecursive() const;
         IgnoreStrategy ignoreStrategy() const;
         UpdateStrategy updateStrategy() const;
-        ObjectId currentSHA1() const;
+        ObjectId headOid() const;
+        ObjectId wdOid() const;
+
+    public:
+        Git::Repository repository() const;
+
+        /**
+         * @brief Opens a submodule's repository.
+         * @return true, when repoitory could be opened successfully; false otherwise
+         */
+        bool open(Result &result);
 
     private:
-        Internal::GitPtr< Internal::RepositoryPrivate > mRepo;
+        Internal::GitPtr< Internal::RepositoryPrivate > mOwnerRepo;
+        Internal::GitPtr< Internal::RepositoryPrivate > mMyRepo;
         QString mName;
     };
 

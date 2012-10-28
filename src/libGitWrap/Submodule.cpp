@@ -39,26 +39,29 @@ namespace Git
     }
 
     Submodule::Submodule()
-        : mRepo( NULL )
+        : mOwnerRepo( NULL )
+        , mMyRepo( NULL )
     {
     }
 
     Submodule::Submodule( Internal::RepositoryPrivate* repo, const QString& name )
-        : mRepo( repo )
+        : mOwnerRepo( repo )
+        , mMyRepo( NULL )
         , mName( name )
     {
-        isValid();	// do a lookup, so we know we're valid at least once
     }
 
     Submodule::Submodule( const Submodule& other )
+        : mOwnerRepo( other.mOwnerRepo )
+        , mMyRepo( other.mMyRepo )
+        , mName( other.mName )
     {
-        mRepo = other.mRepo;
-        mName = other.mName;
     }
 
     Submodule& Submodule::operator=( const Submodule& other )
     {
-        mRepo = other.mRepo;
+        mOwnerRepo = other.mOwnerRepo;
+        mMyRepo = other.mMyRepo;
         mName = other.mName;
         return *this;
     }
@@ -69,19 +72,7 @@ namespace Git
 
     bool Submodule::isValid()
     {
-        if( !mRepo || mName.isEmpty() )
-        {
-            return false;
-        }
-
-        git_submodule* sm = getSM( mRepo, mName );
-        if( !sm )
-        {
-            mRepo = NULL;
-            mName = QString();
-        }
-
-        return mRepo;
+        return ( mOwnerRepo && !mName.isEmpty() );
     }
 
     QString Submodule::name() const
@@ -91,7 +82,7 @@ namespace Git
 
     QString Submodule::path() const
     {
-        git_submodule* sm = getSM( mRepo, mName );
+        git_submodule* sm = getSM( mOwnerRepo, mName );
         if( !sm )
         {
             return QString();
@@ -102,7 +93,7 @@ namespace Git
 
     QString Submodule::url() const
     {
-        git_submodule* sm = getSM( mRepo, mName );
+        git_submodule* sm = getSM( mOwnerRepo, mName );
         if( !sm )
         {
             return QString();
@@ -113,7 +104,7 @@ namespace Git
 
     bool Submodule::fetchRecursive() const
     {
-        git_submodule* sm = getSM( mRepo, mName );
+        git_submodule* sm = getSM( mOwnerRepo, mName );
         if( !sm )
         {
             return git_submodule_fetch_recurse_submodules( sm );
@@ -123,7 +114,7 @@ namespace Git
 
     Submodule::IgnoreStrategy Submodule::ignoreStrategy() const
     {
-        git_submodule* sm = getSM( mRepo, mName );
+        git_submodule* sm = getSM( mOwnerRepo, mName );
         if( !sm )
         {
             return None;
@@ -140,7 +131,7 @@ namespace Git
 
     Submodule::UpdateStrategy Submodule::updateStrategy() const
     {
-        git_submodule* sm = getSM( mRepo, mName );
+        git_submodule* sm = getSM( mOwnerRepo, mName );
         if( !sm )
         {
             return Ignore;
@@ -155,9 +146,9 @@ namespace Git
         }
     }
 
-    ObjectId Submodule::currentSHA1() const
+    ObjectId Submodule::headOid() const
     {
-        git_submodule* sm = getSM( mRepo, mName );
+        git_submodule* sm = getSM( mOwnerRepo, mName );
         if( !sm )
         {
             return ObjectId();
@@ -170,6 +161,46 @@ namespace Git
         }
 
         return ObjectId::fromRaw( oid->id );
+    }
+
+    ObjectId Submodule::wdOid() const
+    {
+        git_submodule* sm = getSM( mOwnerRepo, mName );
+        if( !sm )
+        {
+            return ObjectId();
+        }
+
+        const git_oid* oid = git_submodule_wd_oid( sm );
+        if( !oid )
+        {
+            return ObjectId();
+        }
+
+        return ObjectId::fromRaw( oid->id );
+    }
+
+    Repository Submodule::repository() const
+    {
+        return Repository( const_cast<Internal::RepositoryPrivate *>(*mMyRepo));
+    }
+
+    bool Submodule::open(Result &result GITWRAP_DEFAULT_TLSRESULT)
+    {
+        if (!result)
+            return false;
+
+        // already open?
+        if (mMyRepo)
+            return true;
+
+        git_repository *submodule_repo = 0;
+        result = git_submodule_open(&submodule_repo, getSM(mOwnerRepo, name()));
+        if (!result)
+            return false;
+
+        mMyRepo = new Internal::RepositoryPrivate( submodule_repo );
+        return true;
     }
 
 }
