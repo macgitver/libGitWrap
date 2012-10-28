@@ -36,6 +36,8 @@
 #include "RevisionWalkerPrivate.h"
 #include "Submodule.h"
 
+#include <QDir>
+
 namespace Git
 {
 
@@ -623,6 +625,23 @@ namespace Git
         }
 
         return QString::fromUtf8( git_repository_path( d->mRepo ) );
+    }
+
+    /**
+     * The main directory is either the working directory
+     * or the git directory, when the repository is bare.
+     *
+     * @return the name of the repository
+     */
+    QString Repository::name() const
+    {
+        QString repoPath;
+        if (isBare())
+            repoPath = QDir::cleanPath( gitPath() );
+        else
+            repoPath = QDir::cleanPath( basePath() );
+
+        return QFileInfo(repoPath).fileName();
     }
 
     Reference Repository::HEAD( Result& result )
