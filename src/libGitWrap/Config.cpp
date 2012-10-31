@@ -160,7 +160,7 @@ namespace Git
             return false;
         }
 
-        int rc = git_config_add_file_ondisk( d->mCfg, fileName.toLocal8Bit().constData(), priority );
+        int rc = git_config_add_file_ondisk( d->mCfg, fileName.toLocal8Bit().constData(), priority, 0 );
         if( rc < 0 )
         {
             return false;
@@ -169,10 +169,11 @@ namespace Git
         return true;
     }
 
-    static int read_config_cb( const char* key, const char* value, void* data )
+    static int read_config_cb( const git_config_entry* entry, void* data )
     {
         ConfigValues* cv = (ConfigValues*) data;
-        cv->insert( QString::fromUtf8( key ), QString::fromUtf8( value ) );
+        cv->insert( QString::fromUtf8( entry->name ),
+                    QString::fromUtf8( entry->value ) );
         return 0;
     }
 
