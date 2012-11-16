@@ -99,7 +99,7 @@ namespace Git
         git_tree* gitNewTree = (git_tree*) newTree.d->mObj;
 
         git_diff_list* diffList = NULL;
-        result = git_diff_tree_to_tree( d->repo()->mRepo, NULL, gitTree, gitNewTree, &diffList );
+        result = git_diff_tree_to_tree( &diffList, d->repo()->mRepo, gitTree, gitNewTree, NULL );
         if( !result )
         {
             return DiffList();
@@ -124,7 +124,8 @@ namespace Git
         git_tree* gitTree = (git_tree*) d->mObj;
 
         git_diff_list* diffList = NULL;
-        result = git_diff_index_to_tree( d->repo()->mRepo, NULL, gitTree, &diffList );
+
+        result = git_diff_index_to_tree( &diffList, d->repo()->mRepo, gitTree, NULL, NULL );
         if( !result )
         {
             return DiffList();
@@ -149,7 +150,7 @@ namespace Git
         git_tree* gitTree = (git_tree*) d->mObj;
 
         git_diff_list* diffList = NULL;
-        result = git_diff_workdir_to_tree( d->repo()->mRepo, NULL, gitTree, &diffList );
+        result = git_diff_workdir_to_tree( &diffList, d->repo()->mRepo, gitTree, NULL );
         if( !result )
         {
             return DiffList();
