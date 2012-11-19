@@ -87,6 +87,14 @@ namespace Git
         ObjectId headOid() const;
 
         /**
+         * @brief Returns the ObjectId, the owner repository's index points to.
+         * This ObjectId is empty, when the submodule is committed and unchanged.
+         *
+         * @return the oid in the owner repository's index or an empty ObjectId
+         */
+        ObjectId indexOid() const;
+
+        /**
          * @brief Returns the ObjectId of the submodule's 'HEAD' commit.
          * When the submodule is committed and unchanged, this will be the same as @see headOid().
          *

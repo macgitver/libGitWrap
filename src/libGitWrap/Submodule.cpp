@@ -163,6 +163,23 @@ namespace Git
         return ObjectId::fromRaw( oid->id );
     }
 
+    ObjectId Submodule::indexOid() const
+    {
+        git_submodule* sm = getSM( mOwnerRepo, mName );
+        if( !sm )
+        {
+            return ObjectId();
+        }
+
+        const git_oid* oid = git_submodule_index_oid( sm );
+        if( !oid )
+        {
+            return ObjectId();
+        }
+
+        return ObjectId::fromRaw( oid->id );
+    }
+
     ObjectId Submodule::wdOid() const
     {
         git_submodule* sm = getSM( mOwnerRepo, mName );
