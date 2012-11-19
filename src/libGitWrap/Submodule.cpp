@@ -220,4 +220,10 @@ namespace Git
         return true;
     }
 
+    void Submodule::close()
+    {
+        if (mMyRepo)
+            mMyRepo->deref();
+    }
+
 }

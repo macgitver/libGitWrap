@@ -111,6 +111,11 @@ namespace Git
          */
         bool open(Result &result);
 
+        /**
+         * @brief Dereferences the submodule's repository @see GitPtr.
+         */
+        void close();
+
     private:
         Internal::GitPtr< Internal::RepositoryPrivate > mOwnerRepo;
         Internal::GitPtr< Internal::RepositoryPrivate > mMyRepo;
