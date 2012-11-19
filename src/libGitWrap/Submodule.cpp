@@ -72,7 +72,7 @@ namespace Git
 
     bool Submodule::isValid()
     {
-        return ( mOwnerRepo && !mName.isEmpty() );
+        return ( mOwnerRepo && !mName.isEmpty() && getSM( mOwnerRepo, mName ) );
     }
 
     QString Submodule::name() const
