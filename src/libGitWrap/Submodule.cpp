@@ -222,8 +222,7 @@ namespace Git
 
     void Submodule::close()
     {
-        if (mMyRepo)
-            mMyRepo->deref();
+        mMyRepo = NULL;
     }
 
 }
