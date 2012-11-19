@@ -112,7 +112,7 @@ namespace Git
         bool open(Result &result);
 
         /**
-         * @brief Dereferences the submodule's repository @see GitPtr.
+         * @brief Decreases the @see GitPtr of the submodule's repository.
          */
         void close();
 
