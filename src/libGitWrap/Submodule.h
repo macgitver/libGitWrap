@@ -55,6 +55,11 @@ namespace Git
         };
 
     public:
+        /**
+         * @brief Submodule
+         * @param repo the owner repository
+         * @param name is used to lookup the submodule in the owner repository
+         */
         Submodule( Internal::RepositoryPrivate* repo, const QString& name );
         Submodule( const Submodule& other );
         Submodule();
@@ -72,10 +77,48 @@ namespace Git
         bool fetchRecursive() const;
         IgnoreStrategy ignoreStrategy() const;
         UpdateStrategy updateStrategy() const;
-        ObjectId currentSHA1() const;
+
+        /**
+         * @brief The returned ObjectId points from the owner reposiory's 'HEAD' commit to a commit in the submodule.
+         * An empty ObjectId is returned, when the submodule is not known in the owner repository's 'HEAD' commit.
+         *
+         * @return the oid in the owner repository's 'HEAD' commit or an empty ObjectId
+         */
+        ObjectId headOid() const;
+
+        /**
+         * @brief Returns the ObjectId, the owner repository's index points to.
+         * This ObjectId is empty, when the submodule is committed and unchanged.
+         *
+         * @return the oid in the owner repository's index or an empty ObjectId
+         */
+        ObjectId indexOid() const;
+
+        /**
+         * @brief Returns the ObjectId of the submodule's 'HEAD' commit.
+         * When the submodule is committed and unchanged, this will be the same as @see headOid().
+         *
+         * @return the submodule's 'HEAD' oid or an empty ObjectId
+         */
+        ObjectId wdOid() const;
+
+    public:
+        Git::Repository repository() const;
+
+        /**
+         * @brief Opens a submodule's repository.
+         * @return true, when repoitory could be opened successfully; false otherwise
+         */
+        bool open(Result &result);
+
+        /**
+         * @brief Closes the submodule's repository.
+         */
+        void close();
 
     private:
-        Internal::GitPtr< Internal::RepositoryPrivate > mRepo;
+        Internal::GitPtr< Internal::RepositoryPrivate > mOwnerRepo;
+        Internal::GitPtr< Internal::RepositoryPrivate > mMyRepo;
         QString mName;
     };
 
