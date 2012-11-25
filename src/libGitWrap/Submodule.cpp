@@ -22,47 +22,58 @@
 namespace Git
 {
 
-    static inline git_submodule* getSM( const Internal::RepositoryPrivate* repo, const QString& smName )
+    namespace Internal
     {
-        git_submodule* result = NULL;
 
-        if( repo && repo->mRepo )
+        class SubmodulePrivate : public BasicObject
         {
-            int rc = git_submodule_lookup( &result, repo->mRepo, smName.toUtf8().constData() );
-            if( rc < 0 )
-            {
-                return NULL;
-            }
-        }
+        public:
+            GitPtr< RepositoryPrivate > mOwnerRepo;
+            GitPtr< RepositoryPrivate > mMyRepo;
+            QString mName;
 
-        return result;
+        public:
+            inline git_submodule* getSM( Result& rc ) const
+            {
+                git_submodule* sm = NULL;
+
+                if( rc && mOwnerRepo && !mName.isEmpty() )
+                {
+                    rc = git_submodule_lookup( &sm, mOwnerRepo->mRepo,
+                                               mName.toUtf8().constData() );
+                    if( !rc )
+                    {
+                        return NULL;
+                    }
+                }
+
+                return sm;
+            }
+        };
+
     }
 
     Submodule::Submodule()
-        : mOwnerRepo( NULL )
-        , mMyRepo( NULL )
+        : d( NULL )
     {
     }
 
-    Submodule::Submodule( Internal::RepositoryPrivate* repo, const QString& name )
-        : mOwnerRepo( repo )
-        , mMyRepo( NULL )
-        , mName( name )
+    Submodule::Submodule( const Internal::GitPtr< Internal::RepositoryPrivate >& repo,
+                          const QString& name )
     {
+        d = new Internal::SubmodulePrivate;
+        d->mOwnerRepo = repo;
+        d->mName = name;
     }
 
     Submodule::Submodule( const Submodule& other )
-        : mOwnerRepo( other.mOwnerRepo )
-        , mMyRepo( other.mMyRepo )
-        , mName( other.mName )
+        : d( other.d )
     {
     }
 
     Submodule& Submodule::operator=( const Submodule& other )
     {
-        mOwnerRepo = other.mOwnerRepo;
-        mMyRepo = other.mMyRepo;
-        mName = other.mName;
+        d = other.d;
         return *this;
     }
 
@@ -72,53 +83,64 @@ namespace Git
 
     bool Submodule::isValid()
     {
-        return ( mOwnerRepo && !mName.isEmpty() && getSM( mOwnerRepo, mName ) );
+        Result r;
+        return d && ( d->getSM( r ) != NULL ) && r;
     }
 
     QString Submodule::name() const
     {
-        return mName;
+        return d ? d->mName : QString();
     }
 
-    QString Submodule::path() const
+    QString Submodule::path( Result& r ) const
     {
-        git_submodule* sm = getSM( mOwnerRepo, mName );
-        if( !sm )
+        git_submodule* sm = d ? d->getSM( r ) : NULL;
+
+        if( !r || !sm )
         {
             return QString();
         }
+
         const char* data = git_submodule_path( sm );
         return data ? QString::fromUtf8( data ) : QString();
     }
 
-    QString Submodule::url() const
+    QString Submodule::url( Result& r ) const
     {
-        git_submodule* sm = getSM( mOwnerRepo, mName );
-        if( !sm )
+        git_submodule* sm = d ? d->getSM( r ) : NULL;
+
+        if( !r || !sm )
         {
             return QString();
         }
+
         const char* data = git_submodule_url( sm );
         return data ? QString::fromUtf8( data ) : QString();
     }
 
     bool Submodule::fetchRecursive() const
     {
-        git_submodule* sm = getSM( mOwnerRepo, mName );
-        if( !sm )
+        Result r;
+        git_submodule* sm = d ? d->getSM( r ) : NULL;
+
+        if( !r || !sm )
         {
             return git_submodule_fetch_recurse_submodules( sm );
         }
+
         return false;
     }
 
     Submodule::IgnoreStrategy Submodule::ignoreStrategy() const
     {
-        git_submodule* sm = getSM( mOwnerRepo, mName );
-        if( !sm )
+        Result r;
+        git_submodule* sm = d ? d->getSM( r ) : NULL;
+
+        if( !r || !sm )
         {
             return None;
         }
+
         switch( git_submodule_ignore( sm ) )
         {
         case GIT_SUBMODULE_IGNORE_ALL:          return All;
@@ -131,11 +153,14 @@ namespace Git
 
     Submodule::UpdateStrategy Submodule::updateStrategy() const
     {
-        git_submodule* sm = getSM( mOwnerRepo, mName );
-        if( !sm )
+        Result r;
+        git_submodule* sm = d ? d->getSM( r ) : NULL;
+
+        if( !r || !sm )
         {
             return Ignore;
         }
+
         switch( git_submodule_update( sm ) )
         {
         default:
@@ -148,8 +173,10 @@ namespace Git
 
     ObjectId Submodule::headOid() const
     {
-        git_submodule* sm = getSM( mOwnerRepo, mName );
-        if( !sm )
+        Result r;
+        git_submodule* sm = d ? d->getSM( r ) : NULL;
+
+        if( !r || !sm )
         {
             return ObjectId();
         }
@@ -165,8 +192,10 @@ namespace Git
 
     ObjectId Submodule::indexOid() const
     {
-        git_submodule* sm = getSM( mOwnerRepo, mName );
-        if( !sm )
+        Result r;
+        git_submodule* sm = d ? d->getSM( r ) : NULL;
+
+        if( !r || !sm )
         {
             return ObjectId();
         }
@@ -182,8 +211,10 @@ namespace Git
 
     ObjectId Submodule::wdOid() const
     {
-        git_submodule* sm = getSM( mOwnerRepo, mName );
-        if( !sm )
+        Result r;
+        git_submodule* sm = d ? d->getSM( r ) : NULL;
+
+        if( !r || !sm )
         {
             return ObjectId();
         }
@@ -199,30 +230,35 @@ namespace Git
 
     Repository Submodule::repository() const
     {
-        return Repository( const_cast<Internal::RepositoryPrivate *>(*mMyRepo));
+        return Repository( d->mMyRepo );
     }
 
-    bool Submodule::open(Result &result GITWRAP_DEFAULT_TLSRESULT)
+    bool Submodule::isOpened() const
     {
-        if (!result)
+        return d && d->mMyRepo;
+    }
+
+    bool Submodule::open( Result& result )
+    {
+        if( !result || !d )
             return false;
 
         // already open?
-        if (mMyRepo)
+        if( d->mMyRepo )
             return true;
 
         git_repository *submodule_repo = 0;
-        result = git_submodule_open(&submodule_repo, getSM(mOwnerRepo, name()));
+        result = git_submodule_open(&submodule_repo, d->getSM( result ) );
         if (!result)
             return false;
 
-        mMyRepo = new Internal::RepositoryPrivate( submodule_repo );
+        d->mMyRepo = new Internal::RepositoryPrivate( submodule_repo );
         return true;
     }
 
     void Submodule::close()
     {
-        mMyRepo = NULL;
+        d->mMyRepo = NULL;
     }
 
 }

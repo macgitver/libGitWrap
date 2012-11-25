@@ -25,6 +25,7 @@ namespace Git
     namespace Internal
     {
         class RepositoryPrivate;
+        class SubmodulePrivate;
     }
 
     class ObjectId;
@@ -60,7 +61,8 @@ namespace Git
          * @param repo the owner repository
          * @param name is used to lookup the submodule in the owner repository
          */
-        Submodule( Internal::RepositoryPrivate* repo, const QString& name );
+        Submodule( const Internal::GitPtr< Internal::RepositoryPrivate >& repo,
+                   const QString& name );
         Submodule( const Submodule& other );
         Submodule();
         ~Submodule();
@@ -72,8 +74,9 @@ namespace Git
 
     public:
         QString name() const;
-        QString path() const;
-        QString url() const;
+        QString path( Result& r ) const;
+        QString url( Result& r ) const;
+
         bool fetchRecursive() const;
         IgnoreStrategy ignoreStrategy() const;
         UpdateStrategy updateStrategy() const;
@@ -116,10 +119,10 @@ namespace Git
          */
         void close();
 
+        bool isOpened() const;
+
     private:
-        Internal::GitPtr< Internal::RepositoryPrivate > mOwnerRepo;
-        Internal::GitPtr< Internal::RepositoryPrivate > mMyRepo;
-        QString mName;
+        Internal::GitPtr< Internal::SubmodulePrivate > d;
     };
 
     typedef QList< Submodule > SubmoduleList;
