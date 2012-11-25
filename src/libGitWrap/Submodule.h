@@ -122,6 +122,8 @@ namespace Git
         QString mName;
     };
 
+    typedef QList< Submodule > SubmoduleList;
+
 }
 
 Q_DECLARE_METATYPE( Git::Submodule )

@@ -20,6 +20,7 @@
 #include <QStringList>
 
 #include "GitWrap.hpp"
+#include "Submodule.h"
 
 namespace Git
 {
@@ -139,7 +140,7 @@ namespace Git
         DiffList diffTreeToWorkingDir( ObjectTree oldTree, Result& result GITWRAP_DEFAULT_TLSRESULT );
         DiffList diffIndexToWorkingDir( Result& result GITWRAP_DEFAULT_TLSRESULT );
 
-        QList< Submodule > submodules( Result& result GITWRAP_DEFAULT_TLSRESULT );
+        SubmoduleList submodules( Result& result GITWRAP_DEFAULT_TLSRESULT );
         Submodule submodule( const QString& name, Result& result GITWRAP_DEFAULT_TLSRESULT );
 
     private:
