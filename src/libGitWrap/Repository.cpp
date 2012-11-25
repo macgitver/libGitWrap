@@ -76,7 +76,7 @@ namespace Git
      * @brief       Create a Repository object
      * @param[in]   _d  Pointer to private data.
      */
-    Repository::Repository( Internal::RepositoryPrivate* _d )
+    Repository::Repository( const Internal::GitPtr< Internal::RepositoryPrivate >& _d )
         : d( _d )
     {
     }

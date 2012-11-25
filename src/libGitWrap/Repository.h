@@ -53,7 +53,7 @@ namespace Git
     class GITWRAP_API Repository
     {
     public:
-        explicit Repository( Internal::RepositoryPrivate* _d );
+        explicit Repository( const Internal::GitPtr< Internal::RepositoryPrivate >& _d );
         Repository();
         Repository( const Repository& other );
         Repository& operator=( const Repository& other );
