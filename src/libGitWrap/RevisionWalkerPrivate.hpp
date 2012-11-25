@@ -14,33 +14,35 @@
  *
  */
 
-#ifndef GIT_REFERENCE_PRIVATE_H
-#define GIT_REFERENCE_PRIVATE_H
+#ifndef GIT_REVWALKER_PRIVATE_H
+#define GIT_REVWALKER_PRIVATE_H
 
-#include "RepoObject.h"
+#include "GitWrapPrivate.hpp"
+#include "RepoObject.hpp"
 
 namespace Git
 {
 
-    BEGIN_INTERNAL_DECL()
-
-    /**
-     * @internal
-     * @ingroup     GitWrap
-     * @brief       The ReferencePrivate class
-     *
-     */
-    class ReferencePrivate : public RepoObject
+    namespace Internal
     {
-    public:
-        ReferencePrivate( RepositoryPrivate* repo, git_reference* ref );
-        ~ReferencePrivate();
 
-    public:
-        git_reference*  mRef;
-    };
+        /**
+         * @internal
+         * @ingroup     GitWrap
+         * @brief       The RevisionWalkerPrivate class
+         *
+         */
+        class RevisionWalkerPrivate : public RepoObject
+        {
+        public:
+            RevisionWalkerPrivate( const GitPtr< RepositoryPrivate >& repo, git_revwalk* walker );
+            ~RevisionWalkerPrivate();
 
-    END_INTERNAL_DECL()
+        public:
+            git_revwalk* mWalker;
+        };
+
+    }
 
 }
 

@@ -17,7 +17,7 @@
 #ifndef GIT_TREE_BUILDER_H
 #define GIT_TREE_BUILDER_H
 
-#include "GitWrap.h"
+#include "GitWrap.hpp"
 
 namespace Git
 {

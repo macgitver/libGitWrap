@@ -17,7 +17,7 @@
 #include "Submodule.h"
 #include "ObjectId.h"
 #include "Repository.h"
-#include "RepositoryPrivate.h"
+#include "RepositoryPrivate.hpp"
 
 namespace Git
 {

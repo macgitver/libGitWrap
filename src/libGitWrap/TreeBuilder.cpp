@@ -15,31 +15,33 @@
  */
 
 #include "TreeEntry.h"
-#include "TreeEntryPrivate.h"
+#include "TreeEntryPrivate.hpp"
 #include "TreeBuilder.h"
-#include "TreeBuilderPrivate.h"
+#include "TreeBuilderPrivate.hpp"
 #include "ObjectId.h"
 
-#include "RepositoryPrivate.h"
+#include "RepositoryPrivate.hpp"
 
 namespace Git
 {
 
-    BEGIN_INTERNAL_IMPL()
-
-    TreeBuilderPrivate::TreeBuilderPrivate( RepositoryPrivate* repo, git_treebuilder* builder )
-        : RepoObject( repo )
-        , mBuilder( builder )
+    namespace Internal
     {
-        Q_ASSERT( mBuilder );
-    }
 
-    TreeBuilderPrivate::~TreeBuilderPrivate()
-    {
-        git_treebuilder_free( mBuilder );
-    }
+        TreeBuilderPrivate::TreeBuilderPrivate( const GitPtr< RepositoryPrivate >& repo,
+                                                git_treebuilder* builder )
+            : RepoObject( repo )
+            , mBuilder( builder )
+        {
+            Q_ASSERT( mBuilder );
+        }
 
-    END_INTERNAL_IMPL()
+        TreeBuilderPrivate::~TreeBuilderPrivate()
+        {
+            git_treebuilder_free( mBuilder );
+        }
+
+    }
 
     TreeBuilder::TreeBuilder()
     {

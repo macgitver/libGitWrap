@@ -14,26 +14,26 @@
  *
  */
 
-#include "GitWrapPrivate.h"
+#include "GitWrapPrivate.hpp"
 #include "Result.h"
 #include "Index.h"
-#include "IndexPrivate.h"
+#include "IndexPrivate.hpp"
 #include "Remote.h"
-#include "RemotePrivate.h"
+#include "RemotePrivate.hpp"
 #include "Repository.h"
-#include "RepositoryPrivate.h"
+#include "RepositoryPrivate.hpp"
 #include "Reference.h"
-#include "ReferencePrivate.h"
+#include "ReferencePrivate.hpp"
 #include "DiffList.h"
-#include "DiffListPrivate.h"
+#include "DiffListPrivate.hpp"
 #include "Object.h"
-#include "ObjectPrivate.h"
+#include "ObjectPrivate.hpp"
 #include "ObjectTag.h"
 #include "ObjectTree.h"
 #include "ObjectBlob.h"
 #include "ObjectCommit.h"
 #include "RevisionWalker.h"
-#include "RevisionWalkerPrivate.h"
+#include "RevisionWalkerPrivate.hpp"
 #include "Submodule.h"
 
 #include <QDir>
@@ -644,7 +644,7 @@ namespace Git
         return QFileInfo(repoPath).fileName();
     }
 
-    Reference Repository::HEAD( Result& result )
+    Reference Repository::HEAD( Result& result ) const
     {
         if( !result )
         {

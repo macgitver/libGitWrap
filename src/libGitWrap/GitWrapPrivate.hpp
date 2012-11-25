@@ -21,14 +21,8 @@
 
 #include "git2.h"
 
-#include "GitWrap.h"
+#include "GitWrap.hpp"
 #include "Result.h"
-
-#define BEGIN_INTERNAL_DECL()   namespace Internal {
-#define END_INTERNAL_DECL()     }
-
-#define BEGIN_INTERNAL_IMPL()   namespace Internal {
-#define END_INTERNAL_IMPL()     }
 
 namespace Git
 {
@@ -137,6 +131,12 @@ namespace Git
 
         template< class T >
         inline GitPtr< T >::operator const T*() const
+        {
+            return d;
+        }
+
+        template< class T >
+        inline T* GitPtr< T >::data() const
         {
             return d;
         }

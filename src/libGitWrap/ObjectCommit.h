@@ -20,7 +20,7 @@
 #include <QDebug>
 #include <QList>
 
-#include "GitWrap.h"
+#include "GitWrap.hpp"
 #include "ObjectId.h"
 #include "Object.h"
 #include "Signature.h"

@@ -14,35 +14,43 @@
  *
  */
 
-#ifndef GIT_REVWALKER_PRIVATE_H
-#define GIT_REVWALKER_PRIVATE_H
+#ifndef GIT_BASIC_OBJECT_H
+#define GIT_BASIC_OBJECT_H
 
-#include "GitWrapPrivate.h"
-#include "RepoObject.h"
+#include <QAtomicInt>
+
+#include "GitWrapPrivate.hpp"
 
 namespace Git
 {
-
-    BEGIN_INTERNAL_DECL()
-
-    /**
-     * @internal
-     * @ingroup     GitWrap
-     * @brief       The RevisionWalkerPrivate class
-     *
-     */
-    class RevisionWalkerPrivate : public RepoObject
+    namespace Internal
     {
-    public:
-        RevisionWalkerPrivate( RepositoryPrivate* repo, git_revwalk* walker );
-        ~RevisionWalkerPrivate();
 
-    public:
-        git_revwalk* mWalker;
-    };
+        class RepositoryPrivate;
 
-    END_INTERNAL_DECL()
+        /**
+         * @internal
+         * @ingroup GitWrap
+         * @brief The BaseObject class
+         *
+         */
+        class BasicObject
+        {
+        public:
+            BasicObject();
+            virtual ~BasicObject();
+
+        public:
+            void ref();
+            void deref();
+
+        private:
+            QAtomicInt mRefCounter;
+        };
+
+    }
 
 }
 
 #endif
+

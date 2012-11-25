@@ -17,31 +17,32 @@
 #ifndef GIT_DIFFLIST_PRIVATE_H
 #define GIT_DIFFLIST_PRIVATE_H
 
-#include "GitWrapPrivate.h"
-#include "RepoObject.h"
+#include "GitWrapPrivate.hpp"
+#include "RepoObject.hpp"
 
 namespace Git
 {
 
-    BEGIN_INTERNAL_DECL()
-
-    /**
-     * @internal
-     * @ingroup     GitWrap
-     * @brief       The DiffListPrivate class
-     *
-     */
-    class DiffListPrivate : public RepoObject
+    namespace Internal
     {
-    public:
-        DiffListPrivate( RepositoryPrivate* repo, git_diff_list* difflist );
-        ~DiffListPrivate();
 
-    public:
-        git_diff_list*	mDiffList;
-    };
+        /**
+         * @internal
+         * @ingroup     GitWrap
+         * @brief       The DiffListPrivate class
+         *
+         */
+        class DiffListPrivate : public RepoObject
+        {
+        public:
+            DiffListPrivate( const GitPtr< RepositoryPrivate >& repo, git_diff_list* difflist );
+            ~DiffListPrivate();
 
-    END_INTERNAL_DECL()
+        public:
+            git_diff_list*	mDiffList;
+        };
+
+    }
 
 }
 

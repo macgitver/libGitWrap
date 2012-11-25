@@ -19,7 +19,7 @@
 
 #include <QString>
 
-#include "GitWrap.h"
+#include "GitWrap.hpp"
 
 namespace Git
 {

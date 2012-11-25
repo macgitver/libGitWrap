@@ -15,7 +15,7 @@
  */
 
 #include "Remote.h"
-#include "RemotePrivate.h"
+#include "RemotePrivate.hpp"
 #include "Reference.h"
 #include "RefSpec.h"
 
@@ -25,7 +25,7 @@ namespace Git
     namespace Internal
     {
 
-        RemotePrivate::RemotePrivate( RepositoryPrivate* repo, git_remote* remote )
+        RemotePrivate::RemotePrivate( const GitPtr<RepositoryPrivate>& repo, git_remote* remote )
             : RepoObject( repo )
             , mRemote( remote )
         {

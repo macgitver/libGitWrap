@@ -17,7 +17,7 @@
 #ifndef GIT_BACKGROUND_FETCH_H
 #define GIT_BACKGROUND_FETCH_H
 
-#include "GitWrap.h"
+#include "GitWrap.hpp"
 #include "BackgroundTasks.h"
 #include "Repository.h"
 #include "Remote.h"

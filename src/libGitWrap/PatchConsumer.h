@@ -17,7 +17,7 @@
 #ifndef GITWRAP_PATCH_CONSUMER_H
 #define GITWRAP_PATCH_CONSUMER_H
 
-#include "GitWrap.h"
+#include "GitWrap.hpp"
 
 namespace Git
 {

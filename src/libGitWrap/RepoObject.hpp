@@ -14,37 +14,37 @@
  *
  */
 
-#ifndef GIT_REMOTE_PRIVATE_H
-#define GIT_REMOTE_PRIVATE_H
+#ifndef GIT_REPO_OBJECT_H
+#define GIT_REPO_OBJECT_H
 
-#include "GitWrapPrivate.h"
-#include "RepoObject.h"
+#include "RepositoryPrivate.hpp"
 
 namespace Git
 {
-
-    BEGIN_INTERNAL_DECL()
-
-    /**
-     * @internal
-     * @ingroup GitWrap
-     * @brief The RemotePrivate class
-     *
-     */
-    class RemotePrivate : public RepoObject
+    namespace Internal
     {
-    public:
-        RemotePrivate( RepositoryPrivate* repo, git_remote* remote );
-        ~RemotePrivate();
 
-    public:
-        git_remote*         mRemote;
-        git_off_t           mBytes;
-        git_transfer_progress mStats;
-    };
+        /**
+         * @internal
+         * @ingroup GitWrap
+         * @brief The RepoObject class
+         *
+         */
+        class RepoObject : public BasicObject
+        {
+        public:
+            RepoObject( const GitPtr< RepositoryPrivate >& repo );
+            ~RepoObject();
 
-    END_INTERNAL_DECL()
+            RepositoryPrivate* repo() const;
+
+        protected:
+            GitPtr< RepositoryPrivate > mRepo;
+        };
+
+    }
 
 }
 
 #endif
+

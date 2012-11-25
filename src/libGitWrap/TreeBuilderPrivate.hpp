@@ -14,34 +14,34 @@
  *
  */
 
-#ifndef GIT_TREE_ENTRY_PRIVATE_H
-#define GIT_TREE_ENTRY_PRIVATE_H
+#ifndef GIT_TREEBUILDER_PRIVATE_H
+#define GIT_TREEBUILDER_PRIVATE_H
 
-#include "GitWrapPrivate.h"
-#include "RepoObject.h"
+#include "GitWrapPrivate.hpp"
+#include "RepoObject.hpp"
 
 namespace Git
 {
 
-    BEGIN_INTERNAL_DECL()
-
-    /**
-     * @internal
-     * @ingroup     GitWrap
-     * @brief       The TreeEntryPrivate class
-     */
-    class TreeEntryPrivate : public BasicObject
+    namespace Internal
     {
-    public:
-        TreeEntryPrivate( const git_tree_entry* entry, bool unmanaged = false );
-        ~TreeEntryPrivate();
 
-    public:
-        const git_tree_entry*   mEntry;
-        bool                    mUnmanaged;
-    };
+        /**
+         * @internal
+         * @ingroup     GitWrap
+         * @brief       The TreeBuilderPrivate class
+         */
+        class TreeBuilderPrivate : public RepoObject
+        {
+        public:
+            TreeBuilderPrivate( const GitPtr< RepositoryPrivate >& repo, git_treebuilder* builder );
+            ~TreeBuilderPrivate();
 
-    END_INTERNAL_DECL()
+        public:
+            git_treebuilder* mBuilder;
+        };
+
+    }
 
 }
 

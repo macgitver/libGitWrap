@@ -21,7 +21,7 @@
 #include <QQueue>
 #include <QMutex>
 
-#include "GitWrap.h"
+#include "GitWrap.hpp"
 
 namespace Git
 {

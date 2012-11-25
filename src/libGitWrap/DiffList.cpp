@@ -14,13 +14,13 @@
  *
  */
 
-#include "GitWrapPrivate.h"
+#include "GitWrapPrivate.hpp"
 #include "ChangeListConsumer.h"
 #include "PatchConsumer.h"
 #include "DiffList.h"
 #include "Repository.h"
-#include "RepositoryPrivate.h"
-#include "DiffListPrivate.h"
+#include "RepositoryPrivate.hpp"
+#include "DiffListPrivate.hpp"
 
 namespace Git
 {
@@ -28,7 +28,8 @@ namespace Git
     namespace Internal
     {
 
-        DiffListPrivate::DiffListPrivate( RepositoryPrivate* repo, git_diff_list* difflist )
+        DiffListPrivate::DiffListPrivate( const GitPtr< RepositoryPrivate >& repo,
+                                          git_diff_list* difflist )
             : RepoObject( repo )
             , mDiffList( difflist )
         {

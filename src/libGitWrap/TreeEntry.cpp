@@ -16,29 +16,30 @@
 
 #include "ObjectId.h"
 #include "TreeEntry.h"
-#include "TreeEntryPrivate.h"
+#include "TreeEntryPrivate.hpp"
 
 namespace Git
 {
 
-    BEGIN_INTERNAL_IMPL()
-
-    TreeEntryPrivate::TreeEntryPrivate( const git_tree_entry* entry, bool unmanaged )
-        : mEntry( entry )
-        , mUnmanaged( unmanaged )
+    namespace Internal
     {
-        Q_ASSERT( mEntry );
-    }
 
-    TreeEntryPrivate::~TreeEntryPrivate()
-    {
-        if( !mUnmanaged )
+        TreeEntryPrivate::TreeEntryPrivate( const git_tree_entry* entry, bool unmanaged )
+            : mEntry( entry )
+            , mUnmanaged( unmanaged )
         {
-            git_tree_entry_free( const_cast< git_tree_entry* >( mEntry ) );
+            Q_ASSERT( mEntry );
         }
-    }
 
-    END_INTERNAL_IMPL()
+        TreeEntryPrivate::~TreeEntryPrivate()
+        {
+            if( !mUnmanaged )
+            {
+                git_tree_entry_free( const_cast< git_tree_entry* >( mEntry ) );
+            }
+        }
+
+    }
 
     TreeEntry::TreeEntry()
     {

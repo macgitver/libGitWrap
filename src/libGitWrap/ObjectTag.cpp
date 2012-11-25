@@ -14,10 +14,10 @@
  *
  */
 
-#include "GitWrapPrivate.h"
+#include "GitWrapPrivate.hpp"
 
 #include "ObjectTag.h"
-#include "ObjectPrivate.h"
+#include "ObjectPrivate.hpp"
 
 namespace Git
 {

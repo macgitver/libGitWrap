@@ -17,7 +17,7 @@
 #ifndef GIT_REVISION_WALKER_H
 #define GIT_REVISION_WALKER_H
 
-#include "GitWrap.h"
+#include "GitWrap.hpp"
 
 namespace Git
 {

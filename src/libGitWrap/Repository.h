@@ -19,7 +19,7 @@
 
 #include <QStringList>
 
-#include "GitWrap.h"
+#include "GitWrap.hpp"
 
 namespace Git
 {
@@ -99,7 +99,7 @@ namespace Git
 
         StatusHash statusHash( Result& result GITWRAP_DEFAULT_TLSRESULT );
 
-        Reference HEAD( Result& result GITWRAP_DEFAULT_TLSRESULT );
+        Reference HEAD( Result& result GITWRAP_DEFAULT_TLSRESULT ) const;
         Reference lookupRef( const QString& refName, Result& result GITWRAP_DEFAULT_TLSRESULT );
         ObjectId resolveRef( const QString& refName, Result& result GITWRAP_DEFAULT_TLSRESULT );
 

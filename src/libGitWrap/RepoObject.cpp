@@ -14,9 +14,9 @@
  *
  */
 
-#include "GitWrapPrivate.h"
-#include "RepositoryPrivate.h"
-#include "RepoObject.h"
+#include "GitWrapPrivate.hpp"
+#include "RepositoryPrivate.hpp"
+#include "RepoObject.hpp"
 
 namespace Git
 {
@@ -24,49 +24,19 @@ namespace Git
     namespace Internal
     {
 
-        BasicObject::BasicObject()
-        {
-        }
-
-        BasicObject::~BasicObject()
-        {
-        }
-
-        void BasicObject::ref()
-        {
-            mRefCounter.ref();
-        }
-
-        void BasicObject::deref()
-        {
-            if( !mRefCounter.deref() )
-            {
-                delete this;
-            }
-        }
-
-        RepoObject::RepoObject( RepositoryPrivate* repo )
+        RepoObject::RepoObject( const GitPtr< RepositoryPrivate >& repo )
             : mRepo( repo )
         {
-            Q_ASSERT( mRepo );
-            if( mRepo )
-            {
-                mRepo->ref();
-            }
+            Q_ASSERT( *mRepo );
         }
 
         RepoObject::~RepoObject()
         {
-            if( mRepo )
-            {
-                mRepo->deref();
-                mRepo = NULL;
-            }
         }
 
         RepositoryPrivate* RepoObject::repo() const
         {
-            return mRepo;
+            return mRepo.data();
         }
 
     }

@@ -15,24 +15,25 @@
  */
 
 #include "Config.h"
-#include "ConfigPrivate.h"
+#include "ConfigPrivate.hpp"
 
 namespace Git
 {
 
-    BEGIN_INTERNAL_IMPL()
-
-    ConfigPrivate::ConfigPrivate( git_config* cfg )
-        : mCfg( cfg )
+    namespace Internal
     {
-    }
 
-    ConfigPrivate::~ConfigPrivate()
-    {
-        git_config_free( mCfg );
-    }
+        ConfigPrivate::ConfigPrivate( git_config* cfg )
+            : mCfg( cfg )
+        {
+        }
 
-    END_INTERNAL_IMPL()
+        ConfigPrivate::~ConfigPrivate()
+        {
+            git_config_free( mCfg );
+        }
+
+    }
 
     Config::Config()
     {

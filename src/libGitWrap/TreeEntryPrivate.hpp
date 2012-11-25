@@ -14,56 +14,32 @@
  *
  */
 
-#ifndef GIT_REPO_OBJECT_H
-#define GIT_REPO_OBJECT_H
+#ifndef GIT_TREE_ENTRY_PRIVATE_H
+#define GIT_TREE_ENTRY_PRIVATE_H
 
-#include <QAtomicInt>
-
-#include "GitWrapPrivate.h"
+#include "GitWrapPrivate.hpp"
+#include "BasicObject.hpp"
 
 namespace Git
 {
+
     namespace Internal
     {
 
-        class RepositoryPrivate;
-
         /**
          * @internal
-         * @ingroup GitWrap
-         * @brief The BaseObject class
-         *
+         * @ingroup     GitWrap
+         * @brief       The TreeEntryPrivate class
          */
-        class BasicObject
+        class TreeEntryPrivate : public BasicObject
         {
         public:
-            BasicObject();
-            virtual ~BasicObject();
+            TreeEntryPrivate( const git_tree_entry* entry, bool unmanaged = false );
+            ~TreeEntryPrivate();
 
         public:
-            void ref();
-            void deref();
-
-        private:
-            QAtomicInt mRefCounter;
-        };
-
-        /**
-         * @internal
-         * @ingroup GitWrap
-         * @brief The RepoObject class
-         *
-         */
-        class RepoObject : public BasicObject
-        {
-        public:
-            RepoObject( RepositoryPrivate* repo );
-            ~RepoObject();
-
-            RepositoryPrivate* repo() const;
-
-        protected:
-            RepositoryPrivate* mRepo;
+            const git_tree_entry*   mEntry;
+            bool                    mUnmanaged;
         };
 
     }
@@ -71,4 +47,3 @@ namespace Git
 }
 
 #endif
-

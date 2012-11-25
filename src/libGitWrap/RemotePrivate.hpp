@@ -14,31 +14,38 @@
  *
  */
 
-#ifndef GIT_OBJECT_TAG_H
-#define GIT_OBJECT_TAG_H
+#ifndef GIT_REMOTE_PRIVATE_H
+#define GIT_REMOTE_PRIVATE_H
 
-#include "GitWrap.hpp"
-#include "ObjectId.h"
-#include "Object.h"
+#include "GitWrapPrivate.hpp"
+#include "RepoObject.hpp"
 
 namespace Git
 {
 
-    /**
-     * @ingroup     GitWrap
-     * @brief       Represents a git tag reference.
-     *
-     */
-    class GITWRAP_API ObjectTag : public Object
+    namespace Internal
     {
-    public:
-        ObjectTag();
-        ObjectTag( Internal::ObjectPrivate* _d );
-        ObjectTag( const ObjectTag& o );
-    };
+
+        /**
+         * @internal
+         * @ingroup GitWrap
+         * @brief The RemotePrivate class
+         *
+         */
+        class RemotePrivate : public RepoObject
+        {
+        public:
+            RemotePrivate( const GitPtr< RepositoryPrivate >& repo, git_remote* remote );
+            ~RemotePrivate();
+
+        public:
+            git_remote*         mRemote;
+            git_off_t           mBytes;
+            git_transfer_progress mStats;
+        };
+
+    }
 
 }
-
-Q_DECLARE_METATYPE( Git::ObjectTag )
 
 #endif

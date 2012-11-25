@@ -14,39 +14,40 @@
  *
  */
 
-#include "GitWrapPrivate.h"
+#include "GitWrapPrivate.hpp"
 #include "Index.h"
 #include "Repository.h"
-#include "RepositoryPrivate.h"
-#include "IndexPrivate.h"
+#include "RepositoryPrivate.hpp"
+#include "IndexPrivate.hpp"
 
 namespace Git
 {
 
-    BEGIN_INTERNAL_IMPL()
-
-    IndexPrivate::IndexPrivate( RepositoryPrivate* repo, git_index* index )
-        : RepoObject( repo )
-        , mIndex( index )
+    namespace Internal
     {
-        Q_ASSERT( index );
-    }
 
-    IndexPrivate::~IndexPrivate()
-    {
-        Q_ASSERT( mRepo );
-        if( mRepo->mIndex == this )
+        IndexPrivate::IndexPrivate( const GitPtr< RepositoryPrivate >& repo, git_index* index )
+            : RepoObject( repo )
+            , mIndex( index )
         {
-            mRepo->mIndex = NULL;
+            Q_ASSERT( index );
         }
 
-        if( mIndex )
+        IndexPrivate::~IndexPrivate()
         {
-            git_index_free( mIndex );
-        }
-    }
+            Q_ASSERT( mRepo );
+            if( mRepo->mIndex == this )
+            {
+                mRepo->mIndex = NULL;
+            }
 
-    END_INTERNAL_IMPL()
+            if( mIndex )
+            {
+                git_index_free( mIndex );
+            }
+        }
+
+    }
 
     Index::Index()
     {

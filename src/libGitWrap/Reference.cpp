@@ -14,8 +14,8 @@
  *
  */
 
-#include "GitWrapPrivate.h"
-#include "ReferencePrivate.h"
+#include "GitWrapPrivate.hpp"
+#include "ReferencePrivate.hpp"
 #include "ObjectId.h"
 #include "Repository.h"
 #include "Reference.h"
@@ -23,24 +23,26 @@
 namespace Git
 {
 
-    BEGIN_INTERNAL_IMPL()
-
-    ReferencePrivate::ReferencePrivate( RepositoryPrivate* repo, git_reference* ref )
-        : RepoObject( repo )
-        , mRef( ref )
+    namespace Internal
     {
-        Q_ASSERT( ref );
-    }
 
-    ReferencePrivate::~ReferencePrivate()
-    {
-        if( mRef )
+        ReferencePrivate::ReferencePrivate( const GitPtr< RepositoryPrivate >& repo,
+                                            git_reference* ref )
+            : RepoObject( repo )
+            , mRef( ref )
         {
-            git_reference_free( mRef );
+            Q_ASSERT( ref );
         }
-    }
 
-    END_INTERNAL_IMPL()
+        ReferencePrivate::~ReferencePrivate()
+        {
+            if( mRef )
+            {
+                git_reference_free( mRef );
+            }
+        }
+
+    }
 
     Reference::Reference()
     {

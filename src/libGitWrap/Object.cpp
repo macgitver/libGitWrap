@@ -14,34 +14,35 @@
  *
  */
 
-#include "GitWrapPrivate.h"
+#include "GitWrapPrivate.hpp"
 #include "ObjectId.h"
 #include "Object.h"
 #include "ObjectTree.h"
 #include "ObjectTag.h"
 #include "ObjectCommit.h"
 #include "ObjectBlob.h"
-#include "ObjectPrivate.h"
+#include "ObjectPrivate.hpp"
 #include "Repository.h"
 
 namespace Git
 {
 
-    BEGIN_INTERNAL_IMPL()
-
-    ObjectPrivate::ObjectPrivate( RepositoryPrivate* repo, git_object* o )
-        : RepoObject( repo )
-        , mObj( o )
+    namespace Internal
     {
-        Q_ASSERT( o );
-    }
 
-    ObjectPrivate::~ObjectPrivate()
-    {
-        git_object_free( mObj );
-    }
+        ObjectPrivate::ObjectPrivate( const GitPtr< RepositoryPrivate >& repo, git_object* o )
+            : RepoObject( repo )
+            , mObj( o )
+        {
+            Q_ASSERT( o );
+        }
 
-    END_INTERNAL_IMPL()
+        ObjectPrivate::~ObjectPrivate()
+        {
+            git_object_free( mObj );
+        }
+
+    }
 
     Object::Object( Internal::ObjectPrivate* _d )
         : d( _d )

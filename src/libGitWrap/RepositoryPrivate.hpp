@@ -14,34 +14,39 @@
  *
  */
 
-#ifndef GIT_INDEX_PRIVATE_H
-#define GIT_INDEX_PRIVATE_H
+#ifndef GIT_REPOSITORY_PRIVATE_H
+#define GIT_REPOSITORY_PRIVATE_H
 
-#include "GitWrapPrivate.h"
-#include "RepoObject.h"
+#include <QMutex>
+
+#include "GitWrapPrivate.hpp"
+#include "BasicObject.hpp"
 
 namespace Git
 {
 
-    BEGIN_INTERNAL_DECL()
-
-    /**
-     * @internal
-     * @ingroup GitWrap
-     * @brief The IndexPrivate class
-     *
-     */
-    class IndexPrivate : public RepoObject
+    namespace Internal
     {
-    public:
-        IndexPrivate( RepositoryPrivate* repo, git_index* index );
-        ~IndexPrivate();
 
-    public:
-        git_index*  mIndex;
-    };
+        /**
+         * @internal
+         * @ingroup GitWrap
+         * @brief The RepositoryPrivate class
+         *
+         */
+        class RepositoryPrivate : public BasicObject
+        {
+        public:
+            RepositoryPrivate( git_repository* repo );
+            ~RepositoryPrivate();
 
-    END_INTERNAL_DECL()
+        public:
+            git_repository* mRepo;
+            IndexPrivate*   mIndex;
+        };
+
+    }
+
 }
 
 #endif

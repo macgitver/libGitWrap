@@ -14,13 +14,8 @@
  *
  */
 
-#ifndef GIT_REPOSITORY_PRIVATE_H
-#define GIT_REPOSITORY_PRIVATE_H
-
-#include <QMutex>
-
-#include "GitWrapPrivate.h"
-#include "RepoObject.h"
+#include "GitWrapPrivate.hpp"
+#include "BasicObject.hpp"
 
 namespace Git
 {
@@ -30,23 +25,20 @@ namespace Git
 
         /**
          * @internal
-         * @ingroup GitWrap
-         * @brief The RepositoryPrivate class
+         * @ingroup     GitWrap
+         * @brief       The ConfigPrivate class
          *
          */
-        class RepositoryPrivate : public BasicObject
+        class ConfigPrivate : public BasicObject
         {
         public:
-            RepositoryPrivate( git_repository* repo );
-            ~RepositoryPrivate();
+            ConfigPrivate( git_config* cfg );
+            ~ConfigPrivate();
 
         public:
-            git_repository* mRepo;
-            IndexPrivate*   mIndex;
+            git_config* mCfg;
         };
 
     }
 
 }
-
-#endif

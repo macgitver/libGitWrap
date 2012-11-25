@@ -62,6 +62,8 @@ namespace Git
             operator T*();
             operator const T*() const;
 
+            T* data() const;
+
         private:
             T* d;
         };

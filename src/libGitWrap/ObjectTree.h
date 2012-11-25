@@ -17,7 +17,7 @@
 #ifndef GIT_OBJECT_TREE_H
 #define GIT_OBJECT_TREE_H
 
-#include "GitWrap.h"
+#include "GitWrap.hpp"
 #include "ObjectId.h"
 #include "Object.h"
 #include "TreeEntry.h"

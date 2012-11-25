@@ -17,7 +17,7 @@
 #ifndef GIT_REMOTE_H
 #define GIT_REMOTE_H
 
-#include "GitWrap.h"
+#include "GitWrap.hpp"
 
 namespace Git
 {

@@ -15,28 +15,30 @@
  */
 
 #include "RevisionWalker.h"
-#include "RevisionWalkerPrivate.h"
+#include "RevisionWalkerPrivate.hpp"
 #include "ObjectId.h"
 #include "Reference.h"
 
 namespace Git
 {
 
-    BEGIN_INTERNAL_IMPL()
-
-    RevisionWalkerPrivate::RevisionWalkerPrivate( RepositoryPrivate* repo, git_revwalk* walker )
-        : RepoObject( repo )
-        , mWalker( walker )
+    namespace Internal
     {
-        Q_ASSERT( walker );
-    }
 
-    RevisionWalkerPrivate::~RevisionWalkerPrivate()
-    {
-        git_revwalk_free( mWalker );
-    }
+        RevisionWalkerPrivate::RevisionWalkerPrivate( const GitPtr< RepositoryPrivate >& repo,
+                                                      git_revwalk* walker )
+            : RepoObject( repo )
+            , mWalker( walker )
+        {
+            Q_ASSERT( walker );
+        }
 
-    END_INTERNAL_IMPL()
+        RevisionWalkerPrivate::~RevisionWalkerPrivate()
+        {
+            git_revwalk_free( mWalker );
+        }
+
+    }
 
     RevisionWalker::RevisionWalker()
     {

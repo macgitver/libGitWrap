@@ -11,6 +11,7 @@ INCLUDE_DIRECTORIES(
 
 SET( SRC_FILES
 
+    BasicObject.cpp
     Config.cpp
     ChangeListConsumer.cpp
     DiffList.cpp
@@ -45,7 +46,7 @@ SET( PUB_HDR_FILES
     Result.h
     Config.h
     ChangeListConsumer.h
-    GitWrap.h
+    GitWrap.hpp
     DiffList.h
     Index.h
     Object.h
@@ -71,18 +72,19 @@ SET( PUB_HDR_FILES
 
 SET( PRI_HDR_FILES
 
-    GitWrapPrivate.h
-    ConfigPrivate.h
-    DiffListPrivate.h
-    IndexPrivate.h
-    ObjectPrivate.h
-    ReferencePrivate.h
-    RemotePrivate.h
-    RepoObject.h
-    RepositoryPrivate.h
-    RevisionWalkerPrivate.h
-    TreeBuilderPrivate.h
-    TreeEntryPrivate.h
+    GitWrapPrivate.hpp
+    BasicObject.hpp
+    ConfigPrivate.hpp
+    DiffListPrivate.hpp
+    IndexPrivate.hpp
+    ObjectPrivate.hpp
+    ReferencePrivate.hpp
+    RemotePrivate.hpp
+    RepoObject.hpp
+    RepositoryPrivate.hpp
+    RevisionWalkerPrivate.hpp
+    TreeBuilderPrivate.hpp
+    TreeEntryPrivate.hpp
 )
 
 SET( HDR_FILES ${PRI_HDR_FILES} ${PUB_HDR_FILES} )

@@ -17,7 +17,7 @@
 #ifndef GITWRAP_CONFIG_H
 #define GITWRAP_CONFIG_H
 
-#include "GitWrap.h"
+#include "GitWrap.hpp"
 
 namespace Git
 {

@@ -14,33 +14,35 @@
  *
  */
 
-#ifndef GIT_TREEBUILDER_PRIVATE_H
-#define GIT_TREEBUILDER_PRIVATE_H
+#ifndef GIT_INDEX_PRIVATE_H
+#define GIT_INDEX_PRIVATE_H
 
-#include "GitWrapPrivate.h"
-#include "RepoObject.h"
+#include "GitWrapPrivate.hpp"
+#include "RepoObject.hpp"
 
 namespace Git
 {
 
-    BEGIN_INTERNAL_DECL()
-
-    /**
-     * @internal
-     * @ingroup     GitWrap
-     * @brief       The TreeBuilderPrivate class
-     */
-    class TreeBuilderPrivate : public RepoObject
+    namespace Internal
     {
-    public:
-        TreeBuilderPrivate( RepositoryPrivate* repo, git_treebuilder* builder );
-        ~TreeBuilderPrivate();
 
-    public:
-        git_treebuilder* mBuilder;
-    };
+        /**
+         * @internal
+         * @ingroup GitWrap
+         * @brief The IndexPrivate class
+         *
+         */
+        class IndexPrivate : public RepoObject
+        {
+        public:
+            IndexPrivate( const GitPtr< RepositoryPrivate >& repo, git_index* index );
+            ~IndexPrivate();
 
-    END_INTERNAL_DECL()
+        public:
+            git_index*  mIndex;
+        };
+
+    }
 
 }
 
