@@ -142,7 +142,7 @@ namespace Git
         case GIT_SUBMODULE_UPDATE_CHECKOUT: return Checkout;
         case GIT_SUBMODULE_UPDATE_MERGE:    return Merge;
         case GIT_SUBMODULE_UPDATE_REBASE:   return Rebase;
-            // libgit2 doesn't support None
+        case GIT_SUBMODULE_UPDATE_NONE:     return Ignore;
         }
     }
 
