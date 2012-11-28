@@ -181,7 +181,7 @@ namespace Git
             return ObjectId();
         }
 
-        const git_oid* oid = git_submodule_head_oid( sm );
+        const git_oid* oid = git_submodule_head_id( sm );
         if( !oid )
         {
             return ObjectId();
@@ -200,7 +200,7 @@ namespace Git
             return ObjectId();
         }
 
-        const git_oid* oid = git_submodule_index_oid( sm );
+        const git_oid* oid = git_submodule_index_id( sm );
         if( !oid )
         {
             return ObjectId();
@@ -219,7 +219,7 @@ namespace Git
             return ObjectId();
         }
 
-        const git_oid* oid = git_submodule_wd_oid( sm );
+        const git_oid* oid = git_submodule_wd_id( sm );
         if( !oid )
         {
             return ObjectId();

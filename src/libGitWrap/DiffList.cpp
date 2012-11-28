@@ -46,7 +46,7 @@ namespace Git
             }
         }
 
-        static int patchFileCallBack( void* cb_data, const git_diff_delta* delta, float )
+        static int patchFileCallBack( const git_diff_delta* delta, float, void* cb_data )
         {
             PatchConsumer* pc = (PatchConsumer*) cb_data;
 
@@ -62,10 +62,10 @@ namespace Git
             return GIT_OK;
         }
 
-        static int patchHunkCallBack( void* cb_data,
-                                      const git_diff_delta* delta,
+        static int patchHunkCallBack( const git_diff_delta* delta,
                                       const git_diff_range* range,
-                                      const char* header, size_t header_len )
+                                      const char* header, size_t header_len,
+                                      void* cb_data )
         {
             PatchConsumer* pc = (PatchConsumer*) cb_data;
 
@@ -79,12 +79,12 @@ namespace Git
             return GIT_OK;
         }
 
-        static int patchDataCallBack( void* cb_data,
-                                      const git_diff_delta* delta,
+        static int patchDataCallBack( const git_diff_delta* delta,
                                       const git_diff_range* range,
                                       char line_origin,
                                       const char *content,
-                                      size_t content_len )
+                                      size_t content_len,
+                                      void* cb_data )
         {
             PatchConsumer* pc = (PatchConsumer*) cb_data;
 
@@ -128,7 +128,7 @@ namespace Git
             return GIT_OK;
         }
 
-        static int changeListCallBack( void* cb_data, const git_diff_delta* delta, float )
+        static int changeListCallBack( const git_diff_delta* delta, float, void* cb_data )
         {
             ChangeListConsumer* consumer = (ChangeListConsumer*) cb_data;
 
@@ -227,10 +227,11 @@ namespace Git
             return false;
         }
 
-        result = git_diff_foreach( d->mDiffList, consumer,
+        result = git_diff_foreach( d->mDiffList,
                                    &Internal::patchFileCallBack,
                                    &Internal::patchHunkCallBack,
-                                   &Internal::patchDataCallBack );
+                                   &Internal::patchDataCallBack,
+                                   consumer );
 
         return result;
     }
@@ -254,8 +255,11 @@ namespace Git
             return false;
         }
 
-        result = git_diff_foreach( d->mDiffList, consumer,
-                                   &Internal::changeListCallBack, NULL, NULL );
+        result = git_diff_foreach( d->mDiffList,
+                                   &Internal::changeListCallBack,
+                                   NULL,
+                                   NULL,
+                                   consumer );
 
         return result;
     }

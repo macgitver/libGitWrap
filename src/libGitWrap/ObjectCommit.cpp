@@ -83,7 +83,7 @@ namespace Git
 
         git_commit* commit = (git_commit*) d->mObj;
 
-        return ObjectId::fromRaw( git_commit_tree_oid( commit )->id );
+        return ObjectId::fromRaw( git_commit_tree_id( commit )->id );
     }
 
     ObjectIdList ObjectCommit::parentCommitIds( Result& result ) const
@@ -104,7 +104,7 @@ namespace Git
 
         for( unsigned int i = 0; i < numParentCommits(); i++ )
         {
-            ObjectId id = ObjectId::fromRaw( git_commit_parent_oid( commit, i )->id );
+            ObjectId id = ObjectId::fromRaw( git_commit_parent_id( commit, i )->id );
             ids.append( id );
         }
 
@@ -151,7 +151,7 @@ namespace Git
         {
             git_commit* commit = (git_commit*) d->mObj;
 
-            const git_oid* oid = git_commit_parent_oid( commit, index );
+            const git_oid* oid = git_commit_parent_id( commit, index );
             if( oid )
             {
                 return ObjectId::fromRaw( oid->id );
@@ -323,7 +323,7 @@ namespace Git
         return QString::fromUtf8( msg, len );
     }
 
-    Reference ObjectCommit::createBranch( const QString& name, bool force, Result& result )
+    Reference ObjectCommit::createBranch( const QString& name, bool force, Result& result ) const
     {
         if( !result )
         {
@@ -337,7 +337,7 @@ namespace Git
 
         git_reference* ref = NULL;
         result = git_branch_create( &ref, d->repo()->mRepo, name.toUtf8().constData(),
-                                    d->mObj, force );
+                                    (const git_commit*) d->mObj, force );
         if( !result )
         {
             return Reference();

@@ -184,7 +184,8 @@ namespace Git
             return false;
         }
 
-        result = git_remote_connect( d->mRemote, forFetch ? GIT_DIR_FETCH : GIT_DIR_PUSH );
+        result = git_remote_connect( d->mRemote, forFetch ? GIT_DIRECTION_FETCH
+                                                          : GIT_DIRECTION_PUSH );
         return result;
     }
 

@@ -79,7 +79,7 @@ namespace Git
         QString shortMessage( Result& result GITWRAP_DEFAULT_TLSRESULT ) const;
 
         Reference createBranch( const QString& name, bool force,
-                                Result& result GITWRAP_DEFAULT_TLSRESULT );
+                                Result& result GITWRAP_DEFAULT_TLSRESULT ) const;
 
         DiffList diffFromParent( unsigned int index, Result& result GITWRAP_DEFAULT_TLSRESULT );
         DiffList diffFromAllParents( Result& result GITWRAP_DEFAULT_TLSRESULT );

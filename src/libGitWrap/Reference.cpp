@@ -143,7 +143,7 @@ namespace Git
             return ObjectId();
         }
 
-        return ObjectId::fromRaw( git_reference_oid( d->mRef )->id );
+        return ObjectId::fromRaw( git_reference_target( d->mRef )->id );
     }
 
     QString Reference::target( Result& result ) const
@@ -157,7 +157,7 @@ namespace Git
         {
             return QString();
         }
-        return QString::fromUtf8( git_reference_target( d->mRef ) );
+        return QString::fromUtf8( git_reference_symbolic_target( d->mRef ) );
     }
 
     Repository Reference::repository( Result& result ) const

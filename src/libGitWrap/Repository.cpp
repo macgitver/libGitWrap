@@ -368,7 +368,7 @@ namespace Git
 
             git_oid oid;
 
-            int rc = git_reference_name_to_oid( &oid, d->repo, refName );
+            int rc = git_reference_name_to_id( &oid, d->repo, refName );
 
             d->result->setError( rc );
             if( rc < 0 )
