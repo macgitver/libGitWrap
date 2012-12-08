@@ -588,7 +588,7 @@ namespace Git
 
         StatusHash sh;
 
-        git_status_options opt = { GIT_STATUS_OPTIONS_VERSION };
+        git_status_options opt = GIT_STATUS_OPTIONS_INIT;
 
         opt.flags = GIT_STATUS_OPT_INCLUDE_UNTRACKED
                   | GIT_STATUS_OPT_INCLUDE_IGNORED
