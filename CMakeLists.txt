@@ -11,5 +11,4 @@ IF( UNIX )
 	GCC_ADD_FLAG( "-fvisibility=hidden" )
 ENDIF()
 
-ADD_SUBDIRECTORY( 3rd )
-ADD_SUBDIRECTORY( src )
+ADD_SUBDIRECTORY( libGitWrap )
