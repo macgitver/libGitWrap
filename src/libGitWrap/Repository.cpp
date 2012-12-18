@@ -903,7 +903,7 @@ namespace Git
         }
 
         git_diff_list* diffList = NULL;
-        result = git_diff_workdir_to_index( &diffList, d->mRepo, NULL, NULL );
+        result = git_diff_index_to_workdir( &diffList, d->mRepo, NULL, NULL );
         if( !result )
         {
             return DiffList();
