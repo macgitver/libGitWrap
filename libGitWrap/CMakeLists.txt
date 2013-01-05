@@ -67,9 +67,9 @@ IF( WIN32 )
     INCLUDE_DIRECTORIES(
         ${LIBGIT2_BASE}/deps/regex
     )
-    
+
     ADD_DEFINITIONS( -DWIN32 -D_DEBUG -D_WIN32_WINNT=0x0501 )
-    
+
     IF( NOT MINGW )
         ADD_DEFINITIONS( -DGIT_WINHTTP )
 
@@ -117,6 +117,7 @@ SET( SRC_FILES
     BasicObject.cpp
     Config.cpp
     ChangeListConsumer.cpp
+    CloneOpts.cpp
     DiffList.cpp
     GitWrap.cpp
     Index.cpp
@@ -149,6 +150,7 @@ SET( PUB_HDR_FILES
     Result.hpp
     Config.hpp
     ChangeListConsumer.hpp
+    CloneOpts.hpp
     GitWrap.hpp
     DiffList.hpp
     Index.hpp
@@ -178,6 +180,7 @@ SET( PRI_HDR_FILES
     GitWrapPrivate.hpp
     BasicObject.hpp
     ConfigPrivate.hpp
+    CloneOptsPrivate.hpp
     DiffListPrivate.hpp
     IndexPrivate.hpp
     ObjectPrivate.hpp
@@ -209,11 +212,11 @@ FUNCTION( MSVC_SPLIT_SOURCES target )
     GET_TARGET_PROPERTY( sources ${target} SOURCES )
 
     FOREACH( source ${sources} )
-    
+
         IF( NOT source MATCHES ".*/" )
 
             SET( rel "Sources" )
-            
+
         ELSE()
             STRING( REPLACE ${CMAKE_CURRENT_BINARY_DIR}/ "Sources/Generated/" rel ${source} )
             STRING( REPLACE ${CMAKE_CURRENT_SOURCE_DIR}/ "Sources/" rel ${rel} )
