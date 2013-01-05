@@ -857,14 +857,25 @@ namespace Git
         }
 
         git_remote* remote = NULL;
-        result = git_remote_new( &remote, d->mRepo, remoteName.toUtf8().constData(),
-                                 url.toUtf8().constData(), fetchSpec.toUtf8().constData() );
+        result = git_remote_create( &remote, d->mRepo, remoteName.toUtf8().constData(),
+                                    url.toUtf8().constData() );
         if( !result )
         {
             return Remote();
         }
 
-        return new Internal::RemotePrivate( *d, remote );
+        Remote remo = new Internal::RemotePrivate( *d, remote );
+
+        if( !fetchSpec.isEmpty() )
+        {
+            remo.setFetchSpec( fetchSpec, result );
+            if( !result )
+            {
+                return Remote();
+            }
+        }
+
+        return remo;
     }
 
     DiffList Repository::diffCommitToCommit( ObjectCommit oldCommit, ObjectCommit newCommit,
