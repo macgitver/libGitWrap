@@ -21,12 +21,15 @@
 
 namespace Git
 {
+
+    class Repository;
+
     namespace Internal
     {
         class CloneOptsPrivate;
     }
 
-    class CloneOpts
+    class GITWRAP_API CloneOpts
     {
     public:
         CloneOpts();
@@ -47,7 +50,7 @@ namespace Git
         void setPushSpec( const QByteArray& pushSpec );
         void setPushUrl( const QByteArray& pushUrl );
 
-    private:
+    public:
         QByteArray url() const;
         QByteArray path() const;
         bool bare() const;
@@ -56,6 +59,13 @@ namespace Git
         QByteArray fetchSpec() const;
         QByteArray pushSpec() const;
         QByteArray pushUrl() const;
+
+    private:
+        friend class Repository;
+        operator const Internal::CloneOptsPrivate*() const
+        {
+            return d;
+        }
 
     private:
         Internal::GitPtr< Internal::CloneOptsPrivate > d;

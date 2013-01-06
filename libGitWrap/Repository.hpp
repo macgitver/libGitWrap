@@ -37,6 +37,7 @@ namespace Git
     class ObjectId;
     class RevisionWalker;
     class Remote;
+    class CloneOpts;
 
     namespace Internal
     {
@@ -73,6 +74,13 @@ namespace Git
 
         static Repository open( const QString& path,
                                 Result& result GITWRAP_DEFAULT_TLSRESULT );
+
+        static Repository clone( const QByteArray& fromUrl,
+                                 const QByteArray& toPath,
+                                 Result& result GITWRAP_DEFAULT_TLSRESULT );
+
+        static Repository clone( const CloneOpts& opts,
+                                 Result& result GITWRAP_DEFAULT_TLSRESULT );
 
         bool isValid() const;
         bool isBare() const;
