@@ -20,6 +20,8 @@
 namespace Git
 {
 
+    class CloneEvents;
+
     namespace Internal
     {
 
@@ -35,16 +37,30 @@ namespace Git
             ~CloneOptsPrivate();
 
         public:
+            void setEvents( CloneEvents* events );
+
+        public:
             const git_clone_options* asGitCloneOptions() const;
 
         public:
-            QByteArray          mUrl;
-            QByteArray          mPath;
-            QByteArray          mRemoteName;
-            QByteArray          mFetchSpec;
-            QByteArray          mPushSpec;
-            QByteArray          mPushUrl;
-            git_clone_options   mGitCloneOptions;
+            QByteArray              mUrl;
+            QByteArray              mPath;
+            QByteArray              mRemoteName;
+            QByteArray              mFetchSpec;
+            QByteArray              mPushSpec;
+            QByteArray              mPushUrl;
+            git_clone_options       mGitCloneOptions;
+            git_remote_callbacks    mRemoteCallbacks;
+            CloneEvents*            mEvents;
+
+        private:
+            static int  credAccquire( git_cred** cred, const char* url,
+                                      unsigned int allowed_types, void* payload );
+            static void fetchProgress( const git_transfer_progress* stats, void* payload );
+            static int  remoteComplete( git_remote_completion_type type, void* payload );
+            static void remoteProgress( const char* str, int len, void* payload );
+            static int  remoteUpdateTips( const char* refname, const git_oid* a, const git_oid* b,
+                                          void* payload );
         };
 
     }
