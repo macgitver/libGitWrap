@@ -76,7 +76,7 @@ namespace Git
 
     void CloneOpts::setBare( bool bare )
     {
-        d->mGitCloneOptions.bare = bare ? 0 : 1;
+        d->mGitCloneOptions.bare = bare ? 1 : 0;
     }
 
     void CloneOpts::setRemoteName( const QByteArray& remoteName )
