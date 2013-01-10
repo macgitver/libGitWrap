@@ -139,10 +139,6 @@ SET( SRC_FILES
     Submodule.cpp
     TreeBuilder.cpp
     TreeEntry.cpp
-    BackgroundTasks.cpp
-    BackgroundFetch.cpp
-    BackgroundCheckout.cpp
-    BackgroundClone.cpp
 )
 
 SET( PUB_HDR_FILES
@@ -169,10 +165,6 @@ SET( PUB_HDR_FILES
     Submodule.hpp
     TreeBuilder.hpp
     TreeEntry.hpp
-    BackgroundTasks.hpp
-    BackgroundFetch.hpp
-    BackgroundCheckout.hpp
-    BackgroundClone.hpp
 )
 
 SET( PRI_HDR_FILES
