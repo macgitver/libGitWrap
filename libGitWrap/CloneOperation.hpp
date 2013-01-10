@@ -62,6 +62,8 @@ namespace Git
         QByteArray pushSpec() const;
         QByteArray pushUrl() const;
 
+        Result result() const;
+
     signals:
         void askCredentials( CredentialRequest& request );
         void transportProgress( unsigned int totalObjects,
@@ -75,6 +77,10 @@ namespace Git
         void updateTip( const QString& branchName,
                         const Git::ObjectId& from,
                         const Git::ObjectId& to );
+        void finished();
+
+    private slots:
+        void workerFinished();
 
     private:
         Internal::CloneOperationPrivate* d;

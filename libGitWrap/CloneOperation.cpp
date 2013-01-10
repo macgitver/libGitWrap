@@ -28,6 +28,7 @@ namespace Git
             : mOwner( owner )
         {
             mBackgroundMode = false;
+            mThread = NULL;
 
             mGitCloneOptions = (git_clone_options) GIT_CLONE_OPTIONS_INIT;
 
@@ -48,7 +49,6 @@ namespace Git
         CloneOperationPrivate::~CloneOperationPrivate()
         {
         }
-
 
         void CloneOperationPrivate::run()
         {
@@ -165,6 +165,11 @@ namespace Git
     {
         if( d->mBackgroundMode )
         {
+            Q_ASSERT( !d->mThread );
+            d->mThread = new Internal::WorkerThread( this, d );
+            connect( d->mThread, SIGNAL(finished()),
+                     this, SLOT(workerFinished()) );
+            d->mThread->start();
             return Result();
         }
         else
@@ -176,7 +181,19 @@ namespace Git
 
     bool CloneOperation::isRunning() const
     {
-        return false;
+        return d->mThread;
+    }
+
+    void CloneOperation::workerFinished()
+    {
+        delete d->mThread;
+        d->mThread = NULL;
+        emit finished();
+    }
+
+    Result CloneOperation::result() const
+    {
+        return d->mResult;
     }
 
 }

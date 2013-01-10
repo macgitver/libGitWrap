@@ -141,6 +141,7 @@ SET( SRC_FILES
     Submodule.cpp
     TreeBuilder.cpp
     TreeEntry.cpp
+    WorkerThread.cpp
 )
 
 SET( PUB_HDR_FILES
@@ -187,6 +188,7 @@ SET( PRI_HDR_FILES
     RevisionWalkerPrivate.hpp
     TreeBuilderPrivate.hpp
     TreeEntryPrivate.hpp
+    WorkerThread.hpp
 )
 
 SET( HDR_FILES ${PRI_HDR_FILES} ${PUB_HDR_FILES} )

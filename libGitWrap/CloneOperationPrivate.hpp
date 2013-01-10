@@ -16,6 +16,7 @@
 
 #include "GitWrapPrivate.hpp"
 #include "Result.hpp"
+#include "WorkerThread.hpp"
 
 namespace Git
 {
@@ -30,7 +31,7 @@ namespace Git
          * @ingroup     GitWrap
          *
          */
-        class CloneOperationPrivate
+        class CloneOperationPrivate : public Worker
         {
         public:
             CloneOperationPrivate( CloneOperation* owner );
@@ -55,6 +56,7 @@ namespace Git
             git_remote_callbacks    mRemoteCallbacks;
 
             Result                  mResult;
+            WorkerThread*           mThread;
         };
 
     }
