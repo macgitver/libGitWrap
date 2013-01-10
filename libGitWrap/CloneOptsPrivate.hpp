@@ -43,8 +43,8 @@ namespace Git
             const git_clone_options* asGitCloneOptions() const;
 
         public:
-            QByteArray              mUrl;
-            QByteArray              mPath;
+            QString                 mUrl;
+            QString                 mPath;
             QByteArray              mRemoteName;
             QByteArray              mFetchSpec;
             QByteArray              mPushSpec;

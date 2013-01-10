@@ -89,8 +89,8 @@ namespace Git
         CloneEvents* events() const;
 
     public:
-        void setUrl( const QByteArray& url );
-        void setPath( const QByteArray& path );
+        void setUrl( const QString& url );
+        void setPath( const QString& path );
 
     public:
         void setBare( bool bare );
@@ -100,8 +100,8 @@ namespace Git
         void setPushUrl( const QByteArray& pushUrl );
 
     public:
-        QByteArray url() const;
-        QByteArray path() const;
+        QString url() const;
+        QString path() const;
         bool bare() const;
 
         QByteArray remoteName() const;

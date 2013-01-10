@@ -218,12 +218,12 @@ struct CredentialRequest{}; // temporary dummy
         return d == other.d || *d == *other.d;
     }
 
-    void CloneOpts::setUrl( const QByteArray& url )
+    void CloneOpts::setUrl( const QString& url )
     {
         d->mUrl = url;
     }
 
-    void CloneOpts::setPath( const QByteArray& path )
+    void CloneOpts::setPath( const QString& path )
     {
         d->mPath = path;
     }
@@ -257,12 +257,12 @@ struct CredentialRequest{}; // temporary dummy
         d->mGitCloneOptions.pushurl = pushUrl.isEmpty() ? NULL : pushUrl.constData();
     }
 
-    QByteArray CloneOpts::url() const
+    QString CloneOpts::url() const
     {
         return d->mUrl;
     }
 
-    QByteArray CloneOpts::path() const
+    QString CloneOpts::path() const
     {
         return d->mPath;
     }

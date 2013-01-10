@@ -75,8 +75,8 @@ namespace Git
         static Repository open( const QString& path,
                                 Result& result GITWRAP_DEFAULT_TLSRESULT );
 
-        static Repository clone( const QByteArray& fromUrl,
-                                 const QByteArray& toPath,
+        static Repository clone( const QString& fromUrl,
+                                 const QString& toPath,
                                  Result& result GITWRAP_DEFAULT_TLSRESULT );
 
         static Repository clone( const CloneOpts& opts,

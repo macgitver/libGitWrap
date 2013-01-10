@@ -1020,8 +1020,8 @@ namespace Git
         return new Internal::ReferencePrivate( d, ref );
     }
 
-    Repository Repository::clone( const QByteArray& fromUrl,
-                                  const QByteArray& toPath,
+    Repository Repository::clone( const QString& fromUrl,
+                                  const QString& toPath,
                                   Result& result )
     {
         CloneOpts opts;
@@ -1044,7 +1044,8 @@ namespace Git
 
         git_repository* repo = NULL;
 
-        result = git_clone( &repo, opts.url().constData(), opts.path().constData(), gitopts );
+        result = git_clone( &repo, opts.url().toUtf8().constData(),
+                            opts.path().toUtf8().constData(), gitopts );
         if( !result )
         {
             return Repository();
