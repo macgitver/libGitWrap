@@ -119,6 +119,7 @@ SET( SRC_FILES
     ChangeListConsumer.cpp
     CloneOperation.cpp
     DiffList.cpp
+    FetchCallbacks.cpp
     GitWrap.cpp
     IFetchEvents.cpp
     Index.cpp
@@ -176,6 +177,7 @@ SET( PRI_HDR_FILES
     ConfigPrivate.hpp
     CloneOperationPrivate.hpp
     DiffListPrivate.hpp
+    FetchCallbacks.hpp
     IndexPrivate.hpp
     ObjectPrivate.hpp
     ReferencePrivate.hpp

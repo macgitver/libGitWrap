@@ -16,17 +16,10 @@
 
 #include "CloneOperationPrivate.hpp"
 #include "CloneOperation.hpp"
-
-#if 0
-#define debugEvents qDebug
-#else
-#define debugEvents if(0) qDebug
-#endif
+#include "FetchCallbacks.hpp"
 
 namespace Git
 {
-
-struct CredentialRequest{}; // temporary dummy
 
     namespace Internal
     {
@@ -34,19 +27,21 @@ struct CredentialRequest{}; // temporary dummy
         CloneOperationPrivate::CloneOperationPrivate( CloneOperation* owner )
             : mOwner( owner )
         {
+            mBackgroundMode = false;
+
             mGitCloneOptions = (git_clone_options) GIT_CLONE_OPTIONS_INIT;
 
             mRemoteCallbacks                        = (git_remote_callbacks)
                                                       GIT_REMOTE_CALLBACKS_INIT;
-            mRemoteCallbacks.completion             = &CloneOperationPrivate::remoteComplete;
-            mRemoteCallbacks.progress               = &CloneOperationPrivate::remoteProgress;
-            mRemoteCallbacks.update_tips            = &CloneOperationPrivate::remoteUpdateTips;
+            mRemoteCallbacks.completion             = &FetchCallbacks::remoteComplete;
+            mRemoteCallbacks.progress               = &FetchCallbacks::remoteProgress;
+            mRemoteCallbacks.update_tips            = &FetchCallbacks::remoteUpdateTips;
             mRemoteCallbacks.payload                = static_cast< IFetchEvents* >( mOwner );
             mGitCloneOptions.remote_callbacks       = &mRemoteCallbacks;
 
-            mGitCloneOptions.fetch_progress_cb      = &CloneOperationPrivate::fetchProgress;
+            mGitCloneOptions.fetch_progress_cb      = &FetchCallbacks::fetchProgress;
 
-            mGitCloneOptions.cred_acquire_cb        = &CloneOperationPrivate::credAccquire;
+            mGitCloneOptions.cred_acquire_cb        = &FetchCallbacks::credAccquire;
             mGitCloneOptions.cred_acquire_payload   = static_cast< IFetchEvents* >( mOwner );
         }
 
@@ -54,97 +49,6 @@ struct CredentialRequest{}; // temporary dummy
         {
         }
 
-        int CloneOperationPrivate::credAccquire( git_cred** cred, const char* url,
-                                            unsigned int allowed_types, void* payload )
-        {
-            IFetchEvents* events = static_cast< IFetchEvents* >( payload );
-
-            debugEvents( "credAccquire: %s %i", url, allowed_types );
-
-            if( events )
-            {
-                CredentialRequest request;
-                events->askCredentials( request );
-            }
-
-            return 0;
-        }
-
-        void CloneOperationPrivate::fetchProgress( const git_transfer_progress* stats, void* payload )
-        {
-            IFetchEvents* events = static_cast< IFetchEvents* >( payload );
-
-            debugEvents( "fetchProgress: %u %u %u %lu",
-                         stats->total_objects,
-                         stats->received_objects,
-                         stats->indexed_objects,
-                         stats->received_bytes );
-
-            if( events )
-            {
-                events->transportProgress( stats->total_objects, stats->indexed_objects,
-                                           stats->received_objects, stats->received_bytes );
-            }
-        }
-
-        int CloneOperationPrivate::remoteComplete( git_remote_completion_type type, void* payload )
-        {
-            IFetchEvents* events = static_cast< IFetchEvents* >( payload );
-
-            debugEvents( "fetchComplete: %i", type );
-
-            if( events )
-            {
-                switch( type )
-                {
-                case GIT_REMOTE_COMPLETION_DOWNLOAD:
-                    events->doneDownloading();
-                    break;
-
-                case GIT_REMOTE_COMPLETION_INDEXING:
-                    events->doneIndexing();
-                    break;
-
-                case GIT_REMOTE_COMPLETION_ERROR:
-                    events->error();
-                    break;
-                }
-            }
-            return 0;
-        }
-
-        void CloneOperationPrivate::remoteProgress( const char* str, int len, void* payload )
-        {
-            IFetchEvents* events = static_cast< IFetchEvents* >( payload );
-
-            debugEvents( "Remote Progress: %s", QByteArray( str, len ).constData() );
-
-            if( events )
-            {
-                events->remoteMessage( QString::fromUtf8( str, len ) );
-            }
-        }
-
-        int CloneOperationPrivate::remoteUpdateTips( const char* refname, const git_oid* a,
-                                                const git_oid* b, void* payload )
-        {
-            IFetchEvents* events = static_cast< IFetchEvents* >( payload );
-
-            Git::ObjectId oidFrom = Git::ObjectId::fromRaw( a->id );
-            Git::ObjectId oidTo   = Git::ObjectId::fromRaw( b->id );
-
-            debugEvents( "Remote Update Tips: %s [%s->%s]",
-                         refname,
-                         oidFrom.toAscii().constData(),
-                         oidTo.toAscii().constData() );
-
-            if( events )
-            {
-                events->updateTip( QString::fromUtf8( refname ), oidFrom, oidTo );
-            }
-
-            return 0;
-        }
 
         void CloneOperationPrivate::run()
         {
