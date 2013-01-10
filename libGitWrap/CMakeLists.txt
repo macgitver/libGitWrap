@@ -117,7 +117,7 @@ SET( SRC_FILES
     BasicObject.cpp
     Config.cpp
     ChangeListConsumer.cpp
-    CloneOpts.cpp
+    CloneOperation.cpp
     DiffList.cpp
     GitWrap.cpp
     IFetchEvents.cpp
@@ -147,7 +147,7 @@ SET( PUB_HDR_FILES
     Result.hpp
     Config.hpp
     ChangeListConsumer.hpp
-    CloneOpts.hpp
+    CloneOperation.hpp
     DiffList.hpp
     GitWrap.hpp
     IFetchEvents.hpp
@@ -174,7 +174,7 @@ SET( PRI_HDR_FILES
     GitWrapPrivate.hpp
     BasicObject.hpp
     ConfigPrivate.hpp
-    CloneOptsPrivate.hpp
+    CloneOperationPrivate.hpp
     DiffListPrivate.hpp
     IndexPrivate.hpp
     ObjectPrivate.hpp

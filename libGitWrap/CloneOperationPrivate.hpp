@@ -15,12 +15,12 @@
  */
 
 #include "GitWrapPrivate.hpp"
-#include "BasicObject.hpp"
+#include "Result.hpp"
 
 namespace Git
 {
 
-    class CloneEvents;
+    class CloneOperation;
 
     namespace Internal
     {
@@ -30,28 +30,31 @@ namespace Git
          * @ingroup     GitWrap
          *
          */
-        class CloneOptsPrivate : public BasicObject
+        class CloneOperationPrivate
         {
         public:
-            CloneOptsPrivate();
-            ~CloneOptsPrivate();
+            CloneOperationPrivate( CloneOperation* owner );
+            ~CloneOperationPrivate();
 
         public:
-            void setEvents( CloneEvents* events );
-
-        public:
-            const git_clone_options* asGitCloneOptions() const;
+            void run();
 
         public:
             QString                 mUrl;
             QString                 mPath;
+
+            CloneOperation*         mOwner;
+            bool                    mBackgroundMode;
+
             QByteArray              mRemoteName;
             QByteArray              mFetchSpec;
             QByteArray              mPushSpec;
             QByteArray              mPushUrl;
+
             git_clone_options       mGitCloneOptions;
             git_remote_callbacks    mRemoteCallbacks;
-            CloneEvents*            mEvents;
+
+            Result                  mResult;
 
         private:
             static int  credAccquire(git_cred** cred, const char* url, const char *username_from_url,
