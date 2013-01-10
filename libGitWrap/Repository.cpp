@@ -35,8 +35,6 @@
 #include "RevisionWalker.hpp"
 #include "RevisionWalkerPrivate.hpp"
 #include "Submodule.hpp"
-#include "CloneOpts.hpp"
-#include "CloneOptsPrivate.hpp"
 
 #include <QDir>
 
@@ -1018,42 +1016,6 @@ namespace Git
         }
 
         return new Internal::ReferencePrivate( d, ref );
-    }
-
-    Repository Repository::clone( const QString& fromUrl,
-                                  const QString& toPath,
-                                  Result& result )
-    {
-        CloneOpts opts;
-        opts.setUrl( fromUrl );
-        opts.setPath( toPath );
-        return clone( opts, result );
-    }
-
-    Repository Repository::clone( const CloneOpts& opts,
-                                  Result& result )
-
-    {
-        const Internal::CloneOptsPrivate* realopts = opts;
-        const git_clone_options* gitopts = realopts->asGitCloneOptions();
-
-        if( !result )
-        {
-            return Repository();
-        }
-
-        git_repository* repo = NULL;
-
-        result = git_clone( &repo, opts.url().toUtf8().constData(),
-                            opts.path().toUtf8().constData(), gitopts );
-        if( !result )
-        {
-            return Repository();
-        }
-
-        Q_ASSERT( repo );
-
-        return Repository( new Internal::RepositoryPrivate( repo ) );
     }
 
 }
