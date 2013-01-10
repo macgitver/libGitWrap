@@ -120,6 +120,7 @@ SET( SRC_FILES
     CloneOpts.cpp
     DiffList.cpp
     GitWrap.cpp
+    IFetchEvents.cpp
     Index.cpp
     Object.cpp
     ObjectBlob.cpp
@@ -147,8 +148,9 @@ SET( PUB_HDR_FILES
     Config.hpp
     ChangeListConsumer.hpp
     CloneOpts.hpp
-    GitWrap.hpp
     DiffList.hpp
+    GitWrap.hpp
+    IFetchEvents.hpp
     Index.hpp
     Object.hpp
     ObjectBlob.hpp

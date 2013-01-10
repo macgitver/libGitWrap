@@ -14,11 +14,10 @@
  *
  */
 
-#ifndef GITWRAP_CLONEOPTS_H
-#define GITWRAP_CLONEOPTS_H
+#ifndef GITWRAP_CLONEOPTS_HPP
+#define GITWRAP_CLONEOPTS_HPP
 
-#include "GitWrap.hpp"
-#include "ObjectId.hpp"
+#include "IFetchEvents.hpp"
 
 namespace Git
 {
@@ -32,7 +31,7 @@ namespace Git
         class CloneOptsPrivate;
     }
 
-    class GITWRAP_API CloneEvents : public QObject
+    class GITWRAP_API CloneEvents : public QObject, private IFetchEvents
     {
         Q_OBJECT
     public:
@@ -41,35 +40,23 @@ namespace Git
     public:
         CloneOpts options() const;
 
-    // to avoid moc complaining that signals may not be virtual.
-    // They may indeed be virtual. It's just that they will only
-    // be emitted if you overwrite them and miss to call the base
-    // class. However, this can be desired, also.
-    // i.e. a deviat of CloneEvents might implement all events and
-    // not want signals being emitted.
-    #ifdef Q_MOC_RUN
-        #define V_SIGNAL
-    #else
-        #define V_SIGNAL virtual
-    #endif
-
     signals:
-        V_SIGNAL void askCredentials( CredentialRequest& request );
-        V_SIGNAL void transportProgress( unsigned int totalObjects,
-                                         unsigned int indexedObjects,
-                                         unsigned int receivedObjects,
-                                         size_t receivedBytes );
-        V_SIGNAL void doneDownloading();
-        V_SIGNAL void doneIndexing();
-        V_SIGNAL void error();
-        V_SIGNAL void remoteMessage( const QString& message );
-        V_SIGNAL void updateTip( const QString& branchName,
-                                 const Git::ObjectId& from,
-                                 const Git::ObjectId& to );
-    #undef V_SIGNAL
+        void askCredentials( CredentialRequest& request );
+        void transportProgress( unsigned int totalObjects,
+                                unsigned int indexedObjects,
+                                unsigned int receivedObjects,
+                                size_t receivedBytes );
+        void doneDownloading();
+        void doneIndexing();
+        void error();
+        void remoteMessage( const QString& message );
+        void updateTip( const QString& branchName,
+                        const Git::ObjectId& from,
+                        const Git::ObjectId& to );
 
     private:
         friend class Internal::CloneOptsPrivate;
+        operator IFetchEvents*(){ return this; }
         Internal::CloneOptsPrivate*     mOpts;
     };
 
