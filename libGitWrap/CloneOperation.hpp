@@ -66,10 +66,10 @@ namespace Git
 
     signals:
         void askCredentials( CredentialRequest& request );
-        void transportProgress( unsigned int totalObjects,
-                                unsigned int indexedObjects,
-                                unsigned int receivedObjects,
-                                size_t receivedBytes );
+        void transportProgress( quint32 totalObjects,
+                                quint32 indexedObjects,
+                                quint32 receivedObjects,
+                                quint64 receivedBytes );
         void doneDownloading();
         void doneIndexing();
         void error();

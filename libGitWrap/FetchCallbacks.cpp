@@ -60,11 +60,29 @@ namespace Git
             {
                 events->transportProgress( stats->total_objects, stats->indexed_objects,
                                            stats->received_objects, stats->received_bytes );
+
+                if( stats->received_objects == stats->total_objects )
+                {
+                    events->doneDownloading();
+                }
+
+                if( stats->indexed_objects == stats->total_objects )
+                {
+                    events->doneIndexing();
+                }
             }
         }
 
         int FetchCallbacks::remoteComplete( git_remote_completion_type type, void* payload )
         {
+            /* THIS event is not triggered by lg anywhere! */
+
+            qDebug( "**********************************************************\n"
+                    "libgit2 started triggering completion events from remotes!\n"
+                    "**********************************************************\n"
+                    "\n\n\n");
+            return 0;
+
             IFetchEvents* events = static_cast< IFetchEvents* >( payload );
 
             debugEvents( "fetchComplete: %i", type );

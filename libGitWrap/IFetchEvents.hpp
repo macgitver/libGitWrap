@@ -32,10 +32,10 @@ namespace Git
 
     public:
         virtual void askCredentials( CredentialRequest& request ) = 0;
-        virtual void transportProgress( unsigned int totalObjects,
-                                        unsigned int indexedObjects,
-                                        unsigned int receivedObjects,
-                                        size_t receivedBytes ) = 0;
+        virtual void transportProgress( quint32 totalObjects,
+                                        quint32 indexedObjects,
+                                        quint32 receivedObjects,
+                                        quint64 receivedBytes ) = 0;
         virtual void doneDownloading() = 0;
         virtual void doneIndexing() = 0;
         virtual void error() = 0;

@@ -31,6 +31,7 @@ namespace Git
             mThread = NULL;
 
             mGitCloneOptions = (git_clone_options) GIT_CLONE_OPTIONS_INIT;
+            mGitCloneOptions.checkout_opts.checkout_strategy = GIT_CHECKOUT_SAFE_CREATE;
 
             mRemoteCallbacks                        = (git_remote_callbacks)
                                                       GIT_REMOTE_CALLBACKS_INIT;
@@ -41,6 +42,7 @@ namespace Git
             mGitCloneOptions.remote_callbacks       = &mRemoteCallbacks;
 
             mGitCloneOptions.fetch_progress_cb      = &FetchCallbacks::fetchProgress;
+            mGitCloneOptions.fetch_progress_payload = static_cast< IFetchEvents* >( mOwner );
 
             mGitCloneOptions.cred_acquire_cb        = &FetchCallbacks::credAccquire;
             mGitCloneOptions.cred_acquire_payload   = static_cast< IFetchEvents* >( mOwner );
