@@ -88,9 +88,6 @@ namespace Git
         QString basePath() const;
         QString gitPath() const;
 
-        /**
-         * @brief The name of the repository equals the name of the repository's directory.
-         */
         QString name() const;
 
         QStringList allReferences( Result& result GITWRAP_DEFAULT_TLSRESULT );

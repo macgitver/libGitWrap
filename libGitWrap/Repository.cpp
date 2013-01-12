@@ -629,20 +629,21 @@ namespace Git
     }
 
     /**
-     * The main directory is either the working directory
-     * or the git directory, when the repository is bare.
+     * @brief   Get the name of the Repository
      *
-     * @return the name of the repository
+     * The name of a repository is the directory where the repository is located. If the trailing
+     * `.git` is present, it will be stripped.
+     *
+     * @return  Name of the repository
      */
     QString Repository::name() const
     {
-        QString repoPath;
-        if (isBare())
-            repoPath = QDir::cleanPath( gitPath() );
-        else
-            repoPath = QDir::cleanPath( basePath() );
+        QFileInfo fi( isBare() ? gitPath() : basePath() );
 
-        return QFileInfo(repoPath).fileName();
+        if( fi.suffix() == QLatin1String( "git" ) )
+            return fi.completeBaseName();
+
+        return fi.fileName();
     }
 
     Reference Repository::HEAD( Result& result ) const
