@@ -54,7 +54,7 @@ namespace Git
             CloneEvents*            mEvents;
 
         private:
-            static int  credAccquire( git_cred** cred, const char* url,
+            static int  credAccquire(git_cred** cred, const char* url, const char *username_from_url,
                                       unsigned int allowed_types, void* payload );
             static void fetchProgress( const git_transfer_progress* stats, void* payload );
             static int  remoteComplete( git_remote_completion_type type, void* payload );

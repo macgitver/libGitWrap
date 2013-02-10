@@ -83,11 +83,11 @@ struct CredentialRequest{}; // temporary dummy
         }
 
 
-        int CloneOptsPrivate::credAccquire( git_cred** cred, const char* url,
+        int CloneOptsPrivate::credAccquire( git_cred** cred, const char* url, const char *username_from_url,
                                             unsigned int allowed_types, void* payload )
         {
             CloneOptsPrivate* that = static_cast< CloneOptsPrivate* >( payload );
-            debugEvents( "credAccquire: %s %i", url, allowed_types );
+            debugEvents( "credAccquire: %s %s %i", url, username_from_url, allowed_types );
 
             if( that->mEvents )
             {
