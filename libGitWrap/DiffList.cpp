@@ -138,10 +138,10 @@ namespace Git
                                delta->similarity,
                                delta->binary ) )
             {
-                return GIT_ERROR;
+                return GIT_OK;
             }
 
-            return GIT_OK;
+            return GIT_ERROR;
         }
 
     }
