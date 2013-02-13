@@ -48,8 +48,7 @@ namespace Git
         virtual ~ChangeListConsumer();
 
     public:
-        virtual bool raw( const QString& oldPath, const QString& newPath, Type type,
-                          unsigned int similarity, bool isBinary );
+        virtual bool raw( const ChangeListEntry &entry );
 
     };
 

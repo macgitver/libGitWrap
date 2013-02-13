@@ -27,14 +27,9 @@ namespace Git
     {
     }
 
-    bool ChangeListConsumer::raw( const QString& oldPath, const QString& newPath, Type type,
-                                  unsigned int similarity, bool isBinary )
+    bool ChangeListConsumer::raw( const ChangeListEntry &entry )
     {
-        Q_UNUSED( oldPath );
-        Q_UNUSED( newPath );
-        Q_UNUSED( type );
-        Q_UNUSED( similarity );
-        Q_UNUSED( isBinary );
+        Q_UNUSED( entry );
 
         return false;
     }

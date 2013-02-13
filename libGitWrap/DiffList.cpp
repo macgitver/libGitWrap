@@ -132,11 +132,16 @@ namespace Git
         {
             ChangeListConsumer* consumer = (ChangeListConsumer*) cb_data;
 
-            if( consumer->raw( QString::fromUtf8( delta->old_file.path ),
-                               QString::fromUtf8( delta->new_file.path ),
-                               ChangeListConsumer::Type( delta->status ),
-                               delta->similarity,
-                               delta->binary ) )
+            ChangeListEntry change =
+            {
+                QString::fromUtf8( delta->old_file.path )
+                , QString::fromUtf8( delta->new_file.path )
+                , ChangeListConsumer::Type( delta->status )
+                , delta->similarity
+                , delta->binary
+            };
+
+            if( consumer->raw( change ) )
             {
                 return GIT_OK;
             }
