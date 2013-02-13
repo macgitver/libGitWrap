@@ -21,6 +21,7 @@
 
 namespace Git
 {
+    struct ChangeListEntry;
 
     /**
      * @ingroup     GitWrap
@@ -50,6 +51,19 @@ namespace Git
         virtual bool raw( const QString& oldPath, const QString& newPath, Type type,
                           unsigned int similarity, bool isBinary );
 
+    };
+
+    /**
+     * @ingroup GitWrap
+     * @brief The ChangeListEntry struct keeps information about a single file change.
+     */
+    struct ChangeListEntry
+    {
+        QString oldPath;
+        QString newPath;
+        ChangeListConsumer::Type type;
+        unsigned int similarity;
+        bool isBinary;
     };
 
 }
