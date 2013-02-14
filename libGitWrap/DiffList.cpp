@@ -22,11 +22,35 @@
 #include "RepositoryPrivate.hpp"
 #include "DiffListPrivate.hpp"
 
+
 namespace Git
 {
 
     namespace Internal
     {
+
+        class DiffListConsumer : public ChangeListConsumer
+        {
+        public:
+            bool raw(const Git::ChangeListEntry &entry);
+
+            const Git::ChangesList &changes() const;
+
+        private:
+            Git::ChangesList     mChanges;
+        };
+
+        bool DiffListConsumer::raw(const Git::ChangeListEntry &entry)
+        {
+            mChanges.append( entry );
+
+            return true;
+        }
+
+        const ChangesList &DiffListConsumer::changes() const
+        {
+            return mChanges;
+        }
 
         DiffListPrivate::DiffListPrivate( const GitPtr< RepositoryPrivate >& repo,
                                           git_diff_list* difflist )
@@ -267,6 +291,14 @@ namespace Git
                                    consumer );
 
         return result;
+    }
+
+    ChangesList DiffList::changes(Result &result)
+    {
+        Internal::DiffListConsumer consumer;
+        consumeChangeList(&consumer, result);
+
+        return consumer.changes();
     }
 
 }

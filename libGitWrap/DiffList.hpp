@@ -24,12 +24,16 @@ namespace Git
 
     class Repository;
     class ChangeListConsumer;
+    struct ChangeListEntry;
     class PatchConsumer;
 
     namespace Internal
     {
         class DiffListPrivate;
+        class DiffListConsumer;
     }
+
+    typedef QVector<ChangeListEntry> ChangesList;
 
     /**
      * @ingroup     GitWrap
@@ -58,6 +62,8 @@ namespace Git
         bool consumePatch( PatchConsumer* consumer, Result& result GITWRAP_DEFAULT_TLSRESULT ) const;
         bool consumeChangeList( ChangeListConsumer* consumer,
                                 Result& result GITWRAP_DEFAULT_TLSRESULT ) const;
+
+        ChangesList changes(Result& result);
 
     private:
         Internal::GitPtr< Internal::DiffListPrivate > d;
