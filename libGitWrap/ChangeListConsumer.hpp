@@ -56,7 +56,7 @@ namespace Git
      * @ingroup GitWrap
      * @brief The ChangeListEntry struct keeps information about a single file change.
      */
-    struct ChangeListEntry
+    struct GITWRAP_API ChangeListEntry
     {
         QString oldPath;
         QString newPath;
