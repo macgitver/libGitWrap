@@ -34,10 +34,10 @@ namespace Git
         public:
             bool raw(const Git::ChangeListEntry &entry);
 
-            const Git::ChangesList &changes() const;
+            const Git::ChangeList &changeList() const;
 
         private:
-            Git::ChangesList     mChanges;
+            Git::ChangeList      mChanges;
         };
 
         bool DiffListConsumer::raw(const Git::ChangeListEntry &entry)
@@ -47,7 +47,7 @@ namespace Git
             return true;
         }
 
-        const ChangesList &DiffListConsumer::changes() const
+        const ChangeList &DiffListConsumer::changeList() const
         {
             return mChanges;
         }
@@ -293,12 +293,12 @@ namespace Git
         return result;
     }
 
-    ChangesList DiffList::changes(Result &result)
+    ChangeList DiffList::changeList(Result &result) const
     {
         Internal::DiffListConsumer consumer;
         consumeChangeList(&consumer, result);
 
-        return consumer.changes();
+        return consumer.changeList();
     }
 
 }
