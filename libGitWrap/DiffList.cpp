@@ -74,16 +74,21 @@ namespace Git
         {
             PatchConsumer* pc = (PatchConsumer*) cb_data;
 
-            if( pc->startFile( QString::fromUtf8( delta->old_file.path ),
-                               QString::fromUtf8( delta->new_file.path ),
-                               PatchConsumer::Type( delta->status ),
-                               delta->similarity,
-                               delta->binary ) )
+            ChangeListEntry entry =
             {
-                return GIT_ERROR;
+                QString::fromUtf8( delta->old_file.path )
+                , QString::fromUtf8( delta->new_file.path )
+                , PatchConsumer::Type( delta->status )
+                , delta->similarity
+                , delta->binary
+            };
+
+            if( pc->raw( entry ) )
+            {
+                return GIT_OK;
             }
 
-            return GIT_OK;
+            return GIT_ERROR;
         }
 
         static int patchHunkCallBack( const git_diff_delta* delta,

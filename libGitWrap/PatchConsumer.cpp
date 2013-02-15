@@ -27,18 +27,6 @@ namespace Git
     {
     }
 
-    bool PatchConsumer::startFile( const QString& oldPath, const QString& newPath, Type type,
-                                   unsigned int similarity, bool isBinary )
-    {
-        Q_UNUSED( oldPath );
-        Q_UNUSED( newPath );
-        Q_UNUSED( type );
-        Q_UNUSED( similarity );
-        Q_UNUSED( isBinary );
-
-        return false;
-    }
-
     bool PatchConsumer::startHunk( int newStart, int newLines, int oldStart, int oldLines,
                                    const QString& header )
     {
