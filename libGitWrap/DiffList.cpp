@@ -32,7 +32,7 @@ namespace Git
         class DiffListConsumer : public ChangeListConsumer
         {
         public:
-            bool raw(const Git::ChangeListEntry &entry);
+            bool startFileChange(const Git::ChangeListEntry &entry);
 
             const Git::ChangeList &changeList() const;
 
@@ -40,7 +40,7 @@ namespace Git
             Git::ChangeList      mChanges;
         };
 
-        bool DiffListConsumer::raw(const Git::ChangeListEntry &entry)
+        bool DiffListConsumer::startFileChange(const Git::ChangeListEntry &entry)
         {
             mChanges.append( entry );
 
@@ -83,7 +83,7 @@ namespace Git
                 , delta->binary
             };
 
-            if( pc->raw( entry ) )
+            if( pc->startFileChange( entry ) )
             {
                 return GIT_OK;
             }
@@ -98,9 +98,9 @@ namespace Git
         {
             PatchConsumer* pc = (PatchConsumer*) cb_data;
 
-            if( pc->startHunk( range->new_start, range->new_lines,
-                               range->old_start, range->old_lines,
-                               header ? QString::fromUtf8( header, int( header_len ) ) : QString() ) )
+            if( pc->startHunkChange( range->new_start, range->new_lines,
+                                     range->old_start, range->old_lines,
+                                     header ? QString::fromUtf8( header, int( header_len ) ) : QString() ) )
             {
                 return GIT_ERROR;
             }
@@ -170,7 +170,7 @@ namespace Git
                 , delta->binary
             };
 
-            if( consumer->raw( change ) )
+            if( consumer->startFileChange( change ) )
             {
                 return GIT_OK;
             }

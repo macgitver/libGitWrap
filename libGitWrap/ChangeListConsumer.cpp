@@ -27,7 +27,7 @@ namespace Git
     {
     }
 
-    bool ChangeListConsumer::raw( const ChangeListEntry &entry )
+    bool ChangeListConsumer::startFileChange( const ChangeListEntry &entry )
     {
         Q_UNUSED( entry );
 

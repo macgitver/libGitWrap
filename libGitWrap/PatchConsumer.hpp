@@ -35,8 +35,8 @@ namespace Git
         virtual ~PatchConsumer();
 
     public:
-        virtual bool startHunk( int newStart, int newLines, int oldStart, int oldLines,
-                                const QString& header );
+        virtual bool startHunkChange( int newStart, int newLines, int oldStart, int oldLines,
+                                      const QString& header );
 
         virtual bool appendContext( const QString& content );
         virtual bool appendAddition( const QString& content );

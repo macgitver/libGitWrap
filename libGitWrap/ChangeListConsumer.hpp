@@ -48,7 +48,7 @@ namespace Git
         virtual ~ChangeListConsumer();
 
     public:
-        virtual bool raw( const ChangeListEntry &entry );
+        virtual bool startFileChange( const ChangeListEntry &entry );
 
     };
 

@@ -27,8 +27,8 @@ namespace Git
     {
     }
 
-    bool PatchConsumer::startHunk( int newStart, int newLines, int oldStart, int oldLines,
-                                   const QString& header )
+    bool PatchConsumer::startHunkChange( int newStart, int newLines, int oldStart, int oldLines,
+                                         const QString& header )
     {
         Q_UNUSED( newStart );
         Q_UNUSED( newLines );
