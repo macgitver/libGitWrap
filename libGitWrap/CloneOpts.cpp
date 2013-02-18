@@ -98,7 +98,7 @@ struct CredentialRequest{}; // temporary dummy
             return 0;
         }
 
-        void CloneOptsPrivate::fetchProgress( const git_transfer_progress* stats, void* payload )
+        int CloneOptsPrivate::fetchProgress( const git_transfer_progress* stats, void* payload )
         {
             CloneOptsPrivate* that = static_cast< CloneOptsPrivate* >( payload );
 
@@ -113,6 +113,8 @@ struct CredentialRequest{}; // temporary dummy
                 that->mEvents->transportProgress( stats->total_objects, stats->indexed_objects,
                                                   stats->received_objects, stats->received_bytes );
             }
+
+            return 0;
         }
 
         int CloneOptsPrivate::remoteComplete( git_remote_completion_type type, void* payload )

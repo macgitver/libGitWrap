@@ -208,10 +208,11 @@ namespace Git
     namespace Internal
     {
 
-        void download_progress( const git_transfer_progress* prg, void* _d )
+        int download_progress( const git_transfer_progress* prg, void* _d )
         {
             RemotePrivate* d = (RemotePrivate*) _d;
             d->mStats = *prg;
+            return 0;
         }
 
     }
