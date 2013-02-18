@@ -14,39 +14,40 @@
  *
  */
 
-#ifndef GIT_BACKGROUND_FETCH_H
-#define GIT_BACKGROUND_FETCH_H
+#ifndef GITWRAP_WORKER_THREAD_HPP
+#define GITWRAP_WORKER_THREAD_HPP
 
-#include "GitWrap.hpp"
-#include "BackgroundTasks.hpp"
-#include "Repository.hpp"
-#include "Remote.hpp"
+#include <QThread>
 
 namespace Git
 {
 
-    /**
-     * @ingroup GitWrap
-     * @brief The BackgroundFetch class provides functionality to fetch a repository in a background thread.
-     *
-     */
-    class GITWRAP_API BackgroundFetch : public BackgroundTask
+    namespace Internal
     {
-        Q_OBJECT
-    public:
-        BackgroundFetch();
 
-    public:
-        void setRepository( Repository repo );
-        void setRemote( Remote remote );
+        class Worker
+        {
+        public:
+            virtual ~Worker();
 
-    public:
-        bool execute();
+        public:
+            virtual void run() = 0;
+        };
 
-    private:
-        Repository  mRepo;
-        Remote      mRemote;
-    };
+        class WorkerThread : public QThread
+        {
+            Q_OBJECT
+        public:
+            WorkerThread( QObject* parent, Worker* worker );
+
+        public:
+            void run();
+
+        private:
+            Worker* mWorker;
+        };
+
+    }
 
 }
 

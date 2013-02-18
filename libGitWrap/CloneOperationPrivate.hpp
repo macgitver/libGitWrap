@@ -15,12 +15,13 @@
  */
 
 #include "GitWrapPrivate.hpp"
-#include "BasicObject.hpp"
+#include "Result.hpp"
+#include "WorkerThread.hpp"
 
 namespace Git
 {
 
-    class CloneEvents;
+    class CloneOperation;
 
     namespace Internal
     {
@@ -30,40 +31,34 @@ namespace Git
          * @ingroup     GitWrap
          *
          */
-        class CloneOptsPrivate : public BasicObject
+        class CloneOperationPrivate : public Worker
         {
         public:
-            CloneOptsPrivate();
-            ~CloneOptsPrivate();
+            CloneOperationPrivate( CloneOperation* owner );
+            ~CloneOperationPrivate();
 
         public:
-            void setEvents( CloneEvents* events );
+            void run();
 
         public:
-            const git_clone_options* asGitCloneOptions() const;
+            QString                 mUrl;
+            QString                 mPath;
 
-        public:
-            QByteArray              mUrl;
-            QByteArray              mPath;
+            CloneOperation*         mOwner;
+            bool                    mBackgroundMode;
+
             QByteArray              mRemoteName;
             QByteArray              mFetchSpec;
             QByteArray              mPushSpec;
             QByteArray              mPushUrl;
+
             git_clone_options       mGitCloneOptions;
             git_remote_callbacks    mRemoteCallbacks;
-            CloneEvents*            mEvents;
 
-        private:
-            static int  credAccquire(git_cred** cred, const char* url, const char *username_from_url,
-                                      unsigned int allowed_types, void* payload );
-            static int  fetchProgress( const git_transfer_progress* stats, void* payload );
-            static int  remoteComplete( git_remote_completion_type type, void* payload );
-            static void remoteProgress( const char* str, int len, void* payload );
-            static int  remoteUpdateTips( const char* refname, const git_oid* a, const git_oid* b,
-                                          void* payload );
+            Result                  mResult;
+            WorkerThread*           mThread;
         };
 
     }
-
 
 }

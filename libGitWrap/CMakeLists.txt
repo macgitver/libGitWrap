@@ -117,9 +117,11 @@ SET( SRC_FILES
     BasicObject.cpp
     Config.cpp
     ChangeListConsumer.cpp
-    CloneOpts.cpp
+    CloneOperation.cpp
     DiffList.cpp
+    FetchCallbacks.cpp
     GitWrap.cpp
+    IFetchEvents.cpp
     Index.cpp
     Object.cpp
     ObjectBlob.cpp
@@ -139,10 +141,7 @@ SET( SRC_FILES
     Submodule.cpp
     TreeBuilder.cpp
     TreeEntry.cpp
-    BackgroundTasks.cpp
-    BackgroundFetch.cpp
-    BackgroundCheckout.cpp
-    BackgroundClone.cpp
+    WorkerThread.cpp
 )
 
 SET( PUB_HDR_FILES
@@ -150,9 +149,10 @@ SET( PUB_HDR_FILES
     Result.hpp
     Config.hpp
     ChangeListConsumer.hpp
-    CloneOpts.hpp
-    GitWrap.hpp
+    CloneOperation.hpp
     DiffList.hpp
+    GitWrap.hpp
+    IFetchEvents.hpp
     Index.hpp
     Object.hpp
     ObjectBlob.hpp
@@ -169,10 +169,6 @@ SET( PUB_HDR_FILES
     Submodule.hpp
     TreeBuilder.hpp
     TreeEntry.hpp
-    BackgroundTasks.hpp
-    BackgroundFetch.hpp
-    BackgroundCheckout.hpp
-    BackgroundClone.hpp
 )
 
 SET( PRI_HDR_FILES
@@ -180,8 +176,9 @@ SET( PRI_HDR_FILES
     GitWrapPrivate.hpp
     BasicObject.hpp
     ConfigPrivate.hpp
-    CloneOptsPrivate.hpp
+    CloneOperationPrivate.hpp
     DiffListPrivate.hpp
+    FetchCallbacks.hpp
     IndexPrivate.hpp
     ObjectPrivate.hpp
     ReferencePrivate.hpp
@@ -191,6 +188,7 @@ SET( PRI_HDR_FILES
     RevisionWalkerPrivate.hpp
     TreeBuilderPrivate.hpp
     TreeEntryPrivate.hpp
+    WorkerThread.hpp
 )
 
 SET( HDR_FILES ${PRI_HDR_FILES} ${PUB_HDR_FILES} )

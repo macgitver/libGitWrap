@@ -13,3 +13,31 @@
  * not, see <http://www.gnu.org/licenses/>.
  *
  */
+
+#include "WorkerThread.hpp"
+
+namespace Git
+{
+
+    namespace Internal
+    {
+
+        Worker::~Worker()
+        {
+        }
+
+        WorkerThread::WorkerThread( QObject* parent, Worker* worker )
+            : QThread( parent )
+            , mWorker( worker )
+        {
+        }
+
+        void WorkerThread::run()
+        {
+            Q_ASSERT( mWorker );
+            mWorker->run();
+        }
+
+    }
+
+}
