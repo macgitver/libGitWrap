@@ -638,10 +638,18 @@ namespace Git
      */
     QString Repository::name() const
     {
-        QFileInfo fi( isBare() ? gitPath() : basePath() );
+        QString path( isBare() ? gitPath() : basePath() );
+        if( path.endsWith( QChar( L'/') ) )
+        {
+            path = path.left( path.length() - 1 );
+        }
+
+        QFileInfo fi( path );
 
         if( fi.suffix() == QLatin1String( "git" ) )
+        {
             return fi.completeBaseName();
+        }
 
         return fi.fileName();
     }
