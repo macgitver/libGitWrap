@@ -31,6 +31,7 @@ namespace Git
     {
 
         int FetchCallbacks::credAccquire( git_cred** cred, const char* url,
+                                          const char *username_from_url,
                                           unsigned int allowed_types, void* payload )
         {
             IFetchEvents* events = static_cast< IFetchEvents* >( payload );
@@ -46,7 +47,7 @@ namespace Git
             return 0;
         }
 
-        void FetchCallbacks::fetchProgress( const git_transfer_progress* stats, void* payload )
+        int FetchCallbacks::fetchProgress( const git_transfer_progress* stats, void* payload )
         {
             IFetchEvents* events = static_cast< IFetchEvents* >( payload );
 
@@ -71,6 +72,8 @@ namespace Git
                     events->doneIndexing();
                 }
             }
+
+            return 0;
         }
 
         int FetchCallbacks::remoteComplete( git_remote_completion_type type, void* payload )
