@@ -80,7 +80,7 @@ namespace Git
                 , QString::fromUtf8( delta->new_file.path )
                 , PatchConsumer::Type( delta->status )
                 , delta->similarity
-                , delta->binary
+                , delta->binary != 0
             };
 
             if( pc->startFileChange( entry ) )
@@ -167,7 +167,7 @@ namespace Git
                 , QString::fromUtf8( delta->new_file.path )
                 , ChangeListConsumer::Type( delta->status )
                 , delta->similarity
-                , delta->binary
+                , delta->binary != 0
             };
 
             if( consumer->startFileChange( change ) )
