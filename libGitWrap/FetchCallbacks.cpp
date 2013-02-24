@@ -25,7 +25,7 @@
 
 namespace Git
 {
-    struct CredentialRequest{}; // temporary dummy
+    class CredentialRequest{}; // temporary dummy
 
     namespace Internal
     {
