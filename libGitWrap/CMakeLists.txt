@@ -121,6 +121,7 @@ SET( SRC_FILES
     DiffList.cpp
     GitWrap.cpp
     Index.cpp
+    IndexEntry.cpp
     Object.cpp
     ObjectBlob.cpp
     ObjectCommit.cpp
@@ -154,6 +155,7 @@ SET( PUB_HDR_FILES
     GitWrap.hpp
     DiffList.hpp
     Index.hpp
+    IndexEntry.hpp
     Object.hpp
     ObjectBlob.hpp
     ObjectCommit.hpp
@@ -183,6 +185,7 @@ SET( PRI_HDR_FILES
     CloneOptsPrivate.hpp
     DiffListPrivate.hpp
     IndexPrivate.hpp
+    IndexEntryPrivate.hpp
     ObjectPrivate.hpp
     ReferencePrivate.hpp
     RemotePrivate.hpp
