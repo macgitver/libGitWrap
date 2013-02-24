@@ -1,6 +1,8 @@
 /*
- * MacGitver
- * Copyright (C) 2012-2013 Sascha Cunz <sascha@babbelbox.org>
+ * libGitWrap - A Qt wrapper library for libgit2
+ * Copyright (C) 2012-2013 The MacGitver-Developers <dev@macgitver.org>
+ *
+ * (C) Sascha Cunz <sascha@macgitver.org>
  *
  * This program is free software; you can redistribute it and/or modify it under the terms of the
  * GNU General Public License (Version 2) as published by the Free Software Foundation.
@@ -14,11 +16,13 @@
  *
  */
 
-#include "GitWrapPrivate.hpp"
 #include "Index.hpp"
+
+#include "IndexPrivate.hpp"
+#include "IndexEntry.hpp"
+#include "IndexEntryPrivate.hpp"
 #include "Repository.hpp"
 #include "RepositoryPrivate.hpp"
-#include "IndexPrivate.hpp"
 
 namespace Git
 {
@@ -107,6 +111,50 @@ namespace Git
         }
 
         return Repository( d->repo() );
+    }
+
+    IndexEntry Index::getEntry(int n, Result &result) const
+    {
+        if( !result )
+        {
+            return IndexEntry();
+        }
+
+        if( !d )
+        {
+            result.setInvalidObject();
+            return IndexEntry();
+        }
+
+        const git_index_entry *entry = git_index_get_byindex(d->mIndex, n);
+        if(entry == NULL)
+        {
+            result.setError(GIT_ENOTFOUND);
+        }
+
+        return IndexEntry( new Internal::IndexEntryPrivate(entry) );
+    }
+
+    IndexEntry Index::getEntry(const QString &path, Result &result) const
+    {
+        if( !result )
+        {
+            return IndexEntry();
+        }
+
+        if( !d )
+        {
+            result.setInvalidObject();
+            return IndexEntry();
+        }
+
+        const git_index_entry *entry = git_index_get_bypath(d->mIndex, path.toUtf8().constData(), 0);
+        if(entry == NULL)
+        {
+            result.setError(GIT_ENOTFOUND);
+        }
+
+        return IndexEntry( new Internal::IndexEntryPrivate(entry) );
     }
 
     /**
