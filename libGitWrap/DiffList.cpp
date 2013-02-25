@@ -102,10 +102,10 @@ namespace Git
                                      range->old_start, range->old_lines,
                                      header ? QString::fromUtf8( header, int( header_len ) ) : QString() ) )
             {
-                return GIT_ERROR;
+                return GIT_OK;
             }
 
-            return GIT_OK;
+            return GIT_ERROR;
         }
 
         static int patchDataCallBack( const git_diff_delta* delta,
