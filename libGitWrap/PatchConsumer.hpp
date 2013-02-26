@@ -18,6 +18,7 @@
 #define GITWRAP_PATCH_CONSUMER_H
 
 #include "GitWrap.hpp"
+#include "ChangeListConsumer.hpp"
 
 namespace Git
 {
@@ -27,31 +28,15 @@ namespace Git
      * @brief       Callback interface to consume a list of differences
      *
      */
-    class GITWRAP_API PatchConsumer
+    class GITWRAP_API PatchConsumer : public ChangeListConsumer
     {
-    public:
-        enum Type
-        {
-            FileUnmodified,
-            FileAdded,
-            FileDeleted,
-            FileModified,
-            FileRenamed,
-            FileCopied,
-            FileIgnored,
-            FileUntracked
-        };
-
     public:
         PatchConsumer();
         virtual ~PatchConsumer();
 
     public:
-        virtual bool startFile( const QString& oldPath, const QString& newPath, Type type,
-                                unsigned int similarity, bool isBinary );
-
-        virtual bool startHunk( int newStart, int newLines, int oldStart, int oldLines,
-                                const QString& header );
+        virtual bool startHunkChange( int newStart, int newLines, int oldStart, int oldLines,
+                                      const QString& header );
 
         virtual bool appendContext( const QString& content );
         virtual bool appendAddition( const QString& content );

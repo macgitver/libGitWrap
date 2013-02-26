@@ -22,11 +22,35 @@
 #include "RepositoryPrivate.hpp"
 #include "DiffListPrivate.hpp"
 
+
 namespace Git
 {
 
     namespace Internal
     {
+
+        class DiffListConsumer : public ChangeListConsumer
+        {
+        public:
+            bool startFileChange(const Git::ChangeListEntry &entry);
+
+            const Git::ChangeList &changeList() const;
+
+        private:
+            Git::ChangeList      mChanges;
+        };
+
+        bool DiffListConsumer::startFileChange(const Git::ChangeListEntry &entry)
+        {
+            mChanges.append( entry );
+
+            return true;
+        }
+
+        const ChangeList &DiffListConsumer::changeList() const
+        {
+            return mChanges;
+        }
 
         DiffListPrivate::DiffListPrivate( const GitPtr< RepositoryPrivate >& repo,
                                           git_diff_list* difflist )
@@ -50,16 +74,21 @@ namespace Git
         {
             PatchConsumer* pc = (PatchConsumer*) cb_data;
 
-            if( pc->startFile( QString::fromUtf8( delta->old_file.path ),
-                               QString::fromUtf8( delta->new_file.path ),
-                               PatchConsumer::Type( delta->status ),
-                               delta->similarity,
-                               delta->binary ) )
+            ChangeListEntry entry =
             {
-                return GIT_ERROR;
+                QString::fromUtf8( delta->old_file.path )
+                , QString::fromUtf8( delta->new_file.path )
+                , PatchConsumer::Type( delta->status )
+                , delta->similarity
+                , delta->binary != 0
+            };
+
+            if( pc->startFileChange( entry ) )
+            {
+                return GIT_OK;
             }
 
-            return GIT_OK;
+            return GIT_ERROR;
         }
 
         static int patchHunkCallBack( const git_diff_delta* delta,
@@ -69,14 +98,14 @@ namespace Git
         {
             PatchConsumer* pc = (PatchConsumer*) cb_data;
 
-            if( pc->startHunk( range->new_start, range->new_lines,
-                               range->old_start, range->old_lines,
-                               header ? QString::fromUtf8( header, int( header_len ) ) : QString() ) )
+            if( pc->startHunkChange( range->new_start, range->new_lines,
+                                     range->old_start, range->old_lines,
+                                     header ? QString::fromUtf8( header, int( header_len ) ) : QString() ) )
             {
-                return GIT_ERROR;
+                return GIT_OK;
             }
 
-            return GIT_OK;
+            return GIT_ERROR;
         }
 
         static int patchDataCallBack( const git_diff_delta* delta,
@@ -132,11 +161,16 @@ namespace Git
         {
             ChangeListConsumer* consumer = (ChangeListConsumer*) cb_data;
 
-            if( consumer->raw( QString::fromUtf8( delta->old_file.path ),
-                               QString::fromUtf8( delta->new_file.path ),
-                               ChangeListConsumer::Type( delta->status ),
-                               delta->similarity,
-                               delta->binary ) )
+            ChangeListEntry change =
+            {
+                QString::fromUtf8( delta->old_file.path )
+                , QString::fromUtf8( delta->new_file.path )
+                , ChangeListConsumer::Type( delta->status )
+                , delta->similarity
+                , delta->binary != 0
+            };
+
+            if( consumer->startFileChange( change ) )
             {
                 return GIT_OK;
             }
@@ -262,6 +296,14 @@ namespace Git
                                    consumer );
 
         return result;
+    }
+
+    ChangeList DiffList::changeList(Result &result) const
+    {
+        Internal::DiffListConsumer consumer;
+        consumeChangeList(&consumer, result);
+
+        return consumer.changeList();
     }
 
 }

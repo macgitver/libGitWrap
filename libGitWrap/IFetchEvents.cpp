@@ -13,3 +13,14 @@
  * not, see <http://www.gnu.org/licenses/>.
  *
  */
+
+#include "IFetchEvents.hpp"
+
+namespace Git
+{
+
+    IFetchEvents::~IFetchEvents()
+    {
+    }
+
+}
