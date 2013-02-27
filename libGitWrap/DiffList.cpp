@@ -129,21 +129,21 @@ namespace Git
             switch( line_origin )
             {
             case GIT_DIFF_LINE_CONTEXT:
-                if( pc->appendContext( ct ) )
+                if( !pc->appendContext( ct ) )
                 {
                     return GIT_ERROR;
                 }
                 break;
 
             case GIT_DIFF_LINE_ADDITION:
-                if( pc->appendAddition( ct ) )
+                if( !pc->appendAddition( ct ) )
                 {
                     return GIT_ERROR;
                 }
                 break;
 
             case GIT_DIFF_LINE_DELETION:
-                if( pc->appendDeletion( ct ) )
+                if( !pc->appendDeletion( ct ) )
                 {
                     return GIT_ERROR;
                 }
