@@ -36,28 +36,28 @@ namespace Git
         Q_UNUSED( oldLines );
         Q_UNUSED( header );
 
-        return false;
+        return true;
     }
 
     bool PatchConsumer::appendContext( const QString& content )
     {
         Q_UNUSED( content );
 
-        return false;
+        return true;
     }
 
     bool PatchConsumer::appendAddition( const QString& content )
     {
         Q_UNUSED( content );
 
-        return false;
+        return true;
     }
 
     bool PatchConsumer::appendDeletion( const QString& content )
     {
         Q_UNUSED( content );
 
-        return false;
+        return true;
     }
 
 }
