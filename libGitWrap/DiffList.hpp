@@ -64,6 +64,8 @@ namespace Git
 
         ChangeList changeList(Result& result) const;
 
+        bool findRenames( Result& result );
+
     private:
         Internal::GitPtr< Internal::DiffListPrivate > d;
     };

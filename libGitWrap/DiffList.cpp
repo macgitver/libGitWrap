@@ -80,7 +80,7 @@ namespace Git
                 , QString::fromUtf8( delta->new_file.path )
                 , PatchConsumer::Type( delta->status )
                 , delta->similarity
-                , delta->binary != 0
+                , ( delta->flags & GIT_DIFF_FLAG_BINARY ) != 0
             };
 
             if( pc->startFileChange( entry ) )
@@ -167,7 +167,7 @@ namespace Git
                 , QString::fromUtf8( delta->new_file.path )
                 , ChangeListConsumer::Type( delta->status )
                 , delta->similarity
-                , delta->binary != 0
+                , ( delta->flags & GIT_DIFF_FLAG_BINARY ) != 0
             };
 
             if( consumer->startFileChange( change ) )
@@ -304,6 +304,32 @@ namespace Git
         consumeChangeList(&consumer, result);
 
         return consumer.changeList();
+    }
+
+    /**
+     * @brief   Try to find renames
+     *
+     * @param[in,out] result
+     *
+     * @return        `true` on success, otherwise `false`.
+     */
+    bool DiffList::findRenames( Result& result )
+    {
+        if( !result )
+        {
+            return false;
+        }
+
+        if( !d )
+        {
+            result.setInvalidObject();
+            return false;
+        }
+
+        git_diff_find_options opts = GIT_DIFF_FIND_OPTIONS_INIT;
+        result = git_diff_find_similar( d->mDiffList, &opts );
+
+        return result;
     }
 
 }
