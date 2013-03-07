@@ -36,10 +36,7 @@ namespace Git
 
         ReferencePrivate::~ReferencePrivate()
         {
-            if( mRef )
-            {
-                git_reference_free( mRef );
-            }
+            git_reference_free( mRef );
         }
 
     }
@@ -71,8 +68,7 @@ namespace Git
 
     bool Reference::isValid() const
     {
-        // libGit2 allows a Reference to become invalid though _WE_ still refCount it...
-        return d && d->mRef;
+        return d;
     }
 
     bool Reference::destroy( Result& result )
@@ -87,17 +83,7 @@ namespace Git
             return false;
         }
 
-        result = git_reference_delete( d->mRef );
-        if( !result )
-        {
-            return false;
-        }
-
-        // Clear our ref out. This ReferencePrivate object is invalid from now on.
-        // libgit2 free'ed d->mRef.
-        d->mRef = NULL;
-
-        return false;
+        return git_reference_delete( d->mRef );
     }
 
     QString Reference::name() const
@@ -125,10 +111,13 @@ namespace Git
             return Invalid;
         }
 
-        if( git_reference_type( d->mRef ) == GIT_REF_SYMBOLIC )
-            return Symbolic;
-        else
-            return Direct;
+        switch( git_reference_type( d->mRef ) )
+        {
+        case GIT_REF_SYMBOLIC:  return Symbolic;
+        case GIT_REF_OID:       return Direct;
+        default:
+        case GIT_REF_INVALID:   return Invalid;
+        }
     }
 
     ObjectId Reference::objectId( Result& result ) const

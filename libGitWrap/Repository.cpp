@@ -526,7 +526,14 @@ namespace Git
             return false;
         }
 
-        result = git_branch_move( ref, newName.toUtf8().constData(), force );
+        git_reference* refOut = NULL;
+        result = git_branch_move( &refOut, ref, newName.toUtf8().constData(), force );
+
+        if( result )
+        {
+            git_reference_free( refOut );
+        }
+
         git_reference_free( ref );
 
         return result;
