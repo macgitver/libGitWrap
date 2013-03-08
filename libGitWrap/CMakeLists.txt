@@ -206,26 +206,6 @@ ADD_QT_LIBRARY(
 
 TARGET_LINK_LIBRARIES( GitWrap ${GIT_LIBS} )
 
-FUNCTION( MSVC_SPLIT_SOURCES target )
-    GET_TARGET_PROPERTY( sources ${target} SOURCES )
-
-    FOREACH( source ${sources} )
-
-        IF( NOT source MATCHES ".*/" )
-
-            SET( rel "Sources" )
-
-        ELSE()
-            STRING( REPLACE ${CMAKE_CURRENT_BINARY_DIR}/ "Sources/Generated/" rel ${source} )
-            STRING( REPLACE ${CMAKE_CURRENT_SOURCE_DIR}/ "Sources/" rel ${rel} )
-            STRING( REGEX REPLACE "/([^/]*)$" "" rel ${rel} )
-        ENDIF()
-
-        STRING( REPLACE "/" "\\\\" rel ${rel} )
-        SOURCE_GROUP( ${rel} FILES ${source} )
-    ENDFOREACH()
-ENDFUNCTION()
-
 IF( MSVC )
     SET_TARGET_PROPERTIES( GitWrap PROPERTIES COMPILE_FLAGS "/FIforce_no_export.h" )
     MSVC_SPLIT_SOURCES( GitWrap )
