@@ -30,11 +30,12 @@ namespace Git
             mBackgroundMode = false;
             mThread = NULL;
 
-            mGitCloneOptions = (git_clone_options) GIT_CLONE_OPTIONS_INIT;
-            mGitCloneOptions.checkout_opts.checkout_strategy = GIT_CHECKOUT_SAFE_CREATE;
+            git_clone_options opts = GIT_CLONE_OPTIONS_INIT;
+            memcpy( &mGitCloneOptions, &opts, sizeof( opts ) );
 
-            mRemoteCallbacks                        = (git_remote_callbacks)
-                                                      GIT_REMOTE_CALLBACKS_INIT;
+            git_remote_callbacks rcb = GIT_REMOTE_CALLBACKS_INIT;
+            memcpy( &mRemoteCallbacks, &rcb, sizeof( rcb ) );
+
             mRemoteCallbacks.completion             = &FetchCallbacks::remoteComplete;
             mRemoteCallbacks.progress               = &FetchCallbacks::remoteProgress;
             mRemoteCallbacks.update_tips            = &FetchCallbacks::remoteUpdateTips;
