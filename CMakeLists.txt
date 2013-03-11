@@ -7,3 +7,11 @@ SET( libGitWrap_includes
 )
 
 ADD_SUBDIRECTORY( libGitWrap )
+
+ADD_DOXYGEN_TARGET(
+    libGitWrap
+    ${libGitWrap_SOURCE_DIR}/doc
+
+    ${MGV_GITWRAP_SOURCE_DIR}
+    EXCLUDE ${MGV_GITWRAP_SOURCE_DIR}/libgit2
+)

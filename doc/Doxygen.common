@@ -1,0 +1,10 @@
+
+PROJECT_NAME           = libGitWrap
+PROJECT_NUMBER         = "" 
+PROJECT_BRIEF          = "The modern way to git"
+PROJECT_LOGO           =
+
+HTML_COLORSTYLE_HUE    = 359
+HTML_COLORSTYLE_SAT    = 4
+HTML_COLORSTYLE_GAMMA  = 240
+
