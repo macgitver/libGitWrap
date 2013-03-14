@@ -23,14 +23,11 @@
 
 #include <QTime>
 
+struct git_index_entry;
+
 namespace Git
 {
     class ObjectId;
-
-    namespace Internal
-    {
-        class IndexEntryPrivate;
-    }
 
     /**
      * @ingroup GitWrap
@@ -42,7 +39,7 @@ namespace Git
     public:
         IndexEntry();
         IndexEntry(const IndexEntry &other);
-        IndexEntry(Internal::IndexEntryPrivate *entry);
+        IndexEntry(const git_index_entry *entry);
         ~IndexEntry();
 
         IndexEntry& operator=( const IndexEntry& other );
@@ -61,7 +58,7 @@ namespace Git
         int stage() const;
 
     private:
-        Internal::GitPtr< Internal::IndexEntryPrivate >   d;
+        git_index_entry *   d;
     };
 
 }
