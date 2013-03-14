@@ -18,7 +18,7 @@
 
 #include "IndexEntry.hpp"
 
-#include "IndexEntryPrivate.hpp"
+#include "GitWrapPrivate.hpp"
 #include "ObjectId.hpp"
 
 
