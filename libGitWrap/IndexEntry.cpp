@@ -36,36 +36,19 @@ IndexEntry::IndexEntry( const IndexEntry& other )
 }
 
 IndexEntry::IndexEntry( const git_index_entry *entry )
-    : d( new git_index_entry )
 {
     Q_ASSERT(entry);
 
-    d->ctime = entry->ctime;
-    d->mtime = entry->mtime;
-
-    d->dev   = entry->dev;
-    d->ino   = entry->ino;
-    d->mode  = entry->mode;
-    d->uid   = entry->uid;
-    d->gid   = entry->gid;
-    d->file_size = entry->file_size;
-    d->oid   = entry->oid;
-    d->flags = entry->flags;
-    d->flags_extended = entry->flags_extended;
-
-    QByteArray a(entry->path);
-    int len = a.size();
-    d->path = new char(len);
-    memcpy( d->path, a.data(), len );
+    int l = strlen( entry->path );
+    d = (git_index_entry*) malloc( sizeof(git_index_entry) + l + 1 );
+    *d = *entry;
+    d->path = (char*) ( d + 1 );
+    memcpy( d->path, entry->path, l + 1 );
 }
 
 IndexEntry::~IndexEntry()
 {
-    if (d != NULL)
-    {
-        delete d->path;
-        delete d;
-    }
+    free( d );
 }
 
 IndexEntry &IndexEntry::operator =(const IndexEntry &other)
