@@ -29,6 +29,11 @@ namespace Git
 {
     class ObjectId;
 
+    namespace Internal
+    {
+        class IndexEntryPrivate;
+    }
+
     /**
      * @ingroup GitWrap
      * @brief The IndexEntry class provides information about a Git index entry.
@@ -39,7 +44,7 @@ namespace Git
     public:
         IndexEntry();
         IndexEntry(const IndexEntry &other);
-        IndexEntry(const git_index_entry *entry);
+        IndexEntry(Internal::IndexEntryPrivate* _d);
         ~IndexEntry();
 
         IndexEntry& operator=( const IndexEntry& other );
@@ -58,7 +63,7 @@ namespace Git
         int stage() const;
 
     private:
-        git_index_entry *   d;
+        Internal::GitPtr< Internal::IndexEntryPrivate >   d;
     };
 
 }

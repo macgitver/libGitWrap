@@ -17,13 +17,28 @@
  */
 
 #include "IndexEntry.hpp"
+#include "IndexEntryPrivate.hpp"
 
-#include "GitWrapPrivate.hpp"
 #include "ObjectId.hpp"
 
 
 namespace Git
 {
+
+namespace Internal
+{
+
+    IndexEntryPrivate::IndexEntryPrivate( const git_index_entry* entry )
+        : mEntry( *entry )
+    {
+        mEntry.path = qstrdup( entry->path );
+    }
+
+    IndexEntryPrivate::~IndexEntryPrivate()
+    {
+    }
+
+}
 
 
 IndexEntry::IndexEntry()
@@ -35,20 +50,14 @@ IndexEntry::IndexEntry( const IndexEntry& other )
 {
 }
 
-IndexEntry::IndexEntry( const git_index_entry *entry )
+IndexEntry::IndexEntry(Internal::IndexEntryPrivate *_d )
+    : d( _d )
 {
-    Q_ASSERT(entry);
-
-    int l = strlen( entry->path );
-    d = (git_index_entry*) malloc( sizeof(git_index_entry) + l + 1 );
-    *d = *entry;
-    d->path = (char*) ( d + 1 );
-    memcpy( d->path, entry->path, l + 1 );
+    Q_ASSERT(d);
 }
 
 IndexEntry::~IndexEntry()
 {
-    free( d );
 }
 
 IndexEntry &IndexEntry::operator =(const IndexEntry &other)
@@ -64,49 +73,49 @@ bool IndexEntry::isValid() const
 
 QString IndexEntry::path() const
 {
-    return QString::fromUtf8(d->path);
+    return QString::fromUtf8( d->mEntry.path );
 }
 
 ObjectId IndexEntry::blobSha() const
 {
-    return ObjectId::fromRaw( d->oid.id );
+    return ObjectId::fromRaw( d->mEntry.oid.id );
 }
 
 unsigned int IndexEntry::mode() const
 {
-    return d->mode;
+    return d->mEntry.mode;
 }
 
 unsigned int IndexEntry::ino() const
 {
-    return d->ino;
+    return d->mEntry.ino;
 }
 
 unsigned int IndexEntry::uid() const
 {
-    return d->uid;
+    return d->mEntry.uid;
 }
 
 unsigned int IndexEntry::gid() const
 {
-    return d->gid;
+    return d->mEntry.gid;
 }
 
 QTime IndexEntry::cTime() const
 {
-    git_index_time t = d->ctime;
+    git_index_time t = d->mEntry.ctime;
     return QTime( 0, 0, t.seconds );
 }
 
 QTime IndexEntry::mTime() const
 {
-    git_index_time t = d->mtime;
+    git_index_time t = d->mEntry.mtime;
     return QTime(0, 0, t.seconds );
 }
 
 int IndexEntry::stage() const
 {
-    return git_index_entry_stage( d );
+    return git_index_entry_stage( &(d->mEntry) );
 }
 
 }

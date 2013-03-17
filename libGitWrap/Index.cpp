@@ -20,6 +20,7 @@
 
 #include "IndexPrivate.hpp"
 #include "IndexEntry.hpp"
+#include "IndexEntryPrivate.hpp"
 #include "Repository.hpp"
 #include "RepositoryPrivate.hpp"
 
@@ -131,7 +132,7 @@ namespace Git
             result.setError(GIT_ENOTFOUND);
         }
 
-        return IndexEntry( entry );
+        return IndexEntry( new Internal::IndexEntryPrivate( entry ) );
     }
 
     IndexEntry Index::getEntry(const QString &path, Result &result) const
@@ -153,7 +154,7 @@ namespace Git
             result.setError(GIT_ENOTFOUND);
         }
 
-        return IndexEntry( entry );
+        return IndexEntry( new Internal::IndexEntryPrivate( entry ) );
     }
 
     /**

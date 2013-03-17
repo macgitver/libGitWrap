@@ -182,6 +182,7 @@ SET( PRI_HDR_FILES
     DiffListPrivate.hpp
     FetchCallbacks.hpp
     IndexPrivate.hpp
+    IndexEntryPrivate.hpp
     ObjectPrivate.hpp
     ReferencePrivate.hpp
     RemotePrivate.hpp
