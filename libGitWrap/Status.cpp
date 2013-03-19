@@ -107,11 +107,9 @@ FileStatusHash Status::all(Result &result) const
 
     if( !d )
     {
-        qDebug( "ERR: NO-STATUS" );
         result.setInvalidObject();
         return FileStatusHash();
     }
-    qDebug( "1" );
 
     FileStatusHash sh;
 
@@ -128,7 +126,6 @@ FileStatusHash Status::all(Result &result) const
         return FileStatusHash();
     }
 
-    qDebug( "OK" );
     return sh;
 }
 
