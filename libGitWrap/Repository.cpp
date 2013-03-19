@@ -34,7 +34,8 @@
 #include "ObjectCommit.hpp"
 #include "RevisionWalker.hpp"
 #include "RevisionWalkerPrivate.hpp"
-#include "Submodule.hpp"
+#include "Status.hpp"
+#include "StatusPrivate.hpp"
 
 #include <QDir>
 
@@ -47,6 +48,7 @@ namespace Git
         RepositoryPrivate::RepositoryPrivate( git_repository* repo )
             : mRepo( repo )
             , mIndex( NULL )
+            , mStatus( NULL )
         {
         }
 
@@ -65,6 +67,7 @@ namespace Git
             // a race-condition in libgit2, which - as I later understood - is not at all there
             // because outer constraints - like the above - prohibited the race to happen.
             Q_ASSERT( !mIndex );
+            Q_ASSERT( !mStatus );
 
             git_repository_free( mRepo );
         }
@@ -321,6 +324,32 @@ namespace Git
         return Index( d->mIndex );
     }
 
+    Status Repository::status(Result &result)
+    {
+        if( !result )
+        {
+            return Status();
+        }
+
+        if( !d )
+        {
+            result.setInvalidObject();
+            return Status();
+        }
+
+        if( isBare() )
+        {
+            return Status();
+        }
+
+        if( !d->mStatus )
+        {
+            d->mStatus = new Internal::StatusPrivate( d );
+        }
+
+        return Status( d->mStatus );
+    }
+
     /**
      * @brief           List all references
      *
@@ -561,54 +590,6 @@ namespace Git
         }
 
         return Internal::slFromStrArray( &arr );
-    }
-
-    namespace Internal
-    {
-
-        static int statusHashCB( const char* fn, unsigned int status, void* rawSH )
-        {
-            #if 0
-            qDebug( "%s - %s", qPrintable( QString::number( status, 2 ) ), fn );
-            #endif
-
-            StatusHash* sh = (StatusHash*) rawSH;
-            sh->insert( QString::fromUtf8( fn ), FileStati( status ) );
-
-            return GIT_OK;
-        }
-
-    }
-
-    StatusHash Repository::statusHash( Result& result )
-    {
-        if( !result )
-        {
-            return StatusHash();
-        }
-
-        if( !d )
-        {
-            result.setInvalidObject();
-            return StatusHash();
-        }
-
-        StatusHash sh;
-
-        git_status_options opt = GIT_STATUS_OPTIONS_INIT;
-
-        opt.flags = GIT_STATUS_OPT_INCLUDE_UNTRACKED
-                  | GIT_STATUS_OPT_INCLUDE_IGNORED
-                  | GIT_STATUS_OPT_INCLUDE_UNMODIFIED
-                  | GIT_STATUS_OPT_RECURSE_UNTRACKED_DIRS;
-
-        result = git_status_foreach_ext( d->mRepo, &opt, &Internal::statusHashCB, (void*) &sh );
-        if( !result )
-        {
-            return StatusHash();
-        }
-
-        return sh;
     }
 
     QString Repository::basePath() const

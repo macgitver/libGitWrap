@@ -27,6 +27,7 @@ namespace Git
 
     namespace Internal
     {
+        class StatusPrivate;
 
         /**
          * @internal
@@ -43,6 +44,7 @@ namespace Git
         public:
             git_repository* mRepo;
             IndexPrivate*   mIndex;
+            StatusPrivate*  mStatus;
         };
 
     }

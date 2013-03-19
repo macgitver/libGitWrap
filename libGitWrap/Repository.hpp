@@ -19,7 +19,6 @@
 
 #include <QStringList>
 
-#include "GitWrap.hpp"
 #include "Submodule.hpp"
 
 namespace Git
@@ -37,6 +36,7 @@ namespace Git
     class ObjectId;
     class RevisionWalker;
     class Remote;
+    class Status;
 
     namespace Internal
     {
@@ -95,7 +95,7 @@ namespace Git
 
         Index index( Result& result GITWRAP_DEFAULT_TLSRESULT );
 
-        StatusHash statusHash( Result& result GITWRAP_DEFAULT_TLSRESULT );
+        Status status( Result &result GITWRAP_DEFAULT_TLSRESULT );
 
         Reference HEAD( Result& result GITWRAP_DEFAULT_TLSRESULT ) const;
         Reference lookupRef( const QString& refName, Result& result GITWRAP_DEFAULT_TLSRESULT );

@@ -91,28 +91,6 @@ namespace Git
         SubmoduleAttr       = 0160000
     };
 
-    enum FileStatus
-    {
-        StatusCurrent               = 0,
-
-        StatusIndexNew              = (1 << 0),
-        StatusIndexModified         = (1 << 1),
-        StatusIndexDeleted          = (1 << 2),
-        StatusIndexRenamed          = (1 << 3),
-        StatusIndexTypeChange       = (1 << 4),
-
-        StatusWorkingTreeNew        = (1 << 7),
-        StatusWorkingTreeModified   = (1 << 8),
-        StatusWorkingTreeDeleted    = (1 << 9),
-        StatusWorkingTreeTypeChange = (1 << 10),
-
-        StatusIgnored               = (1 << 14)
-    };
-
-    typedef QFlags< FileStatus > FileStati;
-
-    typedef QHash< QString, FileStati > StatusHash;
-
     class Result;
 
     class GITWRAP_API GitWrap
