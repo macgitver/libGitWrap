@@ -31,7 +31,7 @@ namespace Internal
     IndexEntryPrivate::IndexEntryPrivate( const git_index_entry* entry )
         : mEntry( *entry )
     {
-        mEntry.path = qstrdup( entry->path );
+        mEntry.path = strdup( entry->path );
     }
 
     IndexEntryPrivate::~IndexEntryPrivate()
