@@ -123,6 +123,7 @@ SET( SRC_FILES
     GitWrap.cpp
     IFetchEvents.cpp
     Index.cpp
+    IndexEntry.cpp
     Object.cpp
     ObjectBlob.cpp
     ObjectCommit.cpp
@@ -154,6 +155,7 @@ SET( PUB_HDR_FILES
     GitWrap.hpp
     IFetchEvents.hpp
     Index.hpp
+    IndexEntry.hpp
     Object.hpp
     ObjectBlob.hpp
     ObjectCommit.hpp
@@ -180,6 +182,7 @@ SET( PRI_HDR_FILES
     DiffListPrivate.hpp
     FetchCallbacks.hpp
     IndexPrivate.hpp
+    IndexEntryPrivate.hpp
     ObjectPrivate.hpp
     ReferencePrivate.hpp
     RemotePrivate.hpp

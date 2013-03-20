@@ -1,6 +1,8 @@
 /*
- * MacGitver
- * Copyright (C) 2012-2013 Sascha Cunz <sascha@babbelbox.org>
+ * libGitWrap - A Qt wrapper library for libgit2
+ * Copyright (C) 2012-2013 The MacGitver-Developers <dev@macgitver.org>
+ *
+ * (C) Sascha Cunz <sascha@macgitver.org>
  *
  * This program is free software; you can redistribute it and/or modify it under the terms of the
  * GNU General Public License (Version 2) as published by the Free Software Foundation.
@@ -22,6 +24,7 @@
 namespace Git
 {
 
+    class IndexEntry;
     class Repository;
 
     namespace Internal
@@ -40,8 +43,9 @@ namespace Git
         explicit Index( Internal::IndexPrivate* _d );
 
     public:
+        Index( bool create = false );
+        Index( const QString& path, Result& result );
         Index( const Index& other );
-        Index();
         ~Index();
 
     public:
@@ -55,6 +59,9 @@ namespace Git
 
         int count( Result& result GITWRAP_DEFAULT_TLSRESULT ) const;
         Repository repository( Result& result GITWRAP_DEFAULT_TLSRESULT ) const;
+
+        IndexEntry getEntry(int n, Result &result GITWRAP_DEFAULT_TLSRESULT) const;
+        IndexEntry getEntry(const QString &path, Result &result GITWRAP_DEFAULT_TLSRESULT) const;
 
     private:
         Internal::GitPtr< Internal::IndexPrivate > d;
