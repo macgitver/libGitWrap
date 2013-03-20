@@ -36,6 +36,7 @@ namespace Internal
 
     IndexEntryPrivate::~IndexEntryPrivate()
     {
+        free( mEntry.path );
     }
 
 }
