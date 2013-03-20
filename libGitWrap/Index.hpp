@@ -43,8 +43,9 @@ namespace Git
         explicit Index( Internal::IndexPrivate* _d );
 
     public:
+        Index( bool create = false );
+        Index( const QString& path, Result& result );
         Index( const Index& other );
-        Index();
         ~Index();
 
     public:
