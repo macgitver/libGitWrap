@@ -55,6 +55,28 @@ namespace Git
             Ignore
         };
 
+        /**
+         * @brief The Status enum describes a submodule's status.
+         */
+        enum Status
+        {
+            InHead          = (1u << 0),
+            InIndex         = (1u << 1),
+            InConfig        = (1u << 2),
+            InWorkingTree   = (1u << 3),
+            IndexAdded      = (1u << 4),
+            IndexDeleted    = (1u << 5),
+            IndexModified   = (1u << 6),
+            WorkingTreeUninitialized    = (1u << 7),
+            WorkingTreeAdded            = (1u << 8),
+            WorkingTreeDeleted          = (1u << 9),
+            WorkingTreeModified         = (1u << 10),
+            WorkingTreeIndexModified    = (1u << 11),
+            WorkingTreeWtModified       = (1u << 12),
+            WorkingTreeUntracked        = (1u << 13)
+        };
+        Q_DECLARE_FLAGS ( StatusFlags, Status )
+
     public:
         /**
          * @brief Submodule
@@ -120,6 +142,8 @@ namespace Git
         void close();
 
         bool isOpened() const;
+
+        Submodule::Status status(Result &result) const;
 
     private:
         Internal::GitPtr< Internal::SubmodulePrivate > d;

@@ -238,6 +238,19 @@ namespace Git
         return d && d->mMyRepo;
     }
 
+    Submodule::Status Submodule::status(Result &result) const
+    {
+        if ( !result || !d )
+        {
+            return InHead;
+        }
+
+        unsigned int status = GIT_SUBMODULE_STATUS_IN_HEAD;
+        result = git_submodule_status( &status, d->getSM( result ) );
+
+        return static_cast< Submodule::Status >( status );
+    }
+
     bool Submodule::open( Result& result )
     {
         if( !result || !d )
