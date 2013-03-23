@@ -24,7 +24,6 @@
 namespace Git
 {
 
-    class Submodule;
     class Reference;
     class DiffList;
     class Index;
@@ -36,7 +35,6 @@ namespace Git
     class ObjectId;
     class RevisionWalker;
     class Remote;
-    class Status;
 
     namespace Internal
     {
@@ -44,6 +42,7 @@ namespace Git
     }
 
     typedef QHash< QString, ObjectId > ResolvedRefs;
+
 
     /**
      * @ingroup     GitWrap
@@ -95,7 +94,8 @@ namespace Git
 
         Index index( Result& result GITWRAP_DEFAULT_TLSRESULT );
 
-        Status status( Result &result GITWRAP_DEFAULT_TLSRESULT );
+        FileStatusFlags status(const QString &fileName, Result &result GITWRAP_DEFAULT_TLSRESULT) const;
+        FileStatusHash status(Result &result GITWRAP_DEFAULT_TLSRESULT) const;
 
         Reference HEAD( Result& result GITWRAP_DEFAULT_TLSRESULT ) const;
         Reference lookupRef( const QString& refName, Result& result GITWRAP_DEFAULT_TLSRESULT );

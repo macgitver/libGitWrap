@@ -34,8 +34,6 @@
 #include "ObjectCommit.hpp"
 #include "RevisionWalker.hpp"
 #include "RevisionWalkerPrivate.hpp"
-#include "Status.hpp"
-#include "StatusPrivate.hpp"
 
 #include <QDir>
 
@@ -48,7 +46,6 @@ namespace Git
         RepositoryPrivate::RepositoryPrivate( git_repository* repo )
             : mRepo( repo )
             , mIndex( NULL )
-            , mStatus( NULL )
         {
         }
 
@@ -67,11 +64,21 @@ namespace Git
             // a race-condition in libgit2, which - as I later understood - is not at all there
             // because outer constraints - like the above - prohibited the race to happen.
             Q_ASSERT( !mIndex );
-            Q_ASSERT( !mStatus );
 
             git_repository_free( mRepo );
         }
 
+        static int statusHashCB( const char* fn, unsigned int status, void* rawSH )
+        {
+            #if 0
+            qDebug( "%s - %s", qPrintable( QString::number( status, 2 ) ), fn );
+            #endif
+
+            Git::FileStatusHash* sh = (FileStatusHash*) rawSH;
+            sh->insert( QString::fromUtf8( fn ), FileStatusFlags( status ) );
+
+            return GIT_OK;
+        }
     }
 
     /**
@@ -324,30 +331,57 @@ namespace Git
         return Index( d->mIndex );
     }
 
-    Status Repository::status(Result &result)
+    /**
+     * @brief status Reads the status of a single file.
+     * The file status is a combination of worktree, index and repository HEAD.
+     * @param fileName the file path relative to the repository
+     * @param r the error result
+     * @return the current file status
+     */
+    FileStatusFlags Repository::status(const QString &fileName, Result &result) const
+    {
+        unsigned int status = GIT_STATUS_CURRENT;
+
+        if ( !d )
+        {
+            result.setInvalidObject();
+            return (FileStatusFlags)GIT_STATUS_CURRENT;
+        }
+
+        result = git_status_file( &status, d->mRepo, fileName.toUtf8().data() );
+
+        return static_cast<FileStatusFlags>( status );
+    }
+
+    FileStatusHash Repository::status(Result &result) const
     {
         if( !result )
         {
-            return Status();
+            return FileStatusHash();
         }
 
         if( !d )
         {
             result.setInvalidObject();
-            return Status();
+            return FileStatusHash();
         }
 
-        if( isBare() )
+        FileStatusHash sh;
+
+        git_status_options opt = GIT_STATUS_OPTIONS_INIT;
+
+        opt.flags = GIT_STATUS_OPT_INCLUDE_UNTRACKED
+                  | GIT_STATUS_OPT_INCLUDE_IGNORED
+                  | GIT_STATUS_OPT_INCLUDE_UNMODIFIED
+                  | GIT_STATUS_OPT_RECURSE_UNTRACKED_DIRS;
+
+        result = git_status_foreach_ext( d->mRepo, &opt, &Internal::statusHashCB, (void*) &sh );
+        if( !result )
         {
-            return Status();
+            return FileStatusHash();
         }
 
-        if( !d->mStatus )
-        {
-            d->mStatus = new Internal::StatusPrivate( d );
-        }
-
-        return Status( d->mStatus );
+        return sh;
     }
 
     /**

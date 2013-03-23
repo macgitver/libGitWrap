@@ -91,6 +91,30 @@ namespace Git
         SubmoduleAttr       = 0160000
     };
 
+    /**
+     * @brief Status flags for a single file.
+     */
+    enum FileStatus
+    {
+        Unchanged             = 0,
+
+        IndexNew              = (1u << 0),
+        IndexModified         = (1u << 1),
+        IndexDeleted          = (1u << 2),
+        IndexRenamed          = (1u << 3),
+        IndexTypeChange       = (1u << 4),
+
+        WorkingTreeNew        = (1u << 7),
+        WorkingTreeModified   = (1u << 8),
+        WorkingTreeDeleted    = (1u << 9),
+        WorkingTreeTypeChange = (1u << 10),
+
+        Ignored               = (1u << 14)
+    };
+    Q_DECLARE_FLAGS ( FileStatusFlags, FileStatus )
+
+    typedef QHash< QString, FileStatusFlags > FileStatusHash;
+
     class Result;
 
     class GITWRAP_API GitWrap

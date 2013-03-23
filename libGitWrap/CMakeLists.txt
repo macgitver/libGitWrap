@@ -138,7 +138,6 @@ SET( SRC_FILES
     Result.cpp
     RevisionWalker.cpp
     Signature.cpp
-    Status.cpp
     Submodule.cpp
     TreeBuilder.cpp
     TreeEntry.cpp
@@ -168,7 +167,6 @@ SET( PUB_HDR_FILES
     RevisionWalker.hpp
     Signature.hpp
     Submodule.hpp
-    Status.hpp
     TreeBuilder.hpp
     TreeEntry.hpp
 )
@@ -188,7 +186,6 @@ SET( PRI_HDR_FILES
     RepoObject.hpp
     RepositoryPrivate.hpp
     RevisionWalkerPrivate.hpp
-    StatusPrivate.hpp
     TreeBuilderPrivate.hpp
     TreeEntryPrivate.hpp
     WorkerThread.hpp
