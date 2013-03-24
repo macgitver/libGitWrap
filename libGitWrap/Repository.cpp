@@ -74,8 +74,8 @@ namespace Git
             qDebug( "%s - %s", qPrintable( QString::number( status, 2 ) ), fn );
             #endif
 
-            Git::FileStatusHash* sh = (FileStatusHash*) rawSH;
-            sh->insert( QString::fromUtf8( fn ), FileStatusFlags( status ) );
+            File::StatusHash* sh = (File::StatusHash*) rawSH;
+            sh->insert( QString::fromUtf8( fn ), value2FileStatus( status ) );
 
             return GIT_OK;
         }
@@ -338,35 +338,35 @@ namespace Git
      * @param r the error result
      * @return the current file status
      */
-    FileStatusFlags Repository::status(const QString &fileName, Result &result) const
+    File::StatusFlags Repository::status(const QString &fileName, Result &result) const
     {
         unsigned int status = GIT_STATUS_CURRENT;
 
         if ( !d )
         {
             result.setInvalidObject();
-            return (FileStatusFlags)GIT_STATUS_CURRENT;
+            return Internal::value2FileStatus( GIT_STATUS_CURRENT );
         }
 
         result = git_status_file( &status, d->mRepo, fileName.toUtf8().data() );
 
-        return static_cast<FileStatusFlags>( status );
+        return Internal::value2FileStatus( status );
     }
 
-    FileStatusHash Repository::status(Result &result) const
+    File::StatusHash Repository::status(Result &result) const
     {
         if( !result )
         {
-            return FileStatusHash();
+            return File::StatusHash();
         }
 
         if( !d )
         {
             result.setInvalidObject();
-            return FileStatusHash();
+            return File::StatusHash();
         }
 
-        FileStatusHash sh;
+        File::StatusHash sh;
 
         git_status_options opt = GIT_STATUS_OPTIONS_INIT;
 
@@ -378,7 +378,7 @@ namespace Git
         result = git_status_foreach_ext( d->mRepo, &opt, &Internal::statusHashCB, (void*) &sh );
         if( !result )
         {
-            return FileStatusHash();
+            return File::StatusHash();
         }
 
         return sh;

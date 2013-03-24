@@ -91,29 +91,71 @@ namespace Git
         SubmoduleAttr       = 0160000
     };
 
-    /**
-     * @brief Status flags for a single file.
-     */
-    enum FileStatus
+    namespace File
     {
-        Unchanged             = 0,
 
-        IndexNew              = (1u << 0),
-        IndexModified         = (1u << 1),
-        IndexDeleted          = (1u << 2),
-        IndexRenamed          = (1u << 3),
-        IndexTypeChange       = (1u << 4),
+        /**
+         * @enum        File::Status
+         * @ingroup     GitWrap
+         * @brief       Represents the modified state for a single file.
+         *              The file status is combination of the current HEAD commit,
+         *              the repository's index and the working tree.
+         *
+         * @var         Status::Unchanged
+         *              The file is completely unchanged.
+         *
+         * @var         Status::IndexNew
+         *              The file was added to the index and untracked before.
+         *
+         * @var         Status::IndexModified
+         *              The file is modified within the index.
+         *
+         * @var         Status::IndexDeleted
+         *              The file was removed from the index.
+         *
+         * @var         Status::Renamed
+         *              The file was moved or renamed.
+         *
+         * @var         Status::IndexTypeChange
+         *              The file type changed in the index.
+         *
+         * @var         Status::WorkingTreeNew
+         *              Marks a new, untracked file in the working tree.
+         *
+         * @var         Status::WorkingTreeModified
+         *              The file is modified.
+         *
+         * @var         Status::WorkingTreeDeleted
+         *              The tracked file was deleted in the working tree.
+         *
+         * @var         Status::WorkingTreeTypeChange
+         *              The file type changed in the working tree.
+         *
+         * @var         Status::Ignored
+         *              The file is marked as ignored (i.e. it is filtered in .gitignore).
+         */
+        enum Status
+        {
+            Unchanged             = 0,
 
-        WorkingTreeNew        = (1u << 7),
-        WorkingTreeModified   = (1u << 8),
-        WorkingTreeDeleted    = (1u << 9),
-        WorkingTreeTypeChange = (1u << 10),
+            IndexNew              = (1u << 0),
+            IndexModified         = (1u << 1),
+            IndexDeleted          = (1u << 2),
+            IndexRenamed          = (1u << 3),
+            IndexTypeChange       = (1u << 4),
 
-        Ignored               = (1u << 14)
-    };
-    Q_DECLARE_FLAGS ( FileStatusFlags, FileStatus )
+            WorkingTreeNew        = (1u << 7),
+            WorkingTreeModified   = (1u << 8),
+            WorkingTreeDeleted    = (1u << 9),
+            WorkingTreeTypeChange = (1u << 10),
 
-    typedef QHash< QString, FileStatusFlags > FileStatusHash;
+            Ignored               = (1u << 14)
+        };
+        Q_DECLARE_FLAGS ( StatusFlags, Status )
+
+        typedef QHash< QString, StatusFlags > StatusHash;
+
+    }
 
     class Result;
 

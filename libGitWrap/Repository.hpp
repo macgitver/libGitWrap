@@ -94,8 +94,8 @@ namespace Git
 
         Index index( Result& result GITWRAP_DEFAULT_TLSRESULT );
 
-        FileStatusFlags status(const QString &fileName, Result &result GITWRAP_DEFAULT_TLSRESULT) const;
-        FileStatusHash status(Result &result GITWRAP_DEFAULT_TLSRESULT) const;
+        File::StatusFlags status(const QString &fileName, Result &result GITWRAP_DEFAULT_TLSRESULT) const;
+        File::StatusHash status(Result &result GITWRAP_DEFAULT_TLSRESULT) const;
 
         Reference HEAD( Result& result GITWRAP_DEFAULT_TLSRESULT ) const;
         Reference lookupRef( const QString& refName, Result& result GITWRAP_DEFAULT_TLSRESULT );
