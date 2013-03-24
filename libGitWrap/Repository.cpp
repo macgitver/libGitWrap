@@ -75,7 +75,7 @@ namespace Git
             #endif
 
             File::StatusHash* sh = (File::StatusHash*) rawSH;
-            sh->insert( QString::fromUtf8( fn ), value2FileStatus( status ) );
+            sh->insert( QString::fromUtf8( fn ), convertFileStatus( status ) );
 
             return GIT_OK;
         }
@@ -345,12 +345,12 @@ namespace Git
         if ( !d )
         {
             result.setInvalidObject();
-            return Internal::value2FileStatus( GIT_STATUS_CURRENT );
+            return Internal::convertFileStatus( GIT_STATUS_CURRENT );
         }
 
         result = git_status_file( &status, d->mRepo, fileName.toUtf8().data() );
 
-        return Internal::value2FileStatus( status );
+        return Internal::convertFileStatus( status );
     }
 
     File::StatusHash Repository::status(Result &result) const

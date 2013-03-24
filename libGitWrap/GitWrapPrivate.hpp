@@ -213,29 +213,26 @@ namespace Git
          * @ingroup     GitWrap
          * @brief       convert Converts a value to GitWrap's File::Status.
          * The value is assumed to be the enum type git_status_t in libgit2.
-         * @param[in]   value   the libgit2 git_status_t value
+         * @param[in]   v       the libgit2 git_status_t value
          * @return      the File::Status
          */
-        static inline File::Status value2FileStatus( unsigned int value )
+        static inline File::StatusFlags convertFileStatus( unsigned int v )
         {
-            switch( value )
-            {
-            default:
-                Q_ASSERT( false );
-                return File::Unchanged;
+            File::StatusFlags s;
 
-            case GIT_STATUS_CURRENT:            return File::Unchanged;
-            case GIT_STATUS_INDEX_NEW:          return File::IndexNew;
-            case GIT_STATUS_INDEX_MODIFIED:     return File::IndexModified;
-            case GIT_STATUS_INDEX_DELETED:      return File::IndexDeleted;
-            case GIT_STATUS_INDEX_RENAMED:      return File::IndexRenamed;
-            case GIT_STATUS_INDEX_TYPECHANGE:   return File::IndexTypeChange;
-            case GIT_STATUS_WT_NEW:             return File::WorkingTreeNew;
-            case GIT_STATUS_WT_MODIFIED:        return File::WorkingTreeModified;
-            case GIT_STATUS_WT_DELETED:         return File::WorkingTreeDeleted;
-            case GIT_STATUS_WT_TYPECHANGE:      return File::WorkingTreeTypeChange;
-            case GIT_STATUS_IGNORED:            return File::Ignored;
-            }
+            if ( v & GIT_STATUS_CURRENT )           s |= File::Unchanged;
+            if ( v & GIT_STATUS_INDEX_NEW )         s |= File::IndexNew;
+            if ( v & GIT_STATUS_INDEX_MODIFIED )    s |= File::IndexModified;
+            if ( v & GIT_STATUS_INDEX_DELETED )     s |= File::IndexDeleted;
+            if ( v & GIT_STATUS_INDEX_RENAMED )     s |= File::IndexRenamed;
+            if ( v & GIT_STATUS_INDEX_TYPECHANGE )  s |= File::IndexTypeChange;
+            if ( v & GIT_STATUS_WT_NEW )            s |= File::WorkingTreeNew;
+            if ( v & GIT_STATUS_WT_MODIFIED )       s |= File::WorkingTreeModified;
+            if ( v & GIT_STATUS_WT_DELETED )        s |= File::WorkingTreeDeleted;
+            if ( v & GIT_STATUS_WT_TYPECHANGE )     s |= File::WorkingTreeTypeChange;
+            if ( v & GIT_STATUS_IGNORED )           s |= File::Ignored;
+
+            return s;
         }
 
     }
