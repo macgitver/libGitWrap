@@ -211,9 +211,12 @@ namespace Git
         /**
          * @internal
          * @ingroup     GitWrap
-         * @brief       convert Converts a value to GitWrap's File::Status.
-         * The value is assumed to be the enum type git_status_t in libgit2.
+         * @brief       convertFileStatus Converts a value to GitWrap's File::Status.
+         *
+         *              The value is assumed to be the enum type git_status_t in libgit2.
+         *
          * @param[in]   v       the libgit2 git_status_t value
+         *
          * @return      the File::Status
          */
         static inline File::StatusFlags convertFileStatus( unsigned int v )
