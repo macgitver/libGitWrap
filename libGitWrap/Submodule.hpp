@@ -55,78 +55,6 @@ namespace Git
             Ignore
         };
 
-        /**
-         * @brief   The Status enum describes a submodule's status.
-         *
-         * @var     Status::InHead
-         *          The superproject's HEAD commit contains the submodule.
-         *
-         * @var     Status::InIndex
-         *          The superproject's contains an entry for the submodule.
-         *
-         * @var     Status::InConfig
-         *          The superproject's .gitmodules file contains
-         *          an entry for the submodule.
-         *
-         * @var     Status::InWorkingTree
-         *          The superproject's working tree contains
-         *          a folder matching the submodule's name.
-         *
-         * @var     Status::IndexAdded
-         *          A new submodule was added to the superproject's index.
-         *
-         * @var     Status::IndexDeleted
-         *          The submodule was deleted from the superproject's index.
-         *
-         * @var     Status::IndexModified
-         *          The superproject's submodule entries in HEAD and index don't match.
-         *
-         * @var     Status::WorkingTreeUninitialized
-         *          The folder for the submodule is empty.
-         *
-         * @var     Status::WorkingTreeAdded
-         *          The superproject's working tree contains the submodule folder,
-         *          but no index entry.
-         *
-         * @var     Status::WorkingTreeDeleted
-         *          The superproject's index contains a submodule entry,
-         *          but not the folder in working dir is missing.
-         *
-         * @var     Status::WorkingTreeModified
-         *          The superproject's index and working tree of the submodule don't match.
-         *
-         * @var     Status::WorkingTreeIndexModified
-         *          The submodule's index contains entries
-         *          (submodule is "dirty").
-         *
-         * @var     Status::WorkingTreeWtModified
-         *          The submodule's working tree contains modified files
-         *          (submodule is dirty).
-         *
-         * @var     Status::WorkingTreeUntracked
-         *          There are untracked files within the submodule's working tree.
-         */
-        enum Status
-        {
-            NoStatus        = 0,
-
-            InHead          = (1u << 0),
-            InIndex         = (1u << 1),
-            InConfig        = (1u << 2),
-            InWorkingTree   = (1u << 3),
-            IndexAdded      = (1u << 4),
-            IndexDeleted    = (1u << 5),
-            IndexModified   = (1u << 6),
-            WorkingTreeUninitialized    = (1u << 7),
-            WorkingTreeAdded            = (1u << 8),
-            WorkingTreeDeleted          = (1u << 9),
-            WorkingTreeModified         = (1u << 10),
-            WorkingTreeIndexModified    = (1u << 11),
-            WorkingTreeWtModified       = (1u << 12),
-            WorkingTreeUntracked        = (1u << 13)
-        };
-        Q_DECLARE_FLAGS ( StatusFlags, Status )
-
     public:
         /**
          * @brief Submodule
@@ -197,7 +125,7 @@ namespace Git
 
         bool isOpened() const;
 
-        Submodule::StatusFlags status(Result &result) const;
+        File::StatusFlags status(Result &result) const;
 
     private:
         Internal::GitPtr< Internal::SubmodulePrivate > d;

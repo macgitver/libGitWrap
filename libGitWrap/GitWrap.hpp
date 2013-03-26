@@ -133,6 +133,37 @@ namespace Git
          *
          * @var         Status::Ignored
          *              The file is marked as ignored (i.e. it is filtered in .gitignore).
+         *
+         * @var         Status::InHead
+         *              The superproject's HEAD commit contains the submodule.
+         *
+         * @var         Status::InIndex
+         *              The superproject's contains an entry for the submodule.
+         *
+         * @var         Status::InConfig
+         *              The superproject's .gitmodules file contains
+         *              an entry for the submodule.
+         *
+         * @var         Status::InWorkingTree
+         *              The superproject's working tree contains
+         *              a folder matching the submodule's name.
+         *
+         * @var         Status::IndexModified
+         *              The superproject's submodule entries in HEAD and index don't match.
+         *
+         * @var         Status::WorkingTreeUninitialized
+         *              The folder for the submodule is empty.
+         *
+         * @var         Status::WorkingTreeIndexModified
+         *              The submodule's index contains entries
+         *              (submodule is "dirty").
+         *
+         * @var         Status::WorkingTreeWtModified
+         *              The submodule's working tree contains modified files
+         *              (submodule is dirty).
+         *
+         * @var         Status::WorkingTreeUntracked
+         *              There are untracked files within the submodule's working tree.
          */
         enum Status
         {
@@ -149,7 +180,17 @@ namespace Git
             WorkingTreeDeleted    = (1u << 9),
             WorkingTreeTypeChange = (1u << 10),
 
-            Ignored               = (1u << 14)
+            Ignored               = (1u << 14),
+
+            SubmoduleInHead                     = (1u << 16),
+            SubmoduleInIndex                    = (1u << 17),
+            SubmoduleInConfig                   = (1u << 18),
+            SubmoduleInWorkingTree              = (1u << 19),
+            SubmoduleIndexModified              = (1u << 21),
+            SubmoduleWorkingTreeUninitialized   = (1u << 22),
+            SubmoduleWorkingTreeIndexModified   = (1u << 26),
+            SubmoduleWorkingTreeWtModified      = (1u << 27),
+            SubmoduleWorkingTreeUntracked       = (1u << 28)
         };
         Q_DECLARE_FLAGS ( StatusFlags, Status )
 
