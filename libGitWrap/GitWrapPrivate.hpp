@@ -219,21 +219,21 @@ namespace Git
          *
          * @return      the File::Status
          */
-        static inline File::StatusFlags convertFileStatus( unsigned int v )
+        static inline StatusFlags convertFileStatus( unsigned int v )
         {
-            File::StatusFlags s;
+            StatusFlags s;
 
-            if ( v & GIT_STATUS_CURRENT )           s |= File::Unchanged;
-            if ( v & GIT_STATUS_INDEX_NEW )         s |= File::IndexNew;
-            if ( v & GIT_STATUS_INDEX_MODIFIED )    s |= File::IndexModified;
-            if ( v & GIT_STATUS_INDEX_DELETED )     s |= File::IndexDeleted;
-            if ( v & GIT_STATUS_INDEX_RENAMED )     s |= File::IndexRenamed;
-            if ( v & GIT_STATUS_INDEX_TYPECHANGE )  s |= File::IndexTypeChange;
-            if ( v & GIT_STATUS_WT_NEW )            s |= File::WorkingTreeNew;
-            if ( v & GIT_STATUS_WT_MODIFIED )       s |= File::WorkingTreeModified;
-            if ( v & GIT_STATUS_WT_DELETED )        s |= File::WorkingTreeDeleted;
-            if ( v & GIT_STATUS_WT_TYPECHANGE )     s |= File::WorkingTreeTypeChange;
-            if ( v & GIT_STATUS_IGNORED )           s |= File::Ignored;
+            if ( v & GIT_STATUS_CURRENT )           s |= FileUnchanged;
+            if ( v & GIT_STATUS_INDEX_NEW )         s |= FileIndexNew;
+            if ( v & GIT_STATUS_INDEX_MODIFIED )    s |= FileIndexModified;
+            if ( v & GIT_STATUS_INDEX_DELETED )     s |= FileIndexDeleted;
+            if ( v & GIT_STATUS_INDEX_RENAMED )     s |= FileIndexRenamed;
+            if ( v & GIT_STATUS_INDEX_TYPECHANGE )  s |= FileIndexTypeChange;
+            if ( v & GIT_STATUS_WT_NEW )            s |= FileWorkingTreeNew;
+            if ( v & GIT_STATUS_WT_MODIFIED )       s |= FileWorkingTreeModified;
+            if ( v & GIT_STATUS_WT_DELETED )        s |= FileWorkingTreeDeleted;
+            if ( v & GIT_STATUS_WT_TYPECHANGE )     s |= FileWorkingTreeTypeChange;
+            if ( v & GIT_STATUS_IGNORED )           s |= FileIgnored;
 
             return s;
         }

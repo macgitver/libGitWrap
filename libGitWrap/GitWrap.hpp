@@ -91,112 +91,135 @@ namespace Git
         SubmoduleAttr       = 0160000
     };
 
-    namespace File
+    /**
+     * @enum        Status
+     * @ingroup     GitWrap
+     * @brief       Represents the modified state for a single file.
+     *              The file status is combination of the current HEAD commit,
+     *              the repository's index and the working tree.
+     *
+     * @var         Status::FileUnchanged
+     *              The file is completely unchanged.
+     *
+     * @var         Status::FileIndexNew
+     *              The file was added to the index and untracked before.
+     *
+     * @var         Status::FileIndexModified
+     *              The file is modified within the index.
+     *
+     * @var         Status::FileIndexDeleted
+     *              The file was removed from the index.
+     *
+     * @var         Status::FileRenamed
+     *              The file was moved or renamed.
+     *
+     * @var         Status::FileIndexTypeChange
+     *              The file type changed in the index.
+     *
+     * @var         Status::FileWorkingTreeNew
+     *              Marks a new, untracked file in the working tree.
+     *
+     * @var         Status::FileWorkingTreeModified
+     *              The file is modified.
+     *
+     * @var         Status::FileWorkingTreeDeleted
+     *              The tracked file was deleted in the working tree.
+     *
+     * @var         Status::FileWorkingTreeTypeChange
+     *              The file type changed in the working tree.
+     *
+     * @var         Status::FileIgnored
+     *              The file is marked as ignored (i.e. it is filtered in .gitignore).
+     *
+     * @var         Status::SubmoduleInHead
+     *              The superproject's HEAD commit contains the submodule.
+     *
+     * @var         Status::SubmoduleInIndex
+     *              The superproject's contains an entry for the submodule.
+     *
+     * @var         Status::SubmoduleInConfig
+     *              The superproject's .gitmodules file contains
+     *              an entry for the submodule.
+     *
+     * @var         Status::SubmoduleInWorkingTree
+     *              The superproject's working tree contains
+     *              a folder matching the submodule's name.
+     *
+     * @var         Status::SubmoduleWorkingTreeUninitialized
+     *              The folder for the submodule is empty.
+     *
+     * @var         Status::SubmoduleWorkingTreeIndexModified
+     *              The submodule's index contains entries
+     *              (submodule is dirty).
+     *
+     * @var         Status::SubmoduleWorkingTreeWtModified
+     *              The submodule's working tree contains modified files
+     *              (submodule is dirty).
+     *
+     * @var         Status::SubmoduleWorkingTreeUntracked
+     *              There are untracked files within the submodule's working tree.
+     *
+     * @var         Status::SubmoduleIndexNew
+     *              The submodule entry was added to the index and untracked before.
+     *              (same as Status::FileIndexNew)
+     *
+     * @var         Status::SubmoduleIndexModified
+     *              The submodule index entry is modified.
+     *              (same as Status::FileIndexModified)
+     *
+     * @var         Status::SubmoduleIndexDeleted
+     *              The submodule entry was deleted from the index and became untracked.
+     *              (same as Status::FileIndexDeleted)
+     *
+     * @var         Status::SubmoduleWorkingTreeNew
+     *              The submodule was added to the working tree.
+     *              (same as Status::FileWorkingTreeNew)
+     *
+     * @var         Status::SubmoduleWorkingTreeModified
+     *              The submodule was modified in the working tree.
+     *              (same as Status::FileWorkingTreeModified)
+     *
+     * @var         Status::SubmoduleWorkingTreeDeleted
+     *              The submodule's directory was deleted from the working tree.
+     *              (same as Status::FileWorkingTreeDeleted)
+     */
+    enum Status
     {
+        FileUnchanged               = 0,
 
-        /**
-         * @enum        File::Status
-         * @ingroup     GitWrap
-         * @brief       Represents the modified state for a single file.
-         *              The file status is combination of the current HEAD commit,
-         *              the repository's index and the working tree.
-         *
-         * @var         Status::Unchanged
-         *              The file is completely unchanged.
-         *
-         * @var         Status::IndexNew
-         *              The file was added to the index and untracked before.
-         *
-         * @var         Status::IndexModified
-         *              The file is modified within the index.
-         *
-         * @var         Status::IndexDeleted
-         *              The file was removed from the index.
-         *
-         * @var         Status::Renamed
-         *              The file was moved or renamed.
-         *
-         * @var         Status::IndexTypeChange
-         *              The file type changed in the index.
-         *
-         * @var         Status::WorkingTreeNew
-         *              Marks a new, untracked file in the working tree.
-         *
-         * @var         Status::WorkingTreeModified
-         *              The file is modified.
-         *
-         * @var         Status::WorkingTreeDeleted
-         *              The tracked file was deleted in the working tree.
-         *
-         * @var         Status::WorkingTreeTypeChange
-         *              The file type changed in the working tree.
-         *
-         * @var         Status::Ignored
-         *              The file is marked as ignored (i.e. it is filtered in .gitignore).
-         *
-         * @var         Status::InHead
-         *              The superproject's HEAD commit contains the submodule.
-         *
-         * @var         Status::InIndex
-         *              The superproject's contains an entry for the submodule.
-         *
-         * @var         Status::InConfig
-         *              The superproject's .gitmodules file contains
-         *              an entry for the submodule.
-         *
-         * @var         Status::InWorkingTree
-         *              The superproject's working tree contains
-         *              a folder matching the submodule's name.
-         *
-         * @var         Status::IndexModified
-         *              The superproject's submodule entries in HEAD and index don't match.
-         *
-         * @var         Status::WorkingTreeUninitialized
-         *              The folder for the submodule is empty.
-         *
-         * @var         Status::WorkingTreeIndexModified
-         *              The submodule's index contains entries
-         *              (submodule is "dirty").
-         *
-         * @var         Status::WorkingTreeWtModified
-         *              The submodule's working tree contains modified files
-         *              (submodule is dirty).
-         *
-         * @var         Status::WorkingTreeUntracked
-         *              There are untracked files within the submodule's working tree.
-         */
-        enum Status
-        {
-            Unchanged             = 0,
+        FileIndexNew                = (1u << 0),
+        FileIndexModified           = (1u << 1),
+        FileIndexDeleted            = (1u << 2),
+        FileIndexRenamed            = (1u << 3),
+        FileIndexTypeChange         = (1u << 4),
 
-            IndexNew              = (1u << 0),
-            IndexModified         = (1u << 1),
-            IndexDeleted          = (1u << 2),
-            IndexRenamed          = (1u << 3),
-            IndexTypeChange       = (1u << 4),
+        FileWorkingTreeNew          = (1u << 7),
+        FileWorkingTreeModified     = (1u << 8),
+        FileWorkingTreeDeleted      = (1u << 9),
+        FileWorkingTreeTypeChange   = (1u << 10),
 
-            WorkingTreeNew        = (1u << 7),
-            WorkingTreeModified   = (1u << 8),
-            WorkingTreeDeleted    = (1u << 9),
-            WorkingTreeTypeChange = (1u << 10),
+        FileIgnored                 = (1u << 14),
 
-            Ignored               = (1u << 14),
+        SubmoduleInHead                     = (1u << 16),
+        SubmoduleInIndex                    = (1u << 17),
+        SubmoduleInConfig                   = (1u << 18),
+        SubmoduleInWorkingTree              = (1u << 19),
+        SubmoduleWorkingTreeUninitialized   = (1u << 22),
+        SubmoduleWorkingTreeIndexModified   = (1u << 26),
+        SubmoduleWorkingTreeWtModified      = (1u << 27),
+        SubmoduleWorkingTreeUntracked       = (1u << 28),
 
-            SubmoduleInHead                     = (1u << 16),
-            SubmoduleInIndex                    = (1u << 17),
-            SubmoduleInConfig                   = (1u << 18),
-            SubmoduleInWorkingTree              = (1u << 19),
-            SubmoduleIndexModified              = (1u << 21),
-            SubmoduleWorkingTreeUninitialized   = (1u << 22),
-            SubmoduleWorkingTreeIndexModified   = (1u << 26),
-            SubmoduleWorkingTreeWtModified      = (1u << 27),
-            SubmoduleWorkingTreeUntracked       = (1u << 28)
-        };
-        Q_DECLARE_FLAGS ( StatusFlags, Status )
+        // convenience flags
+        SubmoduleIndexNew                   = FileIndexNew,
+        SubmoduleIndexModified              = FileIndexModified,
+        SubmoduleIndexDeleted               = FileIndexDeleted,
+        SubmoduleWorkingTreeNew             = FileWorkingTreeNew,
+        SubmoduleWorkingTreeModified        = FileWorkingTreeModified,
+        SubmoduleWorkingTreeDeleted         = FileWorkingTreeDeleted
+    };
+    Q_DECLARE_FLAGS ( StatusFlags, Status )
 
-        typedef QHash< QString, StatusFlags > StatusHash;
-
-    }
+    typedef QHash< QString, StatusFlags > StatusHash;
 
     class Result;
 

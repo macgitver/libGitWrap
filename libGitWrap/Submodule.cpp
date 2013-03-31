@@ -62,25 +62,25 @@ namespace Git
          *
          * @return      the converted flags
          */
-        static File::StatusFlags convertSubmoduleStatus( unsigned int v )
+        static Git::StatusFlags convertSubmoduleStatus( unsigned int v )
         {
-            File::StatusFlags s = File::Unchanged;
+            Git::StatusFlags s = Git::FileUnchanged;
 
-            if ( v & GIT_SUBMODULE_STATUS_INDEX_ADDED )         s |= Git::File::IndexNew;
-            if ( v & GIT_SUBMODULE_STATUS_INDEX_DELETED )       s |= Git::File::IndexDeleted;
-            if ( v & GIT_SUBMODULE_STATUS_INDEX_MODIFIED )      s |= Git::File::IndexModified;
-            if ( v & GIT_SUBMODULE_STATUS_WD_ADDED )            s |= Git::File::WorkingTreeNew;
-            if ( v & GIT_SUBMODULE_STATUS_WD_DELETED )          s |= Git::File::WorkingTreeDeleted;
-            if ( v & GIT_SUBMODULE_STATUS_WD_MODIFIED )         s |= Git::File::WorkingTreeModified;
+            if ( v & GIT_SUBMODULE_STATUS_INDEX_ADDED )         s |= Git::SubmoduleIndexNew;
+            if ( v & GIT_SUBMODULE_STATUS_INDEX_DELETED )       s |= Git::SubmoduleIndexDeleted;
+            if ( v & GIT_SUBMODULE_STATUS_INDEX_MODIFIED )      s |= Git::SubmoduleIndexModified;
+            if ( v & GIT_SUBMODULE_STATUS_WD_ADDED )            s |= Git::SubmoduleWorkingTreeNew;
+            if ( v & GIT_SUBMODULE_STATUS_WD_DELETED )          s |= Git::SubmoduleWorkingTreeDeleted;
+            if ( v & GIT_SUBMODULE_STATUS_WD_MODIFIED )         s |= Git::SubmoduleWorkingTreeModified;
 
-            if ( v & GIT_SUBMODULE_STATUS_IN_HEAD )             s |= Git::File::SubmoduleInHead;
-            if ( v & GIT_SUBMODULE_STATUS_IN_INDEX )            s |= Git::File::SubmoduleInIndex;
-            if ( v & GIT_SUBMODULE_STATUS_IN_CONFIG )           s |= Git::File::SubmoduleInConfig;
-            if ( v & GIT_SUBMODULE_STATUS_IN_WD )               s |= Git::File::SubmoduleInWorkingTree;
-            if ( v & GIT_SUBMODULE_STATUS_WD_UNINITIALIZED )    s |= Git::File::SubmoduleWorkingTreeUninitialized;
-            if ( v & GIT_SUBMODULE_STATUS_WD_INDEX_MODIFIED )   s |= Git::File::SubmoduleWorkingTreeIndexModified;
-            if ( v & GIT_SUBMODULE_STATUS_WD_WD_MODIFIED )      s |= Git::File::SubmoduleWorkingTreeWtModified;
-            if ( v & GIT_SUBMODULE_STATUS_WD_UNTRACKED )        s |= Git::File::SubmoduleWorkingTreeUntracked;
+            if ( v & GIT_SUBMODULE_STATUS_IN_HEAD )             s |= Git::SubmoduleInHead;
+            if ( v & GIT_SUBMODULE_STATUS_IN_INDEX )            s |= Git::SubmoduleInIndex;
+            if ( v & GIT_SUBMODULE_STATUS_IN_CONFIG )           s |= Git::SubmoduleInConfig;
+            if ( v & GIT_SUBMODULE_STATUS_IN_WD )               s |= Git::SubmoduleInWorkingTree;
+            if ( v & GIT_SUBMODULE_STATUS_WD_UNINITIALIZED )    s |= Git::SubmoduleWorkingTreeUninitialized;
+            if ( v & GIT_SUBMODULE_STATUS_WD_INDEX_MODIFIED )   s |= Git::SubmoduleWorkingTreeIndexModified;
+            if ( v & GIT_SUBMODULE_STATUS_WD_WD_MODIFIED )      s |= Git::SubmoduleWorkingTreeWtModified;
+            if ( v & GIT_SUBMODULE_STATUS_WD_UNTRACKED )        s |= Git::SubmoduleWorkingTreeUntracked;
 
             return s;
         }
@@ -271,11 +271,11 @@ namespace Git
         return d && d->mMyRepo;
     }
 
-    File::StatusFlags Submodule::status(Result &result) const
+    StatusFlags Submodule::status(Result &result) const
     {
         if ( !result || !d )
         {
-            return File::SubmoduleInHead;
+            return SubmoduleInHead;
         }
 
         unsigned int status = GIT_SUBMODULE_STATUS_IN_HEAD;

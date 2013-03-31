@@ -125,7 +125,7 @@ namespace Git
 
         bool isOpened() const;
 
-        File::StatusFlags status(Result &result) const;
+        StatusFlags status(Result &result) const;
 
     private:
         Internal::GitPtr< Internal::SubmodulePrivate > d;
