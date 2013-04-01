@@ -83,6 +83,7 @@ namespace Git
 
         /**
          * @brief The returned ObjectId points from the owner reposiory's 'HEAD' commit to a commit in the submodule.
+         *
          * An empty ObjectId is returned, when the submodule is not known in the owner repository's 'HEAD' commit.
          *
          * @return the oid in the owner repository's 'HEAD' commit or an empty ObjectId
@@ -91,6 +92,7 @@ namespace Git
 
         /**
          * @brief Returns the ObjectId, the owner repository's index points to.
+         *
          * This ObjectId is empty, when the submodule is committed and unchanged.
          *
          * @return the oid in the owner repository's index or an empty ObjectId
@@ -99,6 +101,7 @@ namespace Git
 
         /**
          * @brief Returns the ObjectId of the submodule's 'HEAD' commit.
+         *
          * When the submodule is committed and unchanged, this will be the same as @see headOid().
          *
          * @return the submodule's 'HEAD' oid or an empty ObjectId
@@ -110,6 +113,7 @@ namespace Git
 
         /**
          * @brief Opens a submodule's repository.
+         *
          * @return true, when repoitory could be opened successfully; false otherwise
          */
         bool open(Result &result);
@@ -120,6 +124,8 @@ namespace Git
         void close();
 
         bool isOpened() const;
+
+        StatusFlags status(Result &result) const;
 
     private:
         Internal::GitPtr< Internal::SubmodulePrivate > d;

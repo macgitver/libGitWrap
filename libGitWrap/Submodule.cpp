@@ -51,6 +51,39 @@ namespace Git
             }
         };
 
+        /**
+         * @internal
+         * @ingroup GitWrap
+         *
+         * @brief convertSubmoduleStatus
+         * Converts an unsigned int value to the File::StatusFlags enum.
+         *
+         * @param v     the value to convert
+         *
+         * @return      the converted flags
+         */
+        static Git::StatusFlags convertSubmoduleStatus( unsigned int v )
+        {
+            Git::StatusFlags s = Git::FileUnchanged;
+
+            if ( v & GIT_SUBMODULE_STATUS_INDEX_ADDED )         s |= Git::SubmoduleIndexNew;
+            if ( v & GIT_SUBMODULE_STATUS_INDEX_DELETED )       s |= Git::SubmoduleIndexDeleted;
+            if ( v & GIT_SUBMODULE_STATUS_INDEX_MODIFIED )      s |= Git::SubmoduleIndexModified;
+            if ( v & GIT_SUBMODULE_STATUS_WD_ADDED )            s |= Git::SubmoduleWorkingTreeNew;
+            if ( v & GIT_SUBMODULE_STATUS_WD_DELETED )          s |= Git::SubmoduleWorkingTreeDeleted;
+            if ( v & GIT_SUBMODULE_STATUS_WD_MODIFIED )         s |= Git::SubmoduleWorkingTreeModified;
+
+            if ( v & GIT_SUBMODULE_STATUS_IN_HEAD )             s |= Git::SubmoduleInHead;
+            if ( v & GIT_SUBMODULE_STATUS_IN_INDEX )            s |= Git::SubmoduleInIndex;
+            if ( v & GIT_SUBMODULE_STATUS_IN_CONFIG )           s |= Git::SubmoduleInConfig;
+            if ( v & GIT_SUBMODULE_STATUS_IN_WD )               s |= Git::SubmoduleInWorkingTree;
+            if ( v & GIT_SUBMODULE_STATUS_WD_UNINITIALIZED )    s |= Git::SubmoduleWorkingTreeUninitialized;
+            if ( v & GIT_SUBMODULE_STATUS_WD_INDEX_MODIFIED )   s |= Git::SubmoduleWorkingTreeIndexModified;
+            if ( v & GIT_SUBMODULE_STATUS_WD_WD_MODIFIED )      s |= Git::SubmoduleWorkingTreeWtModified;
+            if ( v & GIT_SUBMODULE_STATUS_WD_UNTRACKED )        s |= Git::SubmoduleWorkingTreeUntracked;
+
+            return s;
+        }
     }
 
     Submodule::Submodule()
@@ -236,6 +269,19 @@ namespace Git
     bool Submodule::isOpened() const
     {
         return d && d->mMyRepo;
+    }
+
+    StatusFlags Submodule::status(Result &result) const
+    {
+        if ( !result || !d )
+        {
+            return SubmoduleInHead;
+        }
+
+        unsigned int status = GIT_SUBMODULE_STATUS_IN_HEAD;
+        result = git_submodule_status( &status, d->getSM( result ) );
+
+        return Internal::convertSubmoduleStatus( status );
     }
 
     bool Submodule::open( Result& result )

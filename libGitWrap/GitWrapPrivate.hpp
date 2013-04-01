@@ -208,6 +208,36 @@ namespace Git
             static GitWrapPrivate* self;    // Make this an QAtomicPointer
         };
 
+        /**
+         * @internal
+         * @ingroup     GitWrap
+         * @brief       convertFileStatus Converts a value to GitWrap's File::Status.
+         *
+         *              The value is assumed to be the enum type git_status_t in libgit2.
+         *
+         * @param[in]   v       the libgit2 git_status_t value
+         *
+         * @return      the File::Status
+         */
+        static inline StatusFlags convertFileStatus( unsigned int v )
+        {
+            StatusFlags s;
+
+            if ( v & GIT_STATUS_CURRENT )           s |= FileUnchanged;
+            if ( v & GIT_STATUS_INDEX_NEW )         s |= FileIndexNew;
+            if ( v & GIT_STATUS_INDEX_MODIFIED )    s |= FileIndexModified;
+            if ( v & GIT_STATUS_INDEX_DELETED )     s |= FileIndexDeleted;
+            if ( v & GIT_STATUS_INDEX_RENAMED )     s |= FileIndexRenamed;
+            if ( v & GIT_STATUS_INDEX_TYPECHANGE )  s |= FileIndexTypeChange;
+            if ( v & GIT_STATUS_WT_NEW )            s |= FileWorkingTreeNew;
+            if ( v & GIT_STATUS_WT_MODIFIED )       s |= FileWorkingTreeModified;
+            if ( v & GIT_STATUS_WT_DELETED )        s |= FileWorkingTreeDeleted;
+            if ( v & GIT_STATUS_WT_TYPECHANGE )     s |= FileWorkingTreeTypeChange;
+            if ( v & GIT_STATUS_IGNORED )           s |= FileIgnored;
+
+            return s;
+        }
+
     }
 
 }

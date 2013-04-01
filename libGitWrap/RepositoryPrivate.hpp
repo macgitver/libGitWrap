@@ -27,6 +27,7 @@ namespace Git
 
     namespace Internal
     {
+        class StatusPrivate;
 
         /**
          * @internal

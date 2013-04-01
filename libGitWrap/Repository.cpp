@@ -34,7 +34,6 @@
 #include "ObjectCommit.hpp"
 #include "RevisionWalker.hpp"
 #include "RevisionWalkerPrivate.hpp"
-#include "Submodule.hpp"
 
 #include <QDir>
 
@@ -69,6 +68,17 @@ namespace Git
             git_repository_free( mRepo );
         }
 
+        static int statusHashCB( const char* fn, unsigned int status, void* rawSH )
+        {
+            #if 0
+            qDebug( "%s - %s", qPrintable( QString::number( status, 2 ) ), fn );
+            #endif
+
+            Git::StatusHash* sh = (Git::StatusHash*) rawSH;
+            sh->insert( QString::fromUtf8( fn ), convertFileStatus( status ) );
+
+            return GIT_OK;
+        }
     }
 
     /**
@@ -322,6 +332,59 @@ namespace Git
     }
 
     /**
+     * @brief status Reads the status of a single file.
+     * The file status is a combination of worktree, index and repository HEAD.
+     * @param fileName the file path relative to the repository
+     * @param r the error result
+     * @return the current file status
+     */
+    Git::StatusFlags Repository::status(const QString &fileName, Result &result) const
+    {
+        unsigned int status = GIT_STATUS_CURRENT;
+
+        if ( !d )
+        {
+            result.setInvalidObject();
+            return Internal::convertFileStatus( GIT_STATUS_CURRENT );
+        }
+
+        result = git_status_file( &status, d->mRepo, fileName.toUtf8().data() );
+
+        return Internal::convertFileStatus( status );
+    }
+
+    Git::StatusHash Repository::status(Result &result) const
+    {
+        if( !result )
+        {
+            return Git::StatusHash();
+        }
+
+        if( !d )
+        {
+            result.setInvalidObject();
+            return Git::StatusHash();
+        }
+
+        Git::StatusHash sh;
+
+        git_status_options opt = GIT_STATUS_OPTIONS_INIT;
+
+        opt.flags = GIT_STATUS_OPT_INCLUDE_UNTRACKED
+                  | GIT_STATUS_OPT_INCLUDE_IGNORED
+                  | GIT_STATUS_OPT_INCLUDE_UNMODIFIED
+                  | GIT_STATUS_OPT_RECURSE_UNTRACKED_DIRS;
+
+        result = git_status_foreach_ext( d->mRepo, &opt, &Internal::statusHashCB, (void*) &sh );
+        if( !result )
+        {
+            return Git::StatusHash();
+        }
+
+        return sh;
+    }
+
+    /**
      * @brief           List all references
      *
      * @param[in,out]   result  A Result object; see @ref GitWrapErrorHandling
@@ -561,54 +624,6 @@ namespace Git
         }
 
         return Internal::slFromStrArray( &arr );
-    }
-
-    namespace Internal
-    {
-
-        static int statusHashCB( const char* fn, unsigned int status, void* rawSH )
-        {
-            #if 0
-            qDebug( "%s - %s", qPrintable( QString::number( status, 2 ) ), fn );
-            #endif
-
-            StatusHash* sh = (StatusHash*) rawSH;
-            sh->insert( QString::fromUtf8( fn ), FileStati( status ) );
-
-            return GIT_OK;
-        }
-
-    }
-
-    StatusHash Repository::statusHash( Result& result )
-    {
-        if( !result )
-        {
-            return StatusHash();
-        }
-
-        if( !d )
-        {
-            result.setInvalidObject();
-            return StatusHash();
-        }
-
-        StatusHash sh;
-
-        git_status_options opt = GIT_STATUS_OPTIONS_INIT;
-
-        opt.flags = GIT_STATUS_OPT_INCLUDE_UNTRACKED
-                  | GIT_STATUS_OPT_INCLUDE_IGNORED
-                  | GIT_STATUS_OPT_INCLUDE_UNMODIFIED
-                  | GIT_STATUS_OPT_RECURSE_UNTRACKED_DIRS;
-
-        result = git_status_foreach_ext( d->mRepo, &opt, &Internal::statusHashCB, (void*) &sh );
-        if( !result )
-        {
-            return StatusHash();
-        }
-
-        return sh;
     }
 
     QString Repository::basePath() const

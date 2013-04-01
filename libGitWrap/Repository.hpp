@@ -19,13 +19,11 @@
 
 #include <QStringList>
 
-#include "GitWrap.hpp"
 #include "Submodule.hpp"
 
 namespace Git
 {
 
-    class Submodule;
     class Reference;
     class DiffList;
     class Index;
@@ -44,6 +42,7 @@ namespace Git
     }
 
     typedef QHash< QString, ObjectId > ResolvedRefs;
+
 
     /**
      * @ingroup     GitWrap
@@ -95,7 +94,8 @@ namespace Git
 
         Index index( Result& result GITWRAP_DEFAULT_TLSRESULT );
 
-        StatusHash statusHash( Result& result GITWRAP_DEFAULT_TLSRESULT );
+        Git::StatusFlags status(const QString &fileName, Result &result GITWRAP_DEFAULT_TLSRESULT) const;
+        Git::StatusHash status(Result &result GITWRAP_DEFAULT_TLSRESULT) const;
 
         Reference HEAD( Result& result GITWRAP_DEFAULT_TLSRESULT ) const;
         Reference lookupRef( const QString& refName, Result& result GITWRAP_DEFAULT_TLSRESULT );
