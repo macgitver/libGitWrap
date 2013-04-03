@@ -64,7 +64,7 @@ namespace Git
          */
         static Git::StatusFlags convertSubmoduleStatus( unsigned int v )
         {
-            Git::StatusFlags s = Git::FileUnchanged;
+            Git::StatusFlags s = Git::FileInvalidStatus;
 
             if ( v & GIT_SUBMODULE_STATUS_INDEX_ADDED )         s |= Git::SubmoduleIndexNew;
             if ( v & GIT_SUBMODULE_STATUS_INDEX_DELETED )       s |= Git::SubmoduleIndexDeleted;
@@ -275,7 +275,7 @@ namespace Git
     {
         if ( !result || !d )
         {
-            return SubmoduleInHead;
+            return FileInvalidStatus;
         }
 
         unsigned int status = GIT_SUBMODULE_STATUS_IN_HEAD;

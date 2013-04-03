@@ -221,7 +221,7 @@ namespace Git
          */
         static inline StatusFlags convertFileStatus( unsigned int v )
         {
-            StatusFlags s;
+            StatusFlags s = FileInvalidStatus;
 
             if ( v & GIT_STATUS_CURRENT )           s |= FileUnchanged;
             if ( v & GIT_STATUS_INDEX_NEW )         s |= FileIndexNew;
