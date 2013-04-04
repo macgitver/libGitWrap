@@ -345,10 +345,12 @@ namespace Git
         if ( !d )
         {
             result.setInvalidObject();
-            return Internal::convertFileStatus( GIT_STATUS_CURRENT );
+            return FileInvalidStatus;
         }
 
         result = git_status_file( &status, d->mRepo, fileName.toUtf8().data() );
+        if ( !result )
+            return FileInvalidStatus;
 
         return Internal::convertFileStatus( status );
     }

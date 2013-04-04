@@ -98,8 +98,8 @@ namespace Git
      *              The file status is combination of the current HEAD commit,
      *              the repository's index and the working tree.
      *
-     * @var         Status::FileUnchanged
-     *              The file is completely unchanged.
+     * @var         Status::FileInvalidStatus
+     *              This status marks an error (all flags cleared).
      *
      * @var         Status::FileIndexNew
      *              The file was added to the index and untracked before.
@@ -130,6 +130,9 @@ namespace Git
      *
      * @var         Status::FileIgnored
      *              The file is marked as ignored (i.e. it is filtered in .gitignore).
+     *
+     * @var         Status::FileUnchanged
+     *              The file is completely unchanged.
      *
      * @var         Status::SubmoduleInHead
      *              The superproject's HEAD commit contains the submodule.
@@ -185,7 +188,7 @@ namespace Git
      */
     enum Status
     {
-        FileUnchanged               = 0,
+        FileInvalidStatus           = 0,
 
         FileIndexNew                = (1u << 0),
         FileIndexModified           = (1u << 1),
@@ -199,6 +202,7 @@ namespace Git
         FileWorkingTreeTypeChange   = (1u << 10),
 
         FileIgnored                 = (1u << 14),
+        FileUnchanged               = (1u << 15),
 
         SubmoduleInHead                     = (1u << 16),
         SubmoduleInIndex                    = (1u << 17),
