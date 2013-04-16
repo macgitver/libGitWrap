@@ -209,6 +209,50 @@ namespace Git
     }
 
     /**
+     * @brief           Adds a file entry to the index.
+     *
+     *                  The path must be a relative subpath to the repository.
+     *
+     * @param[in]       path the file path
+     * @param[in,out]   result the error result
+     */
+    void Index::addEntry(const QString &path, Result &result)
+    {
+        if ( !result )
+            return;
+
+        if ( !d )
+        {
+            result.setInvalidObject();
+            return;
+        }
+
+        result = git_index_add_bypath( d->mIndex, path.toUtf8().constData() );
+    }
+
+    /**
+     * @brief           Removes a file entry from the index.
+     *
+     *                  The path must be a relative subpath to the repository.
+     *
+     * @param[in]       path the file path
+     * @param[in,out]   result the error result
+     */
+    void Index::removeEntry(const QString &path, Result &result)
+    {
+        if ( !result )
+            return;
+
+        if ( !d )
+        {
+            result.setInvalidObject();
+            return;
+        }
+
+        result = git_index_remove_bypath( d->mIndex, path.toUtf8().constData() );
+    }
+
+    /**
      * @brief           Read the index from storage
      *
      * Refills this index object with data obtained from hard disc. Any local modifications to this
