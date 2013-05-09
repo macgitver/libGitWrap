@@ -253,6 +253,44 @@ namespace Git
     }
 
     /**
+     * @brief           Resets an index entry to HEAD without changing the working tree
+     *
+     *                  This behaviour is also known as "unstaging".
+     *                  It resets the state of a file without chaning any contents.
+     *
+     * @param[in]       paths   the file paths relative to the repository's working directory
+     * @param[in,out]   result  a Result object; see @ref GitWrapErrorHandling
+     */
+    void Index::resetDefault(const QStringList &paths, Result &result)
+    {
+        if ( !result || paths.isEmpty() )
+            return;
+
+        if ( !d )
+        {
+            result.setInvalidObject();
+            return;
+        }
+
+        git_reference *ref = NULL;
+        result = git_repository_head( &ref, d->repo()->mRepo );
+        if ( !result )
+            return;
+
+        git_oid oid;
+        result = git_reference_name_to_id( &oid, d->repo()->mRepo, "HEAD" );
+        if (!result )
+            return;
+
+        git_object *o = NULL;
+        result = git_object_lookup( &o, d->repo()->mRepo, &oid, GIT_OBJ_COMMIT );
+        if ( !result )
+            return;
+
+        result = git_reset_default( d->repo()->mRepo, o, Internal::StrArrayWrapper( paths ) );
+    }
+
+    /**
      * @brief           Read the index from storage
      *
      * Refills this index object with data obtained from hard disc. Any local modifications to this
