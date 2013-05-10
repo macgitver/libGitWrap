@@ -58,10 +58,10 @@ namespace Git
         {
             internalCopy = sl;
 
-            a.count = sl.count();
+            a.count = internalCopy.count();
             a.strings = new char *[a.count];
 
-            for(int i=0; i < sl.count(); ++i )
+            for(int i=0; i < internalCopy.count(); ++i )
             {
                 a.strings[i] = internalCopy[i].toUtf8().data();
             }
