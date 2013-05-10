@@ -256,7 +256,7 @@ namespace Git
      * @brief           Resets an index entry to HEAD without changing the working tree
      *
      *                  This behaviour is also known as "unstaging".
-     *                  It resets the state of a file without chaning any contents.
+     *                  It resets the state of a file without changing any contents.
      *
      * @param[in]       paths   the file paths relative to the repository's working directory
      * @param[in,out]   result  a Result object; see @ref GitWrapErrorHandling
@@ -277,13 +277,9 @@ namespace Git
         if ( !result )
             return;
 
-        git_oid oid;
-        result = git_reference_name_to_id( &oid, d->repo()->mRepo, "HEAD" );
-        if (!result )
-            return;
-
         git_object *o = NULL;
-        result = git_object_lookup( &o, d->repo()->mRepo, &oid, GIT_OBJ_COMMIT );
+        result = git_reference_peel( &o, ref, GIT_OBJ_COMMIT );
+        git_reference_free( ref );
         if ( !result )
             return;
 
