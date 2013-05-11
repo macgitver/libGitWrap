@@ -323,6 +323,26 @@ namespace Git
         return QString::fromUtf8( msg, len );
     }
 
+    /**
+     * @brief           Checkout this commit.
+     *
+     * @param[in,out]   result  A Result object; see @ref GitWrapErrorHandling
+     */
+    void ObjectCommit::checkout(Result &result) const
+    {
+        if( !result )
+        {
+            return;
+        }
+        if( !d )
+        {
+            result.setInvalidObject();
+            return;
+        }
+
+        result = git_checkout_tree( d->repo()->mRepo, d->mObj, NULL );
+    }
+
     Reference ObjectCommit::createBranch( const QString& name, bool force, Result& result ) const
     {
         if( !result )
