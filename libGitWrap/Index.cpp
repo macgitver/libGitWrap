@@ -287,7 +287,7 @@ namespace Git
     }
 
     /**
-     * @brief           Overwrites the file content with the conten from the index.
+     * @brief           Overwrites the file content with the content from the index.
      *
      * @param[in]       paths
      * @param[in,out]   result  A Result object; see @ref GitWrapErrorHandling
@@ -311,6 +311,8 @@ namespace Git
 
         git_checkout_opts options = GIT_CHECKOUT_OPTS_INIT;
         options.checkout_strategy = GIT_CHECKOUT_FORCE;
+
+        // TODO don't copy, just map paths here
         result = git_strarray_copy( &options.paths, Internal::StrArrayWrapper( paths ) );
         if ( !result )
             return;
