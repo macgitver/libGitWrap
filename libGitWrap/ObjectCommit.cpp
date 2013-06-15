@@ -340,7 +340,8 @@ namespace Git
             return;
         }
 
-        result = git_checkout_tree( d->repo()->mRepo, d->mObj, NULL );
+        git_checkout_opts opts = GIT_CHECKOUT_OPTS_INIT;
+        result = git_checkout_tree( d->repo()->mRepo, d->mObj, &opts );
     }
 
     Reference ObjectCommit::createBranch( const QString& name, bool force, Result& result ) const
