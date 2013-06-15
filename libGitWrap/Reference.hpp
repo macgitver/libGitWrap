@@ -63,6 +63,8 @@ namespace Git
         Reference resolved( Result& result GITWRAP_DEFAULT_TLSRESULT );
         ObjectId resolveToObjectId( Result& result GITWRAP_DEFAULT_TLSRESULT );
 
+        void checkout( Result& result GITWRAP_DEFAULT_TLSRESULT ) const;
+
     private:
         Internal::GitPtr< Internal::ReferencePrivate > d;
     };

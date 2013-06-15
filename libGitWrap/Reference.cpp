@@ -197,4 +197,26 @@ namespace Git
         return resolvedRef.objectId( result );
     }
 
+    void Reference::checkout(Result &result) const
+    {
+        if (  !result )
+        {
+            return;
+        }
+
+        if( !d )
+        {
+            result.setInvalidObject();
+            return;
+        }
+
+        git_object *o = NULL;
+        result = git_reference_peel( &o, d->mRef, GIT_OBJ_TREE );
+        if ( !result )
+            return;
+
+        git_checkout_opts opts = GIT_CHECKOUT_OPTS_INIT;
+        result = git_checkout_tree( d->repo()->mRepo, o, &opts );
+    }
+
 }
