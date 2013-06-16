@@ -341,7 +341,12 @@ namespace Git
         }
 
         git_checkout_opts opts = GIT_CHECKOUT_OPTS_INIT;
+        opts.checkout_strategy = GIT_CHECKOUT_SAFE;
         result = git_checkout_tree( d->repo()->mRepo, d->mObj, &opts );
+        if ( !result ) return;
+
+        result = git_repository_set_head_detached( d->repo()->mRepo
+                                                   , git_object_id( d->mObj ) );
     }
 
     Reference ObjectCommit::createBranch( const QString& name, bool force, Result& result ) const
