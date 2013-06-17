@@ -328,7 +328,7 @@ namespace Git
      *
      * @param[in,out]   result  A Result object; see @ref GitWrapErrorHandling
      */
-    void ObjectCommit::checkout(Result &result) const
+    void ObjectCommit::checkout(Result &result, bool force, const QStringList &paths) const
     {
         if( !result )
         {
@@ -341,7 +341,14 @@ namespace Git
         }
 
         git_checkout_opts opts = GIT_CHECKOUT_OPTS_INIT;
-        opts.checkout_strategy = GIT_CHECKOUT_SAFE;
+        opts.checkout_strategy = force ? GIT_CHECKOUT_FORCE : GIT_CHECKOUT_SAFE;
+        if ( !paths.isEmpty() )
+        {
+            // TODO: don't copy, just map paths here
+            result = git_strarray_copy( &opts.paths, Internal::StrArrayWrapper( paths ) );
+            if ( !result ) return;
+        }
+
         result = git_checkout_tree( d->repo()->mRepo, d->mObj, &opts );
         if ( !result ) return;
 
