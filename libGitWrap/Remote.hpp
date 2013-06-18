@@ -56,8 +56,8 @@ namespace Git
         QString name() const;
         QString url() const;
 
-        bool setFetchSpec( const QString& spec, Result& result );
-        bool setPushSpec( const QString& spec, Result& result );
+        bool setFetchSpec( Result& result, const QString& spec );
+        bool setPushSpec( Result& result, const QString& spec );
 
         RefSpec fetchSpec() const;
         RefSpec pushSpec() const;
@@ -65,7 +65,7 @@ namespace Git
         static bool isValidUrl( const QString& url );
         static bool isSupportedUrl( const QString& url );
 
-        bool connect( bool forFetch, Result& result );
+        bool connect( Result& result, bool forFetch );
         void disconnect( Result& result );
         bool download( Result& result );
         bool updateTips( Result& result );

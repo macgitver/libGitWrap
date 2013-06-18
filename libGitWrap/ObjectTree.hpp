@@ -40,9 +40,9 @@ namespace Git
         ObjectTree( const ObjectTree& o );
 
     public:
-        ObjectTree subPath( const QString& pathName, Result& result ) const;
+        ObjectTree subPath( Result& result, const QString& pathName ) const;
 
-        DiffList diffToTree( ObjectTree newTree, Result& result );
+        DiffList diffToTree( Result& result, ObjectTree newTree );
         DiffList diffToIndex( Result& result );
         DiffList diffToWorkingDir( Result& result );
 

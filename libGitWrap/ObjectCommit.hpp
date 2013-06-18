@@ -64,13 +64,13 @@ namespace Git
 
         ObjectIdList parentCommitIds( Result& result ) const;
         QList< ObjectCommit > parentCommits( Result& result ) const;
-        ObjectCommit parentCommit( unsigned int index, Result& result ) const;
-        ObjectId parentCommitId( unsigned int index, Result& result ) const;
+        ObjectCommit parentCommit( Result& result, unsigned int index ) const;
+        ObjectId parentCommitId( Result& result, unsigned int index ) const;
         unsigned int numParentCommits() const;
 
-        bool isParentOf( const Git::ObjectCommit& child, Result& result ) const;
-        bool isChildOf( const Git::ObjectCommit& parent, Result& result ) const;
-        bool isEqual( const Git::ObjectCommit& commit, Result& result ) const;
+        bool isParentOf( Result& result, const Git::ObjectCommit& child ) const;
+        bool isChildOf( Result& result, const Git::ObjectCommit& parent ) const;
+        bool isEqual( Result& result, const Git::ObjectCommit& commit ) const;
 
         Signature author( Result& result ) const;
         Signature committer( Result& result ) const;
@@ -81,7 +81,7 @@ namespace Git
         Reference createBranch( const QString& name, bool force,
                                 Result& result ) const;
 
-        DiffList diffFromParent( unsigned int index, Result& result );
+        DiffList diffFromParent( Result& result, unsigned int index );
         DiffList diffFromAllParents( Result& result );
     };
 

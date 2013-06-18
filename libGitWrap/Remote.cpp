@@ -106,7 +106,7 @@ namespace Git
         return QString::fromUtf8( git_remote_url( d->mRemote ) );
     }
 
-    bool Remote::setFetchSpec( const QString& spec, Result& result )
+    bool Remote::setFetchSpec(Result& result, const QString& spec)
     {
         if( !result )
         {
@@ -122,7 +122,7 @@ namespace Git
         return result;
     }
 
-    bool Remote::setPushSpec( const QString& spec, Result& result )
+    bool Remote::setPushSpec(Result& result, const QString& spec)
     {
         if( !result )
         {
@@ -171,7 +171,7 @@ namespace Git
     }
 
 
-    bool Remote::connect( bool forFetch, Result& result )
+    bool Remote::connect(Result& result, bool forFetch)
     {
         if( !result )
         {

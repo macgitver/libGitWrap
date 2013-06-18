@@ -44,7 +44,7 @@ namespace Git
 
     public:
         Index( bool create = false );
-        Index( const QString& path, Result& result );
+        Index( Result& result, const QString& path );
         Index( const Index& other );
         ~Index();
 
@@ -60,11 +60,11 @@ namespace Git
         int count( Result& result ) const;
         Repository repository( Result& result ) const;
 
-        IndexEntry getEntry(int n, Result &result) const;
-        IndexEntry getEntry(const QString &path, Result &result) const;
+        IndexEntry getEntry(Result &result, int n) const;
+        IndexEntry getEntry(Result &result, const QString &path) const;
 
-        void addEntry(const QString &path, Result &result);
-        void removeEntry(const QString &path, Result &result);
+        void addEntry(Result &result, const QString &path);
+        void removeEntry(Result &result, const QString &path);
 
     private:
         Internal::GitPtr< Internal::IndexPrivate > d;

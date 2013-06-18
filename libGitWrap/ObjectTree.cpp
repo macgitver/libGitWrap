@@ -45,7 +45,7 @@ namespace Git
     {
     }
 
-    ObjectTree ObjectTree::subPath( const QString& pathName, Result& result ) const
+    ObjectTree ObjectTree::subPath(Result& result , const QString& pathName) const
     {
         if( !result )
         {
@@ -82,7 +82,7 @@ namespace Git
         return new Internal::ObjectPrivate( d->repo(), subObject );
     }
 
-    DiffList ObjectTree::diffToTree( ObjectTree newTree, Result& result )
+    DiffList ObjectTree::diffToTree(Result& result , ObjectTree newTree)
     {
         if( !result )
         {

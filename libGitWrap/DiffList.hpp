@@ -56,11 +56,11 @@ namespace Git
         bool isValid() const;
         Repository repository( Result& result ) const;
 
-        bool mergeOnto( DiffList other, Result& result ) const;
+        bool mergeOnto( Result& result, DiffList other ) const;
 
-        bool consumePatch( PatchConsumer* consumer, Result& result ) const;
-        bool consumeChangeList( ChangeListConsumer* consumer,
-                                Result& result ) const;
+        bool consumePatch( Result& result, PatchConsumer* consumer ) const;
+        bool consumeChangeList( Result& result,
+                                ChangeListConsumer* consumer ) const;
 
         ChangeList changeList(Result& result) const;
 

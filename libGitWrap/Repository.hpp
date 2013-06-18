@@ -84,7 +84,7 @@ namespace Git
         QStringList allReferences( Result& result );
         QStringList allBranches( Result& result );
         QString currentBranch( Result& result );
-        QStringList branches( bool local, bool remote, Result& result );
+        QStringList branches( Result& result, bool local, bool remote );
         QStringList allTags( Result& result );
 
         ResolvedRefs allResolvedRefs( Result& result );
@@ -94,37 +94,37 @@ namespace Git
 
         Index index( Result& result );
 
-        Git::StatusFlags status(const QString &fileName, Result &result) const;
+        Git::StatusFlags status(Result &result, const QString &fileName) const;
         Git::StatusHash status(Result &result) const;
 
         Reference HEAD( Result& result ) const;
-        Reference lookupRef( const QString& refName, Result& result );
-        ObjectId resolveRef( const QString& refName, Result& result );
+        Reference lookupRef( Result& result, const QString& refName );
+        ObjectId resolveRef( Result& result, const QString& refName );
 
         Object lookup( const ObjectId& id, ObjectType ot /* = otAny */,
                        Result& result );
 
-        ObjectCommit lookupCommit( const ObjectId& id, Result& result );
-        ObjectTree lookupTree( const ObjectId& id, Result& result );
-        ObjectBlob lookupBlob( const ObjectId& id, Result& result );
-        ObjectTag lookupTag( const ObjectId& id, Result& result );
+        ObjectCommit lookupCommit( Result& result, const ObjectId& id );
+        ObjectTree lookupTree( Result& result, const ObjectId& id );
+        ObjectBlob lookupBlob( Result& result, const ObjectId& id );
+        ObjectTag lookupTag( Result& result, const ObjectId& id );
 
         Object lookup( const QString& refName, ObjectType ot /* = otAny */,
                        Result& result );
 
-        ObjectCommit lookupCommit( const QString& refName, Result& result );
-        ObjectTree lookupTree( const QString& refName, Result& result );
-        ObjectBlob lookupBlob( const QString& refName, Result& result );
-        ObjectTag lookupTag( const QString& refName, Result& result );
+        ObjectCommit lookupCommit( Result& result, const QString& refName );
+        ObjectTree lookupTree( Result& result, const QString& refName );
+        ObjectBlob lookupBlob( Result& result, const QString& refName );
+        ObjectTag lookupTag( Result& result, const QString& refName );
 
-        bool shouldIgnore( const QString& filePath, Result& result ) const;
+        bool shouldIgnore( Result& result, const QString& filePath ) const;
 
         RevisionWalker newWalker( Result& result );
 
         QStringList allRemotes( Result& result ) const;
-        Remote remote( const QString& remoteName, Result& result ) const;
-        Remote createRemote( const QString& remoteName, const QString& url,
-                             const QString& fetchSpec, Result& result );
+        Remote remote( Result& result, const QString& remoteName ) const;
+        Remote createRemote( Result& result, const QString& remoteName, const QString& url,
+                             const QString& fetchSpec );
 
         DiffList diffCommitToCommit( ObjectCommit oldCommit, ObjectCommit newCommit,
                                      Result& result );
@@ -132,13 +132,13 @@ namespace Git
         DiffList diffTreeToTree( ObjectTree oldTree, ObjectTree newTree,
                                  Result& result);
 
-        DiffList diffIndexToTree( ObjectTree oldTree, Result& result );
+        DiffList diffIndexToTree( Result& result, ObjectTree oldTree );
 
-        DiffList diffTreeToWorkingDir( ObjectTree oldTree, Result& result );
+        DiffList diffTreeToWorkingDir( Result& result, ObjectTree oldTree );
         DiffList diffIndexToWorkingDir( Result& result );
 
         SubmoduleList submodules( Result& result );
-        Submodule submodule( const QString& name, Result& result );
+        Submodule submodule( Result& result, const QString& name );
 
     private:
         Internal::GitPtr< Internal::RepositoryPrivate > d;

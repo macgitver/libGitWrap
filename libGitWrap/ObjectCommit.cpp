@@ -111,7 +111,7 @@ namespace Git
         return ids;
     }
 
-    ObjectCommit ObjectCommit::parentCommit( unsigned int index, Result& result ) const
+    ObjectCommit ObjectCommit::parentCommit(Result& result, unsigned int index) const
     {
         if( !result )
         {
@@ -135,7 +135,7 @@ namespace Git
         return new Internal::ObjectPrivate( d->repo(), (git_object*) gitparent );
     }
 
-    ObjectId ObjectCommit::parentCommitId( unsigned int index, Result& result ) const
+    ObjectId ObjectCommit::parentCommitId(Result& result, unsigned int index) const
     {
         if( !result )
         {
@@ -204,7 +204,7 @@ namespace Git
         return git_commit_parentcount( commit );
     }
 
-    bool ObjectCommit::isParentOf( const Git::ObjectCommit& child, Result& result ) const
+    bool ObjectCommit::isParentOf(Result& result, const Git::ObjectCommit& child) const
     {
         QList< Git::ObjectCommit > parents = child.parentCommits( result );
 
@@ -217,7 +217,7 @@ namespace Git
         return false;
     }
 
-    bool ObjectCommit::isChildOf( const Git::ObjectCommit& parent, Result& result ) const
+    bool ObjectCommit::isChildOf(Result& result, const Git::ObjectCommit& parent) const
     {
         QList< Git::ObjectCommit > children = parentCommits( result );
 
@@ -232,7 +232,7 @@ namespace Git
         return false;
     }
 
-    bool ObjectCommit::isEqual( const Git::ObjectCommit& commit, Result& result ) const
+    bool ObjectCommit::isEqual(Result& result, const Git::ObjectCommit& commit) const
     {
         return id( result ) == commit.id( result ) && result;
     }
@@ -346,7 +346,7 @@ namespace Git
         return Reference( new Internal::ReferencePrivate( d->repo(), ref ) );
     }
 
-    DiffList ObjectCommit::diffFromParent( unsigned int index, Result& result )
+    DiffList ObjectCommit::diffFromParent(Result& result, unsigned int index)
     {
         if( !result )
         {

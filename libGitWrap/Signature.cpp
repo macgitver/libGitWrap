@@ -34,7 +34,7 @@ namespace Git
                 dt );
         }
 
-        git_signature* signature2git( const Signature& sig, Result& result )
+        git_signature* signature2git(Result& result, const Signature& sig)
         {
             if( !result )
             {
