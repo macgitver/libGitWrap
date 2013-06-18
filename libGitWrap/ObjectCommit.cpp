@@ -210,7 +210,7 @@ namespace Git
 
         for( int i = 0; result && i < parents.count(); i++ )
         {
-            if( isEqual( parents[ i ], result ) )
+            if( isEqual( result, parents[ i ] ) )
                 return true;
         }
 
@@ -223,7 +223,7 @@ namespace Git
 
         for( int i = 0; result && i < children.count(); i++ )
         {
-            if( parent.isEqual( children[ i ], result ) )
+            if( parent.isEqual( result, children[ i ] ) )
             {
                 return true;
             }
@@ -359,10 +359,10 @@ namespace Git
             return DiffList();
         }
 
-        ObjectCommit parentObjCommit = parentCommit( index, result );
+        ObjectCommit parentObjCommit = parentCommit( result, index );
         ObjectTree parentObjTree = parentObjCommit.tree( result );
 
-        return parentObjTree.diffToTree( tree( result ), result );
+        return parentObjTree.diffToTree( result, tree( result ) );
     }
 
     DiffList ObjectCommit::diffFromAllParents( Result& result )
@@ -383,11 +383,11 @@ namespace Git
             return DiffList();
         }
 
-        DiffList dl = diffFromParent( 0, result );
+        DiffList dl = diffFromParent( result, 0 );
         for( unsigned int i = 1; i < numParentCommits(); i++ )
         {
-            DiffList dl2 = diffFromParent( i, result );
-            dl2.mergeOnto( dl, result );
+            DiffList dl2 = diffFromParent( result, i );
+            dl2.mergeOnto( result, dl );
         }
 
         return dl;

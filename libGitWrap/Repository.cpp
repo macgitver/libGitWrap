@@ -488,7 +488,7 @@ namespace Git
 
     QStringList Repository::allBranches( Result& result )
     {
-        return branches( true, true, result );
+        return branches( result, true, true );
     }
 
     QString Repository::currentBranch( Result& result )
@@ -700,7 +700,7 @@ namespace Git
         return new Internal::ReferencePrivate( d, refHead );
     }
 
-    Object Repository::lookup( const ObjectId& id, ObjectType ot, Result& result )
+    Object Repository::lookup( Result& result, const ObjectId& id, ObjectType ot )
     {
         if( !result )
         {
@@ -737,47 +737,47 @@ namespace Git
 
     ObjectCommit Repository::lookupCommit(Result& result, const ObjectId& id)
     {
-        return lookup( id, otCommit, result ).asCommit( result );
+        return lookup( result, id, otCommit ).asCommit( result );
     }
 
     ObjectTree Repository::lookupTree(Result& result, const ObjectId& id)
     {
-        return lookup( id, otTree, result ).asTree( result );
+        return lookup( result, id, otTree ).asTree( result );
     }
 
     ObjectBlob Repository::lookupBlob(Result& result, const ObjectId& id)
     {
-        return lookup( id, otBlob, result ).asBlob( result );
+        return lookup( result, id, otBlob ).asBlob( result );
     }
 
     ObjectTag Repository::lookupTag(Result& result, const ObjectId& id)
     {
-        return lookup( id, otTag, result ).asTag( result );
+        return lookup( result, id, otTag ).asTag( result );
     }
 
-    Object Repository::lookup( const QString& refName, ObjectType ot, Result& result )
+    Object Repository::lookup( Result& result, const QString& refName, ObjectType ot )
     {
-        return lookup( lookupRef( refName, result ).resolveToObjectId( result ), ot, result );
+        return lookup( result, lookupRef( result, refName ).resolveToObjectId( result ), ot );
     }
 
     ObjectCommit Repository::lookupCommit(Result& result, const QString& refName)
     {
-        return lookupCommit( lookupRef( refName, result ).resolveToObjectId( result ), result );
+        return lookupCommit( result, lookupRef( result, refName ).resolveToObjectId( result ) );
     }
 
     ObjectTree Repository::lookupTree(Result& result, const QString& refName)
     {
-        return lookupTree( lookupRef( refName, result ).resolveToObjectId( result ), result );
+        return lookupTree( result, lookupRef( result, refName ).resolveToObjectId( result ) );
     }
 
     ObjectBlob Repository::lookupBlob(Result& result, const QString& refName)
     {
-        return lookupBlob( lookupRef( refName, result ).resolveToObjectId( result ), result );
+        return lookupBlob( result, lookupRef( result, refName ).resolveToObjectId( result ) );
     }
 
     ObjectTag Repository::lookupTag(Result& result, const QString& refName)
     {
-        return lookupTag( lookupRef( refName, result ).resolveToObjectId( result ), result );
+        return lookupTag( result, lookupRef( result, refName ).resolveToObjectId( result ) );
     }
 
     RevisionWalker Repository::newWalker( Result& result )
@@ -901,7 +901,7 @@ namespace Git
 
         if( !fetchSpec.isEmpty() )
         {
-            remo.setFetchSpec( fetchSpec, result );
+            remo.setFetchSpec( result, fetchSpec );
             if( !result )
             {
                 return Remote();
@@ -911,16 +911,15 @@ namespace Git
         return remo;
     }
 
-    DiffList Repository::diffCommitToCommit( ObjectCommit oldCommit, ObjectCommit newCommit,
-                                             Result& result )
+    DiffList Repository::diffCommitToCommit( Result& result, ObjectCommit oldCommit,
+                                             ObjectCommit newCommit )
     {
-        return diffTreeToTree( oldCommit.tree( result ), newCommit.tree( result ), result );
+        return diffTreeToTree( result, oldCommit.tree( result ), newCommit.tree( result ) );
     }
 
-    DiffList Repository::diffTreeToTree( ObjectTree oldTree, ObjectTree newTree,
-                                         Result& result  )
+    DiffList Repository::diffTreeToTree(Result& result, ObjectTree oldTree, ObjectTree newTree)
     {
-        return oldTree.diffToTree( newTree, result );
+        return oldTree.diffToTree( result, newTree );
     }
 
     DiffList Repository::diffIndexToTree(Result& result, ObjectTree oldTree)

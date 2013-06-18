@@ -49,13 +49,13 @@ namespace Git
         bool operator==( const Git::ObjectCommit& commit ) const
         {
             Result r;
-            return isEqual( commit, r ) && r;
+            return isEqual( r, commit ) && r;
         }
 
         bool operator!=( const Git::ObjectCommit& commit ) const
         {
             Result r;
-            return !isEqual( commit, r ) && r;
+            return !isEqual( r, commit ) && r;
         }
 
     public:

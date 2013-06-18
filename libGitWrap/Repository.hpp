@@ -101,16 +101,14 @@ namespace Git
         Reference lookupRef( Result& result, const QString& refName );
         ObjectId resolveRef( Result& result, const QString& refName );
 
-        Object lookup( const ObjectId& id, ObjectType ot /* = otAny */,
-                       Result& result );
+        Object lookup(Result& result, const ObjectId& id, ObjectType ot /* = otAny */);
 
         ObjectCommit lookupCommit( Result& result, const ObjectId& id );
         ObjectTree lookupTree( Result& result, const ObjectId& id );
         ObjectBlob lookupBlob( Result& result, const ObjectId& id );
         ObjectTag lookupTag( Result& result, const ObjectId& id );
 
-        Object lookup( const QString& refName, ObjectType ot /* = otAny */,
-                       Result& result );
+        Object lookup(Result& result, const QString& refName, ObjectType ot /* = otAny */);
 
         ObjectCommit lookupCommit( Result& result, const QString& refName );
         ObjectTree lookupTree( Result& result, const QString& refName );
@@ -126,11 +124,10 @@ namespace Git
         Remote createRemote( Result& result, const QString& remoteName, const QString& url,
                              const QString& fetchSpec );
 
-        DiffList diffCommitToCommit( ObjectCommit oldCommit, ObjectCommit newCommit,
-                                     Result& result );
+        DiffList diffCommitToCommit(Result& result, ObjectCommit oldCommit, ObjectCommit newCommit);
 
-        DiffList diffTreeToTree( ObjectTree oldTree, ObjectTree newTree,
-                                 Result& result);
+        DiffList diffTreeToTree( Result& result, ObjectTree oldTree,
+                                 ObjectTree newTree);
 
         DiffList diffIndexToTree( Result& result, ObjectTree oldTree );
 

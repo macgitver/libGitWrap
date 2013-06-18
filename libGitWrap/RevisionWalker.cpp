@@ -110,7 +110,7 @@ namespace Git
             return;
         }
 
-        pushRef( ref.name(), result );
+        pushRef( result, ref.name() );
     }
 
     void RevisionWalker::pushRef(Result& result, const QString& name)
@@ -174,7 +174,7 @@ namespace Git
             return;
         }
 
-        hideRef( ref.name(), result );
+        hideRef( result, ref.name() );
     }
 
     void RevisionWalker::hideRef(Result& result, const QString& name)
@@ -253,7 +253,7 @@ namespace Git
         }
 
         ObjectId id;
-        while( next( id, result ) )
+        while( next( result, id ) )
         {
             if( !result )
             {

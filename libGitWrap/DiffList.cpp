@@ -301,7 +301,7 @@ namespace Git
     ChangeList DiffList::changeList(Result &result) const
     {
         Internal::DiffListConsumer consumer;
-        consumeChangeList(&consumer, result);
+        consumeChangeList(result, &consumer);
 
         return consumer.changeList();
     }
