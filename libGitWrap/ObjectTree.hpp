@@ -40,11 +40,11 @@ namespace Git
         ObjectTree( const ObjectTree& o );
 
     public:
-        ObjectTree subPath( const QString& pathName, Result& result GITWRAP_DEFAULT_TLSRESULT ) const;
+        ObjectTree subPath( const QString& pathName, Result& result ) const;
 
-        DiffList diffToTree( ObjectTree newTree, Result& result GITWRAP_DEFAULT_TLSRESULT );
-        DiffList diffToIndex( Result& result GITWRAP_DEFAULT_TLSRESULT );
-        DiffList diffToWorkingDir( Result& result GITWRAP_DEFAULT_TLSRESULT );
+        DiffList diffToTree( ObjectTree newTree, Result& result );
+        DiffList diffToIndex( Result& result );
+        DiffList diffToWorkingDir( Result& result );
 
         size_t entryCount() const;
         TreeEntry entryAt( size_t index ) const;

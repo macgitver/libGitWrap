@@ -51,13 +51,13 @@ namespace Git
     public:
         bool isValid() const;
 
-        bool save( Result& result GITWRAP_DEFAULT_TLSRESULT );
+        bool save( Result& result );
 
         QString name() const;
         QString url() const;
 
-        bool setFetchSpec( const QString& spec, Result& result GITWRAP_DEFAULT_TLSRESULT );
-        bool setPushSpec( const QString& spec, Result& result GITWRAP_DEFAULT_TLSRESULT );
+        bool setFetchSpec( const QString& spec, Result& result );
+        bool setPushSpec( const QString& spec, Result& result );
 
         RefSpec fetchSpec() const;
         RefSpec pushSpec() const;
@@ -65,10 +65,10 @@ namespace Git
         static bool isValidUrl( const QString& url );
         static bool isSupportedUrl( const QString& url );
 
-        bool connect( bool forFetch, Result& result GITWRAP_DEFAULT_TLSRESULT );
-        void disconnect( Result& result GITWRAP_DEFAULT_TLSRESULT );
-        bool download( Result& result GITWRAP_DEFAULT_TLSRESULT );
-        bool updateTips( Result& result GITWRAP_DEFAULT_TLSRESULT );
+        bool connect( bool forFetch, Result& result );
+        void disconnect( Result& result );
+        bool download( Result& result );
+        bool updateTips( Result& result );
 
     private:
         Internal::GitPtr< Internal::RemotePrivate > d;

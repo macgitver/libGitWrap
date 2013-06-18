@@ -54,13 +54,13 @@ namespace Git
 
     public:
         bool isValid() const;
-        Repository repository( Result& result GITWRAP_DEFAULT_TLSRESULT ) const;
+        Repository repository( Result& result ) const;
 
-        bool mergeOnto( DiffList other, Result& result GITWRAP_DEFAULT_TLSRESULT ) const;
+        bool mergeOnto( DiffList other, Result& result ) const;
 
-        bool consumePatch( PatchConsumer* consumer, Result& result GITWRAP_DEFAULT_TLSRESULT ) const;
+        bool consumePatch( PatchConsumer* consumer, Result& result ) const;
         bool consumeChangeList( ChangeListConsumer* consumer,
-                                Result& result GITWRAP_DEFAULT_TLSRESULT ) const;
+                                Result& result ) const;
 
         ChangeList changeList(Result& result) const;
 

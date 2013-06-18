@@ -63,15 +63,15 @@ namespace Git
     public:
         static Repository create( const QString& path,
                                   bool bare,
-                                  Result& result GITWRAP_DEFAULT_TLSRESULT );
+                                  Result& result );
 
         static QString discover( const QString& startPath,
                                  bool acrossFs /* = false */,
                                  const QStringList& ceilingDirs /* = QStringList() */,
-                                 Result& result GITWRAP_DEFAULT_TLSRESULT );
+                                 Result& result );
 
         static Repository open( const QString& path,
-                                Result& result GITWRAP_DEFAULT_TLSRESULT );
+                                Result& result );
 
         bool isValid() const;
         bool isBare() const;
@@ -81,64 +81,64 @@ namespace Git
 
         QString name() const;
 
-        QStringList allReferences( Result& result GITWRAP_DEFAULT_TLSRESULT );
-        QStringList allBranches( Result& result GITWRAP_DEFAULT_TLSRESULT );
-        QString currentBranch( Result& result GITWRAP_DEFAULT_TLSRESULT );
-        QStringList branches( bool local, bool remote, Result& result GITWRAP_DEFAULT_TLSRESULT );
-        QStringList allTags( Result& result GITWRAP_DEFAULT_TLSRESULT );
+        QStringList allReferences( Result& result );
+        QStringList allBranches( Result& result );
+        QString currentBranch( Result& result );
+        QStringList branches( bool local, bool remote, Result& result );
+        QStringList allTags( Result& result );
 
-        ResolvedRefs allResolvedRefs( Result& result GITWRAP_DEFAULT_TLSRESULT );
+        ResolvedRefs allResolvedRefs( Result& result );
 
         bool renameBranch( const QString& oldName, const QString& newName, bool force /* = false */,
-                           Result& result GITWRAP_DEFAULT_TLSRESULT );
+                           Result& result );
 
-        Index index( Result& result GITWRAP_DEFAULT_TLSRESULT );
+        Index index( Result& result );
 
-        Git::StatusFlags status(const QString &fileName, Result &result GITWRAP_DEFAULT_TLSRESULT) const;
-        Git::StatusHash status(Result &result GITWRAP_DEFAULT_TLSRESULT) const;
+        Git::StatusFlags status(const QString &fileName, Result &result) const;
+        Git::StatusHash status(Result &result) const;
 
-        Reference HEAD( Result& result GITWRAP_DEFAULT_TLSRESULT ) const;
-        Reference lookupRef( const QString& refName, Result& result GITWRAP_DEFAULT_TLSRESULT );
-        ObjectId resolveRef( const QString& refName, Result& result GITWRAP_DEFAULT_TLSRESULT );
+        Reference HEAD( Result& result ) const;
+        Reference lookupRef( const QString& refName, Result& result );
+        ObjectId resolveRef( const QString& refName, Result& result );
 
         Object lookup( const ObjectId& id, ObjectType ot /* = otAny */,
-                       Result& result GITWRAP_DEFAULT_TLSRESULT );
+                       Result& result );
 
-        ObjectCommit lookupCommit( const ObjectId& id, Result& result GITWRAP_DEFAULT_TLSRESULT );
-        ObjectTree lookupTree( const ObjectId& id, Result& result GITWRAP_DEFAULT_TLSRESULT );
-        ObjectBlob lookupBlob( const ObjectId& id, Result& result GITWRAP_DEFAULT_TLSRESULT );
-        ObjectTag lookupTag( const ObjectId& id, Result& result GITWRAP_DEFAULT_TLSRESULT );
+        ObjectCommit lookupCommit( const ObjectId& id, Result& result );
+        ObjectTree lookupTree( const ObjectId& id, Result& result );
+        ObjectBlob lookupBlob( const ObjectId& id, Result& result );
+        ObjectTag lookupTag( const ObjectId& id, Result& result );
 
         Object lookup( const QString& refName, ObjectType ot /* = otAny */,
-                       Result& result GITWRAP_DEFAULT_TLSRESULT );
+                       Result& result );
 
-        ObjectCommit lookupCommit( const QString& refName, Result& result GITWRAP_DEFAULT_TLSRESULT );
-        ObjectTree lookupTree( const QString& refName, Result& result GITWRAP_DEFAULT_TLSRESULT );
-        ObjectBlob lookupBlob( const QString& refName, Result& result GITWRAP_DEFAULT_TLSRESULT );
-        ObjectTag lookupTag( const QString& refName, Result& result GITWRAP_DEFAULT_TLSRESULT );
+        ObjectCommit lookupCommit( const QString& refName, Result& result );
+        ObjectTree lookupTree( const QString& refName, Result& result );
+        ObjectBlob lookupBlob( const QString& refName, Result& result );
+        ObjectTag lookupTag( const QString& refName, Result& result );
 
-        bool shouldIgnore( const QString& filePath, Result& result GITWRAP_DEFAULT_TLSRESULT ) const;
+        bool shouldIgnore( const QString& filePath, Result& result ) const;
 
-        RevisionWalker newWalker( Result& result GITWRAP_DEFAULT_TLSRESULT );
+        RevisionWalker newWalker( Result& result );
 
-        QStringList allRemotes( Result& result GITWRAP_DEFAULT_TLSRESULT ) const;
-        Remote remote( const QString& remoteName, Result& result GITWRAP_DEFAULT_TLSRESULT ) const;
+        QStringList allRemotes( Result& result ) const;
+        Remote remote( const QString& remoteName, Result& result ) const;
         Remote createRemote( const QString& remoteName, const QString& url,
-                             const QString& fetchSpec, Result& result GITWRAP_DEFAULT_TLSRESULT );
+                             const QString& fetchSpec, Result& result );
 
         DiffList diffCommitToCommit( ObjectCommit oldCommit, ObjectCommit newCommit,
-                                     Result& result GITWRAP_DEFAULT_TLSRESULT );
+                                     Result& result );
 
         DiffList diffTreeToTree( ObjectTree oldTree, ObjectTree newTree,
-                                 Result& result GITWRAP_DEFAULT_TLSRESULT);
+                                 Result& result);
 
-        DiffList diffIndexToTree( ObjectTree oldTree, Result& result GITWRAP_DEFAULT_TLSRESULT );
+        DiffList diffIndexToTree( ObjectTree oldTree, Result& result );
 
-        DiffList diffTreeToWorkingDir( ObjectTree oldTree, Result& result GITWRAP_DEFAULT_TLSRESULT );
-        DiffList diffIndexToWorkingDir( Result& result GITWRAP_DEFAULT_TLSRESULT );
+        DiffList diffTreeToWorkingDir( ObjectTree oldTree, Result& result );
+        DiffList diffIndexToWorkingDir( Result& result );
 
-        SubmoduleList submodules( Result& result GITWRAP_DEFAULT_TLSRESULT );
-        Submodule submodule( const QString& name, Result& result GITWRAP_DEFAULT_TLSRESULT );
+        SubmoduleList submodules( Result& result );
+        Submodule submodule( const QString& name, Result& result );
 
     private:
         Internal::GitPtr< Internal::RepositoryPrivate > d;

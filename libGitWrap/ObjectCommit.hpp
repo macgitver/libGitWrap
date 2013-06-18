@@ -59,30 +59,30 @@ namespace Git
         }
 
     public:
-        ObjectTree tree( Result& result GITWRAP_DEFAULT_TLSRESULT );
-        ObjectId treeId( Result& result GITWRAP_DEFAULT_TLSRESULT );
+        ObjectTree tree( Result& result );
+        ObjectId treeId( Result& result );
 
-        ObjectIdList parentCommitIds( Result& result GITWRAP_DEFAULT_TLSRESULT ) const;
-        QList< ObjectCommit > parentCommits( Result& result GITWRAP_DEFAULT_TLSRESULT ) const;
-        ObjectCommit parentCommit( unsigned int index, Result& result GITWRAP_DEFAULT_TLSRESULT ) const;
-        ObjectId parentCommitId( unsigned int index, Result& result GITWRAP_DEFAULT_TLSRESULT ) const;
+        ObjectIdList parentCommitIds( Result& result ) const;
+        QList< ObjectCommit > parentCommits( Result& result ) const;
+        ObjectCommit parentCommit( unsigned int index, Result& result ) const;
+        ObjectId parentCommitId( unsigned int index, Result& result ) const;
         unsigned int numParentCommits() const;
 
-        bool isParentOf( const Git::ObjectCommit& child, Result& result GITWRAP_DEFAULT_TLSRESULT ) const;
-        bool isChildOf( const Git::ObjectCommit& parent, Result& result GITWRAP_DEFAULT_TLSRESULT ) const;
-        bool isEqual( const Git::ObjectCommit& commit, Result& result GITWRAP_DEFAULT_TLSRESULT ) const;
+        bool isParentOf( const Git::ObjectCommit& child, Result& result ) const;
+        bool isChildOf( const Git::ObjectCommit& parent, Result& result ) const;
+        bool isEqual( const Git::ObjectCommit& commit, Result& result ) const;
 
-        Signature author( Result& result GITWRAP_DEFAULT_TLSRESULT ) const;
-        Signature committer( Result& result GITWRAP_DEFAULT_TLSRESULT ) const;
+        Signature author( Result& result ) const;
+        Signature committer( Result& result ) const;
 
-        QString message( Result& result GITWRAP_DEFAULT_TLSRESULT ) const;
-        QString shortMessage( Result& result GITWRAP_DEFAULT_TLSRESULT ) const;
+        QString message( Result& result ) const;
+        QString shortMessage( Result& result ) const;
 
         Reference createBranch( const QString& name, bool force,
-                                Result& result GITWRAP_DEFAULT_TLSRESULT ) const;
+                                Result& result ) const;
 
-        DiffList diffFromParent( unsigned int index, Result& result GITWRAP_DEFAULT_TLSRESULT );
-        DiffList diffFromAllParents( Result& result GITWRAP_DEFAULT_TLSRESULT );
+        DiffList diffFromParent( unsigned int index, Result& result );
+        DiffList diffFromAllParents( Result& result );
     };
 
     /**

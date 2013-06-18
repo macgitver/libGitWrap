@@ -54,17 +54,17 @@ namespace Git
     public:
         bool isValid() const;
 
-        void read( Result& result GITWRAP_DEFAULT_TLSRESULT );
-        void write( Result& result GITWRAP_DEFAULT_TLSRESULT );
+        void read( Result& result );
+        void write( Result& result );
 
-        int count( Result& result GITWRAP_DEFAULT_TLSRESULT ) const;
-        Repository repository( Result& result GITWRAP_DEFAULT_TLSRESULT ) const;
+        int count( Result& result ) const;
+        Repository repository( Result& result ) const;
 
-        IndexEntry getEntry(int n, Result &result GITWRAP_DEFAULT_TLSRESULT) const;
-        IndexEntry getEntry(const QString &path, Result &result GITWRAP_DEFAULT_TLSRESULT) const;
+        IndexEntry getEntry(int n, Result &result) const;
+        IndexEntry getEntry(const QString &path, Result &result) const;
 
-        void addEntry(const QString &path, Result &result GITWRAP_DEFAULT_TLSRESULT);
-        void removeEntry(const QString &path, Result &result GITWRAP_DEFAULT_TLSRESULT);
+        void addEntry(const QString &path, Result &result);
+        void removeEntry(const QString &path, Result &result);
 
     private:
         Internal::GitPtr< Internal::IndexPrivate > d;
