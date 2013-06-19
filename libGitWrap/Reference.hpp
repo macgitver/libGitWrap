@@ -67,7 +67,10 @@ namespace Git
 
         void checkout( Result& result,
                        bool force = false,
+                       bool updateHEAD = true,
                        const QStringList &paths = QStringList() ) const;
+
+        void updateHEAD(Result &result) const;
 
     private:
         Internal::GitPtr< Internal::ReferencePrivate > d;

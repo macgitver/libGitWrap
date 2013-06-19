@@ -197,7 +197,8 @@ namespace Git
         return resolvedRef.objectId( result );
     }
 
-    void Reference::checkout(Result &result, bool force, const QStringList &paths) const
+    void Reference::checkout(Result &result, bool force, bool updateHEAD,
+                             const QStringList &paths) const
     {
         if (  !result )
         {
@@ -223,8 +224,13 @@ namespace Git
             if ( !result ) return;
         }
         result = git_checkout_tree( d->repo()->mRepo, o, &opts );
-        if (!result) return;
 
+        if ( result && updateHEAD )
+            this->updateHEAD(result);
+    }
+
+    void Reference::updateHEAD(Result &result) const
+    {
         if( git_reference_is_branch(d->mRef) )
         {
             // reference is a local branch

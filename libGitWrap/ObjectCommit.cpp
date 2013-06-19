@@ -328,7 +328,8 @@ namespace Git
      *
      * @param[in,out]   result  A Result object; see @ref GitWrapErrorHandling
      */
-    void ObjectCommit::checkout(Result &result, bool force, const QStringList &paths) const
+    void ObjectCommit::checkout(Result &result, bool force, bool updateHEAD,
+                                const QStringList &paths) const
     {
         if( !result )
         {
@@ -350,10 +351,8 @@ namespace Git
         }
 
         result = git_checkout_tree( d->repo()->mRepo, d->mObj, &opts );
-        if ( !result ) return;
-
-        result = git_repository_set_head_detached( d->repo()->mRepo
-                                                   , git_object_id( d->mObj ) );
+        if ( result && updateHEAD )
+            this->updateHEAD(result);
     }
 
     Reference ObjectCommit::createBranch( const QString& name, bool force, Result& result ) const
@@ -424,6 +423,12 @@ namespace Git
         }
 
         return dl;
+    }
+
+    void ObjectCommit::updateHEAD(Result &result) const
+    {
+        result = git_repository_set_head_detached( d->repo()->mRepo
+                                                   , git_object_id( d->mObj ) );
     }
 
 }

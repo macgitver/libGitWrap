@@ -79,12 +79,15 @@ namespace Git
 
         void checkout( Result &result,
                        bool force = false,
+                       bool updateHEAD = true,
                        const QStringList &paths = QStringList() ) const;
         Reference createBranch( const QString& name, bool force,
                                 Result& result GITWRAP_DEFAULT_TLSRESULT ) const;
 
         DiffList diffFromParent( unsigned int index, Result& result GITWRAP_DEFAULT_TLSRESULT );
         DiffList diffFromAllParents( Result& result GITWRAP_DEFAULT_TLSRESULT );
+
+        void updateHEAD(Result &result) const;
     };
 
     /**
