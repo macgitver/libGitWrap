@@ -351,7 +351,7 @@ namespace Git
         }
 
         result = git_checkout_tree( d->repo()->mRepo, d->mObj, &opts );
-        if ( result && updateHEAD )
+        if ( updateHEAD )
             this->updateHEAD(result);
     }
 
@@ -427,6 +427,14 @@ namespace Git
 
     void ObjectCommit::updateHEAD(Result &result) const
     {
+        if ( !result ) return;
+
+        if ( !isValid() )
+        {
+            result.setInvalidObject();
+            return;
+        }
+
         result = git_repository_set_head_detached( d->repo()->mRepo
                                                    , git_object_id( d->mObj ) );
     }

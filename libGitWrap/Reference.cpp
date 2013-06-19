@@ -225,12 +225,20 @@ namespace Git
         }
         result = git_checkout_tree( d->repo()->mRepo, o, &opts );
 
-        if ( result && updateHEAD )
+        if ( updateHEAD )
             this->updateHEAD(result);
     }
 
     void Reference::updateHEAD(Result &result) const
     {
+        if ( !result ) return;
+
+        if ( !isValid() )
+        {
+            result.setInvalidObject();
+            return;
+        }
+
         if( git_reference_is_branch(d->mRef) )
         {
             // reference is a local branch
