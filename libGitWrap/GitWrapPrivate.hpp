@@ -18,6 +18,7 @@
 #define GIT_P_H
 
 #include <QThreadStorage>
+#include <QStringList>
 
 #include "git2.h"
 
@@ -150,6 +151,28 @@ namespace Git
         git_signature* signature2git( const Signature& sig, Result& result );
         RefSpec mkRefSpec( const git_refspec* refspec );
         QStringList slFromStrArray( git_strarray* arry );
+
+        /**
+         * @internal
+         * @ingroup GitWrap
+         * @brief The StrArrayWrapper class wraps a QStringList as a pointer to git_strarray.
+         */
+        class StrArrayWrapper
+        {
+            git_strarray a;
+            QStringList internalCopy;
+
+        public:
+            StrArrayWrapper(const QStringList& sl);
+            ~StrArrayWrapper();
+
+            operator git_strarray*();
+            operator const git_strarray*() const;
+
+        private:
+            StrArrayWrapper();
+            StrArrayWrapper(const StrArrayWrapper&);
+        };
 
         /**
          * @internal

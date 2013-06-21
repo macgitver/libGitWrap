@@ -253,6 +253,74 @@ namespace Git
     }
 
     /**
+     * @brief           Resets an index entry to HEAD without changing the working tree
+     *
+     *                  This behaviour is also known as "unstaging".
+     *                  It resets the state of a file without changing any contents.
+     *
+     * @param[in]       paths   the file paths relative to the repository's working directory
+     * @param[in,out]   result  a Result object; see @ref GitWrapErrorHandling
+     */
+    void Index::resetDefault(const QStringList &paths, Result &result)
+    {
+        if ( !result || paths.isEmpty() )
+            return;
+
+        if ( !d )
+        {
+            result.setInvalidObject();
+            return;
+        }
+
+        git_reference *ref = NULL;
+        result = git_repository_head( &ref, d->repo()->mRepo );
+        if ( !result )
+            return;
+
+        git_object *o = NULL;
+        result = git_reference_peel( &o, ref, GIT_OBJ_COMMIT );
+        git_reference_free( ref );
+        if ( !result )
+            return;
+
+        result = git_reset_default( d->repo()->mRepo, o, Internal::StrArrayWrapper( paths ) );
+    }
+
+    /**
+     * @brief           Overwrites the file content with the content from the index.
+     *
+     * @param[in]       paths
+     * @param[in,out]   result  A Result object; see @ref GitWrapErrorHandling
+     *
+     *                  Checkout the files to the index. File changes are discarded only in the
+     *                  working directory. Changes in the index stay untouched.
+     *                  This allows staging part of a file and discard the rest.
+     */
+    void Index::checkout(const QStringList &paths, Result &result)
+    {
+        if( !result )
+        {
+            return;
+        }
+
+        if( !d )
+        {
+            result.setInvalidObject();
+            return;
+        }
+
+        git_checkout_opts options = GIT_CHECKOUT_OPTS_INIT;
+        options.checkout_strategy = GIT_CHECKOUT_FORCE;
+
+        // TODO don't copy, just map paths here
+        result = git_strarray_copy( &options.paths, Internal::StrArrayWrapper( paths ) );
+        if ( !result )
+            return;
+
+        result = git_checkout_index( d->repo()->mRepo, d->mIndex, &options );
+    }
+
+    /**
      * @brief           Read the index from storage
      *
      * Refills this index object with data obtained from hard disc. Any local modifications to this

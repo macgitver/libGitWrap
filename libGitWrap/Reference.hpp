@@ -19,6 +19,8 @@
 
 #include "GitWrap.hpp"
 
+#include <QStringList>
+
 namespace Git
 {
 
@@ -62,6 +64,13 @@ namespace Git
         Repository repository( Result& result GITWRAP_DEFAULT_TLSRESULT ) const;
         Reference resolved( Result& result GITWRAP_DEFAULT_TLSRESULT );
         ObjectId resolveToObjectId( Result& result GITWRAP_DEFAULT_TLSRESULT );
+
+        void checkout( Result& result,
+                       bool force = false,
+                       bool updateHEAD = true,
+                       const QStringList &paths = QStringList() ) const;
+
+        void updateHEAD(Result &result) const;
 
     private:
         Internal::GitPtr< Internal::ReferencePrivate > d;

@@ -197,4 +197,60 @@ namespace Git
         return resolvedRef.objectId( result );
     }
 
+    void Reference::checkout(Result &result, bool force, bool updateHEAD,
+                             const QStringList &paths) const
+    {
+        if (  !result )
+        {
+            return;
+        }
+
+        if( !d )
+        {
+            result.setInvalidObject();
+            return;
+        }
+
+        git_object *o = NULL;
+        result = git_reference_peel( &o, d->mRef, GIT_OBJ_TREE );
+        if ( !result ) return;
+
+        git_checkout_opts opts = GIT_CHECKOUT_OPTS_INIT;
+        opts.checkout_strategy = force ? GIT_CHECKOUT_FORCE : GIT_CHECKOUT_SAFE;
+        if ( !paths.isEmpty() )
+        {
+            // TODO: don't copy, just map paths here
+            result = git_strarray_copy( &opts.paths, Internal::StrArrayWrapper( paths ) );
+            if ( !result ) return;
+        }
+        result = git_checkout_tree( d->repo()->mRepo, o, &opts );
+
+        if ( updateHEAD )
+            this->updateHEAD(result);
+    }
+
+    void Reference::updateHEAD(Result &result) const
+    {
+        if ( !result ) return;
+
+        if ( !isValid() )
+        {
+            result.setInvalidObject();
+            return;
+        }
+
+        if( git_reference_is_branch(d->mRef) )
+        {
+            // reference is a local branch
+            result = git_repository_set_head(d->repo()->mRepo
+                                             , git_reference_name(d->mRef) );
+        }
+        else
+        {
+            // reference is detached
+            result = git_repository_set_head_detached( d->repo()->mRepo
+                                                       , git_reference_target(d->mRef) );
+        }
+    }
+
 }

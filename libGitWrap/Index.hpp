@@ -66,6 +66,10 @@ namespace Git
         void addEntry(const QString &path, Result &result GITWRAP_DEFAULT_TLSRESULT);
         void removeEntry(const QString &path, Result &result GITWRAP_DEFAULT_TLSRESULT);
 
+        void resetDefault(const QStringList &path, Result &result GITWRAP_DEFAULT_TLSRESULT);
+
+        void checkout( const QStringList &paths, Result &result GITWRAP_DEFAULT_TLSRESULT );
+
     private:
         Internal::GitPtr< Internal::IndexPrivate > d;
     };

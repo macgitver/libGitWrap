@@ -46,6 +46,42 @@ namespace Git
             return sl;
         }
 
+        StrArrayWrapper::StrArrayWrapper()
+        {
+        }
+
+        StrArrayWrapper::StrArrayWrapper( const StrArrayWrapper & )
+        {
+        }
+
+        StrArrayWrapper::StrArrayWrapper(const QStringList& sl)
+        {
+            internalCopy = sl;
+
+            a.count = internalCopy.count();
+            a.strings = new char *[a.count];
+
+            for(int i=0; i < internalCopy.count(); ++i )
+            {
+                a.strings[i] = internalCopy[i].toUtf8().data();
+            }
+        }
+
+        StrArrayWrapper::~StrArrayWrapper()
+        {
+            delete[] a.strings;
+        }
+
+        StrArrayWrapper::operator git_strarray*()
+        {
+            return &a;
+        }
+
+        StrArrayWrapper::operator const git_strarray *() const
+        {
+            return &a;
+        }
+
     }
 
     GitWrap::GitWrap()
