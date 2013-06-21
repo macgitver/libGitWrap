@@ -287,6 +287,40 @@ namespace Git
     }
 
     /**
+     * @brief           Overwrites the file content with the content from the index.
+     *
+     * @param[in]       paths
+     * @param[in,out]   result  A Result object; see @ref GitWrapErrorHandling
+     *
+     *                  Checkout the files to the index. File changes are discarded only in the
+     *                  working directory. Changes in the index stay untouched.
+     *                  This allows staging part of a file and discard the rest.
+     */
+    void Index::checkout(const QStringList &paths, Result &result)
+    {
+        if( !result )
+        {
+            return;
+        }
+
+        if( !d )
+        {
+            result.setInvalidObject();
+            return;
+        }
+
+        git_checkout_opts options = GIT_CHECKOUT_OPTS_INIT;
+        options.checkout_strategy = GIT_CHECKOUT_FORCE;
+
+        // TODO don't copy, just map paths here
+        result = git_strarray_copy( &options.paths, Internal::StrArrayWrapper( paths ) );
+        if ( !result )
+            return;
+
+        result = git_checkout_index( d->repo()->mRepo, d->mIndex, &options );
+    }
+
+    /**
      * @brief           Read the index from storage
      *
      * Refills this index object with data obtained from hard disc. Any local modifications to this

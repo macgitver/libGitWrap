@@ -323,6 +323,38 @@ namespace Git
         return QString::fromUtf8( msg, len );
     }
 
+    /**
+     * @brief           Checkout this commit.
+     *
+     * @param[in,out]   result  A Result object; see @ref GitWrapErrorHandling
+     */
+    void ObjectCommit::checkout(Result &result, bool force, bool updateHEAD,
+                                const QStringList &paths) const
+    {
+        if( !result )
+        {
+            return;
+        }
+        if( !d )
+        {
+            result.setInvalidObject();
+            return;
+        }
+
+        git_checkout_opts opts = GIT_CHECKOUT_OPTS_INIT;
+        opts.checkout_strategy = force ? GIT_CHECKOUT_FORCE : GIT_CHECKOUT_SAFE;
+        if ( !paths.isEmpty() )
+        {
+            // TODO: don't copy, just map paths here
+            result = git_strarray_copy( &opts.paths, Internal::StrArrayWrapper( paths ) );
+            if ( !result ) return;
+        }
+
+        result = git_checkout_tree( d->repo()->mRepo, d->mObj, &opts );
+        if ( updateHEAD )
+            this->updateHEAD(result);
+    }
+
     Reference ObjectCommit::createBranch( const QString& name, bool force, Result& result ) const
     {
         if( !result )
@@ -391,6 +423,20 @@ namespace Git
         }
 
         return dl;
+    }
+
+    void ObjectCommit::updateHEAD(Result &result) const
+    {
+        if ( !result ) return;
+
+        if ( !isValid() )
+        {
+            result.setInvalidObject();
+            return;
+        }
+
+        result = git_repository_set_head_detached( d->repo()->mRepo
+                                                   , git_object_id( d->mObj ) );
     }
 
 }

@@ -17,8 +17,7 @@
 #ifndef GIT_OBJECT_COMMIT_H
 #define GIT_OBJECT_COMMIT_H
 
-#include <QDebug>
-#include <QList>
+#include <QStringList>
 
 #include "GitWrap.hpp"
 #include "ObjectId.hpp"
@@ -78,11 +77,17 @@ namespace Git
         QString message( Result& result GITWRAP_DEFAULT_TLSRESULT ) const;
         QString shortMessage( Result& result GITWRAP_DEFAULT_TLSRESULT ) const;
 
+        void checkout( Result &result,
+                       bool force = false,
+                       bool updateHEAD = true,
+                       const QStringList &paths = QStringList() ) const;
         Reference createBranch( const QString& name, bool force,
                                 Result& result GITWRAP_DEFAULT_TLSRESULT ) const;
 
         DiffList diffFromParent( unsigned int index, Result& result GITWRAP_DEFAULT_TLSRESULT );
         DiffList diffFromAllParents( Result& result GITWRAP_DEFAULT_TLSRESULT );
+
+        void updateHEAD(Result &result) const;
     };
 
     /**
