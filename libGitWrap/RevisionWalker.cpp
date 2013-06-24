@@ -80,7 +80,7 @@ namespace Git
         git_revwalk_reset( d->mWalker );
     }
 
-    void RevisionWalker::push( const ObjectId& id, Result& result )
+    void RevisionWalker::push(Result& result, const ObjectId& id)
     {
         if( !result )
         {
@@ -96,7 +96,7 @@ namespace Git
         result = git_revwalk_push( d->mWalker, (const git_oid*) id.raw() );
     }
 
-    void RevisionWalker::push( const Reference& ref, Result& result )
+    void RevisionWalker::push(Result& result, const Reference& ref)
     {
 
         if( !result )
@@ -110,10 +110,10 @@ namespace Git
             return;
         }
 
-        pushRef( ref.name(), result );
+        pushRef( result, ref.name() );
     }
 
-    void RevisionWalker::pushRef( const QString& name, Result& result )
+    void RevisionWalker::pushRef(Result& result, const QString& name)
     {
         if( !result )
         {
@@ -145,7 +145,7 @@ namespace Git
         result = git_revwalk_push_head( d->mWalker );
     }
 
-    void RevisionWalker::hide( const ObjectId& id, Result& result )
+    void RevisionWalker::hide( Result& result, const ObjectId& id )
     {
         if( !result )
         {
@@ -161,7 +161,7 @@ namespace Git
         result = git_revwalk_hide( d->mWalker, (const git_oid*) id.raw() );
     }
 
-    void RevisionWalker::hide( const Reference& ref, Result& result )
+    void RevisionWalker::hide(Result& result, const Reference& ref)
     {
         if( !result )
         {
@@ -174,10 +174,10 @@ namespace Git
             return;
         }
 
-        hideRef( ref.name(), result );
+        hideRef( result, ref.name() );
     }
 
-    void RevisionWalker::hideRef( const QString& name, Result& result )
+    void RevisionWalker::hideRef(Result& result, const QString& name)
     {
         if( !result )
         {
@@ -209,7 +209,7 @@ namespace Git
         result = git_revwalk_hide_head( d->mWalker );
     }
 
-    bool RevisionWalker::next( ObjectId& oidNext, Result& result )
+    bool RevisionWalker::next(Result& result, ObjectId& oidNext)
     {
         if( !result )
         {
@@ -253,7 +253,7 @@ namespace Git
         }
 
         ObjectId id;
-        while( next( id, result ) )
+        while( next( result, id ) )
         {
             if( !result )
             {
@@ -265,7 +265,7 @@ namespace Git
         return ids;
     }
 
-    void RevisionWalker::setSorting( bool topological, bool timed, Result& result )
+    void RevisionWalker::setSorting(Result& result, bool topological, bool timed)
     {
         if( !result )
         {

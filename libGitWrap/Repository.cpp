@@ -338,7 +338,7 @@ namespace Git
      * @param r the error result
      * @return the current file status
      */
-    Git::StatusFlags Repository::status(const QString &fileName, Result &result) const
+    Git::StatusFlags Repository::status(Result &result, const QString &fileName) const
     {
         unsigned int status = GIT_STATUS_CURRENT;
 
@@ -488,7 +488,7 @@ namespace Git
 
     QStringList Repository::allBranches( Result& result )
     {
-        return branches( true, true, result );
+        return branches( result, true, true );
     }
 
     QString Repository::currentBranch( Result& result )
@@ -536,7 +536,7 @@ namespace Git
 
     }
 
-    QStringList Repository::branches( bool local, bool remote, Result& result )
+    QStringList Repository::branches(Result& result, bool local, bool remote)
     {
         if( !result )
         {
@@ -700,7 +700,7 @@ namespace Git
         return new Internal::ReferencePrivate( d, refHead );
     }
 
-    Object Repository::lookup( const ObjectId& id, ObjectType ot, Result& result )
+    Object Repository::lookup( Result& result, const ObjectId& id, ObjectType ot )
     {
         if( !result )
         {
@@ -735,49 +735,49 @@ namespace Git
         return new Internal::ObjectPrivate( d, obj );
     }
 
-    ObjectCommit Repository::lookupCommit( const ObjectId& id, Result& result )
+    ObjectCommit Repository::lookupCommit(Result& result, const ObjectId& id)
     {
-        return lookup( id, otCommit, result ).asCommit( result );
+        return lookup( result, id, otCommit ).asCommit( result );
     }
 
-    ObjectTree Repository::lookupTree( const ObjectId& id, Result& result )
+    ObjectTree Repository::lookupTree(Result& result, const ObjectId& id)
     {
-        return lookup( id, otTree, result ).asTree( result );
+        return lookup( result, id, otTree ).asTree( result );
     }
 
-    ObjectBlob Repository::lookupBlob( const ObjectId& id, Result& result )
+    ObjectBlob Repository::lookupBlob(Result& result, const ObjectId& id)
     {
-        return lookup( id, otBlob, result ).asBlob( result );
+        return lookup( result, id, otBlob ).asBlob( result );
     }
 
-    ObjectTag Repository::lookupTag( const ObjectId& id, Result& result )
+    ObjectTag Repository::lookupTag(Result& result, const ObjectId& id)
     {
-        return lookup( id, otTag, result ).asTag( result );
+        return lookup( result, id, otTag ).asTag( result );
     }
 
-    Object Repository::lookup( const QString& refName, ObjectType ot, Result& result )
+    Object Repository::lookup( Result& result, const QString& refName, ObjectType ot )
     {
-        return lookup( lookupRef( refName, result ).resolveToObjectId( result ), ot, result );
+        return lookup( result, lookupRef( result, refName ).resolveToObjectId( result ), ot );
     }
 
-    ObjectCommit Repository::lookupCommit( const QString& refName, Result& result )
+    ObjectCommit Repository::lookupCommit(Result& result, const QString& refName)
     {
-        return lookupCommit( lookupRef( refName, result ).resolveToObjectId( result ), result );
+        return lookupCommit( result, lookupRef( result, refName ).resolveToObjectId( result ) );
     }
 
-    ObjectTree Repository::lookupTree( const QString& refName, Result& result )
+    ObjectTree Repository::lookupTree(Result& result, const QString& refName)
     {
-        return lookupTree( lookupRef( refName, result ).resolveToObjectId( result ), result );
+        return lookupTree( result, lookupRef( result, refName ).resolveToObjectId( result ) );
     }
 
-    ObjectBlob Repository::lookupBlob( const QString& refName, Result& result )
+    ObjectBlob Repository::lookupBlob(Result& result, const QString& refName)
     {
-        return lookupBlob( lookupRef( refName, result ).resolveToObjectId( result ), result );
+        return lookupBlob( result, lookupRef( result, refName ).resolveToObjectId( result ) );
     }
 
-    ObjectTag Repository::lookupTag( const QString& refName, Result& result )
+    ObjectTag Repository::lookupTag(Result& result, const QString& refName)
     {
-        return lookupTag( lookupRef( refName, result ).resolveToObjectId( result ), result );
+        return lookupTag( result, lookupRef( result, refName ).resolveToObjectId( result ) );
     }
 
     RevisionWalker Repository::newWalker( Result& result )
@@ -804,7 +804,7 @@ namespace Git
         return new Internal::RevisionWalkerPrivate( d, walker );
     }
 
-    bool Repository::shouldIgnore( const QString& filePath, Result& result ) const
+    bool Repository::shouldIgnore(Result& result, const QString& filePath) const
     {
         if( !result )
         {
@@ -851,7 +851,7 @@ namespace Git
         return Internal::slFromStrArray( &arr );
     }
 
-    Remote Repository::remote( const QString& remoteName, Result& result ) const
+    Remote Repository::remote(Result& result, const QString& remoteName) const
     {
         if( !result )
         {
@@ -875,8 +875,8 @@ namespace Git
         return new Internal::RemotePrivate( const_cast< Internal::RepositoryPrivate* >( *d ), remote );
     }
 
-    Remote Repository::createRemote( const QString& remoteName, const QString& url,
-                                     const QString& fetchSpec, Result& result )
+    Remote Repository::createRemote(Result& result, const QString& remoteName, const QString& url,
+                                     const QString& fetchSpec)
     {
         if( !result )
         {
@@ -901,7 +901,7 @@ namespace Git
 
         if( !fetchSpec.isEmpty() )
         {
-            remo.setFetchSpec( fetchSpec, result );
+            remo.setFetchSpec( result, fetchSpec );
             if( !result )
             {
                 return Remote();
@@ -911,24 +911,23 @@ namespace Git
         return remo;
     }
 
-    DiffList Repository::diffCommitToCommit( ObjectCommit oldCommit, ObjectCommit newCommit,
-                                             Result& result )
+    DiffList Repository::diffCommitToCommit( Result& result, ObjectCommit oldCommit,
+                                             ObjectCommit newCommit )
     {
-        return diffTreeToTree( oldCommit.tree( result ), newCommit.tree( result ), result );
+        return diffTreeToTree( result, oldCommit.tree( result ), newCommit.tree( result ) );
     }
 
-    DiffList Repository::diffTreeToTree( ObjectTree oldTree, ObjectTree newTree,
-                                         Result& result  )
+    DiffList Repository::diffTreeToTree(Result& result, ObjectTree oldTree, ObjectTree newTree)
     {
-        return oldTree.diffToTree( newTree, result );
+        return oldTree.diffToTree( result, newTree );
     }
 
-    DiffList Repository::diffIndexToTree( ObjectTree oldTree, Result& result )
+    DiffList Repository::diffIndexToTree(Result& result, ObjectTree oldTree)
     {
         return oldTree.diffToIndex( result );
     }
 
-    DiffList Repository::diffTreeToWorkingDir( ObjectTree oldTree, Result& result )
+    DiffList Repository::diffTreeToWorkingDir(Result& result, ObjectTree oldTree)
     {
         return oldTree.diffToWorkingDir( result );
     }
@@ -1002,7 +1001,7 @@ namespace Git
         return list;
     }
 
-    Submodule Repository::submodule( const QString& name, Result& result  )
+    Submodule Repository::submodule(Result& result, const QString& name)
     {
         if( !result )
         {
@@ -1018,7 +1017,7 @@ namespace Git
         return Submodule( d, name );
     }
 
-    Reference Repository::lookupRef( const QString& refName, Result& result )
+    Reference Repository::lookupRef(Result& result, const QString& refName)
     {
         if( !result )
         {

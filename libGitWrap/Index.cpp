@@ -88,7 +88,7 @@ namespace Git
      * and can be stored back there. It is _not_ associated with any repository.
      *
      */
-    Index::Index( const QString& path, Result& result )
+    Index::Index(Result& result, const QString& path)
     {
         if( !result )
         {
@@ -164,7 +164,7 @@ namespace Git
         return Repository( d->repo() );
     }
 
-    IndexEntry Index::getEntry(int n, Result &result) const
+    IndexEntry Index::getEntry(Result &result, int n) const
     {
         if( !result )
         {
@@ -186,7 +186,7 @@ namespace Git
         return IndexEntry( new Internal::IndexEntryPrivate( entry ) );
     }
 
-    IndexEntry Index::getEntry(const QString &path, Result &result) const
+    IndexEntry Index::getEntry(Result &result, const QString &path) const
     {
         if( !result )
         {
@@ -216,7 +216,7 @@ namespace Git
      * @param[in]       path the file path
      * @param[in,out]   result the error result
      */
-    void Index::addEntry(const QString &path, Result &result)
+    void Index::addEntry(Result &result, const QString &path)
     {
         if ( !result )
             return;
@@ -238,7 +238,7 @@ namespace Git
      * @param[in]       path the file path
      * @param[in,out]   result the error result
      */
-    void Index::removeEntry(const QString &path, Result &result)
+    void Index::removeEntry(Result &result, const QString &path)
     {
         if ( !result )
             return;
@@ -261,7 +261,7 @@ namespace Git
      * @param[in]       paths   the file paths relative to the repository's working directory
      * @param[in,out]   result  a Result object; see @ref GitWrapErrorHandling
      */
-    void Index::resetDefault(const QStringList &paths, Result &result)
+    void Index::resetDefault(Result &result, const QStringList &paths)
     {
         if ( !result || paths.isEmpty() )
             return;
@@ -296,7 +296,7 @@ namespace Git
      *                  working directory. Changes in the index stay untouched.
      *                  This allows staging part of a file and discard the rest.
      */
-    void Index::checkout(const QStringList &paths, Result &result)
+    void Index::checkout(Result &result, const QStringList &paths)
     {
         if( !result )
         {

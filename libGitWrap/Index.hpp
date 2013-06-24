@@ -44,7 +44,7 @@ namespace Git
 
     public:
         Index( bool create = false );
-        Index( const QString& path, Result& result );
+        Index( Result& result, const QString& path );
         Index( const Index& other );
         ~Index();
 
@@ -54,21 +54,21 @@ namespace Git
     public:
         bool isValid() const;
 
-        void read( Result& result GITWRAP_DEFAULT_TLSRESULT );
-        void write( Result& result GITWRAP_DEFAULT_TLSRESULT );
+        void read( Result& result );
+        void write( Result& result );
 
-        int count( Result& result GITWRAP_DEFAULT_TLSRESULT ) const;
-        Repository repository( Result& result GITWRAP_DEFAULT_TLSRESULT ) const;
+        int count( Result& result ) const;
+        Repository repository( Result& result ) const;
 
-        IndexEntry getEntry(int n, Result &result GITWRAP_DEFAULT_TLSRESULT) const;
-        IndexEntry getEntry(const QString &path, Result &result GITWRAP_DEFAULT_TLSRESULT) const;
+        IndexEntry getEntry(Result &result, int n) const;
+        IndexEntry getEntry(Result &result, const QString &path) const;
 
-        void addEntry(const QString &path, Result &result GITWRAP_DEFAULT_TLSRESULT);
-        void removeEntry(const QString &path, Result &result GITWRAP_DEFAULT_TLSRESULT);
+        void addEntry(Result &result, const QString &path);
+        void removeEntry(Result &result, const QString &path);
 
-        void resetDefault(const QStringList &path, Result &result GITWRAP_DEFAULT_TLSRESULT);
+        void resetDefault( Result &result, const QStringList &path );
 
-        void checkout( const QStringList &paths, Result &result GITWRAP_DEFAULT_TLSRESULT );
+        void checkout( Result &result, const QStringList &paths );
 
     private:
         Internal::GitPtr< Internal::IndexPrivate > d;

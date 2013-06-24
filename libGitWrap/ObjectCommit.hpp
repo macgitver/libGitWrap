@@ -48,44 +48,43 @@ namespace Git
         bool operator==( const Git::ObjectCommit& commit ) const
         {
             Result r;
-            return isEqual( commit, r ) && r;
+            return isEqual( r, commit ) && r;
         }
 
         bool operator!=( const Git::ObjectCommit& commit ) const
         {
             Result r;
-            return !isEqual( commit, r ) && r;
+            return !isEqual( r, commit ) && r;
         }
 
     public:
-        ObjectTree tree( Result& result GITWRAP_DEFAULT_TLSRESULT );
-        ObjectId treeId( Result& result GITWRAP_DEFAULT_TLSRESULT );
+        ObjectTree tree( Result& result );
+        ObjectId treeId( Result& result );
 
-        ObjectIdList parentCommitIds( Result& result GITWRAP_DEFAULT_TLSRESULT ) const;
-        QList< ObjectCommit > parentCommits( Result& result GITWRAP_DEFAULT_TLSRESULT ) const;
-        ObjectCommit parentCommit( unsigned int index, Result& result GITWRAP_DEFAULT_TLSRESULT ) const;
-        ObjectId parentCommitId( unsigned int index, Result& result GITWRAP_DEFAULT_TLSRESULT ) const;
+        ObjectIdList parentCommitIds( Result& result ) const;
+        QList< ObjectCommit > parentCommits( Result& result ) const;
+        ObjectCommit parentCommit( Result& result, unsigned int index ) const;
+        ObjectId parentCommitId( Result& result, unsigned int index ) const;
         unsigned int numParentCommits() const;
 
-        bool isParentOf( const Git::ObjectCommit& child, Result& result GITWRAP_DEFAULT_TLSRESULT ) const;
-        bool isChildOf( const Git::ObjectCommit& parent, Result& result GITWRAP_DEFAULT_TLSRESULT ) const;
-        bool isEqual( const Git::ObjectCommit& commit, Result& result GITWRAP_DEFAULT_TLSRESULT ) const;
+        bool isParentOf( Result& result, const Git::ObjectCommit& child ) const;
+        bool isChildOf( Result& result, const Git::ObjectCommit& parent ) const;
+        bool isEqual( Result& result, const Git::ObjectCommit& commit ) const;
 
-        Signature author( Result& result GITWRAP_DEFAULT_TLSRESULT ) const;
-        Signature committer( Result& result GITWRAP_DEFAULT_TLSRESULT ) const;
+        Signature author( Result& result ) const;
+        Signature committer( Result& result ) const;
 
-        QString message( Result& result GITWRAP_DEFAULT_TLSRESULT ) const;
-        QString shortMessage( Result& result GITWRAP_DEFAULT_TLSRESULT ) const;
+        QString message( Result& result ) const;
+        QString shortMessage( Result& result ) const;
 
         void checkout( Result &result,
                        bool force = false,
                        bool updateHEAD = true,
                        const QStringList &paths = QStringList() ) const;
-        Reference createBranch( const QString& name, bool force,
-                                Result& result GITWRAP_DEFAULT_TLSRESULT ) const;
+        Reference createBranch( Result& result, const QString& name, bool force ) const;
 
-        DiffList diffFromParent( unsigned int index, Result& result GITWRAP_DEFAULT_TLSRESULT );
-        DiffList diffFromAllParents( Result& result GITWRAP_DEFAULT_TLSRESULT );
+        DiffList diffFromParent( Result& result, unsigned int index );
+        DiffList diffFromAllParents( Result& result );
 
         void updateHEAD(Result &result) const;
     };

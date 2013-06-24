@@ -54,16 +54,16 @@ namespace Git
 
     public:
         bool isValid() const;
-        bool destroy( Result& result GITWRAP_DEFAULT_TLSRESULT );
+        bool destroy( Result& result );
         QString name() const;
 
-        Type type( Result& result GITWRAP_DEFAULT_TLSRESULT ) const;
-        ObjectId objectId( Result& result GITWRAP_DEFAULT_TLSRESULT ) const;
-        QString target( Result& result GITWRAP_DEFAULT_TLSRESULT ) const;
+        Type type( Result& result ) const;
+        ObjectId objectId( Result& result ) const;
+        QString target( Result& result ) const;
 
-        Repository repository( Result& result GITWRAP_DEFAULT_TLSRESULT ) const;
-        Reference resolved( Result& result GITWRAP_DEFAULT_TLSRESULT );
-        ObjectId resolveToObjectId( Result& result GITWRAP_DEFAULT_TLSRESULT );
+        Repository repository( Result& result ) const;
+        Reference resolved( Result& result );
+        ObjectId resolveToObjectId( Result& result );
 
         void checkout( Result& result,
                        bool force = false,

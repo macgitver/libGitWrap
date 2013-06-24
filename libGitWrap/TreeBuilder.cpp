@@ -88,7 +88,7 @@ namespace Git
         git_treebuilder_clear( d->mBuilder );
     }
 
-    bool TreeBuilder::remove( const QString& fileName, Result& result )
+    bool TreeBuilder::remove(Result& result, const QString& fileName)
     {
         if( !result )
         {
@@ -155,7 +155,7 @@ namespace Git
     }
 
 
-    TreeEntry TreeBuilder::get( const QString& name, Result& result )
+    TreeEntry TreeBuilder::get(Result& result, const QString& name)
     {
         if( !result )
         {

@@ -225,7 +225,7 @@ namespace Git
         return Repository( d->repo() );
     }
 
-    bool DiffList::mergeOnto( DiffList onto, Result& result ) const
+    bool DiffList::mergeOnto(Result& result, DiffList onto) const
     {
         if( !result )
         {
@@ -242,7 +242,7 @@ namespace Git
         return result;
     }
 
-    bool DiffList::consumePatch( PatchConsumer* consumer, Result& result ) const
+    bool DiffList::consumePatch(Result& result, PatchConsumer* consumer) const
     {
         if( !result )
         {
@@ -270,7 +270,7 @@ namespace Git
         return result;
     }
 
-    bool DiffList::consumeChangeList( ChangeListConsumer* consumer, Result& result ) const
+    bool DiffList::consumeChangeList(Result& result, ChangeListConsumer* consumer) const
     {
         if( !result )
         {
@@ -301,7 +301,7 @@ namespace Git
     ChangeList DiffList::changeList(Result &result) const
     {
         Internal::DiffListConsumer consumer;
-        consumeChangeList(&consumer, result);
+        consumeChangeList(result, &consumer);
 
         return consumer.changeList();
     }
