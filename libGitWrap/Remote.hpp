@@ -56,11 +56,11 @@ namespace Git
         QString name() const;
         QString url() const;
 
-        bool setFetchSpec( Result& result, const QString& spec );
-        bool setPushSpec( Result& result, const QString& spec );
+        bool addFetchSpec( Result& result, const QString& spec );
+        bool addPushSpec( Result& result, const QString& spec );
 
-        RefSpec fetchSpec() const;
-        RefSpec pushSpec() const;
+        QVector<RefSpec> fetchSpecs() const;
+        QVector<RefSpec> pushSpecs() const;
 
         static bool isValidUrl( const QString& url );
         static bool isSupportedUrl( const QString& url );

@@ -161,7 +161,7 @@ namespace Git
             return false;
         }
 
-        int rc = git_config_add_file_ondisk( d->mCfg, fileName.toLocal8Bit().constData(), priority, 0 );
+        int rc = git_config_add_file_ondisk( d->mCfg, fileName.toLocal8Bit().constData(), (git_config_level_t)priority, 0 );
         if( rc < 0 )
         {
             return false;

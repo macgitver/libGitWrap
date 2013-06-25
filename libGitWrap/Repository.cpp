@@ -408,7 +408,7 @@ namespace Git
         }
 
         git_strarray arr;
-        result = git_reference_list( &arr, d->mRepo, GIT_REF_LISTALL );
+        result = git_reference_list( &arr, d->mRepo );
         if( !result )
         {
             return QStringList();
@@ -427,12 +427,13 @@ namespace Git
             git_repository* repo;
         };
 
-        static int cb_enum_resolvedrefs( const char* refName, void* payload )
+        static int cb_enum_resolvedrefs( git_reference* ref, void* payload )
         {
             cb_enum_resolvedrefs_data* d = (cb_enum_resolvedrefs_data*) payload;
 
             git_oid oid;
 
+            const char *refName = git_reference_name(ref);
             int rc = git_reference_name_to_id( &oid, d->repo, refName );
 
             d->result->setError( rc );
@@ -441,10 +442,7 @@ namespace Git
                 return -1;
             }
 
-            QString name = QString::fromUtf8( refName );
-            ObjectId obj = ObjectId::fromRaw( oid.id );
-
-            d->refs.insert( name, obj );
+            d->refs.insert( QString::fromUtf8( refName ), ObjectId::fromRaw( oid.id ) );
 
             return 0;
         }
@@ -468,8 +466,7 @@ namespace Git
         data.repo = d->mRepo;
         data.result = &result;
 
-        Result tmp( git_reference_foreach( d->mRepo, GIT_REF_LISTALL,
-                                           &Internal::cb_enum_resolvedrefs, &data ) );
+        Result tmp( git_reference_foreach( d->mRepo, &Internal::cb_enum_resolvedrefs, &data ) );
 
         if( tmp.errorCode() == GIT_EUSER )
         {
@@ -901,7 +898,7 @@ namespace Git
 
         if( !fetchSpec.isEmpty() )
         {
-            remo.setFetchSpec( result, fetchSpec );
+            remo.addFetchSpec( result, fetchSpec );
             if( !result )
             {
                 return Remote();

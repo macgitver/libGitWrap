@@ -106,7 +106,7 @@ namespace Git
         return QString::fromUtf8( git_remote_url( d->mRemote ) );
     }
 
-    bool Remote::setFetchSpec(Result& result, const QString& spec)
+    bool Remote::addFetchSpec(Result& result, const QString& spec)
     {
         if( !result )
         {
@@ -118,11 +118,11 @@ namespace Git
             return false;
         }
 
-        result = git_remote_set_fetchspec( d->mRemote, spec.toUtf8().constData() );
+        result = git_remote_add_fetch( d->mRemote, spec.toUtf8().constData() );
         return result;
     }
 
-    bool Remote::setPushSpec(Result& result, const QString& spec)
+    bool Remote::addPushSpec(Result& result, const QString& spec)
     {
         if( !result )
         {
@@ -134,30 +134,46 @@ namespace Git
             return false;
         }
 
-        result = git_remote_set_pushspec( d->mRemote, spec.toUtf8().constData() );
+        result = git_remote_add_push( d->mRemote, spec.toUtf8().constData() );
         return result;
     }
 
-    RefSpec Remote::fetchSpec() const
+    QVector<RefSpec> Remote::fetchSpecs() const
     {
         if( !d )
         {
             GitWrap::lastResult().setInvalidObject();
-            return RefSpec();
+            return QVector<RefSpec>();
         }
 
-        return Internal::mkRefSpec( git_remote_fetchspec( d->mRemote ) );
+        QVector<RefSpec> result;
+        for (size_t i = 0; i < git_remote_refspec_count( d->mRemote ); ++i)
+        {
+            const git_refspec *spec = git_remote_get_refspec( d->mRemote, i );
+            if ( git_refspec_direction( spec ) == GIT_DIRECTION_FETCH )
+                result << Internal::mkRefSpec( spec );
+        }
+
+        return result;
     }
 
-    RefSpec Remote::pushSpec() const
+    QVector<RefSpec> Remote::pushSpecs() const
     {
         if( !d )
         {
             GitWrap::lastResult().setInvalidObject();
-            return RefSpec();
+            return QVector<RefSpec>();
         }
 
-        return Internal::mkRefSpec( git_remote_pushspec( d->mRemote ) );
+        QVector<RefSpec> result;
+        for (size_t i = 0; i < git_remote_refspec_count( d->mRemote ); ++i)
+        {
+            const git_refspec *spec = git_remote_get_refspec( d->mRemote, i );
+            if ( git_refspec_direction( spec ) == GIT_DIRECTION_PUSH )
+                result << Internal::mkRefSpec( spec );
+        }
+
+        return result;
     }
 
     bool Remote::isValidUrl( const QString& url )
