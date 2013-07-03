@@ -197,6 +197,13 @@ namespace Git
         return resolvedRef.objectId( result );
     }
 
+    bool Reference::isCurrentBranch() const
+    {
+        if ( !d ) return false;
+
+        return git_branch_is_head( d->mRef );
+    }
+
     void Reference::checkout(Result &result, bool force, bool updateHEAD,
                              const QStringList &paths) const
     {

@@ -65,6 +65,8 @@ namespace Git
         Reference resolved( Result& result );
         ObjectId resolveToObjectId( Result& result );
 
+        bool isCurrentBranch() const;
+
         void checkout( Result& result,
                        bool force = false,
                        bool updateHEAD = true,
