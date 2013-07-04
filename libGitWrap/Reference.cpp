@@ -97,6 +97,16 @@ namespace Git
         return QString::fromUtf8( git_reference_name( d->mRef ) );
     }
 
+    QString Reference::shorthand() const
+    {
+        if ( !isValid() )
+        {
+            GitWrap::lastResult().setInvalidObject();
+            return QString();
+        }
+
+        return QString::fromUtf8( git_reference_shorthand( d->mRef ) );
+    }
 
     Reference::Type Reference::type( Result& result ) const
     {

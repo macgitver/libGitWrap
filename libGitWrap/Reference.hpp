@@ -56,6 +56,7 @@ namespace Git
         bool isValid() const;
         bool destroy( Result& result );
         QString name() const;
+        QString shorthand() const;
 
         Type type( Result& result ) const;
         ObjectId objectId( Result& result ) const;
