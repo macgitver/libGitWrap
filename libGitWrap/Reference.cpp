@@ -214,6 +214,28 @@ namespace Git
         return git_branch_is_head( d->mRef );
     }
 
+    bool Reference::isLocal() const
+    {
+        if ( !isValid() )
+        {
+            GitWrap::lastResult().setInvalidObject();
+            return false;
+        }
+
+        return git_reference_is_branch( d->mRef );
+    }
+
+    bool Reference::isRemote() const
+    {
+        if ( !isValid() )
+        {
+            GitWrap::lastResult().setInvalidObject();
+            return false;
+        }
+
+        return git_reference_is_remote( d->mRef );
+    }
+
     void Reference::checkout(Result &result, bool force, bool updateHEAD,
                              const QStringList &paths) const
     {

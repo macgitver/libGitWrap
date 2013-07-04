@@ -67,6 +67,8 @@ namespace Git
         ObjectId resolveToObjectId( Result& result );
 
         bool isCurrentBranch() const;
+        bool isLocal() const;
+        bool isRemote() const;
 
         void checkout( Result& result,
                        bool force = false,
