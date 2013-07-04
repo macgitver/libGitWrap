@@ -488,37 +488,9 @@ namespace Git
         return branches( result, true, true );
     }
 
-    QString Repository::currentBranch( Result& result )
+    QString Repository::currentBranch(Result &result)
     {
-        if( !result )
-        {
-            return QString();
-        }
-
-        if( !d )
-        {
-            result.setInvalidObject();
-            return QString();
-        }
-
-        Git::Reference refHEAD = HEAD( result );
-        if( !result )
-        {
-            return QString();
-        }
-
-        if( refHEAD.isValid() ) // According to new "Error Handling", must be valid now, right?
-        {
-            // ???
-            // NOTE: Shoot the guy that writes such things without comments... Oh my dear, it was me.
-            if( refHEAD.name() == QLatin1String( "HEAD" ) )
-            {
-                return QString();
-            }
-            return refHEAD.name().mid( 11 );
-        }
-
-        return QString();
+        return HEAD( result ).shorthand();
     }
 
     namespace Internal
