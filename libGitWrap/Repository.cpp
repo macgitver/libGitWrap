@@ -528,7 +528,10 @@ namespace Git
 
     QString Repository::currentBranch(Result &result)
     {
-        return HEAD( result ).shorthand();
+        Reference refHEAD = HEAD( result );
+        if ( !refHEAD.isValid() ) return QString();
+
+        return refHEAD.shorthand();
     }
 
     namespace Internal
