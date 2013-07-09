@@ -174,7 +174,7 @@ namespace Git
         return Repository( d->repo() );
     }
 
-    Reference Reference::resolved( Result& result )
+    Reference Reference::resolved( Result& result ) const
     {
         if( !result )
         {
@@ -197,7 +197,7 @@ namespace Git
         return new Internal::ReferencePrivate( d->repo(), ref );
     }
 
-    ObjectId Reference::resolveToObjectId( Result& result )
+    ObjectId Reference::resolveToObjectId( Result& result ) const
     {
         Reference resolvedRef = resolved( result );
         if( !result )

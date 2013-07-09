@@ -63,8 +63,8 @@ namespace Git
         QString target( Result& result ) const;
 
         Repository repository( Result& result ) const;
-        Reference resolved( Result& result );
-        ObjectId resolveToObjectId( Result& result );
+        Reference resolved( Result& result ) const;
+        ObjectId resolveToObjectId( Result& result ) const;
 
         bool isCurrentBranch() const;
         bool isLocal() const;
