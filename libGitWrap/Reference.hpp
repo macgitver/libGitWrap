@@ -52,6 +52,9 @@ namespace Git
         ~Reference();
         Reference& operator=( const Reference& other );
 
+        bool operator==( const Reference& other ) const;
+        bool operator!=( const Reference& other ) const;
+
     public:
         bool isValid() const;
         bool destroy( Result& result );

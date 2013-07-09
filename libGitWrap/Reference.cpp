@@ -66,6 +66,19 @@ namespace Git
         return * this;
     }
 
+    bool Reference::operator==(const Reference &other) const
+    {
+        if( d && other.d )
+            return git_reference_cmp( d->mRef, other.d->mRef ) == 0;
+
+        return false;
+    }
+
+    bool Reference::operator!=(const Reference &other) const
+    {
+        return !( *this == other );
+    }
+
     bool Reference::isValid() const
     {
         return d;
