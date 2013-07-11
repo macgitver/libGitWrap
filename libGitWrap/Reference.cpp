@@ -273,6 +273,19 @@ namespace Git
         result = git_reference_delete( d->mRef );
     }
 
+    void Reference::rename(Result &result, const QString &newName, bool force)
+    {
+        if ( !result ) return;
+
+        if ( !isValid() )
+        {
+            result.setInvalidObject();
+            return;
+        }
+
+        result = git_reference_rename( &d->mRef, d->mRef, newName.toUtf8().constData(), force );
+    }
+
     void Reference::updateHEAD(Result &result) const
     {
         if ( !result ) return;

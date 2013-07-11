@@ -79,6 +79,8 @@ namespace Git
 
         void destroy( Result& result );
 
+        void rename(Result &result, const QString &newName , bool force = false );
+
         void updateHEAD(Result &result) const;
 
     private:
