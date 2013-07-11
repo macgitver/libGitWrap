@@ -57,7 +57,6 @@ namespace Git
 
     public:
         bool isValid() const;
-        bool destroy( Result& result );
         QString name() const;
         QString shorthand() const;
 
@@ -77,6 +76,8 @@ namespace Git
                        bool force = false,
                        bool updateHEAD = true,
                        const QStringList &paths = QStringList() ) const;
+
+        void destroy( Result& result );
 
         void updateHEAD(Result &result) const;
 

@@ -84,21 +84,6 @@ namespace Git
         return d;
     }
 
-    bool Reference::destroy( Result& result )
-    {
-        if( !result )
-        {
-            return false;
-        }
-
-        if( !isValid() )
-        {
-            return false;
-        }
-
-        return git_reference_delete( d->mRef );
-    }
-
     QString Reference::name() const
     {
         if( !isValid() )
@@ -279,6 +264,13 @@ namespace Git
 
         if ( updateHEAD )
             this->updateHEAD(result);
+    }
+
+    void Reference::destroy( Result& result )
+    {
+        if( !result || !isValid() ) return;
+
+        result = git_reference_delete( d->mRef );
     }
 
     void Reference::updateHEAD(Result &result) const
