@@ -16,6 +16,7 @@
 
 #include "GitWrapPrivate.hpp"
 #include "ReferencePrivate.hpp"
+#include "ObjectCommit.hpp"
 #include "ObjectId.hpp"
 #include "Repository.hpp"
 #include "Reference.hpp"
@@ -271,6 +272,24 @@ namespace Git
         if( !result || !isValid() ) return;
 
         result = git_reference_delete( d->mRef );
+    }
+
+    void Reference::move(Result &result, const ObjectCommit &target)
+    {
+        if ( !result ) return;
+
+        if ( !isValid() )
+        {
+            result.setInvalidObject();
+            return;
+        }
+
+        const ObjectId &targetId = target.id(result);
+        if ( !result || targetId.isNull() ) return;
+
+        git_oid *oid = NULL;
+        git_oid_fromraw( oid, targetId.raw() );
+        result = git_reference_set_target( &d->mRef, d->mRef, oid );
     }
 
     void Reference::rename(Result &result, const QString &newName, bool force)

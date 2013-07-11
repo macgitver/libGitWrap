@@ -24,6 +24,7 @@
 namespace Git
 {
 
+    class ObjectCommit;
     class ObjectId;
     class Repository;
 
@@ -79,6 +80,7 @@ namespace Git
 
         void destroy( Result& result );
 
+        void move( Result &result, const ObjectCommit &target );
         void rename(Result &result, const QString &newName , bool force = false );
 
         void updateHEAD(Result &result) const;
