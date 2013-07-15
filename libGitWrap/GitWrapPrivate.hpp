@@ -24,6 +24,7 @@
 
 #include "GitWrap.hpp"
 #include "Result.hpp"
+#include "ObjectId.hpp"
 
 namespace Git
 {
@@ -230,6 +231,11 @@ namespace Git
 
             static GitWrapPrivate* self;    // Make this an QAtomicPointer
         };
+        
+        inline const git_oid* const ObjectId2git_oid(const ObjectId& id)
+        {
+            return (const git_oid* const) id.raw();
+        }
 
         /**
          * @internal
