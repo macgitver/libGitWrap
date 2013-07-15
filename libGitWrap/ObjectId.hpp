@@ -60,6 +60,11 @@ namespace Git
         {
             return data;
         }
+        
+        unsigned char* rawWritable()
+        {
+            return data;
+        }
 
         bool isNull() const;
 
