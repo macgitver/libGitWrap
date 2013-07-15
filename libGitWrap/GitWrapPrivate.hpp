@@ -236,6 +236,11 @@ namespace Git
         {
             return (const git_oid* const) id.raw();
         }
+        
+        inline git_oid* ObjectId2git_oid(ObjectId& id)
+        {
+            return (git_oid*) id.rawWritable();
+        }
 
         /**
          * @internal
