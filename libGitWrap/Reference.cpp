@@ -287,9 +287,7 @@ namespace Git
         const ObjectId &targetId = target.id(result);
         if ( !result || targetId.isNull() ) return;
 
-        git_oid *oid = NULL;
-        git_oid_fromraw( oid, targetId.raw() );
-        result = git_reference_set_target( &d->mRef, d->mRef, oid );
+        result = git_reference_set_target( &d->mRef, d->mRef, Internal::ObjectId2git_oid( targetId ) );
     }
 
     void Reference::rename(Result &result, const QString &newName, bool force)
