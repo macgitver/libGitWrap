@@ -287,7 +287,13 @@ namespace Git
         const ObjectId &targetId = target.id(result);
         if ( !result || targetId.isNull() ) return;
 
-        result = git_reference_set_target( &d->mRef, d->mRef, Internal::ObjectId2git_oid( targetId ) );
+        git_reference* newRef = NULL;
+        result = git_reference_set_target( &newRef, d->mRef, Internal::ObjectId2git_oid( targetId ) );
+        if ( result && (newRef != d->mRef) )
+        {
+            git_reference_free( d->mRef );
+            d->mRef = newRef;
+        }
     }
 
     void Reference::rename(Result &result, const QString &newName, bool force)
@@ -300,7 +306,13 @@ namespace Git
             return;
         }
 
-        result = git_reference_rename( &d->mRef, d->mRef, newName.toUtf8().constData(), force );
+        git_reference* newRef = NULL;
+        result = git_reference_rename( &newRef, d->mRef, newName.toUtf8().constData(), force );
+        if ( result && (newRef != d->mRef) )
+        {
+            git_reference_free( d->mRef );
+            d->mRef = newRef;
+        }
     }
 
     void Reference::updateHEAD(Result &result) const
