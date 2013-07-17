@@ -1027,7 +1027,7 @@ namespace Git
         return Submodule( d, name );
     }
 
-    Reference Repository::lookupRef(Result& result, const QString& refName)
+    Reference Repository::lookupRef(Result& result, const QString& refName, bool dwim)
     {
         if( !result )
         {
@@ -1041,7 +1041,10 @@ namespace Git
         }
 
         git_reference* ref = NULL;
-        result = git_reference_lookup( &ref, d->mRepo, refName.toUtf8().constData() );
+        if ( dwim )
+            result = git_reference_dwim( &ref, d->mRepo, refName.toUtf8().constData() );
+        else
+            result = git_reference_lookup( &ref, d->mRepo, refName.toUtf8().constData() );
 
         if( !result )
         {

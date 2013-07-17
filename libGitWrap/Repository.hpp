@@ -100,7 +100,7 @@ namespace Git
         Git::StatusHash status(Result &result) const;
 
         Reference HEAD( Result& result ) const;
-        Reference lookupRef( Result& result, const QString& refName );
+        Reference lookupRef(Result& result, const QString& refName , bool dwim = false);
         ObjectId resolveRef( Result& result, const QString& refName );
 
         Object lookup(Result& result, const ObjectId& id, ObjectType ot /* = otAny */);
