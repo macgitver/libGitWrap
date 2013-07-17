@@ -79,6 +79,22 @@ namespace Git
 
             return GIT_OK;
         }
+
+        struct cb_append_reference_data
+        {
+            const GitPtr< RepositoryPrivate > &ptr;
+            ReferenceList refs;
+        };
+
+        static int cb_append_reference( git_reference *reference, void *payload )
+        {
+            cb_append_reference_data *data = (cb_append_reference_data *)payload;
+
+            data->refs.append( new ReferencePrivate( data->ptr, reference ) );
+
+            return 0;
+        }
+
     }
 
     /**
@@ -394,7 +410,7 @@ namespace Git
      * @return  A QStringList with all references of this repository.
      *
      */
-    QStringList Repository::allReferences( Result& result )
+    QStringList Repository::allReferenceNames( Result& result )
     {
         if( !result )
         {
@@ -415,6 +431,28 @@ namespace Git
         }
 
         return Internal::slFromStrArray( &arr );
+    }
+
+    ReferenceList Repository::allReferences(Result &result)
+    {
+        if( !result )
+        {
+            return ReferenceList();
+        }
+
+        if( !d )
+        {
+            result.setInvalidObject();
+            return ReferenceList();
+        }
+
+        Internal::cb_append_reference_data data = { d };
+        result = git_reference_foreach( d->mRepo,
+                                        &Internal::cb_append_reference,
+                                        &data );
+        if (!result) return ReferenceList();
+
+        return data.refs;
     }
 
     namespace Internal
@@ -483,42 +521,17 @@ namespace Git
         return data.refs;
     }
 
-    QStringList Repository::allBranches( Result& result )
+    QStringList Repository::allBranchNames( Result& result )
     {
-        return branches( result, true, true );
+        return branchNames( result, true, true );
     }
 
-    QString Repository::currentBranch( Result& result )
+    QString Repository::currentBranch(Result &result)
     {
-        if( !result )
-        {
-            return QString();
-        }
+        Reference refHEAD = HEAD( result );
+        if ( !refHEAD.isValid() ) return QString();
 
-        if( !d )
-        {
-            result.setInvalidObject();
-            return QString();
-        }
-
-        Git::Reference refHEAD = HEAD( result );
-        if( !result )
-        {
-            return QString();
-        }
-
-        if( refHEAD.isValid() ) // According to new "Error Handling", must be valid now, right?
-        {
-            // ???
-            // NOTE: Shoot the guy that writes such things without comments... Oh my dear, it was me.
-            if( refHEAD.name() == QLatin1String( "HEAD" ) )
-            {
-                return QString();
-            }
-            return refHEAD.name().mid( 11 );
-        }
-
-        return QString();
+        return refHEAD.shorthand();
     }
 
     namespace Internal
@@ -533,7 +546,7 @@ namespace Git
 
     }
 
-    QStringList Repository::branches(Result& result, bool local, bool remote)
+    QStringList Repository::branchNames(Result& result, bool local, bool remote)
     {
         if( !result )
         {
@@ -601,7 +614,7 @@ namespace Git
         return result;
     }
 
-    QStringList Repository::allTags( Result& result )
+    QStringList Repository::allTagNames( Result& result )
     {
         if( !result )
         {
@@ -1014,7 +1027,7 @@ namespace Git
         return Submodule( d, name );
     }
 
-    Reference Repository::lookupRef(Result& result, const QString& refName)
+    Reference Repository::lookupRef(Result& result, const QString& refName, bool dwim)
     {
         if( !result )
         {
@@ -1028,7 +1041,10 @@ namespace Git
         }
 
         git_reference* ref = NULL;
-        result = git_reference_lookup( &ref, d->mRepo, refName.toUtf8().constData() );
+        if ( dwim )
+            result = git_reference_dwim( &ref, d->mRepo, refName.toUtf8().constData() );
+        else
+            result = git_reference_lookup( &ref, d->mRepo, refName.toUtf8().constData() );
 
         if( !result )
         {

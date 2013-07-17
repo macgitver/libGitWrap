@@ -16,6 +16,7 @@
 
 #include "GitWrapPrivate.hpp"
 #include "ReferencePrivate.hpp"
+#include "ObjectCommit.hpp"
 #include "ObjectId.hpp"
 #include "Repository.hpp"
 #include "Reference.hpp"
@@ -66,24 +67,22 @@ namespace Git
         return * this;
     }
 
+    bool Reference::operator==(const Reference &other) const
+    {
+        if( d && other.d )
+            return git_reference_cmp( d->mRef, other.d->mRef ) == 0;
+
+        return false;
+    }
+
+    bool Reference::operator!=(const Reference &other) const
+    {
+        return !( *this == other );
+    }
+
     bool Reference::isValid() const
     {
         return d;
-    }
-
-    bool Reference::destroy( Result& result )
-    {
-        if( !result )
-        {
-            return false;
-        }
-
-        if( !isValid() )
-        {
-            return false;
-        }
-
-        return git_reference_delete( d->mRef );
     }
 
     QString Reference::name() const
@@ -97,6 +96,16 @@ namespace Git
         return QString::fromUtf8( git_reference_name( d->mRef ) );
     }
 
+    QString Reference::shorthand() const
+    {
+        if ( !isValid() )
+        {
+            GitWrap::lastResult().setInvalidObject();
+            return QString();
+        }
+
+        return QString::fromUtf8( git_reference_shorthand( d->mRef ) );
+    }
 
     Reference::Type Reference::type( Result& result ) const
     {
@@ -164,7 +173,7 @@ namespace Git
         return Repository( d->repo() );
     }
 
-    Reference Reference::resolved( Result& result )
+    Reference Reference::resolved( Result& result ) const
     {
         if( !result )
         {
@@ -187,7 +196,7 @@ namespace Git
         return new Internal::ReferencePrivate( d->repo(), ref );
     }
 
-    ObjectId Reference::resolveToObjectId( Result& result )
+    ObjectId Reference::resolveToObjectId( Result& result ) const
     {
         Reference resolvedRef = resolved( result );
         if( !result )
@@ -195,6 +204,35 @@ namespace Git
             return ObjectId();
         }
         return resolvedRef.objectId( result );
+    }
+
+    bool Reference::isCurrentBranch() const
+    {
+        if ( !d ) return false;
+
+        return git_branch_is_head( d->mRef );
+    }
+
+    bool Reference::isLocal() const
+    {
+        if ( !isValid() )
+        {
+            GitWrap::lastResult().setInvalidObject();
+            return false;
+        }
+
+        return git_reference_is_branch( d->mRef );
+    }
+
+    bool Reference::isRemote() const
+    {
+        if ( !isValid() )
+        {
+            GitWrap::lastResult().setInvalidObject();
+            return false;
+        }
+
+        return git_reference_is_remote( d->mRef );
     }
 
     void Reference::checkout(Result &result, bool force, bool updateHEAD,
@@ -227,6 +265,54 @@ namespace Git
 
         if ( updateHEAD )
             this->updateHEAD(result);
+    }
+
+    void Reference::destroy( Result& result )
+    {
+        if( !result || !isValid() ) return;
+
+        result = git_reference_delete( d->mRef );
+    }
+
+    void Reference::move(Result &result, const ObjectCommit &target)
+    {
+        if ( !result ) return;
+
+        if ( !isValid() )
+        {
+            result.setInvalidObject();
+            return;
+        }
+
+        const ObjectId &targetId = target.id(result);
+        if ( !result || targetId.isNull() ) return;
+
+        git_reference* newRef = NULL;
+        result = git_reference_set_target( &newRef, d->mRef, Internal::ObjectId2git_oid( targetId ) );
+        if ( result && (newRef != d->mRef) )
+        {
+            git_reference_free( d->mRef );
+            d->mRef = newRef;
+        }
+    }
+
+    void Reference::rename(Result &result, const QString &newName, bool force)
+    {
+        if ( !result ) return;
+
+        if ( !isValid() )
+        {
+            result.setInvalidObject();
+            return;
+        }
+
+        git_reference* newRef = NULL;
+        result = git_reference_rename( &newRef, d->mRef, newName.toUtf8().constData(), force );
+        if ( result && (newRef != d->mRef) )
+        {
+            git_reference_free( d->mRef );
+            d->mRef = newRef;
+        }
     }
 
     void Reference::updateHEAD(Result &result) const

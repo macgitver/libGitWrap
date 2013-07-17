@@ -42,6 +42,7 @@ namespace Git
     }
 
     typedef QHash< QString, ObjectId > ResolvedRefs;
+    typedef QList< Reference > ReferenceList;
 
 
     /**
@@ -81,11 +82,12 @@ namespace Git
 
         QString name() const;
 
-        QStringList allReferences( Result& result );
-        QStringList allBranches( Result& result );
+        QStringList allReferenceNames( Result& result );
+        ReferenceList allReferences( Result& result );
+        QStringList allBranchNames( Result& result );
+        QStringList branchNames( Result& result, bool local, bool remote );
         QString currentBranch( Result& result );
-        QStringList branches( Result& result, bool local, bool remote );
-        QStringList allTags( Result& result );
+        QStringList allTagNames( Result& result );
 
         ResolvedRefs allResolvedRefs( Result& result );
 
@@ -98,7 +100,7 @@ namespace Git
         Git::StatusHash status(Result &result) const;
 
         Reference HEAD( Result& result ) const;
-        Reference lookupRef( Result& result, const QString& refName );
+        Reference lookupRef(Result& result, const QString& refName , bool dwim = false);
         ObjectId resolveRef( Result& result, const QString& refName );
 
         Object lookup(Result& result, const ObjectId& id, ObjectType ot /* = otAny */);

@@ -24,6 +24,7 @@
 namespace Git
 {
 
+    class ObjectCommit;
     class ObjectId;
     class Repository;
 
@@ -52,23 +53,35 @@ namespace Git
         ~Reference();
         Reference& operator=( const Reference& other );
 
+        bool operator==( const Reference& other ) const;
+        bool operator!=( const Reference& other ) const;
+
     public:
         bool isValid() const;
-        bool destroy( Result& result );
         QString name() const;
+        QString shorthand() const;
 
         Type type( Result& result ) const;
         ObjectId objectId( Result& result ) const;
         QString target( Result& result ) const;
 
         Repository repository( Result& result ) const;
-        Reference resolved( Result& result );
-        ObjectId resolveToObjectId( Result& result );
+        Reference resolved( Result& result ) const;
+        ObjectId resolveToObjectId( Result& result ) const;
+
+        bool isCurrentBranch() const;
+        bool isLocal() const;
+        bool isRemote() const;
 
         void checkout( Result& result,
                        bool force = false,
                        bool updateHEAD = true,
                        const QStringList &paths = QStringList() ) const;
+
+        void destroy( Result& result );
+
+        void move( Result &result, const ObjectCommit &target );
+        void rename(Result &result, const QString &newName , bool force = false );
 
         void updateHEAD(Result &result) const;
 
