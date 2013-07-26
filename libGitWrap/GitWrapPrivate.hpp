@@ -257,7 +257,8 @@ namespace Git
         {
             StatusFlags s = FileInvalidStatus;
 
-            if ( v & GIT_STATUS_CURRENT )           s |= FileUnchanged;
+            if ( v == GIT_STATUS_CURRENT )          return FileUnchanged;
+
             if ( v & GIT_STATUS_INDEX_NEW )         s |= FileIndexNew;
             if ( v & GIT_STATUS_INDEX_MODIFIED )    s |= FileIndexModified;
             if ( v & GIT_STATUS_INDEX_DELETED )     s |= FileIndexDeleted;
