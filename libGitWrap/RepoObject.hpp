@@ -34,7 +34,7 @@ namespace Git
         {
         public:
             RepoObject( const GitPtr< RepositoryPrivate >& repo );
-            ~RepoObject();
+            virtual ~RepoObject();
 
             RepositoryPrivate* repo() const;
 
