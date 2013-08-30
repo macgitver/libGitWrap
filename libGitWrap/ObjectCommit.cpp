@@ -161,19 +161,19 @@ namespace Git
         return ObjectId();
     }
 
-    QList< ObjectCommit > ObjectCommit::parentCommits( Result& result ) const
+    QVector< ObjectCommit > ObjectCommit::parentCommits( Result& result ) const
     {
         if( !result )
         {
-            return QList< ObjectCommit >();
+            return QVector< ObjectCommit >();
         }
         if( !d )
         {
             result.setInvalidObject();
-            return QList< ObjectCommit >();
+            return QVector< ObjectCommit >();
         }
 
-        QList< ObjectCommit > objs;
+        QVector< ObjectCommit > objs;
 
         git_commit* commit = (git_commit*) d->mObj;
 
@@ -184,7 +184,7 @@ namespace Git
             result = git_commit_parent( &parent, commit, i );
             if( !result )
             {
-                return QList< ObjectCommit >();
+                return QVector< ObjectCommit >();
             }
 
             objs.append( new Internal::ObjectPrivate( d->repo(), (git_object*) parent ) );
@@ -206,7 +206,7 @@ namespace Git
 
     bool ObjectCommit::isParentOf(Result& result, const Git::ObjectCommit& child) const
     {
-        QList< Git::ObjectCommit > parents = child.parentCommits( result );
+        QVector< Git::ObjectCommit > parents = child.parentCommits( result );
 
         for( int i = 0; result && i < parents.count(); i++ )
         {
@@ -219,7 +219,7 @@ namespace Git
 
     bool ObjectCommit::isChildOf(Result& result, const Git::ObjectCommit& parent) const
     {
-        QList< Git::ObjectCommit > children = parentCommits( result );
+        QVector< Git::ObjectCommit > children = parentCommits( result );
 
         for( int i = 0; result && i < children.count(); i++ )
         {
