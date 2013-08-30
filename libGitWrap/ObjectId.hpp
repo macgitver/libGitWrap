@@ -53,14 +53,14 @@ namespace Git
 
         static ObjectId fromRaw( const unsigned char* raw, int n = SHA1_Length );
 
-        QString toString() const;
-        QByteArray toAscii() const;
+        QString toString(int max = SHA1_LengthHex) const;
+        QByteArray toAscii(int max = SHA1_LengthHex) const;
 
         const unsigned char* raw() const
         {
             return data;
         }
-        
+
         unsigned char* rawWritable()
         {
             return data;
