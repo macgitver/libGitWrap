@@ -117,10 +117,6 @@ namespace Git
 
 }
 
-inline QDebug operator<<( QDebug debug, const Git::Signature& sig )
-{
-    return debug << "Sig(" << sig.toNaturalString() << ")";
-}
-
+GITWRAP_API QDebug operator<<( QDebug debug, const Git::Signature& sig );
 
 #endif

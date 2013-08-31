@@ -98,18 +98,6 @@ namespace Git
 
 }
 
-// Should we keep this? If yes, we should provide them for all GitWrap-classes.
-/**
- * @ingroup     GitWrap
- * @brief       Debug-Stream support of Git::ObjectCommit
- * @param[in]   debug   The Debug-Stream to output into
- * @param[in]   commit  The commit object to output
- * @return      The Debug-Stream
- */
-inline QDebug operator<<( QDebug debug, const Git::ObjectCommit& commit )
-{
-    Git::Result r;
-    return debug << "Commit(id=" << commit.id( r ) << ";author=" << commit.author( r ) << ")";
-}
+GITWRAP_API QDebug operator<<( QDebug debug, const Git::ObjectCommit& commit );
 
 #endif

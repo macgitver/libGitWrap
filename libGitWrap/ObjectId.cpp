@@ -117,3 +117,8 @@ namespace Git
     }
 
 }
+
+QDebug operator<<( QDebug debug, const Git::ObjectId& id )
+{
+    return debug << "SHA1(" << id.toString() << ")";
+}

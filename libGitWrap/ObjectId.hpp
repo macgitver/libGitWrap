@@ -81,10 +81,7 @@ namespace Git
 
 }
 
-inline QDebug operator<<( QDebug debug, const Git::ObjectId& id )
-{
-    return debug << "SHA1(" << id.toString() << ")";
-}
+GITWRAP_API QDebug operator<<( QDebug debug, const Git::ObjectId& id );
 
 Q_DECLARE_METATYPE( Git::ObjectId )
 

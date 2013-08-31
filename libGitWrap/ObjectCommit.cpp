@@ -440,3 +440,17 @@ namespace Git
     }
 
 }
+
+/**
+ * @ingroup     GitWrap
+ * @brief       Debug-Stream support of Git::ObjectCommit
+ * @param[in]   debug   The Debug-Stream to output into
+ * @param[in]   commit  The commit object to output
+ * @return      The Debug-Stream
+ */
+QDebug operator<<( QDebug debug, const Git::ObjectCommit& commit )
+{
+    Git::Result r;
+    return debug << "Commit(id=" << commit.id( r ) << ";author=" << commit.author( r ) << ")";
+}
+
