@@ -56,7 +56,7 @@ namespace Git
         /**
          * @brief       A list of submodules
          */
-        typedef QVector< Submodule > List;
+        typedef SubmoduleList List;
 
     public:
         /**
@@ -133,8 +133,6 @@ namespace Git
     private:
         Internal::GitPtr< Internal::SubmodulePrivate > d;
     };
-
-    typedef Submodule::List SubmoduleList;
 
 }
 
