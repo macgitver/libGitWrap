@@ -27,9 +27,6 @@ namespace Git
         class RevisionWalkerPrivate;
     }
 
-    class ObjectId;
-    class Reference;
-
     /**
      * @ingroup     GitWrap
      * @brief       Provides access to a git repository's history

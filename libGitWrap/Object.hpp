@@ -28,13 +28,6 @@ namespace Git
         class ObjectPrivate;
     }
 
-    class ObjectTree;
-    class ObjectBlob;
-    class ObjectCommit;
-    class ObjectTag;
-
-    class Repository;
-
     /**
      * @brief The Object class is the base class for Git repository objects.
      *

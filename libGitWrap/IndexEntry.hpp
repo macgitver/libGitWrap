@@ -19,15 +19,14 @@
 #ifndef GIT_INDEX_ENTRY_H
 #define GIT_INDEX_ENTRY_H
 
-#include "GitWrap.hpp"
-
 #include <QTime>
+
+#include "GitWrap.hpp"
 
 struct git_index_entry;
 
 namespace Git
 {
-    class ObjectId;
 
     namespace Internal
     {

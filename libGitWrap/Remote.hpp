@@ -27,10 +27,6 @@ namespace Git
         class RemotePrivate;
     }
 
-    class ObjectId;
-    class Reference;
-    class RefSpec;
-
     /**
      * @ingroup     GitWrap
      * @brief       Represents a git remote.

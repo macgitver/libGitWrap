@@ -24,18 +24,6 @@
 namespace Git
 {
 
-    class Reference;
-    class DiffList;
-    class Index;
-    class Object;
-    class ObjectCommit;
-    class ObjectTag;
-    class ObjectBlob;
-    class ObjectTree;
-    class ObjectId;
-    class RevisionWalker;
-    class Remote;
-
     namespace Internal
     {
         class RepositoryPrivate;

@@ -27,8 +27,6 @@ namespace Git
         class TreeEntryPrivate;
     }
 
-    class ObjectId;
-
     /**
      * @ingroup     GitWrap
      * @brief       Represents an entry in a git tree

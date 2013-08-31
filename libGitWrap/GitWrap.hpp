@@ -89,6 +89,27 @@ namespace Git
         SubmoduleAttr       = 0160000
     };
 
+    class ChangeListConsumer;
+    class DiffList;
+    class Index;
+    class IndexEntry;
+    class Object;
+    class ObjectBlob;
+    class ObjectCommit;
+    class ObjectId;
+    class ObjectTag;
+    class ObjectTree;
+    class PatchConsumer;
+    class RefSpec;
+    class Reference;
+    class Remote;
+    class Repository;
+    class RevisionWalker;
+    class Submodule;
+    class TreeBuilder;
+    class TreeEntry;
+    struct ChangeListEntry;
+
     /**
      * @enum        Status
      * @ingroup     GitWrap
@@ -234,6 +255,7 @@ namespace Git
     public:
         static Result& lastResult();
     };
+
 }
 
 #endif

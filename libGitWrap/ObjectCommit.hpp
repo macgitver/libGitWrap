@@ -29,9 +29,6 @@
 namespace Git
 {
 
-    class Reference;
-    class ObjectTree;
-
     /**
      * @ingroup     GitWrap
      * @brief       Represents a git commit object.

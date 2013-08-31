@@ -22,11 +22,6 @@
 namespace Git
 {
 
-    class Repository;
-    class ChangeListConsumer;
-    struct ChangeListEntry;
-    class PatchConsumer;
-
     namespace Internal
     {
         class DiffListPrivate;

@@ -25,8 +25,6 @@
 namespace Git
 {
 
-    class DiffList;
-
     /**
      * @ingroup     GitWrap
      * @brief       Represents a git tree object

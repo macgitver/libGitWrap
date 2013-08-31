@@ -28,9 +28,6 @@ namespace Git
         class SubmodulePrivate;
     }
 
-    class ObjectId;
-    class Repository;
-
     /**
      * @ingroup     GitWrap
      * @brief       Represents a git submodule
