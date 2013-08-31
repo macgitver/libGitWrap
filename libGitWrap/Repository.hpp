@@ -17,8 +17,6 @@
 #ifndef GIT_REPOSITORY_H
 #define GIT_REPOSITORY_H
 
-#include <QStringList>
-
 #include "Submodule.hpp"
 
 namespace Git

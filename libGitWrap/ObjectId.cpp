@@ -14,8 +14,7 @@
  *
  */
 
-#include "git2.h"
-
+#include "GitWrapPrivate.hpp"
 #include "ObjectId.hpp"
 
 namespace Git

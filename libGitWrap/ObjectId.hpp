@@ -17,10 +17,6 @@
 #ifndef GIT_OBJECT_ID_H
 #define GIT_OBJECT_ID_H
 
-#include <QString>
-#include <QByteArray>
-#include <QDebug>
-
 #include "GitWrap.hpp"
 
 namespace Git

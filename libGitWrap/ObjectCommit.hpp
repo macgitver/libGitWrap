@@ -17,8 +17,6 @@
 #ifndef GIT_OBJECT_COMMIT_H
 #define GIT_OBJECT_COMMIT_H
 
-#include <QStringList>
-
 #include "GitWrap.hpp"
 #include "ObjectId.hpp"
 #include "Object.hpp"

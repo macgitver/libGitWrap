@@ -19,8 +19,6 @@
 #ifndef GIT_INDEX_ENTRY_H
 #define GIT_INDEX_ENTRY_H
 
-#include <QTime>
-
 #include "GitWrap.hpp"
 
 namespace Git

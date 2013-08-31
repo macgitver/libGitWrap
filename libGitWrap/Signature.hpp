@@ -17,11 +17,6 @@
 #ifndef GIT_SIGNATURE_H
 #define GIT_SIGNATURE_H
 
-#include <QDebug>
-
-#include <QString>
-#include <QDateTime>
-
 #include "GitWrap.hpp"
 
 namespace Git

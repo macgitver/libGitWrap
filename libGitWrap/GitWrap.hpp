@@ -17,7 +17,8 @@
 #ifndef GITWRAP_GITWRAP_H
 #define GITWRAP_GITWRAP_H
 
-#include <QString>
+#include <QStringList>
+#include <QDateTime>
 #include <QHash>
 #include <QMetaType>
 #include <QVector>

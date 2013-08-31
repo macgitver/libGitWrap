@@ -19,8 +19,6 @@
 
 #include "GitWrap.hpp"
 
-#include <QStringList>
-
 namespace Git
 {
 
