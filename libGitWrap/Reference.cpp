@@ -69,7 +69,7 @@ namespace Git
 
     bool Reference::operator==(const Reference &other) const
     {
-        return this == &other;
+        return d == other.d;
     }
 
     bool Reference::operator!=(const Reference &other) const
