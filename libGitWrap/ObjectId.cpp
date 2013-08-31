@@ -67,15 +67,16 @@ namespace Git
         return id;
     }
 
-    QString ObjectId::toString() const
+    QString ObjectId::toString(int max) const
     {
-        return QString::fromUtf8( toAscii().constData() );	// UTF-8 is Ascii, actually :-)
+        return QString::fromUtf8(toAscii(max).constData()); // UTF-8 is Ascii, actually :-)
     }
 
-    QByteArray ObjectId::toAscii() const
+    QByteArray ObjectId::toAscii(int max) const
     {
-        QByteArray id( SHA1_LengthHex + 1, 0 );
-        git_oid_tostr( id.data(), SHA1_LengthHex +  1, (const git_oid*) data );
+        max = qMax(0,qMin<int>(SHA1_LengthHex, max)) + 1;
+        QByteArray id(max, 0);
+        git_oid_tostr(id.data(), max, (const git_oid*) data);
         return id;
     }
 
