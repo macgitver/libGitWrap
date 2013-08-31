@@ -56,6 +56,8 @@ namespace Git
         bool operator==( const Reference& other ) const;
         bool operator!=( const Reference& other ) const;
 
+        int compare( const Reference& other ) const;
+
     public:
         bool isValid() const;
         QString name() const;
