@@ -21,14 +21,12 @@
 
 namespace Git
 {
-    struct ChangeListEntry;
 
     /**
-     * @ingroup     GitWrap
-     * @brief       Callback interface to consume a list of differences
-     *
+     * @ingroup GitWrap
+     * @brief The ChangeListEntry struct keeps information about a single file change.
      */
-    class GITWRAP_API ChangeListConsumer
+    struct GITWRAP_API ChangeListEntry
     {
     public:
         enum Type
@@ -44,25 +42,29 @@ namespace Git
         };
 
     public:
+        QString         oldPath;
+        QString         newPath;
+        Type            type;
+        unsigned int    similarity;
+        bool            isBinary;
+    };
+
+    /**
+     * @ingroup     GitWrap
+     * @brief       Callback interface to consume a list of differences
+     *
+     */
+    class GITWRAP_API ChangeListConsumer
+    {
+    public:
+        typedef ChangeListEntry::Type Type; // For compat only
+
+    public:
         ChangeListConsumer();
         virtual ~ChangeListConsumer();
 
     public:
         virtual bool startFileChange( const ChangeListEntry &entry );
-
-    };
-
-    /**
-     * @ingroup GitWrap
-     * @brief The ChangeListEntry struct keeps information about a single file change.
-     */
-    struct GITWRAP_API ChangeListEntry
-    {
-        QString oldPath;
-        QString newPath;
-        ChangeListConsumer::Type type;
-        unsigned int similarity;
-        bool isBinary;
     };
 
 }
