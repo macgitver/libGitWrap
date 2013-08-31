@@ -56,3 +56,7 @@ namespace Git
 
 }
 
+QDebug operator<<( QDebug debug, const Git::Signature& sig )
+{
+    return debug << "Sig(" << sig.toNaturalString() << ")";
+}

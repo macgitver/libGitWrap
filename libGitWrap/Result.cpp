@@ -14,8 +14,6 @@
  *
  */
 
-#include <QDebug>
-
 #include "GitWrapPrivate.hpp"
 
 #include "Result.hpp"

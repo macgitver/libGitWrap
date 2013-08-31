@@ -17,24 +17,10 @@
 #ifndef GIT_REPOSITORY_H
 #define GIT_REPOSITORY_H
 
-#include <QStringList>
-
 #include "Submodule.hpp"
 
 namespace Git
 {
-
-    class Reference;
-    class DiffList;
-    class Index;
-    class Object;
-    class ObjectCommit;
-    class ObjectTag;
-    class ObjectBlob;
-    class ObjectTree;
-    class ObjectId;
-    class RevisionWalker;
-    class Remote;
 
     namespace Internal
     {
@@ -42,8 +28,6 @@ namespace Git
     }
 
     typedef QHash< QString, ObjectId > ResolvedRefs;
-    typedef QList< Reference > ReferenceList;
-
 
     /**
      * @ingroup     GitWrap

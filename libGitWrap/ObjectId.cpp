@@ -14,8 +14,7 @@
  *
  */
 
-#include "git2.h"
-
+#include "GitWrapPrivate.hpp"
 #include "ObjectId.hpp"
 
 namespace Git
@@ -116,4 +115,9 @@ namespace Git
         return hash( sha1.raw(), 20 );
     }
 
+}
+
+QDebug operator<<( QDebug debug, const Git::ObjectId& id )
+{
+    return debug << "SHA1(" << id.toString() << ")";
 }

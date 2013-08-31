@@ -17,7 +17,8 @@
 #ifndef GITWRAP_GITWRAP_H
 #define GITWRAP_GITWRAP_H
 
-#include <QString>
+#include <QStringList>
+#include <QDateTime>
 #include <QHash>
 #include <QMetaType>
 #include <QVector>
@@ -88,6 +89,33 @@ namespace Git
         GitLinkAttr         = 0120000,
         SubmoduleAttr       = 0160000
     };
+
+    class ChangeListConsumer;
+    class DiffList;
+    class Index;
+    class IndexEntry;
+    class Object;
+    class ObjectBlob;
+    class ObjectCommit;
+    class ObjectId;
+    class ObjectTag;
+    class ObjectTree;
+    class PatchConsumer;
+    class RefSpec;
+    class Reference;
+    class Remote;
+    class Repository;
+    class RevisionWalker;
+    class Submodule;
+    class TreeBuilder;
+    class TreeEntry;
+    struct ChangeListEntry;
+
+    typedef QVector< ChangeListEntry >  ChangeList;
+    typedef QVector< ObjectId >         ObjectIdList;
+    typedef QVector< Reference >        ReferenceList;
+    typedef QVector< Submodule >        SubmoduleList;
+    typedef QVector< ObjectCommit >     ObjectCommitList;
 
     /**
      * @enum        Status
@@ -234,6 +262,7 @@ namespace Git
     public:
         static Result& lastResult();
     };
+
 }
 
 #endif

@@ -28,9 +28,6 @@ namespace Git
         class SubmodulePrivate;
     }
 
-    class ObjectId;
-    class Repository;
-
     /**
      * @ingroup     GitWrap
      * @brief       Represents a git submodule
@@ -54,6 +51,12 @@ namespace Git
             Merge,
             Ignore
         };
+
+    public:
+        /**
+         * @brief       A list of submodules
+         */
+        typedef SubmoduleList List;
 
     public:
         /**
@@ -130,8 +133,6 @@ namespace Git
     private:
         Internal::GitPtr< Internal::SubmodulePrivate > d;
     };
-
-    typedef QList< Submodule > SubmoduleList;
 
 }
 

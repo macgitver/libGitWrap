@@ -17,8 +17,6 @@
 #ifndef GIT_REFSPEC_H
 #define GIT_REFSPEC_H
 
-#include <QString>
-
 #include "GitWrap.hpp"
 
 namespace Git

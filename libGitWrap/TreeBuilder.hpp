@@ -27,9 +27,6 @@ namespace Git
         class TreeBuilderPrivate;
     }
 
-    class TreeEntry;
-    class ObjectId;
-
     /**
      * @ingroup     GitWrap
      * @brief       Tool for creating tree objects

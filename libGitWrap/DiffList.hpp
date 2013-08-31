@@ -22,17 +22,10 @@
 namespace Git
 {
 
-    class Repository;
-    class ChangeListConsumer;
-    struct ChangeListEntry;
-    class PatchConsumer;
-
     namespace Internal
     {
         class DiffListPrivate;
     }
-
-    typedef QVector<ChangeListEntry> ChangeList;
 
     /**
      * @ingroup     GitWrap

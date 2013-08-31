@@ -19,14 +19,8 @@
 
 #include "GitWrap.hpp"
 
-#include <QStringList>
-
 namespace Git
 {
-
-    class ObjectCommit;
-    class ObjectId;
-    class Repository;
 
     namespace Internal
     {

@@ -17,8 +17,6 @@
 #ifndef GIT_ERROR_H
 #define GIT_ERROR_H
 
-#include <QString>
-
 #include "GitWrap.hpp"
 
 namespace Git

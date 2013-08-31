@@ -17,10 +17,6 @@
 #ifndef GIT_OBJECT_ID_H
 #define GIT_OBJECT_ID_H
 
-#include <QString>
-#include <QByteArray>
-#include <QDebug>
-
 #include "GitWrap.hpp"
 
 namespace Git
@@ -75,16 +71,11 @@ namespace Git
         unsigned char data[ SHA1_Length ];
     };
 
-    typedef QVector< ObjectId > ObjectIdList;
-
     GITWRAP_API uint qHash( const ObjectId& sha1 );
 
 }
 
-inline QDebug operator<<( QDebug debug, const Git::ObjectId& id )
-{
-    return debug << "SHA1(" << id.toString() << ")";
-}
+GITWRAP_API QDebug operator<<( QDebug debug, const Git::ObjectId& id );
 
 Q_DECLARE_METATYPE( Git::ObjectId )
 

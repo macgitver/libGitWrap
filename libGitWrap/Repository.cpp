@@ -970,45 +970,44 @@ namespace Git
 
         struct cb_enum_submodules_t
         {
-            QList< Submodule >*	subs;
-            RepositoryPrivate*	repo;
+            RepositoryPrivate*  repo;
+            Submodule::List     subs;
         };
 
         static int cb_enum_submodules( git_submodule* sm, const char* name, void* payload )
         {
             cb_enum_submodules_t* d = static_cast< cb_enum_submodules_t* >( payload );
-            Q_ASSERT( d && d->subs && name );
+            Q_ASSERT( d && name );
 
-            d->subs->append( Submodule( d->repo, QString::fromUtf8( name ) ) );
+            d->subs.append( Submodule( d->repo, QString::fromUtf8( name ) ) );
             return 0;
         }
 
     }
 
-    QList< Submodule > Repository::submodules( Result& result )
+    Submodule::List Repository::submodules( Result& result )
     {
-        QList< Submodule > list;
+        Internal::cb_enum_submodules_t data = { d };
 
         if( !result )
         {
-            return list;
+            return data.subs;
         }
 
         if( !d )
         {
             result.setInvalidObject();
-            return list;
+            return data.subs;
         }
 
-        Internal::cb_enum_submodules_t data = { &list, d };
 
         result = git_submodule_foreach( d->mRepo, &Internal::cb_enum_submodules, &data );
         if( !result )
         {
-            return QList< Submodule >();
+            return Submodule::List();
         }
 
-        return list;
+        return data.subs;
     }
 
     Submodule Repository::submodule(Result& result, const QString& name)

@@ -21,13 +21,8 @@
 
 #include "GitWrap.hpp"
 
-#include <QTime>
-
-struct git_index_entry;
-
 namespace Git
 {
-    class ObjectId;
 
     namespace Internal
     {

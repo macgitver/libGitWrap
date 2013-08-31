@@ -161,19 +161,19 @@ namespace Git
         return ObjectId();
     }
 
-    QVector< ObjectCommit > ObjectCommit::parentCommits( Result& result ) const
+    ObjectCommitList ObjectCommit::parentCommits( Result& result ) const
     {
         if( !result )
         {
-            return QVector< ObjectCommit >();
+            return ObjectCommitList();
         }
         if( !d )
         {
             result.setInvalidObject();
-            return QVector< ObjectCommit >();
+            return ObjectCommitList();
         }
 
-        QVector< ObjectCommit > objs;
+        ObjectCommitList objs;
 
         git_commit* commit = (git_commit*) d->mObj;
 
@@ -184,7 +184,7 @@ namespace Git
             result = git_commit_parent( &parent, commit, i );
             if( !result )
             {
-                return QVector< ObjectCommit >();
+                return ObjectCommitList();
             }
 
             objs.append( new Internal::ObjectPrivate( d->repo(), (git_object*) parent ) );
@@ -440,3 +440,17 @@ namespace Git
     }
 
 }
+
+/**
+ * @ingroup     GitWrap
+ * @brief       Debug-Stream support of Git::ObjectCommit
+ * @param[in]   debug   The Debug-Stream to output into
+ * @param[in]   commit  The commit object to output
+ * @return      The Debug-Stream
+ */
+QDebug operator<<( QDebug debug, const Git::ObjectCommit& commit )
+{
+    Git::Result r;
+    return debug << "Commit(id=" << commit.id( r ) << ";author=" << commit.author( r ) << ")";
+}
+
