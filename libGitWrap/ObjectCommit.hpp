@@ -57,7 +57,7 @@ namespace Git
         ObjectId treeId( Result& result );
 
         ObjectIdList parentCommitIds( Result& result ) const;
-        QVector< ObjectCommit > parentCommits( Result& result ) const;
+        ObjectCommitList parentCommits( Result& result ) const;
         ObjectCommit parentCommit( Result& result, unsigned int index ) const;
         ObjectId parentCommitId( Result& result, unsigned int index ) const;
         unsigned int numParentCommits() const;

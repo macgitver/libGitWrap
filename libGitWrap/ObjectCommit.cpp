@@ -161,19 +161,19 @@ namespace Git
         return ObjectId();
     }
 
-    QVector< ObjectCommit > ObjectCommit::parentCommits( Result& result ) const
+    ObjectCommitList ObjectCommit::parentCommits( Result& result ) const
     {
         if( !result )
         {
-            return QVector< ObjectCommit >();
+            return ObjectCommitList();
         }
         if( !d )
         {
             result.setInvalidObject();
-            return QVector< ObjectCommit >();
+            return ObjectCommitList();
         }
 
-        QVector< ObjectCommit > objs;
+        ObjectCommitList objs;
 
         git_commit* commit = (git_commit*) d->mObj;
 
@@ -184,7 +184,7 @@ namespace Git
             result = git_commit_parent( &parent, commit, i );
             if( !result )
             {
-                return QVector< ObjectCommit >();
+                return ObjectCommitList();
             }
 
             objs.append( new Internal::ObjectPrivate( d->repo(), (git_object*) parent ) );

@@ -115,6 +115,7 @@ namespace Git
     typedef QVector< ObjectId >         ObjectIdList;
     typedef QVector< Reference >        ReferenceList;
     typedef QVector< Submodule >        SubmoduleList;
+    typedef QVector< ObjectCommit >     ObjectCommitList;
 
     /**
      * @enum        Status
