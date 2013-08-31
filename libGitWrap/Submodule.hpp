@@ -57,6 +57,12 @@ namespace Git
 
     public:
         /**
+         * @brief       A list of submodules
+         */
+        typedef QVector< Submodule > List;
+
+    public:
+        /**
          * @brief Submodule
          * @param repo the owner repository
          * @param name is used to lookup the submodule in the owner repository
@@ -131,7 +137,7 @@ namespace Git
         Internal::GitPtr< Internal::SubmodulePrivate > d;
     };
 
-    typedef QList< Submodule > SubmoduleList;
+    typedef Submodule::List SubmoduleList;
 
 }
 
