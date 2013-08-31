@@ -23,8 +23,6 @@
 
 #include "GitWrap.hpp"
 
-struct git_index_entry;
-
 namespace Git
 {
 
