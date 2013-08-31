@@ -319,6 +319,8 @@ namespace Git
             return;
 
         result = git_checkout_index( d->repo()->mRepo, d->mIndex, &options );
+
+        git_strarray_free(&options.paths);
     }
 
     /**
