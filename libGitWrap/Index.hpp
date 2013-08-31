@@ -40,6 +40,14 @@ namespace Git
         explicit Index( Internal::IndexPrivate* _d );
 
     public:
+        enum Stages {
+            StageDefault    = 0,
+            StageFrom       = 1,
+            StageOurs       = 2,
+            StageTheirs     = 3
+        };
+
+    public:
         Index( bool create = false );
         Index( Result& result, const QString& path );
         Index( const Index& other );
@@ -58,7 +66,7 @@ namespace Git
         Repository repository( Result& result ) const;
 
         IndexEntry getEntry(Result &result, int n) const;
-        IndexEntry getEntry(Result &result, const QString &path) const;
+        IndexEntry getEntry(Result &result, const QString &path, Stages stage = StageDefault) const;
 
         void addEntry(Result &result, const QString &path);
         void removeEntry(Result &result, const QString &path);

@@ -186,7 +186,7 @@ namespace Git
         return IndexEntry( new Internal::IndexEntryPrivate( entry ) );
     }
 
-    IndexEntry Index::getEntry(Result &result, const QString &path) const
+    IndexEntry Index::getEntry(Result &result, const QString &path, Stages stage) const
     {
         if( !result )
         {
@@ -199,7 +199,8 @@ namespace Git
             return IndexEntry();
         }
 
-        const git_index_entry *entry = git_index_get_bypath(d->mIndex, path.toUtf8().constData(), 0);
+        const git_index_entry *entry = git_index_get_bypath(d->mIndex, path.toUtf8().constData(),
+                                                            int(stage));
         if(entry == NULL)
         {
             result.setError(GIT_ENOTFOUND);
