@@ -69,10 +69,7 @@ namespace Git
 
     bool Reference::operator==(const Reference &other) const
     {
-        if( d && other.d )
-            return git_reference_cmp( d->mRef, other.d->mRef ) == 0;
-
-        return false;
+        return this == &other;
     }
 
     bool Reference::operator!=(const Reference &other) const
