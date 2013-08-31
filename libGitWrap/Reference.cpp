@@ -77,6 +77,19 @@ namespace Git
         return !( *this == other );
     }
 
+    /**
+     * @brief   Compares two reference objects.
+     *          Note: References of different types are considered to be different.
+     *
+     * @param   other the reference to compare with
+     *
+     * @return  0 if pointing to the same destination, otherwise an ordered value
+     */
+    int Reference::compare(const Reference &other) const
+    {
+        return git_reference_cmp( d->mRef, other.d->mRef );
+    }
+
     bool Reference::isValid() const
     {
         return d;
