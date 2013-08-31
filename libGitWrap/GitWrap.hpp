@@ -111,6 +111,11 @@ namespace Git
     class TreeEntry;
     struct ChangeListEntry;
 
+    typedef QVector< ChangeListEntry >  ChangeList;
+    typedef QVector< ObjectId >         ObjectIdList;
+    typedef QVector< Reference >        ReferenceList;
+    typedef QVector< Submodule >        SubmoduleList;
+
     /**
      * @enum        Status
      * @ingroup     GitWrap

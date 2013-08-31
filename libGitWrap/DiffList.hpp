@@ -27,8 +27,6 @@ namespace Git
         class DiffListPrivate;
     }
 
-    typedef QVector<ChangeListEntry> ChangeList;
-
     /**
      * @ingroup     GitWrap
      * @brief       List of differences between to objects

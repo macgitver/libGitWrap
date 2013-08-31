@@ -28,8 +28,6 @@ namespace Git
     }
 
     typedef QHash< QString, ObjectId > ResolvedRefs;
-    typedef QList< Reference > ReferenceList;
-
 
     /**
      * @ingroup     GitWrap

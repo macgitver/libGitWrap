@@ -71,8 +71,6 @@ namespace Git
         unsigned char data[ SHA1_Length ];
     };
 
-    typedef QVector< ObjectId > ObjectIdList;
-
     GITWRAP_API uint qHash( const ObjectId& sha1 );
 
 }
