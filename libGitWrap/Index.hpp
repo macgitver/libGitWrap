@@ -59,21 +59,24 @@ namespace Git
     public:
         bool isValid() const;
 
-        void read( Result& result );
-        void write( Result& result );
+        void read(Result& result);
+        void write(Result& result);
+        void clear();
 
-        int count( Result& result ) const;
         Repository repository( Result& result ) const;
 
+        // Methods to access and change entries
+        int count( Result& result ) const;
         IndexEntry getEntry(Result &result, int n) const;
         IndexEntry getEntry(Result &result, const QString &path, Stages stage = StageDefault) const;
-
         void updateEntry(Result &result, const IndexEntry& entry);
 
+        // Index-Entry methods working on a path
         void addFile(Result &result, const QString &path);
         void removeFile(Result &result, const QString &path);
         void resetFiles( Result &result, const QStringList &path );
 
+        // Methods that operate on a glob (set of files)
         void checkoutFiles( Result &result, const QStringList &paths );
 
     private:

@@ -386,4 +386,11 @@ namespace Git
         result = git_index_write( d->mIndex );
     }
 
+    void Index::clear()
+    {
+        if (d) {
+            git_index_clear(d->mIndex);
+        }
+    }
+
 }
