@@ -102,16 +102,16 @@ unsigned int IndexEntry::gid() const
     return d->mEntry.gid;
 }
 
-QTime IndexEntry::cTime() const
+QDateTime IndexEntry::cTime() const
 {
     git_index_time t = d->mEntry.ctime;
-    return QTime( 0, 0, t.seconds );
+    return QDateTime::fromTime_t( t.seconds );
 }
 
-QTime IndexEntry::mTime() const
+QDateTime IndexEntry::mTime() const
 {
     git_index_time t = d->mEntry.mtime;
-    return QTime(0, 0, t.seconds );
+    return QDateTime::fromTime_t( t.seconds );
 }
 
 int IndexEntry::stage() const

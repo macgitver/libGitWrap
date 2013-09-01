@@ -53,8 +53,8 @@ namespace Git
         unsigned int ino() const;
         unsigned int uid() const;
         unsigned int gid() const;
-        QTime cTime() const;
-        QTime mTime() const;
+        QDateTime cTime() const;
+        QDateTime mTime() const;
         int stage() const;
 
     private:
