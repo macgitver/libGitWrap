@@ -25,98 +25,98 @@
 namespace Git
 {
 
-namespace Internal
-{
-
-    IndexEntryPrivate::IndexEntryPrivate( const git_index_entry* entry )
-        : mEntry( *entry )
+    namespace Internal
     {
-        mEntry.path = strdup( entry->path );
+
+        IndexEntryPrivate::IndexEntryPrivate( const git_index_entry* entry )
+            : mEntry( *entry )
+        {
+            mEntry.path = strdup( entry->path );
+        }
+
+        IndexEntryPrivate::~IndexEntryPrivate()
+        {
+            free( mEntry.path );
+        }
+
     }
 
-    IndexEntryPrivate::~IndexEntryPrivate()
+
+    IndexEntry::IndexEntry()
     {
-        free( mEntry.path );
     }
 
-}
+    IndexEntry::IndexEntry( const IndexEntry& other )
+        : d( other.d )
+    {
+    }
 
+    IndexEntry::IndexEntry(Internal::IndexEntryPrivate *_d )
+        : d( _d )
+    {
+        Q_ASSERT(d);
+    }
 
-IndexEntry::IndexEntry()
-{
-}
+    IndexEntry::~IndexEntry()
+    {
+    }
 
-IndexEntry::IndexEntry( const IndexEntry& other )
-    : d( other.d )
-{
-}
+    IndexEntry &IndexEntry::operator =(const IndexEntry &other)
+    {
+        d = other.d;
+        return *this;
+    }
 
-IndexEntry::IndexEntry(Internal::IndexEntryPrivate *_d )
-    : d( _d )
-{
-    Q_ASSERT(d);
-}
+    bool IndexEntry::isValid() const
+    {
+        return d;
+    }
 
-IndexEntry::~IndexEntry()
-{
-}
+    QString IndexEntry::path() const
+    {
+        return QString::fromUtf8( d->mEntry.path );
+    }
 
-IndexEntry &IndexEntry::operator =(const IndexEntry &other)
-{
-    d = other.d;
-    return *this;
-}
+    ObjectId IndexEntry::blobSha() const
+    {
+        return ObjectId::fromRaw( d->mEntry.oid.id );
+    }
 
-bool IndexEntry::isValid() const
-{
-    return d;
-}
+    unsigned int IndexEntry::mode() const
+    {
+        return d->mEntry.mode;
+    }
 
-QString IndexEntry::path() const
-{
-    return QString::fromUtf8( d->mEntry.path );
-}
+    unsigned int IndexEntry::ino() const
+    {
+        return d->mEntry.ino;
+    }
 
-ObjectId IndexEntry::blobSha() const
-{
-    return ObjectId::fromRaw( d->mEntry.oid.id );
-}
+    unsigned int IndexEntry::uid() const
+    {
+        return d->mEntry.uid;
+    }
 
-unsigned int IndexEntry::mode() const
-{
-    return d->mEntry.mode;
-}
+    unsigned int IndexEntry::gid() const
+    {
+        return d->mEntry.gid;
+    }
 
-unsigned int IndexEntry::ino() const
-{
-    return d->mEntry.ino;
-}
+    QDateTime IndexEntry::cTime() const
+    {
+        git_index_time t = d->mEntry.ctime;
+        return QDateTime::fromTime_t( t.seconds );
+    }
 
-unsigned int IndexEntry::uid() const
-{
-    return d->mEntry.uid;
-}
+    QDateTime IndexEntry::mTime() const
+    {
+        git_index_time t = d->mEntry.mtime;
+        return QDateTime::fromTime_t( t.seconds );
+    }
 
-unsigned int IndexEntry::gid() const
-{
-    return d->mEntry.gid;
-}
-
-QDateTime IndexEntry::cTime() const
-{
-    git_index_time t = d->mEntry.ctime;
-    return QDateTime::fromTime_t( t.seconds );
-}
-
-QDateTime IndexEntry::mTime() const
-{
-    git_index_time t = d->mEntry.mtime;
-    return QDateTime::fromTime_t( t.seconds );
-}
-
-int IndexEntry::stage() const
-{
-    return git_index_entry_stage( &(d->mEntry) );
-}
+    int IndexEntry::stage() const
+    {
+        return git_index_entry_stage( &(d->mEntry) );
+    }
 
 }
