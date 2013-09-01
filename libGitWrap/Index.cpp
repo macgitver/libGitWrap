@@ -135,6 +135,11 @@ namespace Git
         return d;
     }
 
+    bool Index::isBare() const
+    {
+        return d->repo() == NULL;
+    }
+
     int Index::count( Result& result ) const
     {
         if( !result )
@@ -283,7 +288,7 @@ namespace Git
         if ( !result || paths.isEmpty() )
             return;
 
-        if ( !d )
+        if ( !d || isBare() )
         {
             result.setInvalidObject();
             return;

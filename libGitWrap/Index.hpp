@@ -58,6 +58,7 @@ namespace Git
 
     public:
         bool isValid() const;
+        bool isBare() const;
 
         void read(Result& result);
         void write(Result& result);
