@@ -36,6 +36,8 @@ namespace Git
      */
     class GITWRAP_API IndexEntry
     {
+        friend class Index;
+
     public:
         IndexEntry();
         IndexEntry(const IndexEntry &other);

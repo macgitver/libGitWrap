@@ -209,6 +209,20 @@ namespace Git
         return IndexEntry( new Internal::IndexEntryPrivate( entry ) );
     }
 
+    void Index::updateEntry(Result &result, const IndexEntry& entry)
+    {
+        if (!result) {
+            return;
+        }
+
+        if (!d || !entry.d) {
+            result.setInvalidObject();
+            return;
+        }
+
+        result = git_index_add(d->mIndex, &entry.d->mEntry);
+    }
+
     /**
      * @brief           Adds a file entry to the index.
      *

@@ -68,6 +68,8 @@ namespace Git
         IndexEntry getEntry(Result &result, int n) const;
         IndexEntry getEntry(Result &result, const QString &path, Stages stage = StageDefault) const;
 
+        void updateEntry(Result &result, const IndexEntry& entry);
+
         void addFile(Result &result, const QString &path);
         void removeFile(Result &result, const QString &path);
         void resetFiles( Result &result, const QStringList &path );
