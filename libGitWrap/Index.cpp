@@ -21,6 +21,9 @@
 #include "IndexPrivate.hpp"
 #include "IndexEntry.hpp"
 #include "IndexEntryPrivate.hpp"
+#include "IndexConflict.hpp"
+#include "IndexConflictPrivate.hpp"
+#include "IndexConflicts.hpp"
 #include "Repository.hpp"
 #include "RepositoryPrivate.hpp"
 #include "ObjectPrivate.hpp"
@@ -33,8 +36,9 @@ namespace Git
     {
 
         IndexPrivate::IndexPrivate( const GitPtr< RepositoryPrivate >& repo, git_index* index )
-            : RepoObject( repo )
-            , mIndex( index )
+            : RepoObject(repo)
+            , mIndex(index)
+            , conflictsLoaded(false)
         {
             Q_ASSERT( index );
         }
@@ -51,6 +55,19 @@ namespace Git
             {
                 git_index_free( mIndex );
             }
+        }
+
+        void IndexPrivate::ensureConflictsLoaded()
+        {
+            if (conflictsLoaded) {
+                return;
+            }
+        }
+
+        void IndexPrivate::clearKnownConflicts()
+        {
+            conflictsLoaded = false;
+            conflicts.clear();
         }
 
     }
@@ -306,6 +323,11 @@ namespace Git
             return;
 
         result = git_reset_default( d->repo()->mRepo, o, Internal::StrArrayWrapper( paths ) );
+
+        if (result) {
+            d->clearKnownConflicts();   // conflicts need to be reloaded as conflicts related to
+                                        // the paths (which we did reset) are removed now.
+        }
     }
 
     /**
@@ -353,20 +375,22 @@ namespace Git
      * @param[in,out]   result  A Result object; see @ref GitWrapErrorHandling
      *
      */
-    void Index::read( Result& result )
+    void Index::read(Result& result)
     {
-        if( !result )
-        {
+        if (!result) {
             return;
         }
 
-        if( !d )
-        {
+        if (!d) {
             result.setInvalidObject();
             return;
         }
 
-        result = git_index_read( d->mIndex );
+        result = git_index_read(d->mIndex);
+
+        if (result) {
+            d->clearKnownConflicts();
+        }
     }
 
     /**
@@ -397,6 +421,7 @@ namespace Git
     {
         if (d) {
             git_index_clear(d->mIndex);
+            d->clearKnownConflicts();
         }
     }
 
@@ -413,6 +438,10 @@ namespace Git
 
         const git_tree* treeobj = (const git_tree*) tree.d->mObj;
         result = git_index_read_tree(d->mIndex, treeobj);
+
+        if (result) {
+            d->clearKnownConflicts();
+        }
     }
 
     ObjectTree Index::writeTree(Result& result)
@@ -453,6 +482,16 @@ namespace Git
         }
 
         return repo.lookupTree(result, ObjectId::fromRaw(treeGitOid.id));
+    }
+
+    IndexConflicts Index::conflicts() const
+    {
+        return IndexConflicts(d.data());
+    }
+
+    bool Index::hasConflicts() const
+    {
+        return d && git_index_has_conflicts(d->mIndex);
     }
 
 }

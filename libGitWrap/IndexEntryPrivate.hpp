@@ -16,8 +16,8 @@
  *
  */
 
-#ifndef GIT_INDEX_ENTRY_PRIVATE_H
-#define GIT_INDEX_ENTRY_PRIVATE_H
+#ifndef GIT_INDEX_ENTRY_PRIVATE_HPP
+#define GIT_INDEX_ENTRY_PRIVATE_HPP
 
 #include "BasicObject.hpp"
 

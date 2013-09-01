@@ -83,6 +83,9 @@ namespace Git
         // Methods that operate on a glob (set of files)
         void checkoutFiles( Result &result, const QStringList &paths );
 
+        bool hasConflicts() const;
+        IndexConflicts conflicts() const;
+
     private:
         Internal::GitPtr< Internal::IndexPrivate > d;
     };
