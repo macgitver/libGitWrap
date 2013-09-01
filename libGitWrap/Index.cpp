@@ -23,6 +23,8 @@
 #include "IndexEntryPrivate.hpp"
 #include "Repository.hpp"
 #include "RepositoryPrivate.hpp"
+#include "ObjectPrivate.hpp"
+#include "ObjectTree.hpp"
 
 namespace Git
 {
@@ -391,6 +393,41 @@ namespace Git
         if (d) {
             git_index_clear(d->mIndex);
         }
+    }
+
+    void Index::readTree(Result& result, ObjectTree& tree)
+    {
+        if (!result) {
+            return;
+        }
+
+        if (!d && !tree.d) {
+            result.setInvalidObject();
+            return;
+        }
+
+        const git_tree* treeobj = (const git_tree*) tree.d->mObj;
+        result = git_index_read_tree(d->mIndex, treeobj);
+    }
+
+    ObjectTree Index::writeTree(Result& result)
+    {
+        if (!result) {
+            return ObjectTree();
+        }
+
+        if (!d) {
+            result.setInvalidObject();
+            return ObjectTree();
+        }
+
+        git_oid treeGitOid;
+        result = git_index_write_tree(&treeGitOid, d->mIndex);
+        if (!result) {
+            return ObjectTree();
+        }
+
+        return repository(result).lookupTree(result, ObjectId::fromRaw(treeGitOid.id));
     }
 
 }
