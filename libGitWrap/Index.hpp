@@ -68,12 +68,11 @@ namespace Git
         IndexEntry getEntry(Result &result, int n) const;
         IndexEntry getEntry(Result &result, const QString &path, Stages stage = StageDefault) const;
 
-        void addEntry(Result &result, const QString &path);
-        void removeEntry(Result &result, const QString &path);
+        void addFile(Result &result, const QString &path);
+        void removeFile(Result &result, const QString &path);
+        void resetFiles( Result &result, const QStringList &path );
 
-        void resetDefault( Result &result, const QStringList &path );
-
-        void checkout( Result &result, const QStringList &paths );
+        void checkoutFiles( Result &result, const QStringList &paths );
 
     private:
         Internal::GitPtr< Internal::IndexPrivate > d;

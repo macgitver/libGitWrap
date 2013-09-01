@@ -217,7 +217,7 @@ namespace Git
      * @param[in]       path the file path
      * @param[in,out]   result the error result
      */
-    void Index::addEntry(Result &result, const QString &path)
+    void Index::addFile(Result &result, const QString &path)
     {
         if ( !result )
             return;
@@ -239,7 +239,7 @@ namespace Git
      * @param[in]       path the file path
      * @param[in,out]   result the error result
      */
-    void Index::removeEntry(Result &result, const QString &path)
+    void Index::removeFile(Result &result, const QString &path)
     {
         if ( !result )
             return;
@@ -262,7 +262,7 @@ namespace Git
      * @param[in]       paths   the file paths relative to the repository's working directory
      * @param[in,out]   result  a Result object; see @ref GitWrapErrorHandling
      */
-    void Index::resetDefault(Result &result, const QStringList &paths)
+    void Index::resetFiles(Result &result, const QStringList &paths)
     {
         if ( !result || paths.isEmpty() )
             return;
@@ -297,7 +297,7 @@ namespace Git
      *                  working directory. Changes in the index stay untouched.
      *                  This allows staging part of a file and discard the rest.
      */
-    void Index::checkout(Result &result, const QStringList &paths)
+    void Index::checkoutFiles(Result &result, const QStringList &paths)
     {
         if( !result )
         {
