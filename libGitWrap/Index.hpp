@@ -29,11 +29,6 @@ namespace Git
         class IndexPrivate;
     }
 
-    /**
-     * @ingroup     GitWrap
-     * @brief       Provides access to the git index.
-     *
-     */
     class GITWRAP_API Index
     {
     public:

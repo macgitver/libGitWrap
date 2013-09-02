@@ -41,6 +41,13 @@ namespace Git
 
     }
 
+    /**
+     * @class       IndexEntry
+     * @ingroup     GitWrap
+     * @brief       Information about an entry of a git index
+     *
+     * An IndexEntry object is a very short lived data container for an index' entry.
+     */
 
     IndexEntry::IndexEntry()
     {
