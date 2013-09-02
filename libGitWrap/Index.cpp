@@ -233,6 +233,52 @@ namespace Git
         return IndexEntry( new Internal::IndexEntryPrivate( entry ) );
     }
 
+    /**
+     * @brief       Index-Operator (count based)
+     *
+     * @param       index   Zero-based index of the IndexEntry to get.
+     *
+     * @return      The desired IndexEntry or an invalid one if any error occured.
+     *
+     * Caution: This method just calls getEntry() and ignores any errors. If you care for
+     * possibly errors, call getEntry() instead.
+     *
+     * In any case: The returned IndexEntry is a short lived value object. It is a copy of the real
+     * data. You can modify it and use it to a call to updateEntry(). But you should not keep it
+     * around.
+     *
+     */
+    IndexEntry Index::operator [](int index) const
+    {
+        Result r;
+        return getEntry(r, index);
+    }
+
+    /**
+     * @brief       Index-Operator (path based)
+     *
+     * @param       path    Path name of the entry to get.
+     *
+     * @return      The desired IndexEntry or an invalid one if any error occured.
+     *
+     * If an IndexEntry is returned, it comes from StageDefault. All other stages are ignored. If
+     * you need to get any other stage's entries, use getEntry() instead and supply the stage you
+     * care for.
+     *
+     * Caution: This method just calls getEntry() and ignores any errors. If you care for
+     * possibly errors, call getEntry() instead.
+     *
+     * In any case: The returned IndexEntry is a short lived value object. It is a copy of the real
+     * data. You can modify it and use it to a call to updateEntry(). But you should not keep it
+     * around.
+     *
+     */
+    IndexEntry Index::operator [](const QString& path) const
+    {
+        Result r;
+        return getEntry(r, path);
+    }
+
     void Index::updateEntry(Result &result, const IndexEntry& entry)
     {
         if (!result) {

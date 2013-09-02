@@ -86,6 +86,9 @@ namespace Git
         bool hasConflicts() const;
         IndexConflicts conflicts() const;
 
+        IndexEntry operator[](int index) const;
+        IndexEntry operator[](const QString& path) const;
+
     private:
         Internal::GitPtr< Internal::IndexPrivate > d;
     };
