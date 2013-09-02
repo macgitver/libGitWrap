@@ -46,7 +46,7 @@ namespace Git
             void clearKnownConflicts();
 
         public:
-            git_index*                  mIndex;
+            git_index*                  index;
             bool                        conflictsLoaded;
             QVector< IndexConflict >    conflicts;
         };

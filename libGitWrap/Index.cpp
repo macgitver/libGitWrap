@@ -37,7 +37,7 @@ namespace Git
 
         IndexPrivate::IndexPrivate( const GitPtr< RepositoryPrivate >& repo, git_index* index )
             : RepoObject(repo)
-            , mIndex(index)
+            , index(index)
             , conflictsLoaded(false)
         {
             Q_ASSERT( index );
@@ -51,9 +51,9 @@ namespace Git
                 mRepo->mIndex = NULL;
             }
 
-            if( mIndex )
+            if( index )
             {
-                git_index_free( mIndex );
+                git_index_free( index );
             }
         }
 
@@ -169,7 +169,7 @@ namespace Git
             result.setInvalidObject();
             return 0;
         }
-        return (int)git_index_entrycount( d->mIndex );
+        return (int)git_index_entrycount( d->index );
     }
 
     Repository Index::repository( Result& result ) const
@@ -201,7 +201,7 @@ namespace Git
             return IndexEntry();
         }
 
-        const git_index_entry *entry = git_index_get_byindex(d->mIndex, n);
+        const git_index_entry *entry = git_index_get_byindex(d->index, n);
         if(entry == NULL)
         {
             result.setError(GIT_ENOTFOUND);
@@ -223,7 +223,7 @@ namespace Git
             return IndexEntry();
         }
 
-        const git_index_entry *entry = git_index_get_bypath(d->mIndex, path.toUtf8().constData(),
+        const git_index_entry *entry = git_index_get_bypath(d->index, path.toUtf8().constData(),
                                                             int(stage));
         if(entry == NULL)
         {
@@ -244,7 +244,7 @@ namespace Git
             return;
         }
 
-        result = git_index_add(d->mIndex, &entry.d->mEntry);
+        result = git_index_add(d->index, &entry.d->mEntry);
     }
 
     /**
@@ -266,7 +266,7 @@ namespace Git
             return;
         }
 
-        result = git_index_add_bypath( d->mIndex, path.toUtf8().constData() );
+        result = git_index_add_bypath( d->index, path.toUtf8().constData() );
     }
 
     /**
@@ -288,7 +288,7 @@ namespace Git
             return;
         }
 
-        result = git_index_remove_bypath( d->mIndex, path.toUtf8().constData() );
+        result = git_index_remove_bypath( d->index, path.toUtf8().constData() );
     }
 
     /**
@@ -361,7 +361,7 @@ namespace Git
         if ( !result )
             return;
 
-        result = git_checkout_index( d->repo()->mRepo, d->mIndex, &options );
+        result = git_checkout_index( d->repo()->mRepo, d->index, &options );
 
         git_strarray_free(&options.paths);
     }
@@ -386,7 +386,7 @@ namespace Git
             return;
         }
 
-        result = git_index_read(d->mIndex);
+        result = git_index_read(d->index);
 
         if (result) {
             d->clearKnownConflicts();
@@ -414,13 +414,13 @@ namespace Git
             return;
         }
 
-        result = git_index_write( d->mIndex );
+        result = git_index_write( d->index );
     }
 
     void Index::clear()
     {
         if (d) {
-            git_index_clear(d->mIndex);
+            git_index_clear(d->index);
             d->clearKnownConflicts();
         }
     }
@@ -437,7 +437,7 @@ namespace Git
         }
 
         const git_tree* treeobj = (const git_tree*) tree.d->mObj;
-        result = git_index_read_tree(d->mIndex, treeobj);
+        result = git_index_read_tree(d->index, treeobj);
 
         if (result) {
             d->clearKnownConflicts();
@@ -456,7 +456,7 @@ namespace Git
         }
 
         git_oid treeGitOid;
-        result = git_index_write_tree(&treeGitOid, d->mIndex);
+        result = git_index_write_tree(&treeGitOid, d->index);
         if (!result) {
             return ObjectTree();
         }
@@ -491,7 +491,7 @@ namespace Git
 
     bool Index::hasConflicts() const
     {
-        return d && git_index_has_conflicts(d->mIndex);
+        return d && git_index_has_conflicts(d->index);
     }
 
 }
