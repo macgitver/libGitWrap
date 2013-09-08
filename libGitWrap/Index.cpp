@@ -430,4 +430,24 @@ namespace Git
         return repository(result).lookupTree(result, ObjectId::fromRaw(treeGitOid.id));
     }
 
+    ObjectTree Index::writeTreeTo(Result& result, Repository& repo)
+    {
+        if (!result) {
+            return ObjectTree();
+        }
+
+        if (!d || !repo.isValid()) {
+            result.setInvalidObject();
+            return ObjectTree();
+        }
+
+        git_oid treeGitOid;
+        result = git_index_write_tree_to(&treeGitOid, d->index, repo.d->mRepo);
+        if (!result) {
+            return ObjectTree();
+        }
+
+        return repo.lookupTree(result, ObjectId::fromRaw(treeGitOid.id));
+    }
+
 }

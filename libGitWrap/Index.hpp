@@ -64,6 +64,7 @@ namespace Git
         void clear();
         void readTree(Result& result, ObjectTree& tree);
         ObjectTree writeTree(Result& result);
+        ObjectTree writeTreeTo(Result& result, Repository& repo);
 
         Repository repository( Result& result ) const;
 
