@@ -348,25 +348,34 @@ namespace Git
     }
 
     /**
-     * @brief status Reads the status of a single file.
-     * The file status is a combination of worktree, index and repository HEAD.
-     * @param fileName the file path relative to the repository
-     * @param r the error result
-     * @return the current file status
+     * @brief           get the status of a single file
+     *
+     * @param[in,out]   result      A Result object; see @ref GitWrapErrorHandling
+     *
+     * @param[in]       fileName    A path (relative to the repository) for which to get the
+     *                              current status.
+     *
+     * @return                      the current file status
+     *
+     *                  The file status is a combination of worktree, index and repository HEAD.
      */
     Git::StatusFlags Repository::status(Result &result, const QString &fileName) const
     {
         unsigned int status = GIT_STATUS_CURRENT;
 
-        if ( !d )
-        {
+        if (!result) {
+            return FileInvalidStatus;
+        }
+
+        if (!d) {
             result.setInvalidObject();
             return FileInvalidStatus;
         }
 
         result = git_status_file( &status, d->mRepo, fileName.toUtf8().data() );
-        if ( !result )
+        if (!result) {
             return FileInvalidStatus;
+        }
 
         return Internal::convertFileStatus( status );
     }

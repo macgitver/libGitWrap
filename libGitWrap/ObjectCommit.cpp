@@ -327,6 +327,17 @@ namespace Git
      * @brief           Checkout this commit.
      *
      * @param[in,out]   result  A Result object; see @ref GitWrapErrorHandling
+     *
+     * @param[in]       force   If @c true, files will be overwritten. If @c false (the default),
+     *                          the operation is canceled in case of any problem.
+     *
+     * @param[in]       updateHEAD  If @c true, ObjectCommit::updateHEAD() is called after a
+     *                              successful checkout. If @c false (the default), updateHEAD is
+     *                              not called.
+     *
+     * @param[in]       paths   Inclusive filters to the tree to checkout. If empty (the default),
+     *                          the whole tree is checked out.
+     *
      */
     void ObjectCommit::checkout(Result &result, bool force, bool updateHEAD,
                                 const QStringList &paths) const
@@ -335,6 +346,7 @@ namespace Git
         {
             return;
         }
+
         if( !d )
         {
             result.setInvalidObject();
@@ -425,12 +437,19 @@ namespace Git
         return dl;
     }
 
+    /**
+     * @brief           Set the HEAD ref to point (detached) to this commit.
+     *
+     * @param[in,out]   result  A Result object; see @ref GitWrapErrorHandling
+     *
+     */
     void ObjectCommit::updateHEAD(Result &result) const
     {
-        if ( !result ) return;
+        if (!result) {
+            return;
+        }
 
-        if ( !isValid() )
-        {
+        if (!d ) {
             result.setInvalidObject();
             return;
         }

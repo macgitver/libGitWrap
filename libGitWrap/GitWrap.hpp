@@ -124,91 +124,91 @@ namespace Git
      *              The file status is combination of the current HEAD commit,
      *              the repository's index and the working tree.
      *
-     * @var         Status::FileInvalidStatus
+     * @var         FileInvalidStatus
      *              This status marks an error (all flags cleared).
      *
-     * @var         Status::FileIndexNew
+     * @var         FileIndexNew
      *              The file was added to the index and untracked before.
      *
-     * @var         Status::FileIndexModified
+     * @var         FileIndexModified
      *              The file is modified within the index.
      *
-     * @var         Status::FileIndexDeleted
+     * @var         FileIndexDeleted
      *              The file was removed from the index.
      *
-     * @var         Status::FileRenamed
+     * @var         FileIndexRenamed
      *              The file was moved or renamed.
      *
-     * @var         Status::FileIndexTypeChange
+     * @var         FileIndexTypeChange
      *              The file type changed in the index.
      *
-     * @var         Status::FileWorkingTreeNew
+     * @var         FileWorkingTreeNew
      *              Marks a new, untracked file in the working tree.
      *
-     * @var         Status::FileWorkingTreeModified
+     * @var         FileWorkingTreeModified
      *              The file is modified.
      *
-     * @var         Status::FileWorkingTreeDeleted
+     * @var         FileWorkingTreeDeleted
      *              The tracked file was deleted in the working tree.
      *
-     * @var         Status::FileWorkingTreeTypeChange
+     * @var         FileWorkingTreeTypeChange
      *              The file type changed in the working tree.
      *
-     * @var         Status::FileIgnored
+     * @var         FileIgnored
      *              The file is marked as ignored (i.e. it is filtered in .gitignore).
      *
-     * @var         Status::FileUnchanged
+     * @var         FileUnchanged
      *              The file is completely unchanged.
      *
-     * @var         Status::SubmoduleInHead
+     * @var         SubmoduleInHead
      *              The superproject's HEAD commit contains the submodule.
      *
-     * @var         Status::SubmoduleInIndex
+     * @var         SubmoduleInIndex
      *              The superproject's contains an entry for the submodule.
      *
-     * @var         Status::SubmoduleInConfig
+     * @var         SubmoduleInConfig
      *              The superproject's .gitmodules file contains
      *              an entry for the submodule.
      *
-     * @var         Status::SubmoduleInWorkingTree
+     * @var         SubmoduleInWorkingTree
      *              The superproject's working tree contains
      *              a folder matching the submodule's name.
      *
-     * @var         Status::SubmoduleWorkingTreeUninitialized
+     * @var         SubmoduleWorkingTreeUninitialized
      *              The folder for the submodule is empty.
      *
-     * @var         Status::SubmoduleWorkingTreeIndexModified
+     * @var         SubmoduleWorkingTreeIndexModified
      *              The submodule's index contains entries
      *              (submodule is dirty).
      *
-     * @var         Status::SubmoduleWorkingTreeWtModified
+     * @var         SubmoduleWorkingTreeWtModified
      *              The submodule's working tree contains modified files
      *              (submodule is dirty).
      *
-     * @var         Status::SubmoduleWorkingTreeUntracked
+     * @var         SubmoduleWorkingTreeUntracked
      *              There are untracked files within the submodule's working tree.
      *
-     * @var         Status::SubmoduleIndexNew
+     * @var         SubmoduleIndexNew
      *              The submodule entry was added to the index and untracked before.
      *              (same as Status::FileIndexNew)
      *
-     * @var         Status::SubmoduleIndexModified
+     * @var         SubmoduleIndexModified
      *              The submodule index entry is modified.
      *              (same as Status::FileIndexModified)
      *
-     * @var         Status::SubmoduleIndexDeleted
+     * @var         SubmoduleIndexDeleted
      *              The submodule entry was deleted from the index and became untracked.
      *              (same as Status::FileIndexDeleted)
      *
-     * @var         Status::SubmoduleWorkingTreeNew
+     * @var         SubmoduleWorkingTreeNew
      *              The submodule was added to the working tree.
      *              (same as Status::FileWorkingTreeNew)
      *
-     * @var         Status::SubmoduleWorkingTreeModified
+     * @var         SubmoduleWorkingTreeModified
      *              The submodule was modified in the working tree.
      *              (same as Status::FileWorkingTreeModified)
      *
-     * @var         Status::SubmoduleWorkingTreeDeleted
+     * @var         SubmoduleWorkingTreeDeleted
      *              The submodule's directory was deleted from the working tree.
      *              (same as Status::FileWorkingTreeDeleted)
      */
