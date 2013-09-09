@@ -302,6 +302,18 @@ namespace Git
     }
 
     /**
+     * @brief       Check whether the repository's HEAD is detached
+     *
+     * @return      @c true if this Repository is valid and its HEAD branch points to a commit
+     *              rather than to another reference. @c false if the Repository is either invalid
+     *              or its HEAD points to another reference.
+     */
+    bool Repository::isHeadDetached() const
+    {
+        return d && git_repository_head_detached(d->mRepo);
+    }
+
+    /**
      * @brief           Access the repository's index object
      *
      * @param[in,out]   result	A result object; see @ref GitWrapErrorHandling

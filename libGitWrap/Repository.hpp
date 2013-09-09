@@ -60,6 +60,7 @@ namespace Git
 
         bool isValid() const;
         bool isBare() const;
+        bool isHeadDetached() const;
 
         QString basePath() const;
         QString gitPath() const;
