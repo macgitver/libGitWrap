@@ -36,6 +36,8 @@ namespace Git
      */
     class GITWRAP_API Object
     {
+        friend class Index;
+
     public:
         Object( Internal::ObjectPrivate* _d );
         Object( const Object& other );

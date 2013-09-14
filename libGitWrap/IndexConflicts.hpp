@@ -2,7 +2,7 @@
  * libGitWrap - A Qt wrapper library for libgit2
  * Copyright (C) 2012-2013 The MacGitver-Developers <dev@macgitver.org>
  *
- * (C) Nils Fenner <nilsfenner@web.de>
+ * (C) Sascha Cunz <sascha@macgitver.org>
  *
  * This program is free software; you can redistribute it and/or modify it under the terms of the
  * GNU General Public License (Version 2) as published by the Free Software Foundation.
@@ -16,32 +16,48 @@
  *
  */
 
-#ifndef GIT_INDEX_ENTRY_PRIVATE_HPP
-#define GIT_INDEX_ENTRY_PRIVATE_HPP
+#ifndef GIT_INDEX_CONFLICTS_HPP
+#define GIT_INDEX_CONFLICTS_HPP
 
-#include "BasicObject.hpp"
+#include "GitWrap.hpp"
 
 namespace Git
 {
+
     namespace Internal
     {
-
-        /**
-         * @internal
-         * @ingroup     GitWrap
-         * @brief       The IndexEntryPrivate class
-         */
-        class IndexEntryPrivate : public BasicObject
-        {
-        public:
-            IndexEntryPrivate(const git_index_entry *entry);
-            ~IndexEntryPrivate();
-
-        public:
-            git_index_entry     mEntry;
-        };
-
+        class IndexPrivate;
     }
+
+    class IndexConflicts
+    {
+    public:
+        explicit IndexConflicts(Internal::IndexPrivate* _d);
+        IndexConflicts(const IndexConflicts& other);
+        ~IndexConflicts();
+
+        IndexConflicts& operator=(const IndexConflicts& other);
+
+    public:
+        bool isValid() const;
+
+    public:
+        Index index() const;
+        void refresh();
+
+        int count();
+        IndexConflict at(int index);
+
+    public:
+        IndexConflict operator[](int index)
+        {
+            return at(index);
+        }
+
+    private:
+        Internal::GitPtr< Internal::IndexPrivate > d;
+    };
+
 }
 
 #endif

@@ -36,6 +36,8 @@ namespace Git
      */
     class GITWRAP_API Repository
     {
+        friend class Index;
+
     public:
         explicit Repository( const Internal::GitPtr< Internal::RepositoryPrivate >& _d );
         Repository();

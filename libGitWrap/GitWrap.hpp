@@ -93,6 +93,8 @@ namespace Git
     class ChangeListConsumer;
     class DiffList;
     class Index;
+    class IndexConflict;
+    class IndexConflicts;
     class IndexEntry;
     class Object;
     class ObjectBlob;

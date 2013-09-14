@@ -29,13 +29,10 @@ namespace Git
         class IndexEntryPrivate;
     }
 
-    /**
-     * @ingroup GitWrap
-     * @brief The IndexEntry class provides information about a Git index entry.
-     * Each instance of IndexEntry encapsulates a git_index_entry struct from libgit2.
-     */
     class GITWRAP_API IndexEntry
     {
+        friend class Index;
+
     public:
         IndexEntry();
         IndexEntry(const IndexEntry &other);
@@ -53,8 +50,8 @@ namespace Git
         unsigned int ino() const;
         unsigned int uid() const;
         unsigned int gid() const;
-        QTime cTime() const;
-        QTime mTime() const;
+        QDateTime cTime() const;
+        QDateTime mTime() const;
         int stage() const;
 
     private:

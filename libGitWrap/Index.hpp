@@ -29,15 +29,18 @@ namespace Git
         class IndexPrivate;
     }
 
-    /**
-     * @ingroup     GitWrap
-     * @brief       Provides access to the git index.
-     *
-     */
     class GITWRAP_API Index
     {
     public:
         explicit Index( Internal::IndexPrivate* _d );
+
+    public:
+        enum Stages {
+            StageDefault    = 0,
+            StageFrom       = 1,
+            StageOurs       = 2,
+            StageTheirs     = 3
+        };
 
     public:
         Index( bool create = false );
@@ -50,22 +53,36 @@ namespace Git
 
     public:
         bool isValid() const;
+        bool isBare() const;
 
-        void read( Result& result );
-        void write( Result& result );
+        void read(Result& result);
+        void write(Result& result);
+        void clear();
+        void readTree(Result& result, ObjectTree& tree);
+        ObjectTree writeTree(Result& result);
+        ObjectTree writeTreeTo(Result& result, Repository& repo);
 
-        int count( Result& result ) const;
         Repository repository( Result& result ) const;
 
+        // Methods to access and change entries
+        int count( Result& result ) const;
         IndexEntry getEntry(Result &result, int n) const;
-        IndexEntry getEntry(Result &result, const QString &path) const;
+        IndexEntry getEntry(Result &result, const QString &path, Stages stage = StageDefault) const;
+        void updateEntry(Result &result, const IndexEntry& entry);
 
-        void addEntry(Result &result, const QString &path);
-        void removeEntry(Result &result, const QString &path);
+        // Index-Entry methods working on a path
+        void addFile(Result &result, const QString &path);
+        void removeFile(Result &result, const QString &path);
+        void resetFiles( Result &result, const QStringList &path );
 
-        void resetDefault( Result &result, const QStringList &path );
+        // Methods that operate on a glob (set of files)
+        void checkoutFiles( Result &result, const QStringList &paths );
 
-        void checkout( Result &result, const QStringList &paths );
+        bool hasConflicts() const;
+        IndexConflicts conflicts() const;
+
+        IndexEntry operator[](int index) const;
+        IndexEntry operator[](const QString& path) const;
 
     private:
         Internal::GitPtr< Internal::IndexPrivate > d;

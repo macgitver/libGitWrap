@@ -124,6 +124,8 @@ SET( SRC_FILES
     IFetchEvents.cpp
     Index.cpp
     IndexEntry.cpp
+    IndexConflict.cpp
+    IndexConflicts.cpp
     Object.cpp
     ObjectBlob.cpp
     ObjectCommit.cpp
@@ -156,6 +158,8 @@ SET( PUB_HDR_FILES
     IFetchEvents.hpp
     Index.hpp
     IndexEntry.hpp
+    IndexConflict.hpp
+    IndexConflicts.hpp
     Object.hpp
     ObjectBlob.hpp
     ObjectCommit.hpp
@@ -183,6 +187,7 @@ SET( PRI_HDR_FILES
     FetchCallbacks.hpp
     IndexPrivate.hpp
     IndexEntryPrivate.hpp
+    IndexConflictPrivate.hpp
     ObjectPrivate.hpp
     ReferencePrivate.hpp
     RemotePrivate.hpp

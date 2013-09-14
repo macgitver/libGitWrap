@@ -21,6 +21,7 @@
 
 #include "GitWrapPrivate.hpp"
 #include "RepoObject.hpp"
+#include "IndexConflict.hpp"
 
 namespace Git
 {
@@ -41,7 +42,13 @@ namespace Git
             ~IndexPrivate();
 
         public:
-            git_index*  mIndex;
+            void ensureConflictsLoaded();
+            void clearKnownConflicts();
+
+        public:
+            git_index*                  index;
+            bool                        conflictsLoaded;
+            QVector< IndexConflict >    conflicts;
         };
 
     }
