@@ -106,6 +106,17 @@ namespace Git
         return QString::fromUtf8( git_reference_name( d->mRef ) );
     }
 
+    /**
+     * @brief   Returns the name prefix for the reference.
+     *
+     * @return  the name prefix or an empty string
+     */
+    QString Reference::prefix() const
+    {
+        const QString tmpName = name();
+        return tmpName.left( tmpName.length() - shorthand().length() );
+    }
+
     QString Reference::shorthand() const
     {
         if ( !isValid() )
