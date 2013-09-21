@@ -136,6 +136,7 @@ SET( SRC_FILES
     Object.cpp
     ObjectId.cpp
     PatchConsumer.cpp
+    RefLog.cpp
     RefName.cpp
     RefSpec.cpp
     Reference.cpp
@@ -186,6 +187,7 @@ SET( PUB_HDR_FILES
     ObjectTag.hpp
     ObjectTree.hpp
     PatchConsumer.hpp
+    RefLog.hpp
     RefName.hpp
     RefSpec.hpp
     Reference.hpp
@@ -224,6 +226,7 @@ SET( PRI_HDR_FILES
     Private/IndexEntryPrivate.hpp
     Private/IndexPrivate.hpp
     Private/ObjectPrivate.hpp
+    RefLogPrivate.hpp
     Private/NoteRefPrivate.hpp
     Private/ReferencePrivate.hpp
     Private/RefNamePrivate.hpp

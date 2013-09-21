@@ -60,11 +60,14 @@ namespace Git
     class Tree;
     class PatchConsumer;
     class RefName;
+    class RefLog;
+    class RefLogEntry;
     class RefSpec;
     class Reference;
     class Remote;
     class Repository;
     class RevisionWalker;
+    class Signature;
     class Submodule;
     class TreeBuilder;
     class TreeEntry;
