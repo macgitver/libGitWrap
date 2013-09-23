@@ -6,7 +6,8 @@ SET( libGitWrap_includes
     CACHE INTERNAL "libGitWrap include directories"
 )
 
-ADD_SUBDIRECTORY( libGitWrap )
+ADD_SUBDIRECTORY(libGitWrap)
+ADD_SUBDIRECTORY(Tests)
 
 ADD_DOXYGEN_TARGET(
     libGitWrap
