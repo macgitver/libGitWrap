@@ -55,6 +55,7 @@ namespace Git
     public:
         bool isValid() const;
         QString name() const;
+        QString prefix() const;
         QString shorthand() const;
 
         Type type( Result& result ) const;
