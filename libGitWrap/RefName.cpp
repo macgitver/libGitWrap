@@ -63,7 +63,7 @@ namespace Git
      *
      *     A reference is namespaced if the regular expression:
      *
-     *         ^refs\/namespace\/([^\/]+)\/(.+)$
+     *         ^refs\/namespaces\/([^\/]+)\/(.+)$
      *
      *     maches at least once. If the regexp matches, `\1` will be appended to the namespaces
      *     array and the reference is replaced with `\2` and the namespace test executed again. In
@@ -199,7 +199,7 @@ namespace Git
         }
 
         RefNameMatches::RefNameMatches()
-            : reNamespaces(QLatin1String("^refs\\/namespace\\/([^\\/]+)\\/(.+)$"))
+            : reNamespaces(QLatin1String("^refs\\/namespaces\\/([^\\/]+)\\/(.+)$"))
             , reRemote(QLatin1String("^refs\\/remotes\\/([^\\/]+)\\/(.+)$"))
             , reScopes(QLatin1String("^([^\\/]+)\\/(.+)$"))
         {
