@@ -370,3 +370,47 @@ TEST(RefName, RemoteBranch) {
     EXPECT_EQ(0, rn.namespaces().count());
     EXPECT_STREQ("home", qPrintable(rn.remote()));
 }
+
+TEST(RefName, CustomRule) {
+    const char* sz = "refs/pull/550/head";
+    const char* szNeg = "refs/heads/master";
+
+    QRegExp re(QLatin1String("^refs\\/pull\\/([1-9][0-9]*)\\/head$"));
+    int id = Git::RefName::registerExpression((void*)0xAABBCCDD, re);
+
+    Git::RefName rn = Git::RefName(QLatin1String(sz));
+    EXPECT_TRUE (rn.isValid());
+
+    EXPECT_FALSE(rn.isBranch());
+    EXPECT_FALSE(rn.isSpecial());
+    EXPECT_FALSE(rn.isTag());
+    EXPECT_FALSE(rn.isCommitNote());
+    EXPECT_FALSE(rn.isHead());
+    EXPECT_FALSE(rn.isMergeHead());
+    EXPECT_FALSE(rn.isNamespaced());
+    EXPECT_FALSE(rn.isScoped());
+    EXPECT_FALSE(rn.isPeculiar());
+    EXPECT_FALSE(rn.isStage());
+    EXPECT_TRUE (rn.isCustom());
+    EXPECT_TRUE (rn.matchesCustomRule(id));
+    EXPECT_STREQ(qPrintable(rn.name()), "");
+    EXPECT_STREQ(qPrintable(rn.branchName()), "");
+    EXPECT_STREQ(qPrintable(rn.tagName()), "");
+    EXPECT_STREQ(qPrintable(rn.scopeName()), "");
+    EXPECT_STREQ(qPrintable(rn.namespaceName()), "");
+    ASSERT_EQ(0, rn.scopes().count());
+    EXPECT_EQ(0, rn.namespaces().count());
+    EXPECT_STREQ("", qPrintable(rn.remote()));
+
+    rn = Git::RefName(QLatin1String(szNeg));
+    EXPECT_TRUE (rn.isValid());
+    EXPECT_FALSE(rn.isCustom());
+    EXPECT_FALSE(rn.matchesCustomRule(id));
+
+    ASSERT_EQ(Git::RefName::expressionData(id), (void*)0xAABBCCDD);
+
+    Git::RefName::unregisterExpression(id);
+
+    ASSERT_NE(Git::RefName::expressionData(id), (void*)0xAABBCCDD);
+}
+
