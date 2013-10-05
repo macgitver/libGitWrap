@@ -134,6 +134,7 @@ SET( SRC_FILES
     ObjectTag.cpp
     ObjectTree.cpp
     PatchConsumer.cpp
+    RefName.cpp
     RefSpec.cpp
     Reference.cpp
     Remote.cpp
@@ -168,6 +169,7 @@ SET( PUB_HDR_FILES
     ObjectTag.hpp
     ObjectTree.hpp
     RefSpec.hpp
+    RefName.hpp
     Reference.hpp
     Remote.hpp
     Repository.hpp
