@@ -74,9 +74,12 @@ namespace Git
         QString tagName();
         QString branchName();
 
+        bool matchesCustomRule(int id);
+
     public:
-        static int registerExpression(void* data, const QRegExp& rexExp);
+        static int registerExpression(void* data, const QRegExp& regExp);
         static void unregisterExpression(int id);
+        static void* expressionData(int id);
 
     private:
         Internal::GitPtr< Internal::RefNamePrivate > d;

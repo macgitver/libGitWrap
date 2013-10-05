@@ -167,9 +167,31 @@ namespace Git
 
         struct CustomMatches
         {
-            int             id;
-            const QRegExp   regExp;
-            void*           payload;
+        public:
+            CustomMatches()
+                : id(-1)
+                , payload(NULL)
+            {
+            }/*
+
+            CustomMatches(const CustomMatches& o)
+                : id(o.id)
+                , regExp(o.regExp)
+                , payload(o.payload)
+            {
+            }*/
+
+            CustomMatches(const QRegExp& _re, int _id, void* _payload)
+                : id(_id)
+                , regExp(_re)
+                , payload(_payload)
+            {
+            }
+
+        public:
+            int                 id;
+            /*const*/ QRegExp   regExp;
+            void*               payload;
         };
 
         class RefNameMatches
@@ -182,6 +204,7 @@ namespace Git
             const QRegExp           reRemote;
             const QRegExp           reScopes;
             QVector<CustomMatches>  customMatches;
+            int                     nextId;
 
         private:
             static RefNameMatches* sSelf;
@@ -202,6 +225,7 @@ namespace Git
             : reNamespaces(QLatin1String("^refs\\/namespaces\\/([^\\/]+)\\/(.+)$"))
             , reRemote(QLatin1String("^refs\\/remotes\\/([^\\/]+)\\/(.+)$"))
             , reScopes(QLatin1String("^([^\\/]+)\\/(.+)$"))
+            , nextId(0)
         {
         }
 
@@ -465,6 +489,46 @@ namespace Git
     QString RefName::scopeName()
     {
         return scopes().join(QChar(L'/'));
+    }
+
+
+    bool RefName::matchesCustomRule(int id)
+    {
+        if (!d) {
+            return false;
+        }
+
+        d->ensureAnalyzed();
+
+        return d->customMatches.contains(id);
+    }
+
+    int RefName::registerExpression(void* data, const QRegExp& regExp)
+    {
+        Internal::CustomMatches cm(regExp, Internal::RefNameMatches::self().nextId++, data);
+        Internal::RefNameMatches::self().customMatches.append(cm);
+        return cm.id;
+    }
+
+    void RefName::unregisterExpression(int id)
+    {
+        for (int i = 0; i < Internal::RefNameMatches::self().customMatches.count(); i++) {
+            if (Internal::RefNameMatches::self().customMatches[i].id == id) {
+                Internal::RefNameMatches::self().customMatches.remove(id);
+                return;
+            }
+        }
+    }
+
+    void* RefName::expressionData(int id)
+    {
+        for (int i = 0; i < Internal::RefNameMatches::self().customMatches.count(); i++) {
+            if (Internal::RefNameMatches::self().customMatches[i].id == id) {
+                return Internal::RefNameMatches::self().customMatches[i].payload;
+            }
+        }
+
+        return NULL;
     }
 
 }
