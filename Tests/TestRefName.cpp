@@ -42,6 +42,7 @@ TEST(RefName, Analyze) {
     EXPECT_EQ(rn.namespaces().count(), 0);
     EXPECT_EQ(rn.scopes().count(), 0);
     EXPECT_STREQ(qPrintable(rn.scopeName()), "");
+    EXPECT_STREQ("", qPrintable(rn.remote()));
 }
 
 TEST(RefName, Namespaces) {
@@ -67,6 +68,7 @@ TEST(RefName, Namespaces) {
     EXPECT_STREQ(qPrintable(rn.namespaceName()), "foo");
     EXPECT_EQ(rn.scopes().count(), 0);
     EXPECT_STREQ(qPrintable(rn.scopeName()), "");
+    EXPECT_STREQ("", qPrintable(rn.remote()));
 }
 
 TEST(RefName, NestedNamespaces) {
@@ -93,6 +95,7 @@ TEST(RefName, NestedNamespaces) {
     EXPECT_STREQ(qPrintable(rn.namespaceName()), "bar/foo");
     EXPECT_EQ(rn.scopes().count(), 0);
     EXPECT_STREQ(qPrintable(rn.scopeName()), "");
+    EXPECT_STREQ("", qPrintable(rn.remote()));
 }
 
 
@@ -119,6 +122,7 @@ TEST(RefName, ScopeBranch) {
     EXPECT_STREQ(qPrintable(rn.scopes()[0]), "feature");
     EXPECT_STREQ(qPrintable(rn.scopeName()), "feature");
     EXPECT_STREQ(qPrintable(rn.namespaceName()), "");
+    EXPECT_STREQ("", qPrintable(rn.remote()));
 }
 
 TEST(RefName, NestedScopeBranch) {
@@ -145,6 +149,7 @@ TEST(RefName, NestedScopeBranch) {
     EXPECT_STREQ(qPrintable(rn.scopeName()), "feature/new");
     EXPECT_EQ(0, rn.namespaces().count());
     EXPECT_STREQ(qPrintable(rn.namespaceName()), "");
+    EXPECT_STREQ("", qPrintable(rn.remote()));
 }
 
 TEST(RefName, ScopedTag) {
@@ -171,6 +176,7 @@ TEST(RefName, ScopedTag) {
     EXPECT_STREQ(qPrintable(rn.scopes()[0]), "feature");
     EXPECT_STREQ(qPrintable(rn.scopeName()), "feature");
     EXPECT_STREQ(qPrintable(rn.namespaceName()), "");
+    EXPECT_STREQ("", qPrintable(rn.remote()));
 }
 
 TEST(RefName, NestedScopedTag) {
@@ -198,6 +204,7 @@ TEST(RefName, NestedScopedTag) {
     EXPECT_STREQ(qPrintable(rn.scopeName()), "feature/new");
     EXPECT_STREQ(qPrintable(rn.namespaceName()), "");
     EXPECT_EQ(0, rn.namespaces().count());
+    EXPECT_STREQ("", qPrintable(rn.remote()));
 }
 
 TEST(RefName, Specials_Stage) {
@@ -224,6 +231,7 @@ TEST(RefName, Specials_Stage) {
     EXPECT_STREQ(qPrintable(rn.namespaceName()), "");
     ASSERT_EQ(0, rn.scopes().count());
     EXPECT_EQ(0, rn.namespaces().count());
+    EXPECT_STREQ("", qPrintable(rn.remote()));
 }
 
 TEST(RefName, Specials_Head) {
@@ -250,6 +258,7 @@ TEST(RefName, Specials_Head) {
     EXPECT_STREQ(qPrintable(rn.namespaceName()), "");
     ASSERT_EQ(0, rn.scopes().count());
     EXPECT_EQ(0, rn.namespaces().count());
+    EXPECT_STREQ("", qPrintable(rn.remote()));
 }
 
 TEST(RefName, Specials_MergeHead) {
@@ -276,6 +285,7 @@ TEST(RefName, Specials_MergeHead) {
     EXPECT_STREQ(qPrintable(rn.namespaceName()), "");
     ASSERT_EQ(0, rn.scopes().count());
     EXPECT_EQ(0, rn.namespaces().count());
+    EXPECT_STREQ("", qPrintable(rn.remote()));
 }
 
 TEST(RefName, Specials_CommitNotes) {
@@ -302,10 +312,11 @@ TEST(RefName, Specials_CommitNotes) {
     EXPECT_STREQ(qPrintable(rn.namespaceName()), "");
     ASSERT_EQ(0, rn.scopes().count());
     EXPECT_EQ(0, rn.namespaces().count());
+    EXPECT_STREQ("", qPrintable(rn.remote()));
 }
 
 
-TEST(RefName, Specials_Peculiars) {
+TEST(RefName, Peculiars) {
     const char* sz = "refs/foobar/commit";
 
     Git::RefName rn = Git::RefName(QLatin1String(sz));
@@ -329,5 +340,33 @@ TEST(RefName, Specials_Peculiars) {
     EXPECT_STREQ(qPrintable(rn.namespaceName()), "");
     ASSERT_EQ(0, rn.scopes().count());
     EXPECT_EQ(0, rn.namespaces().count());
+    EXPECT_STREQ("", qPrintable(rn.remote()));
 }
 
+TEST(RefName, RemoteBranch) {
+    const char* sz = "refs/remotes/home/new/branch";
+
+    Git::RefName rn = Git::RefName(QLatin1String(sz));
+    EXPECT_TRUE (rn.isValid());
+
+    EXPECT_TRUE (rn.isBranch());
+    EXPECT_FALSE(rn.isSpecial());
+    EXPECT_FALSE(rn.isTag());
+    EXPECT_FALSE(rn.isCommitNote());
+    EXPECT_FALSE(rn.isHead());
+    EXPECT_FALSE(rn.isMergeHead());
+    EXPECT_FALSE(rn.isNamespaced());
+    EXPECT_TRUE (rn.isScoped());
+    EXPECT_FALSE(rn.isPeculiar());
+    EXPECT_FALSE(rn.isStage());
+    EXPECT_FALSE(rn.isCustom());
+    EXPECT_STREQ(qPrintable(rn.name()), "branch");
+    EXPECT_STREQ(qPrintable(rn.branchName()), "new/branch");
+    EXPECT_STREQ(qPrintable(rn.tagName()), "");
+    EXPECT_STREQ(qPrintable(rn.scopeName()), "new");
+    EXPECT_STREQ(qPrintable(rn.namespaceName()), "");
+    ASSERT_EQ(1, rn.scopes().count());
+    EXPECT_STREQ(qPrintable(rn.scopes()[0]), "new");
+    EXPECT_EQ(0, rn.namespaces().count());
+    EXPECT_STREQ("home", qPrintable(rn.remote()));
+}
