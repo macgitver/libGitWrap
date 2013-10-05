@@ -6,6 +6,7 @@ QT_PREPARE(Core -Gui)
 SET(SRC_FILES
 
     TestRepository.cpp
+    TestRefName.cpp
 )
 
 INCLUDE_DIRECTORIES(${libGitWrap_includes})
