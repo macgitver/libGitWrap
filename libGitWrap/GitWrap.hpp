@@ -103,6 +103,7 @@ namespace Git
     class ObjectTag;
     class ObjectTree;
     class PatchConsumer;
+    class RefName;
     class RefSpec;
     class Reference;
     class Remote;

@@ -58,6 +58,8 @@ namespace Git
         QString prefix() const;
         QString shorthand() const;
 
+        RefName nameAnalyzer() const;
+
         Type type( Result& result ) const;
         ObjectId objectId( Result& result ) const;
         QString target( Result& result ) const;
