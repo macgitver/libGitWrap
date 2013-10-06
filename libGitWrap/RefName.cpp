@@ -538,7 +538,16 @@ namespace Git
         return scopes().join(QChar(L'/'));
     }
 
-
+    /**
+     * @brief       Did the name match a registered custom expression
+     *
+     * @param[in]   id      The id of the expression as returned by registerExpression().
+     *
+     * @return      `true` or `false` telling whether the given expression matched or not.
+     *
+     * Note that all custom expressions are matched at once.
+     *
+     */
     bool RefName::matchesCustomRule(int id)
     {
         if (!d) {
@@ -550,13 +559,34 @@ namespace Git
         return d->customMatches.contains(id);
     }
 
-    int RefName::registerExpression(void* data, const QRegExp& regExp)
+    /**
+     * @brief       Register a custom expression to match against
+     *
+     * @param[in]   payload A user defined value that is not used internally but yet associated with
+     *                      the expression
+     *
+     * @param[in]   regExp  A regular expression used to match against the full qualified reference
+     *                      name. If it matches, further processing is stopped and the match
+     *                      recorded. In this case, isCustom() will return `true` and
+     *                      matchesCustomRule() with the return value of this method will return
+     *                      `true`, too.
+     *
+     * @return      A unique id that can be used to refer to this registered expression.
+     *
+     */
+    int RefName::registerExpression(void* payload, const QRegExp& regExp)
     {
-        Internal::CustomMatches cm(regExp, Internal::RefNameMatches::self().nextId++, data);
+        Internal::CustomMatches cm(regExp, Internal::RefNameMatches::self().nextId++, payload);
         Internal::RefNameMatches::self().customMatches.append(cm);
         return cm.id;
     }
 
+    /**
+     * @brief       Unregister a custom expression
+     *
+     * @param[in]   id      The id of the expression as returned by registerExpression().
+     *
+     */
     void RefName::unregisterExpression(int id)
     {
         for (int i = 0; i < Internal::RefNameMatches::self().customMatches.count(); i++) {
@@ -567,6 +597,15 @@ namespace Git
         }
     }
 
+    /**
+     * @brief       Find data for a registered custom expression
+     *
+     * @param[in]   id      The id of the expression as returned by registerExpression().
+     *
+     * @return      Either `NULL` if @a id is not a valid expression or the payload that was
+     *              registered with the expression.
+     *
+     */
     void* RefName::expressionData(int id)
     {
         for (int i = 0; i < Internal::RefNameMatches::self().customMatches.count(); i++) {
