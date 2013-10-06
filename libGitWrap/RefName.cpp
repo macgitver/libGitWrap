@@ -471,6 +471,28 @@ namespace Git
         return d ? d->ensureAnalyzed(), d->name : QString();
     }
 
+    QString RefName::fullName()
+    {
+        return d ? d->fqrn : QString();
+    }
+
+    QString RefName::localName()
+    {
+        if (isBranch() || isTag()) {
+            return isScoped() ? scopeName() % QChar(L'/') % name() : name();
+        }
+        return QString();
+    }
+
+    QString RefName::scopePrefix()
+    {
+        if (d) {
+            int l = scopeName().length();
+            return d->fqrn.left(d->fqrn.count() - l);
+        }
+        return QString();
+    }
+
     QString RefName::branchName()
     {
         return isBranch() ? (isScoped() ? scopeName() % QChar(L'/') % name() : name()) : QString();
