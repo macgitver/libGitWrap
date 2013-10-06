@@ -37,11 +37,14 @@ TEST(RefName, Analyze) {
     EXPECT_FALSE(rn.isPeculiar());
     EXPECT_FALSE(rn.isStage());
     EXPECT_FALSE(rn.isCustom());
-    EXPECT_STREQ(qPrintable(rn.name()), "master");
-    EXPECT_STREQ(qPrintable(rn.branchName()), "master");
-    EXPECT_EQ(rn.namespaces().count(), 0);
-    EXPECT_EQ(rn.scopes().count(), 0);
-    EXPECT_STREQ(qPrintable(rn.scopeName()), "");
+
+    EXPECT_EQ(0, rn.namespaces().count());
+    EXPECT_EQ(0, rn.scopes().count());
+
+    EXPECT_STREQ("master", qPrintable(rn.name()));
+    EXPECT_STREQ("master", qPrintable(rn.branchName()));
+    EXPECT_STREQ("master", qPrintable(rn.localName()));
+    EXPECT_STREQ("", qPrintable(rn.scopeName()));
     EXPECT_STREQ("", qPrintable(rn.remote()));
 }
 
@@ -61,14 +64,18 @@ TEST(RefName, Namespaces) {
     EXPECT_FALSE(rn.isPeculiar());
     EXPECT_FALSE(rn.isStage());
     EXPECT_FALSE(rn.isCustom());
-    EXPECT_STREQ(qPrintable(rn.name()), "master");
-    EXPECT_STREQ(qPrintable(rn.branchName()), "master");
-    ASSERT_EQ(rn.namespaces().count(), 1);
-    EXPECT_STREQ(qPrintable(rn.namespaces()[0]), "foo");
-    EXPECT_STREQ(qPrintable(rn.namespaceName()), "foo");
-    EXPECT_EQ(rn.scopes().count(), 0);
-    EXPECT_STREQ(qPrintable(rn.scopeName()), "");
+
+    EXPECT_STREQ("master", qPrintable(rn.name()));
+    EXPECT_STREQ("master", qPrintable(rn.branchName()));
+    EXPECT_STREQ("master", qPrintable(rn.localName()));
+    EXPECT_STREQ("", qPrintable(rn.scopeName()));
     EXPECT_STREQ("", qPrintable(rn.remote()));
+
+    ASSERT_EQ   (1, rn.namespaces().count());
+    EXPECT_STREQ("foo", qPrintable(rn.namespaces()[0]));
+    EXPECT_STREQ("foo", qPrintable(rn.namespaceName()));
+
+    EXPECT_EQ(rn.scopes().count(), 0);
 }
 
 TEST(RefName, NestedNamespaces) {
@@ -87,15 +94,19 @@ TEST(RefName, NestedNamespaces) {
     EXPECT_FALSE(rn.isPeculiar());
     EXPECT_FALSE(rn.isStage());
     EXPECT_FALSE(rn.isCustom());
-    EXPECT_STREQ(qPrintable(rn.name()), "master");
-    EXPECT_STREQ(qPrintable(rn.branchName()), "master");
-    ASSERT_EQ(rn.namespaces().count(), 2);
-    EXPECT_STREQ(qPrintable(rn.namespaces()[0]), "bar");
-    EXPECT_STREQ(qPrintable(rn.namespaces()[1]), "foo");
-    EXPECT_STREQ(qPrintable(rn.namespaceName()), "bar/foo");
-    EXPECT_EQ(rn.scopes().count(), 0);
-    EXPECT_STREQ(qPrintable(rn.scopeName()), "");
+
+    EXPECT_STREQ("master", qPrintable(rn.name()));
+    EXPECT_STREQ("master", qPrintable(rn.branchName()));
+    EXPECT_STREQ("master", qPrintable(rn.localName()));
+    EXPECT_STREQ("", qPrintable(rn.scopeName()));
     EXPECT_STREQ("", qPrintable(rn.remote()));
+
+    ASSERT_EQ(rn.namespaces().count(), 2);
+    EXPECT_STREQ("bar", qPrintable(rn.namespaces()[0]));
+    EXPECT_STREQ("foo", qPrintable(rn.namespaces()[1]));
+    EXPECT_STREQ("bar/foo", qPrintable(rn.namespaceName()));
+
+    EXPECT_EQ(rn.scopes().count(), 0);
 }
 
 
@@ -115,14 +126,17 @@ TEST(RefName, ScopeBranch) {
     EXPECT_FALSE(rn.isPeculiar());
     EXPECT_FALSE(rn.isStage());
     EXPECT_FALSE(rn.isCustom());
-    EXPECT_STREQ(qPrintable(rn.name()), "cool");
-    EXPECT_STREQ(qPrintable(rn.branchName()), "feature/cool");
+
+    EXPECT_STREQ("cool", qPrintable(rn.name()));
+    EXPECT_STREQ("feature/cool", qPrintable(rn.branchName()));
+    EXPECT_STREQ("feature/cool", qPrintable(rn.localName()));
+    EXPECT_STREQ("", qPrintable(rn.namespaceName()));
+    EXPECT_STREQ("", qPrintable(rn.remote()));
+
     EXPECT_EQ(rn.namespaces().count(), 0);
     ASSERT_EQ(rn.scopes().count(), 1);
-    EXPECT_STREQ(qPrintable(rn.scopes()[0]), "feature");
-    EXPECT_STREQ(qPrintable(rn.scopeName()), "feature");
-    EXPECT_STREQ(qPrintable(rn.namespaceName()), "");
-    EXPECT_STREQ("", qPrintable(rn.remote()));
+    EXPECT_STREQ("feature", qPrintable(rn.scopes()[0]));
+    EXPECT_STREQ("feature", qPrintable(rn.scopeName()));
 }
 
 TEST(RefName, NestedScopeBranch) {
@@ -141,15 +155,18 @@ TEST(RefName, NestedScopeBranch) {
     EXPECT_FALSE(rn.isPeculiar());
     EXPECT_FALSE(rn.isStage());
     EXPECT_FALSE(rn.isCustom());
-    EXPECT_STREQ(qPrintable(rn.name()), "cool");
-    EXPECT_STREQ(qPrintable(rn.branchName()), "feature/new/cool");
-    ASSERT_EQ(2, rn.scopes().count());
-    EXPECT_STREQ(qPrintable(rn.scopes()[0]), "feature");
-    EXPECT_STREQ(qPrintable(rn.scopes()[1]), "new");
-    EXPECT_STREQ(qPrintable(rn.scopeName()), "feature/new");
-    EXPECT_EQ(0, rn.namespaces().count());
-    EXPECT_STREQ(qPrintable(rn.namespaceName()), "");
+
+    EXPECT_STREQ("cool", qPrintable(rn.name()));
+    EXPECT_STREQ("feature/new/cool", qPrintable(rn.branchName()));
+    EXPECT_STREQ("feature/new/cool", qPrintable(rn.localName()));
+    EXPECT_STREQ("", qPrintable(rn.namespaceName()));
     EXPECT_STREQ("", qPrintable(rn.remote()));
+
+    ASSERT_EQ(2, rn.scopes().count());
+    EXPECT_STREQ("feature", qPrintable(rn.scopes()[0]));
+    EXPECT_STREQ("new", qPrintable(rn.scopes()[1]));
+    EXPECT_STREQ("feature/new", qPrintable(rn.scopeName()));
+    EXPECT_EQ(0, rn.namespaces().count());
 }
 
 TEST(RefName, ScopedTag) {
@@ -168,15 +185,18 @@ TEST(RefName, ScopedTag) {
     EXPECT_FALSE(rn.isPeculiar());
     EXPECT_FALSE(rn.isStage());
     EXPECT_FALSE(rn.isCustom());
-    EXPECT_STREQ(qPrintable(rn.name()), "cool");
-    EXPECT_STREQ(qPrintable(rn.branchName()), "");
-    EXPECT_STREQ(qPrintable(rn.tagName()), "feature/cool");
+
+    EXPECT_STREQ("cool", qPrintable(rn.name()));
+    EXPECT_STREQ("", qPrintable(rn.branchName()));
+    EXPECT_STREQ("feature/cool", qPrintable(rn.tagName()));
+    EXPECT_STREQ("feature/cool", qPrintable(rn.localName()));
+    EXPECT_STREQ("", qPrintable(rn.remote()));
+
     EXPECT_EQ(rn.namespaces().count(), 0);
     ASSERT_EQ(rn.scopes().count(), 1);
-    EXPECT_STREQ(qPrintable(rn.scopes()[0]), "feature");
-    EXPECT_STREQ(qPrintable(rn.scopeName()), "feature");
-    EXPECT_STREQ(qPrintable(rn.namespaceName()), "");
-    EXPECT_STREQ("", qPrintable(rn.remote()));
+    EXPECT_STREQ("feature", qPrintable(rn.scopes()[0]));
+    EXPECT_STREQ("feature", qPrintable(rn.scopeName()));
+    EXPECT_STREQ("", qPrintable(rn.namespaceName()));
 }
 
 TEST(RefName, NestedScopedTag) {
@@ -195,16 +215,19 @@ TEST(RefName, NestedScopedTag) {
     EXPECT_FALSE(rn.isPeculiar());
     EXPECT_FALSE(rn.isStage());
     EXPECT_FALSE(rn.isCustom());
-    EXPECT_STREQ(qPrintable(rn.name()), "cool");
-    EXPECT_STREQ(qPrintable(rn.branchName()), "");
-    EXPECT_STREQ(qPrintable(rn.tagName()), "feature/new/cool");
-    ASSERT_EQ(2, rn.scopes().count());
-    EXPECT_STREQ(qPrintable(rn.scopes()[0]), "feature");
-    EXPECT_STREQ(qPrintable(rn.scopes()[1]), "new");
-    EXPECT_STREQ(qPrintable(rn.scopeName()), "feature/new");
-    EXPECT_STREQ(qPrintable(rn.namespaceName()), "");
-    EXPECT_EQ(0, rn.namespaces().count());
+
+    EXPECT_STREQ("cool", qPrintable(rn.name()));
+    EXPECT_STREQ("", qPrintable(rn.branchName()));
+    EXPECT_STREQ("feature/new/cool", qPrintable(rn.tagName()));
+    EXPECT_STREQ("feature/new/cool", qPrintable(rn.localName()));
     EXPECT_STREQ("", qPrintable(rn.remote()));
+
+    ASSERT_EQ(2, rn.scopes().count());
+    EXPECT_STREQ("feature", qPrintable(rn.scopes()[0]));
+    EXPECT_STREQ("new", qPrintable(rn.scopes()[1]));
+    EXPECT_STREQ("feature/new", qPrintable(rn.scopeName()));
+    EXPECT_STREQ("", qPrintable(rn.namespaceName()));
+    EXPECT_EQ(0, rn.namespaces().count());
 }
 
 TEST(RefName, Specials_Stage) {
@@ -224,14 +247,17 @@ TEST(RefName, Specials_Stage) {
     EXPECT_FALSE(rn.isPeculiar());
     EXPECT_TRUE (rn.isStage());
     EXPECT_FALSE(rn.isCustom());
-    EXPECT_STREQ(qPrintable(rn.name()), "");
-    EXPECT_STREQ(qPrintable(rn.branchName()), "");
-    EXPECT_STREQ(qPrintable(rn.tagName()), "");
-    EXPECT_STREQ(qPrintable(rn.scopeName()), "");
-    EXPECT_STREQ(qPrintable(rn.namespaceName()), "");
+
+    EXPECT_STREQ("", qPrintable(rn.name()));
+    EXPECT_STREQ("", qPrintable(rn.branchName()));
+    EXPECT_STREQ("", qPrintable(rn.tagName()));
+    EXPECT_STREQ("", qPrintable(rn.localName()));
+    EXPECT_STREQ("", qPrintable(rn.scopeName()));
+    EXPECT_STREQ("", qPrintable(rn.namespaceName()));
+    EXPECT_STREQ("", qPrintable(rn.remote()));
+
     ASSERT_EQ(0, rn.scopes().count());
     EXPECT_EQ(0, rn.namespaces().count());
-    EXPECT_STREQ("", qPrintable(rn.remote()));
 }
 
 TEST(RefName, Specials_Head) {
@@ -251,14 +277,17 @@ TEST(RefName, Specials_Head) {
     EXPECT_FALSE(rn.isPeculiar());
     EXPECT_FALSE(rn.isStage());
     EXPECT_FALSE(rn.isCustom());
-    EXPECT_STREQ(qPrintable(rn.name()), "");
-    EXPECT_STREQ(qPrintable(rn.branchName()), "");
-    EXPECT_STREQ(qPrintable(rn.tagName()), "");
-    EXPECT_STREQ(qPrintable(rn.scopeName()), "");
-    EXPECT_STREQ(qPrintable(rn.namespaceName()), "");
+
+    EXPECT_STREQ("", qPrintable(rn.name()));
+    EXPECT_STREQ("", qPrintable(rn.branchName()));
+    EXPECT_STREQ("", qPrintable(rn.tagName()));
+    EXPECT_STREQ("", qPrintable(rn.localName()));
+    EXPECT_STREQ("", qPrintable(rn.scopeName()));
+    EXPECT_STREQ("", qPrintable(rn.namespaceName()));
+    EXPECT_STREQ("", qPrintable(rn.remote()));
+
     ASSERT_EQ(0, rn.scopes().count());
     EXPECT_EQ(0, rn.namespaces().count());
-    EXPECT_STREQ("", qPrintable(rn.remote()));
 }
 
 TEST(RefName, Specials_MergeHead) {
@@ -278,14 +307,17 @@ TEST(RefName, Specials_MergeHead) {
     EXPECT_FALSE(rn.isPeculiar());
     EXPECT_FALSE(rn.isStage());
     EXPECT_FALSE(rn.isCustom());
-    EXPECT_STREQ(qPrintable(rn.name()), "");
-    EXPECT_STREQ(qPrintable(rn.branchName()), "");
-    EXPECT_STREQ(qPrintable(rn.tagName()), "");
-    EXPECT_STREQ(qPrintable(rn.scopeName()), "");
-    EXPECT_STREQ(qPrintable(rn.namespaceName()), "");
+
+    EXPECT_STREQ("", qPrintable(rn.name()));
+    EXPECT_STREQ("", qPrintable(rn.branchName()));
+    EXPECT_STREQ("", qPrintable(rn.tagName()));
+    EXPECT_STREQ("", qPrintable(rn.localName()));
+    EXPECT_STREQ("", qPrintable(rn.scopeName()));
+    EXPECT_STREQ("", qPrintable(rn.namespaceName()));
+    EXPECT_STREQ("", qPrintable(rn.remote()));
+
     ASSERT_EQ(0, rn.scopes().count());
     EXPECT_EQ(0, rn.namespaces().count());
-    EXPECT_STREQ("", qPrintable(rn.remote()));
 }
 
 TEST(RefName, Specials_CommitNotes) {
@@ -305,14 +337,17 @@ TEST(RefName, Specials_CommitNotes) {
     EXPECT_FALSE(rn.isPeculiar());
     EXPECT_FALSE(rn.isStage());
     EXPECT_FALSE(rn.isCustom());
-    EXPECT_STREQ(qPrintable(rn.name()), "");
-    EXPECT_STREQ(qPrintable(rn.branchName()), "");
-    EXPECT_STREQ(qPrintable(rn.tagName()), "");
-    EXPECT_STREQ(qPrintable(rn.scopeName()), "");
-    EXPECT_STREQ(qPrintable(rn.namespaceName()), "");
+
+    EXPECT_STREQ("", qPrintable(rn.name()));
+    EXPECT_STREQ("", qPrintable(rn.branchName()));
+    EXPECT_STREQ("", qPrintable(rn.tagName()));
+    EXPECT_STREQ("", qPrintable(rn.localName()));
+    EXPECT_STREQ("", qPrintable(rn.scopeName()));
+    EXPECT_STREQ("", qPrintable(rn.namespaceName()));
+    EXPECT_STREQ("", qPrintable(rn.remote()));
+
     ASSERT_EQ(0, rn.scopes().count());
     EXPECT_EQ(0, rn.namespaces().count());
-    EXPECT_STREQ("", qPrintable(rn.remote()));
 }
 
 
@@ -333,14 +368,17 @@ TEST(RefName, Peculiars) {
     EXPECT_TRUE (rn.isPeculiar());
     EXPECT_FALSE(rn.isStage());
     EXPECT_FALSE(rn.isCustom());
-    EXPECT_STREQ(qPrintable(rn.name()), "");
-    EXPECT_STREQ(qPrintable(rn.branchName()), "");
-    EXPECT_STREQ(qPrintable(rn.tagName()), "");
-    EXPECT_STREQ(qPrintable(rn.scopeName()), "");
-    EXPECT_STREQ(qPrintable(rn.namespaceName()), "");
+
+    EXPECT_STREQ("", qPrintable(rn.name()));
+    EXPECT_STREQ("", qPrintable(rn.branchName()));
+    EXPECT_STREQ("", qPrintable(rn.tagName()));
+    EXPECT_STREQ("", qPrintable(rn.localName()));
+    EXPECT_STREQ("", qPrintable(rn.scopeName()));
+    EXPECT_STREQ("", qPrintable(rn.namespaceName()));
+    EXPECT_STREQ("", qPrintable(rn.remote()));
+
     ASSERT_EQ(0, rn.scopes().count());
     EXPECT_EQ(0, rn.namespaces().count());
-    EXPECT_STREQ("", qPrintable(rn.remote()));
 }
 
 TEST(RefName, RemoteBranch) {
@@ -360,15 +398,18 @@ TEST(RefName, RemoteBranch) {
     EXPECT_FALSE(rn.isPeculiar());
     EXPECT_FALSE(rn.isStage());
     EXPECT_FALSE(rn.isCustom());
-    EXPECT_STREQ(qPrintable(rn.name()), "branch");
-    EXPECT_STREQ(qPrintable(rn.branchName()), "new/branch");
-    EXPECT_STREQ(qPrintable(rn.tagName()), "");
-    EXPECT_STREQ(qPrintable(rn.scopeName()), "new");
-    EXPECT_STREQ(qPrintable(rn.namespaceName()), "");
-    ASSERT_EQ(1, rn.scopes().count());
-    EXPECT_STREQ(qPrintable(rn.scopes()[0]), "new");
-    EXPECT_EQ(0, rn.namespaces().count());
+
+    EXPECT_STREQ("branch", qPrintable(rn.name()));
+    EXPECT_STREQ("new/branch", qPrintable(rn.branchName()));
+    EXPECT_STREQ("", qPrintable(rn.tagName()));
+    EXPECT_STREQ("new", qPrintable(rn.scopeName()));
+    EXPECT_STREQ("", qPrintable(rn.namespaceName()));
     EXPECT_STREQ("home", qPrintable(rn.remote()));
+
+    ASSERT_EQ(1, rn.scopes().count());
+    EXPECT_STREQ("new", qPrintable(rn.scopes()[0]));
+
+    EXPECT_EQ(0, rn.namespaces().count());
 }
 
 TEST(RefName, CustomRule) {
@@ -393,14 +434,17 @@ TEST(RefName, CustomRule) {
     EXPECT_FALSE(rn.isStage());
     EXPECT_TRUE (rn.isCustom());
     EXPECT_TRUE (rn.matchesCustomRule(id));
-    EXPECT_STREQ(qPrintable(rn.name()), "");
-    EXPECT_STREQ(qPrintable(rn.branchName()), "");
-    EXPECT_STREQ(qPrintable(rn.tagName()), "");
-    EXPECT_STREQ(qPrintable(rn.scopeName()), "");
-    EXPECT_STREQ(qPrintable(rn.namespaceName()), "");
+
+    EXPECT_STREQ("", qPrintable(rn.name()));
+    EXPECT_STREQ("", qPrintable(rn.branchName()));
+    EXPECT_STREQ("", qPrintable(rn.tagName()));
+    EXPECT_STREQ("", qPrintable(rn.localName()));
+    EXPECT_STREQ("", qPrintable(rn.scopeName()));
+    EXPECT_STREQ("", qPrintable(rn.namespaceName()));
+    EXPECT_STREQ("", qPrintable(rn.remote()));
+
     ASSERT_EQ(0, rn.scopes().count());
     EXPECT_EQ(0, rn.namespaces().count());
-    EXPECT_STREQ("", qPrintable(rn.remote()));
 
     rn = Git::RefName(QLatin1String(szNeg));
     EXPECT_TRUE (rn.isValid());

@@ -20,6 +20,7 @@
 #include "ObjectId.hpp"
 #include "Repository.hpp"
 #include "Reference.hpp"
+#include "RefName.hpp"
 
 namespace Git
 {
@@ -105,6 +106,11 @@ namespace Git
         return d;
     }
 
+    /**
+     * @brief       This reference's name
+     *
+     * @return      Returns the reference name (fully qualified)
+     */
     QString Reference::name() const
     {
         if( !isValid() )
@@ -114,6 +120,17 @@ namespace Git
         }
 
         return QString::fromUtf8( git_reference_name( d->mRef ) );
+    }
+
+    /**
+     * @brief       Reference analyzer for this reference
+     *
+     * @return      A new RefName object for this reference's name.
+     *
+     */
+    RefName Reference::nameAnalyzer() const
+    {
+        return RefName(name());
     }
 
     /**

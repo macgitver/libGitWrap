@@ -123,13 +123,24 @@ namespace Git
      *
      * -   Additional stuff
      *
-     *     -   If isTag() returns `true`, then tagName() will return scopeName() + '/' + name() if
-     *         isScoped() is `true` and will simply return name() if isScoped() is `false`. It will
-     *         return an empty string if isTag() returns `false`.
+     *     -   fullName() will always return the fully qualified reference name as it was set in
+     *         the constructor.
      *
-     *     -   If isBranch() returns `true`, then branchName() will return
-     *         scopeName() + '/' + name() if isScoped() is `true` and will simply return name() if
-     *         isScoped() is `false`. It will return an empty string if isBranch() returns `false`.
+     *     -   If either isBranch() or isTag() returns `true`, localName() will return name() if
+     *         isScoped() returns `false` and scopeName() + '/' + name() otherwise.
+     *
+     *     -   scopePrefix() will return the beginning of the fully qualified reference name up to
+     *         the point where the localName() starts. If scopeName() is empty, scopePrefix() will
+     *         return the fully qualified reference name.
+     *
+     *         _Note_ that this is the only method that might return a trailing slash (`/`).
+     *         scopePrefix() + localName() is always equal to the fullName().
+     *
+     *     -   If isTag() returns `true`, then tagName() will return localName(). It will return an
+     *         empty string if isTag() returns `false`.
+     *
+     *     -   If isBranch() returns `true`, then branchName() will return localName(). It will
+     *         return an empty string if isBranch() returns `false`.
      *
      * Examples:
      *
@@ -140,6 +151,8 @@ namespace Git
      *     -   `scopeName() == ""`
      *     -   `namespaceName() == ""`
      *     -   `branchName() == "master"`
+     *     -   `localName() == "master"`
+     *     -   `scopePrefix() == "refs/heads/"`
      *
      * -   `refs/remotes/origin/feature/cool` will result in:
      *
@@ -150,6 +163,8 @@ namespace Git
      *     -   `scopeName() == "feature"`
      *     -   `namespaceName() == ""`
      *     -   `branchName() == "feature/cool"`
+     *     -   `localName() == "feature/cool"`
+     *     -   `scopePrefix() == "refs/remotes/origin/"`
      *
      * -   `refs/namespaces/foo/refs/namespaces/bar/refs/tags/releases/1.0` will result in:
      *
@@ -160,6 +175,16 @@ namespace Git
      *     -   `scopeName() == "releases"`
      *     -   `namespaceName() == "foo/bar"`
      *     -   `tagName() == "releases/1.0"`
+     *     -   `localName() == "releases/1.0"`
+     *     -   `scopePrefix() == "refs/namespaces/foo/refs/namespaces/bar/refs/tags/"`
+     *
+     * -   `HEAD` will result in:
+     *
+     *     -   `isSpecial() == true`
+     *     -   `isHead() == true`
+     *     -   `scopeName() == ""`
+     *     -   `localName() == ""`
+     *     -   `scopePrefix() == "HEAD"`
      */
 
     namespace Internal
@@ -471,14 +496,36 @@ namespace Git
         return d ? d->ensureAnalyzed(), d->name : QString();
     }
 
+    QString RefName::fullName()
+    {
+        return d ? d->fqrn : QString();
+    }
+
+    QString RefName::localName()
+    {
+        if (isBranch() || isTag()) {
+            return isScoped() ? scopeName() % QChar(L'/') % name() : name();
+        }
+        return QString();
+    }
+
+    QString RefName::scopePrefix()
+    {
+        if (d) {
+            int l = scopeName().length();
+            return d->fqrn.left(d->fqrn.count() - l);
+        }
+        return QString();
+    }
+
     QString RefName::branchName()
     {
-        return isBranch() ? (isScoped() ? scopeName() % QChar(L'/') % name() : name()) : QString();
+        return isBranch() ? localName() : QString();
     }
 
     QString RefName::tagName()
     {
-        return isTag() ? (isScoped() ? scopeName() % QChar(L'/') % name() : name()) : QString();
+        return isTag() ? localName() : QString();
     }
 
     QString RefName::namespaceName()
@@ -491,7 +538,16 @@ namespace Git
         return scopes().join(QChar(L'/'));
     }
 
-
+    /**
+     * @brief       Did the name match a registered custom expression
+     *
+     * @param[in]   id      The id of the expression as returned by registerExpression().
+     *
+     * @return      `true` or `false` telling whether the given expression matched or not.
+     *
+     * Note that all custom expressions are matched at once.
+     *
+     */
     bool RefName::matchesCustomRule(int id)
     {
         if (!d) {
@@ -503,13 +559,34 @@ namespace Git
         return d->customMatches.contains(id);
     }
 
-    int RefName::registerExpression(void* data, const QRegExp& regExp)
+    /**
+     * @brief       Register a custom expression to match against
+     *
+     * @param[in]   payload A user defined value that is not used internally but yet associated with
+     *                      the expression
+     *
+     * @param[in]   regExp  A regular expression used to match against the full qualified reference
+     *                      name. If it matches, further processing is stopped and the match
+     *                      recorded. In this case, isCustom() will return `true` and
+     *                      matchesCustomRule() with the return value of this method will return
+     *                      `true`, too.
+     *
+     * @return      A unique id that can be used to refer to this registered expression.
+     *
+     */
+    int RefName::registerExpression(void* payload, const QRegExp& regExp)
     {
-        Internal::CustomMatches cm(regExp, Internal::RefNameMatches::self().nextId++, data);
+        Internal::CustomMatches cm(regExp, Internal::RefNameMatches::self().nextId++, payload);
         Internal::RefNameMatches::self().customMatches.append(cm);
         return cm.id;
     }
 
+    /**
+     * @brief       Unregister a custom expression
+     *
+     * @param[in]   id      The id of the expression as returned by registerExpression().
+     *
+     */
     void RefName::unregisterExpression(int id)
     {
         for (int i = 0; i < Internal::RefNameMatches::self().customMatches.count(); i++) {
@@ -520,6 +597,15 @@ namespace Git
         }
     }
 
+    /**
+     * @brief       Find data for a registered custom expression
+     *
+     * @param[in]   id      The id of the expression as returned by registerExpression().
+     *
+     * @return      Either `NULL` if @a id is not a valid expression or the payload that was
+     *              registered with the expression.
+     *
+     */
     void* RefName::expressionData(int id)
     {
         for (int i = 0; i < Internal::RefNameMatches::self().customMatches.count(); i++) {

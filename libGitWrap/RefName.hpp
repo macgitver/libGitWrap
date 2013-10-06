@@ -70,6 +70,9 @@ namespace Git
         QString remote();
         QString scopeName();
         QString name();
+        QString fullName();
+        QString localName();
+        QString scopePrefix();
 
         QString tagName();
         QString branchName();
