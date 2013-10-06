@@ -123,13 +123,24 @@ namespace Git
      *
      * -   Additional stuff
      *
-     *     -   If isTag() returns `true`, then tagName() will return scopeName() + '/' + name() if
-     *         isScoped() is `true` and will simply return name() if isScoped() is `false`. It will
-     *         return an empty string if isTag() returns `false`.
+     *     -   fullName() will always return the fully qualified reference name as it was set in
+     *         the constructor.
      *
-     *     -   If isBranch() returns `true`, then branchName() will return
-     *         scopeName() + '/' + name() if isScoped() is `true` and will simply return name() if
-     *         isScoped() is `false`. It will return an empty string if isBranch() returns `false`.
+     *     -   If either isBranch() or isTag() returns `true`, localName() will return name() if
+     *         isScoped() returns `false` and scopeName() + '/' + name() otherwise.
+     *
+     *     -   scopePrefix() will return the beginning of the fully qualified reference name up to
+     *         the point where the localName() starts. If scopeName() is empty, scopePrefix() will
+     *         return the fully qualified reference name.
+     *
+     *         _Note_ that this is the only method that might return a trailing slash (`/`).
+     *         scopePrefix() + localName() is always equal to the fullName().
+     *
+     *     -   If isTag() returns `true`, then tagName() will return localName(). It will return an
+     *         empty string if isTag() returns `false`.
+     *
+     *     -   If isBranch() returns `true`, then branchName() will return localName(). It will
+     *         return an empty string if isBranch() returns `false`.
      *
      * Examples:
      *
@@ -140,6 +151,8 @@ namespace Git
      *     -   `scopeName() == ""`
      *     -   `namespaceName() == ""`
      *     -   `branchName() == "master"`
+     *     -   `localName() == "master"`
+     *     -   `scopePrefix() == "refs/heads/"`
      *
      * -   `refs/remotes/origin/feature/cool` will result in:
      *
@@ -150,6 +163,8 @@ namespace Git
      *     -   `scopeName() == "feature"`
      *     -   `namespaceName() == ""`
      *     -   `branchName() == "feature/cool"`
+     *     -   `localName() == "feature/cool"`
+     *     -   `scopePrefix() == "refs/remotes/origin/"`
      *
      * -   `refs/namespaces/foo/refs/namespaces/bar/refs/tags/releases/1.0` will result in:
      *
@@ -160,6 +175,16 @@ namespace Git
      *     -   `scopeName() == "releases"`
      *     -   `namespaceName() == "foo/bar"`
      *     -   `tagName() == "releases/1.0"`
+     *     -   `localName() == "releases/1.0"`
+     *     -   `scopePrefix() == "refs/namespaces/foo/refs/namespaces/bar/refs/tags/"`
+     *
+     * -   `HEAD` will result in:
+     *
+     *     -   `isSpecial() == true`
+     *     -   `isHead() == true`
+     *     -   `scopeName() == ""`
+     *     -   `localName() == ""`
+     *     -   `scopePrefix() == "HEAD"`
      */
 
     namespace Internal
