@@ -495,12 +495,12 @@ namespace Git
 
     QString RefName::branchName()
     {
-        return isBranch() ? (isScoped() ? scopeName() % QChar(L'/') % name() : name()) : QString();
+        return isBranch() ? localName() : QString();
     }
 
     QString RefName::tagName()
     {
-        return isTag() ? (isScoped() ? scopeName() % QChar(L'/') % name() : name()) : QString();
+        return isTag() ? localName() : QString();
     }
 
     QString RefName::namespaceName()
