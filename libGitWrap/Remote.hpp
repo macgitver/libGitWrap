@@ -38,6 +38,9 @@ namespace Git
     class GITWRAP_API Remote
     {
     public:
+        typedef RemoteList List;
+
+    public:
         Remote();
         Remote( Internal::RemotePrivate* _d );
         Remote( const Remote& other );

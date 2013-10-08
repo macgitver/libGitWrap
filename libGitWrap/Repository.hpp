@@ -18,6 +18,7 @@
 #define GIT_REPOSITORY_H
 
 #include "Submodule.hpp"
+#include "Remote.hpp"
 
 namespace Git
 {
@@ -71,9 +72,11 @@ namespace Git
 
         QStringList allReferenceNames( Result& result );
         ReferenceList allReferences( Result& result );
+
         QStringList allBranchNames( Result& result );
         QStringList branchNames( Result& result, bool local, bool remote );
         QString currentBranch( Result& result );
+
         QStringList allTagNames( Result& result );
 
         ResolvedRefs allResolvedRefs( Result& result );
@@ -108,7 +111,8 @@ namespace Git
 
         RevisionWalker newWalker( Result& result );
 
-        QStringList allRemotes( Result& result ) const;
+        QStringList allRemoteNames( Result& result ) const;
+        Remote::List allRemotes(Result& result) const;
         Remote remote( Result& result, const QString& remoteName ) const;
         Remote createRemote( Result& result, const QString& remoteName, const QString& url,
                              const QString& fetchSpec );

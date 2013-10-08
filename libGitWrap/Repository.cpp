@@ -859,7 +859,36 @@ namespace Git
         return ignore;
     }
 
-    QStringList Repository::allRemotes( Result& result ) const
+    Remote::List Repository::allRemotes(Result& result) const
+    {
+        if (!result) {
+            return Remote::List();
+        }
+
+        if (!d) {
+            result.setInvalidObject();
+            return Remote::List();
+        }
+
+        git_strarray arr;
+        result = git_remote_list( &arr, d->mRepo );
+        if (!result) {
+            return Remote::List();
+        }
+
+        Remote::List remotes;
+        for (int i = 0; i < arr.count; i++) {
+            git_remote* remote = NULL;
+            result = git_remote_load(&remote, d->mRepo, arr.strings[i]);
+            if (!result) {
+                return Remote::List();
+            }
+        }
+
+        return remotes;
+    }
+
+    QStringList Repository::allRemoteNames( Result& result ) const
     {
         if( !result )
         {

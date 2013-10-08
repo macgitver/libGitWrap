@@ -117,6 +117,7 @@ namespace Git
     typedef QVector< ChangeListEntry >  ChangeList;
     typedef QVector< ObjectId >         ObjectIdList;
     typedef QVector< Reference >        ReferenceList;
+    typedef QVector< Remote >           RemoteList;
     typedef QVector< Submodule >        SubmoduleList;
     typedef QVector< ObjectCommit >     ObjectCommitList;
 
