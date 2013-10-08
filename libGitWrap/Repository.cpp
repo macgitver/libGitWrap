@@ -877,7 +877,7 @@ namespace Git
         }
 
         Remote::List remotes;
-        for (int i = 0; i < arr.count; i++) {
+        for (size_t i = 0; i < arr.count; i++) {
             git_remote* remote = NULL;
             result = git_remote_load(&remote, d->mRepo, arr.strings[i]);
             if (!result) {
