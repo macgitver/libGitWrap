@@ -859,6 +859,14 @@ namespace Git
         return ignore;
     }
 
+    /**
+     * @brief           Get a list of all remotes
+     *
+     * @param[in,out]   result  A Result object; see @ref GitWrapErrorHandling
+     *
+     * @return          A list of Git::Remote objects containing all remotes of this repository.
+     *
+     */
     Remote::List Repository::allRemotes(Result& result) const
     {
         if (!result) {
@@ -888,6 +896,14 @@ namespace Git
         return remotes;
     }
 
+    /**
+     * @brief           Get a list of all remotes names
+     *
+     * @param[in,out]   result  A Result object; see @ref GitWrapErrorHandling
+     *
+     * @return          A QStringList containing all names of the remotes of this repository.
+     *
+     */
     QStringList Repository::allRemoteNames( Result& result ) const
     {
         if( !result )
@@ -911,6 +927,17 @@ namespace Git
         return Internal::slFromStrArray( &arr );
     }
 
+    /**
+     * @brief           Find a remote by its name
+     *
+     * @param[in,out]   result  A Result object; see @ref GitWrapErrorHandling
+     *
+     * @param[in]       remoteName  The name of the remote to find.
+     *
+     * @return          The Git::Remote that was found or an invalid Git::Remote object in case of
+     *                  any error.
+     *
+     */
     Remote Repository::remote(Result& result, const QString& remoteName) const
     {
         if( !result )
@@ -936,7 +963,7 @@ namespace Git
     }
 
     Remote Repository::createRemote(Result& result, const QString& remoteName, const QString& url,
-                                     const QString& fetchSpec)
+                                    const QString& fetchSpec)
     {
         if( !result )
         {
