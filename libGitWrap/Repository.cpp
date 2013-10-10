@@ -891,6 +891,9 @@ namespace Git
             if (!result) {
                 return Remote::List();
             }
+            Remote rm = new Internal::RemotePrivate(const_cast< Internal::RepositoryPrivate* >(*d),
+                                                    remote);
+            remotes.append(rm);
         }
 
         return remotes;
