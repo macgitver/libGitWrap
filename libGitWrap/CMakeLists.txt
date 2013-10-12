@@ -27,6 +27,7 @@ ENDMACRO()
 
 IF( NOT WIN32 )
     FIND_PACKAGE( Threads )
+    GCC_ADD_C_FLAG(-Wno-implicit-function-declaration)
 ENDIF()
 
 INCLUDE_DIRECTORIES(
