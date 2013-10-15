@@ -46,6 +46,7 @@ TEST(RefName, Analyze) {
     EXPECT_STREQ("master", qPrintable(rn.localName()));
     EXPECT_STREQ("", qPrintable(rn.scopeName()));
     EXPECT_STREQ("", qPrintable(rn.remote()));
+    EXPECT_STREQ("master", qPrintable(rn.shorthand()));
 }
 
 TEST(RefName, Namespaces) {
@@ -70,6 +71,7 @@ TEST(RefName, Namespaces) {
     EXPECT_STREQ("master", qPrintable(rn.localName()));
     EXPECT_STREQ("", qPrintable(rn.scopeName()));
     EXPECT_STREQ("", qPrintable(rn.remote()));
+    EXPECT_STREQ("", qPrintable(rn.shorthand()));
 
     ASSERT_EQ   (1, rn.namespaces().count());
     EXPECT_STREQ("foo", qPrintable(rn.namespaces()[0]));
@@ -100,6 +102,7 @@ TEST(RefName, NestedNamespaces) {
     EXPECT_STREQ("master", qPrintable(rn.localName()));
     EXPECT_STREQ("", qPrintable(rn.scopeName()));
     EXPECT_STREQ("", qPrintable(rn.remote()));
+    EXPECT_STREQ("", qPrintable(rn.shorthand()));
 
     ASSERT_EQ(rn.namespaces().count(), 2);
     EXPECT_STREQ("bar", qPrintable(rn.namespaces()[0]));
@@ -132,6 +135,7 @@ TEST(RefName, ScopeBranch) {
     EXPECT_STREQ("feature/cool", qPrintable(rn.localName()));
     EXPECT_STREQ("", qPrintable(rn.namespaceName()));
     EXPECT_STREQ("", qPrintable(rn.remote()));
+    EXPECT_STREQ("feature/cool", qPrintable(rn.shorthand()));
 
     EXPECT_EQ(rn.namespaces().count(), 0);
     ASSERT_EQ(rn.scopes().count(), 1);
@@ -161,6 +165,7 @@ TEST(RefName, NestedScopeBranch) {
     EXPECT_STREQ("feature/new/cool", qPrintable(rn.localName()));
     EXPECT_STREQ("", qPrintable(rn.namespaceName()));
     EXPECT_STREQ("", qPrintable(rn.remote()));
+    EXPECT_STREQ("feature/new/cool", qPrintable(rn.shorthand()));
 
     ASSERT_EQ(2, rn.scopes().count());
     EXPECT_STREQ("feature", qPrintable(rn.scopes()[0]));
@@ -191,6 +196,7 @@ TEST(RefName, ScopedTag) {
     EXPECT_STREQ("feature/cool", qPrintable(rn.tagName()));
     EXPECT_STREQ("feature/cool", qPrintable(rn.localName()));
     EXPECT_STREQ("", qPrintable(rn.remote()));
+    EXPECT_STREQ("feature/cool", qPrintable(rn.shorthand()));
 
     EXPECT_EQ(rn.namespaces().count(), 0);
     ASSERT_EQ(rn.scopes().count(), 1);
@@ -221,6 +227,7 @@ TEST(RefName, NestedScopedTag) {
     EXPECT_STREQ("feature/new/cool", qPrintable(rn.tagName()));
     EXPECT_STREQ("feature/new/cool", qPrintable(rn.localName()));
     EXPECT_STREQ("", qPrintable(rn.remote()));
+    EXPECT_STREQ("feature/new/cool", qPrintable(rn.shorthand()));
 
     ASSERT_EQ(2, rn.scopes().count());
     EXPECT_STREQ("feature", qPrintable(rn.scopes()[0]));
@@ -255,6 +262,7 @@ TEST(RefName, Specials_Stage) {
     EXPECT_STREQ("", qPrintable(rn.scopeName()));
     EXPECT_STREQ("", qPrintable(rn.namespaceName()));
     EXPECT_STREQ("", qPrintable(rn.remote()));
+    EXPECT_STREQ("", qPrintable(rn.shorthand()));
 
     ASSERT_EQ(0, rn.scopes().count());
     EXPECT_EQ(0, rn.namespaces().count());
@@ -285,6 +293,7 @@ TEST(RefName, Specials_Head) {
     EXPECT_STREQ("", qPrintable(rn.scopeName()));
     EXPECT_STREQ("", qPrintable(rn.namespaceName()));
     EXPECT_STREQ("", qPrintable(rn.remote()));
+    EXPECT_STREQ("HEAD", qPrintable(rn.shorthand()));   // special case, shorthad() will give `HEAD`
 
     ASSERT_EQ(0, rn.scopes().count());
     EXPECT_EQ(0, rn.namespaces().count());
@@ -315,6 +324,7 @@ TEST(RefName, Specials_MergeHead) {
     EXPECT_STREQ("", qPrintable(rn.scopeName()));
     EXPECT_STREQ("", qPrintable(rn.namespaceName()));
     EXPECT_STREQ("", qPrintable(rn.remote()));
+    EXPECT_STREQ("", qPrintable(rn.shorthand()));
 
     ASSERT_EQ(0, rn.scopes().count());
     EXPECT_EQ(0, rn.namespaces().count());
@@ -345,6 +355,7 @@ TEST(RefName, Specials_CommitNotes) {
     EXPECT_STREQ("", qPrintable(rn.scopeName()));
     EXPECT_STREQ("", qPrintable(rn.namespaceName()));
     EXPECT_STREQ("", qPrintable(rn.remote()));
+    EXPECT_STREQ("", qPrintable(rn.shorthand()));
 
     ASSERT_EQ(0, rn.scopes().count());
     EXPECT_EQ(0, rn.namespaces().count());
@@ -376,6 +387,7 @@ TEST(RefName, Peculiars) {
     EXPECT_STREQ("", qPrintable(rn.scopeName()));
     EXPECT_STREQ("", qPrintable(rn.namespaceName()));
     EXPECT_STREQ("", qPrintable(rn.remote()));
+    EXPECT_STREQ("", qPrintable(rn.shorthand()));
 
     ASSERT_EQ(0, rn.scopes().count());
     EXPECT_EQ(0, rn.namespaces().count());
@@ -405,6 +417,7 @@ TEST(RefName, RemoteBranch) {
     EXPECT_STREQ("new", qPrintable(rn.scopeName()));
     EXPECT_STREQ("", qPrintable(rn.namespaceName()));
     EXPECT_STREQ("home", qPrintable(rn.remote()));
+    EXPECT_STREQ("home/new/branch", qPrintable(rn.shorthand()));
 
     ASSERT_EQ(1, rn.scopes().count());
     EXPECT_STREQ("new", qPrintable(rn.scopes()[0]));
@@ -442,6 +455,7 @@ TEST(RefName, CustomRule) {
     EXPECT_STREQ("", qPrintable(rn.scopeName()));
     EXPECT_STREQ("", qPrintable(rn.namespaceName()));
     EXPECT_STREQ("", qPrintable(rn.remote()));
+    EXPECT_STREQ("", qPrintable(rn.shorthand()));
 
     ASSERT_EQ(0, rn.scopes().count());
     EXPECT_EQ(0, rn.namespaces().count());
