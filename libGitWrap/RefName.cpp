@@ -414,7 +414,9 @@ namespace Git
 
     /**
      * @brief       Is this a remote reference?
+     *
      * @return      `true`, if this is a remote reference.
+     *
      */
     bool RefName::isRemote()
     {
@@ -423,7 +425,9 @@ namespace Git
 
     /**
      * @brief       Is this a tag?
+     *
      * @return      `true`, if this is a tag
+     *
      */
     bool RefName::isTag()
     {
@@ -432,7 +436,9 @@ namespace Git
 
     /**
      * @brief       Is this a branch?
+     *
      * @return      `true`, if this is a branch.
+     *
      */
     bool RefName::isBranch()
     {
@@ -504,11 +510,24 @@ namespace Git
         return d ? d->ensureAnalyzed(), d->name : QString();
     }
 
+    /**
+     * @brief       Get the full qualified reference name
+     *
+     * @return      The fully qualified reference name as set in the constructor.
+     *
+     */
     QString RefName::fullName()
     {
         return d ? d->fqrn : QString();
     }
 
+    /**
+     * @brief       Get the local name of the reference
+     *
+     * @return      If the reference is either a tag, a branch or HEAD, the scopeName() and name()
+     *              are joined via a `/` and the result is returned.
+     *
+     */
     QString RefName::localName()
     {
         if (isBranch() || isTag()) {
@@ -517,6 +536,15 @@ namespace Git
         return QString();
     }
 
+    /**
+     * @brief       Get the prefix that has to be prepended to the scopes
+     *
+     * @return      Returns the beginning part of the full qualified reference name up to the point
+     *              where the scope begins. This might include a trailing slash (`/`).
+     *
+     * If scopeName() is empty, this method returns the full qualified reference name.
+     *
+     */
     QString RefName::scopePrefix()
     {
         if (d) {
@@ -526,21 +554,52 @@ namespace Git
         return QString();
     }
 
+    /**
+     * @brief       Get the name of the branch if this reference is a branch
+     *
+     * @return      If isBranch() returns `true` then return localName() else an empty string.
+     *
+     * Works for local and remote branches and also for special references where isHead() returns
+     * `true`.
+     *
+     */
     QString RefName::branchName()
     {
         return isBranch() ? localName() : QString();
     }
 
+    /**
+     * @brief       Get the name of the tag if this reference is a tag.
+     *
+     * @return      If isTag() returns `true` then return localName() else an empty string.
+     *
+     */
     QString RefName::tagName()
     {
         return isTag() ? localName() : QString();
     }
 
+    /**
+     * @brief       Get the joined namespaces
+     *
+     * @return      a QString containing all namespaces() joined with a `/`
+     *
+     * Note that this is not a part of the reference name. A nested namespace that would return
+     * `foo/bar` from this method actually begins with a reference name like
+     * `refs/namespaces/foo/refs/namespaces/bar`.
+     *
+     */
     QString RefName::namespaceName()
     {
         return namespaces().join(QChar(L'/'));
     }
 
+    /**
+     * @brief       Get the joined scopes
+     *
+     * @return      a QString containing all scopes() joined with a `/`
+     *
+     */
     QString RefName::scopeName()
     {
         return scopes().join(QChar(L'/'));
