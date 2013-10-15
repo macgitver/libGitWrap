@@ -625,4 +625,53 @@ namespace Git
         return NULL;
     }
 
+    /**
+     * @brief       Get the 'shorthand' name for the reference
+     *
+     * A short hand name for a reference is a fully qualified reference name with the line noise
+     * removed. This works for all branches and tags, even remote ones.
+     *
+     * It also works for HEAD. The short hand name for the local current branch is `HEAD` and the
+     * short hand name for the remote `farfarawawy`'s default branch is just `farfaraway` (the FQRN
+     * would be `refs/remotes/farfaraway/HEAD`).
+     *
+     * @return      The short hand name for the reference. The short hand name contains the segments
+     *              consisting of remote() if present, all the scopes() and finally name().
+     *
+     * @see         `man git-rev-parse`
+     */
+    QString RefName::shorthand()
+    {
+        QStringList segments;
+
+        if (isNamespaced()) {
+            return QString();
+        }
+
+        if (isHead()) {
+
+            if (isRemote()) {
+                return remote();
+            }
+
+            return QLatin1String("HEAD");
+        }
+
+        if (isBranch() || isTag()) {
+
+            if (isRemote()) {
+                segments << remote();
+            }
+
+            if (isScoped()) {
+                segments << scopes();
+            }
+
+            segments << name();
+
+        }
+
+        return segments.join(QChar(L'/'));
+    }
+
 }
