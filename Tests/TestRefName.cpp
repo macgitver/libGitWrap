@@ -425,6 +425,37 @@ TEST(RefName, RemoteBranch) {
     EXPECT_EQ(0, rn.namespaces().count());
 }
 
+TEST(RefName, RemoteHead) {
+    const char* sz = "refs/remotes/home/HEAD";
+
+    Git::RefName rn = Git::RefName(QLatin1String(sz));
+    EXPECT_TRUE (rn.isValid());
+
+    EXPECT_TRUE (rn.isBranch());
+    EXPECT_TRUE (rn.isSpecial());
+    EXPECT_FALSE(rn.isTag());
+    EXPECT_FALSE(rn.isCommitNote());
+    EXPECT_TRUE (rn.isHead());
+    EXPECT_FALSE(rn.isMergeHead());
+    EXPECT_FALSE(rn.isNamespaced());
+    EXPECT_FALSE(rn.isScoped());
+    EXPECT_FALSE(rn.isPeculiar());
+    EXPECT_FALSE(rn.isStage());
+    EXPECT_FALSE(rn.isCustom());
+
+    EXPECT_STREQ("HEAD", qPrintable(rn.name()));
+    EXPECT_STREQ("HEAD", qPrintable(rn.branchName()));
+    EXPECT_STREQ("HEAD", qPrintable(rn.localName()));
+    EXPECT_STREQ("", qPrintable(rn.tagName()));
+    EXPECT_STREQ("", qPrintable(rn.scopeName()));
+    EXPECT_STREQ("", qPrintable(rn.namespaceName()));
+    EXPECT_STREQ("home", qPrintable(rn.remote()));
+    EXPECT_STREQ("home", qPrintable(rn.shorthand()));
+
+    EXPECT_EQ(0, rn.scopes().count());
+    EXPECT_EQ(0, rn.namespaces().count());
+}
+
 TEST(RefName, CustomRule) {
     const char* sz = "refs/pull/550/head";
     const char* szNeg = "refs/heads/master";
