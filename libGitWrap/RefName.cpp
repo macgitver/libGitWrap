@@ -48,6 +48,9 @@ namespace Git
      *     isCommitNote(). With the exception of `HEAD` unless it is the fully qualified reference
      *     name, further detection stops if we detect a special reference.
      *
+     *     For consistency reasons, if isHead() returns `true`, isBranch() will also return `true`
+     *     and name() will return `HEAD`.
+     *
      * -   _Custom_
      *
      *     Any regular expression can be registered with the name matcher using the
@@ -182,9 +185,12 @@ namespace Git
      *
      *     -   `isSpecial() == true`
      *     -   `isHead() == true`
+     *     -   `isBranch() == true`
      *     -   `scopeName() == ""`
-     *     -   `localName() == ""`
+     *     -   `name() == "HEAD"`
+     *     -   `localName() == "HEAD"`
      *     -   `scopePrefix() == "HEAD"`
+     *
      */
 
     namespace Internal
@@ -333,6 +339,8 @@ namespace Git
                 isMergeHead = true;
             }
             else if (fqrn == QLatin1String("HEAD")) {
+                name = fqrn;
+                isBranch = true;
                 isHead = true;
             }
             else if (!analyzeCustom()) {
@@ -351,7 +359,7 @@ namespace Git
                     match = reRem.cap(2);
 
                     isHead = (match == QLatin1String("HEAD"));
-                    isBranch = !isHead;
+                    isBranch = true;
 
                     scopeTest(match);
                 }

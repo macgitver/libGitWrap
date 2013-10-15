@@ -266,7 +266,7 @@ TEST(RefName, Specials_Head) {
     Git::RefName rn = Git::RefName(QLatin1String(sz));
     EXPECT_TRUE (rn.isValid());
 
-    EXPECT_FALSE(rn.isBranch());
+    EXPECT_TRUE (rn.isBranch());
     EXPECT_TRUE (rn.isSpecial());
     EXPECT_FALSE(rn.isTag());
     EXPECT_FALSE(rn.isCommitNote());
@@ -278,10 +278,10 @@ TEST(RefName, Specials_Head) {
     EXPECT_FALSE(rn.isStage());
     EXPECT_FALSE(rn.isCustom());
 
-    EXPECT_STREQ("", qPrintable(rn.name()));
-    EXPECT_STREQ("", qPrintable(rn.branchName()));
+    EXPECT_STREQ("HEAD", qPrintable(rn.name()));
+    EXPECT_STREQ("HEAD", qPrintable(rn.branchName()));
     EXPECT_STREQ("", qPrintable(rn.tagName()));
-    EXPECT_STREQ("", qPrintable(rn.localName()));
+    EXPECT_STREQ("HEAD", qPrintable(rn.localName()));
     EXPECT_STREQ("", qPrintable(rn.scopeName()));
     EXPECT_STREQ("", qPrintable(rn.namespaceName()));
     EXPECT_STREQ("", qPrintable(rn.remote()));
