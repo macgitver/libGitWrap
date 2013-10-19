@@ -48,6 +48,9 @@ namespace Git
      *     isCommitNote(). With the exception of `HEAD` unless it is the fully qualified reference
      *     name, further detection stops if we detect a special reference.
      *
+     *     For consistency reasons, if isHead() returns `true`, isBranch() will also return `true`
+     *     and name() will return `HEAD`.
+     *
      * -   _Custom_
      *
      *     Any regular expression can be registered with the name matcher using the
@@ -182,9 +185,12 @@ namespace Git
      *
      *     -   `isSpecial() == true`
      *     -   `isHead() == true`
+     *     -   `isBranch() == true`
      *     -   `scopeName() == ""`
-     *     -   `localName() == ""`
+     *     -   `name() == "HEAD"`
+     *     -   `localName() == "HEAD"`
      *     -   `scopePrefix() == "HEAD"`
+     *
      */
 
     namespace Internal
@@ -333,6 +339,8 @@ namespace Git
                 isMergeHead = true;
             }
             else if (fqrn == QLatin1String("HEAD")) {
+                name = fqrn;
+                isBranch = true;
                 isHead = true;
             }
             else if (!analyzeCustom()) {
@@ -351,7 +359,7 @@ namespace Git
                     match = reRem.cap(2);
 
                     isHead = (match == QLatin1String("HEAD"));
-                    isBranch = !isHead;
+                    isBranch = true;
 
                     scopeTest(match);
                 }
@@ -406,7 +414,9 @@ namespace Git
 
     /**
      * @brief       Is this a remote reference?
+     *
      * @return      `true`, if this is a remote reference.
+     *
      */
     bool RefName::isRemote()
     {
@@ -415,7 +425,9 @@ namespace Git
 
     /**
      * @brief       Is this a tag?
+     *
      * @return      `true`, if this is a tag
+     *
      */
     bool RefName::isTag()
     {
@@ -424,7 +436,9 @@ namespace Git
 
     /**
      * @brief       Is this a branch?
+     *
      * @return      `true`, if this is a branch.
+     *
      */
     bool RefName::isBranch()
     {
@@ -496,11 +510,24 @@ namespace Git
         return d ? d->ensureAnalyzed(), d->name : QString();
     }
 
+    /**
+     * @brief       Get the full qualified reference name
+     *
+     * @return      The fully qualified reference name as set in the constructor.
+     *
+     */
     QString RefName::fullName()
     {
         return d ? d->fqrn : QString();
     }
 
+    /**
+     * @brief       Get the local name of the reference
+     *
+     * @return      If the reference is either a tag, a branch or HEAD, the scopeName() and name()
+     *              are joined via a `/` and the result is returned.
+     *
+     */
     QString RefName::localName()
     {
         if (isBranch() || isTag()) {
@@ -509,6 +536,15 @@ namespace Git
         return QString();
     }
 
+    /**
+     * @brief       Get the prefix that has to be prepended to the scopes
+     *
+     * @return      Returns the beginning part of the full qualified reference name up to the point
+     *              where the scope begins. This might include a trailing slash (`/`).
+     *
+     * If scopeName() is empty, this method returns the full qualified reference name.
+     *
+     */
     QString RefName::scopePrefix()
     {
         if (d) {
@@ -518,21 +554,52 @@ namespace Git
         return QString();
     }
 
+    /**
+     * @brief       Get the name of the branch if this reference is a branch
+     *
+     * @return      If isBranch() returns `true` then return localName() else an empty string.
+     *
+     * Works for local and remote branches and also for special references where isHead() returns
+     * `true`.
+     *
+     */
     QString RefName::branchName()
     {
         return isBranch() ? localName() : QString();
     }
 
+    /**
+     * @brief       Get the name of the tag if this reference is a tag.
+     *
+     * @return      If isTag() returns `true` then return localName() else an empty string.
+     *
+     */
     QString RefName::tagName()
     {
         return isTag() ? localName() : QString();
     }
 
+    /**
+     * @brief       Get the joined namespaces
+     *
+     * @return      a QString containing all namespaces() joined with a `/`
+     *
+     * Note that this is not a part of the reference name. A nested namespace that would return
+     * `foo/bar` from this method actually begins with a reference name like
+     * `refs/namespaces/foo/refs/namespaces/bar`.
+     *
+     */
     QString RefName::namespaceName()
     {
         return namespaces().join(QChar(L'/'));
     }
 
+    /**
+     * @brief       Get the joined scopes
+     *
+     * @return      a QString containing all scopes() joined with a `/`
+     *
+     */
     QString RefName::scopeName()
     {
         return scopes().join(QChar(L'/'));
@@ -615,6 +682,55 @@ namespace Git
         }
 
         return NULL;
+    }
+
+    /**
+     * @brief       Get the 'shorthand' name for the reference
+     *
+     * A short hand name for a reference is a fully qualified reference name with the line noise
+     * removed. This works for all branches and tags, even remote ones.
+     *
+     * It also works for HEAD. The short hand name for the local current branch is `HEAD` and the
+     * short hand name for the remote `farfarawawy`'s default branch is just `farfaraway` (the FQRN
+     * would be `refs/remotes/farfaraway/HEAD`).
+     *
+     * @return      The short hand name for the reference. The short hand name contains the segments
+     *              consisting of remote() if present, all the scopes() and finally name().
+     *
+     * @see         `man git-rev-parse`
+     */
+    QString RefName::shorthand()
+    {
+        QStringList segments;
+
+        if (isNamespaced()) {
+            return QString();
+        }
+
+        if (isHead()) {
+
+            if (isRemote()) {
+                return remote();
+            }
+
+            return QLatin1String("HEAD");
+        }
+
+        if (isBranch() || isTag()) {
+
+            if (isRemote()) {
+                segments << remote();
+            }
+
+            if (isScoped()) {
+                segments << scopes();
+            }
+
+            segments << name();
+
+        }
+
+        return segments.join(QChar(L'/'));
     }
 
 }

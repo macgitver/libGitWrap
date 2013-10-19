@@ -77,6 +77,8 @@ namespace Git
         QString tagName();
         QString branchName();
 
+        QString shorthand();
+
         bool matchesCustomRule(int id);
 
     public:
