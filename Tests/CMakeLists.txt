@@ -13,4 +13,9 @@ INCLUDE_DIRECTORIES(${libGitWrap_includes})
 
 ADD_QT_GTEST(testGitWrap ${SRC_FILES})
 
-TARGET_LINK_LIBRARIES(testGitWrap GitWrap)
+TARGET_LINK_LIBRARIES(
+    testGitWrap
+
+    LINK_PRIVATE
+        GitWrap
+)
