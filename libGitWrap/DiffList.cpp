@@ -14,14 +14,14 @@
  *
  */
 
-#include "GitWrapPrivate.hpp"
 #include "ChangeListConsumer.hpp"
 #include "PatchConsumer.hpp"
 #include "DiffList.hpp"
 #include "Repository.hpp"
-#include "RepositoryPrivate.hpp"
-#include "DiffListPrivate.hpp"
 
+#include "Private/GitWrapPrivate.hpp"
+#include "Private/DiffListPrivate.hpp"
+#include "Private/RepositoryPrivate.hpp"
 
 namespace Git
 {

@@ -15,7 +15,8 @@
  */
 
 #include "Config.hpp"
-#include "ConfigPrivate.hpp"
+
+#include "Private/ConfigPrivate.hpp"
 
 namespace Git
 {

@@ -16,7 +16,8 @@
 
 #include "ObjectId.hpp"
 #include "TreeEntry.hpp"
-#include "TreeEntryPrivate.hpp"
+
+#include "Private/TreeEntryPrivate.hpp"
 
 namespace Git
 {

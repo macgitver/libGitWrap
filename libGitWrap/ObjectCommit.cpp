@@ -14,14 +14,14 @@
  *
  */
 
-#include "GitWrapPrivate.hpp"
-
-#include "ObjectPrivate.hpp"
 #include "ObjectCommit.hpp"
 #include "ObjectTree.hpp"
-#include "RepositoryPrivate.hpp"
 #include "Reference.hpp"
-#include "ReferencePrivate.hpp"
+
+#include "Private/GitWrapPrivate.hpp"
+#include "Private/ObjectPrivate.hpp"
+#include "Private/RepositoryPrivate.hpp"
+#include "Private/ReferencePrivate.hpp"
 
 namespace Git
 {

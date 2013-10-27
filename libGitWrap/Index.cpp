@@ -17,17 +17,17 @@
  */
 
 #include "Index.hpp"
-
-#include "IndexPrivate.hpp"
 #include "IndexEntry.hpp"
-#include "IndexEntryPrivate.hpp"
 #include "IndexConflict.hpp"
-#include "IndexConflictPrivate.hpp"
 #include "IndexConflicts.hpp"
 #include "Repository.hpp"
-#include "RepositoryPrivate.hpp"
-#include "ObjectPrivate.hpp"
 #include "ObjectTree.hpp"
+
+#include "Private/IndexPrivate.hpp"
+#include "Private/IndexEntryPrivate.hpp"
+#include "Private/IndexConflictPrivate.hpp"
+#include "Private/RepositoryPrivate.hpp"
+#include "Private/ObjectPrivate.hpp"
 
 namespace Git
 {

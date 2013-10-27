@@ -17,8 +17,9 @@
  */
 
 #include "IndexConflict.hpp"
-#include "IndexConflictPrivate.hpp"
-#include "IndexEntryPrivate.hpp"
+
+#include "Private/IndexConflictPrivate.hpp"
+#include "Private/IndexEntryPrivate.hpp"
 
 namespace Git
 {

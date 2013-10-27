@@ -17,10 +17,9 @@
  */
 
 #include "IndexEntry.hpp"
-#include "IndexEntryPrivate.hpp"
-
 #include "ObjectId.hpp"
 
+#include "Private/IndexEntryPrivate.hpp"
 
 namespace Git
 {

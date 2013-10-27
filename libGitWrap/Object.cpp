@@ -14,15 +14,16 @@
  *
  */
 
-#include "GitWrapPrivate.hpp"
 #include "ObjectId.hpp"
 #include "Object.hpp"
 #include "ObjectTree.hpp"
 #include "ObjectTag.hpp"
 #include "ObjectCommit.hpp"
 #include "ObjectBlob.hpp"
-#include "ObjectPrivate.hpp"
 #include "Repository.hpp"
+
+#include "Private/GitWrapPrivate.hpp"
+#include "Private/ObjectPrivate.hpp"
 
 namespace Git
 {

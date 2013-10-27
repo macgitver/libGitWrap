@@ -20,10 +20,10 @@
 #include <QVector>
 #include <QStringBuilder>
 
-#include "GitWrapPrivate.hpp"
-
 #include "RefName.hpp"
-#include "BasicObject.hpp"
+
+#include "Private/BasicObject.hpp"
+#include "Private/GitWrapPrivate.hpp"
 
 namespace Git
 {

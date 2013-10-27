@@ -14,9 +14,10 @@
  *
  */
 
-#include "CloneOperationPrivate.hpp"
 #include "CloneOperation.hpp"
-#include "FetchCallbacks.hpp"
+
+#include "Private/CloneOperationPrivate.hpp"
+#include "Private/FetchCallbacks.hpp"
 
 namespace Git
 {

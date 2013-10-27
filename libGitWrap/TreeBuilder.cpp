@@ -15,12 +15,12 @@
  */
 
 #include "TreeEntry.hpp"
-#include "TreeEntryPrivate.hpp"
 #include "TreeBuilder.hpp"
-#include "TreeBuilderPrivate.hpp"
 #include "ObjectId.hpp"
 
-#include "RepositoryPrivate.hpp"
+#include "Private/TreeEntryPrivate.hpp"
+#include "Private/TreeBuilderPrivate.hpp"
+#include "Private/RepositoryPrivate.hpp"
 
 namespace Git
 {

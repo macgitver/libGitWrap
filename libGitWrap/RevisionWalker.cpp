@@ -15,9 +15,10 @@
  */
 
 #include "RevisionWalker.hpp"
-#include "RevisionWalkerPrivate.hpp"
 #include "ObjectId.hpp"
 #include "Reference.hpp"
+
+#include "Private/RevisionWalkerPrivate.hpp"
 
 namespace Git
 {

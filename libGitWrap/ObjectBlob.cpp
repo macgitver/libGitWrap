@@ -14,9 +14,9 @@
  *
  */
 
-#include "GitWrapPrivate.hpp"
-
 #include "ObjectBlob.hpp"
+
+#include "Private/GitWrapPrivate.hpp"
 
 namespace Git
 {

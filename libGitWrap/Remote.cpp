@@ -15,9 +15,10 @@
  */
 
 #include "Remote.hpp"
-#include "RemotePrivate.hpp"
 #include "Reference.hpp"
 #include "RefSpec.hpp"
+
+#include "Private/RemotePrivate.hpp"
 
 namespace Git
 {

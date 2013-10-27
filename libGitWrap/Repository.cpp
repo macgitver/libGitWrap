@@ -14,26 +14,27 @@
  *
  */
 
-#include "GitWrapPrivate.hpp"
 #include "Result.hpp"
 #include "Index.hpp"
-#include "IndexPrivate.hpp"
 #include "Remote.hpp"
-#include "RemotePrivate.hpp"
 #include "Repository.hpp"
-#include "RepositoryPrivate.hpp"
 #include "Reference.hpp"
-#include "ReferencePrivate.hpp"
 #include "DiffList.hpp"
-#include "DiffListPrivate.hpp"
 #include "Object.hpp"
-#include "ObjectPrivate.hpp"
 #include "ObjectTag.hpp"
 #include "ObjectTree.hpp"
 #include "ObjectBlob.hpp"
 #include "ObjectCommit.hpp"
 #include "RevisionWalker.hpp"
-#include "RevisionWalkerPrivate.hpp"
+
+#include "Private/GitWrapPrivate.hpp"
+#include "Private/IndexPrivate.hpp"
+#include "Private/RemotePrivate.hpp"
+#include "Private/RepositoryPrivate.hpp"
+#include "Private/ReferencePrivate.hpp"
+#include "Private/DiffListPrivate.hpp"
+#include "Private/ObjectPrivate.hpp"
+#include "Private/RevisionWalkerPrivate.hpp"
 
 #include <QDir>
 
