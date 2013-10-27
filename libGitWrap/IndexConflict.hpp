@@ -19,7 +19,7 @@
 #ifndef GIT_INDEX_CONFLICT_HPP
 #define GIT_INDEX_CONFLICT_HPP
 
-#include "GitWrap.hpp"
+#include "libGitWrap/Base.hpp"
 
 namespace Git
 {
@@ -31,29 +31,20 @@ namespace Git
 
     }
 
-    class IndexConflict
+    class IndexConflict : public Base
     {
     public:
-        explicit IndexConflict(Internal::IndexConflictPrivate* _d);
+        explicit IndexConflict(Internal::IndexConflictPrivate& _d);
 
     public:
         IndexConflict();
         IndexConflict(const IndexConflict& other);
         IndexConflict(const IndexEntry& from, const IndexEntry& ours, const IndexEntry& theirs);
-        ~IndexConflict();
-
-        IndexConflict& operator=(const IndexConflict& other);
-
-    public:
-        bool isValid() const;
 
     public:
         IndexEntry from() const;
         IndexEntry ours() const;
         IndexEntry theirs() const;
-
-    private:
-        Internal::GitPtr< Internal::IndexConflictPrivate > d;
     };
 
 }

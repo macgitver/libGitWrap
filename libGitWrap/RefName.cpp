@@ -20,10 +20,10 @@
 #include <QVector>
 #include <QStringBuilder>
 
-#include "RefName.hpp"
+#include "libGitWrap/RefName.hpp"
 
-#include "Private/BasicObject.hpp"
-#include "Private/GitWrapPrivate.hpp"
+#include "libGitWrap/Private/BasePrivate.hpp"
+#include "libGitWrap/Private/GitWrapPrivate.hpp"
 
 namespace Git
 {
@@ -260,7 +260,7 @@ namespace Git
         {
         }
 
-        class RefNamePrivate : public BasicObject
+        class RefNamePrivate : public BasePrivate
         {
         public:
             bool isAnalyzed     : 1;
@@ -386,13 +386,14 @@ namespace Git
     }
 
     RefName::RefName(const RefName& other)
-        : d(other.d)
+        : Base(other)
     {
     }
 
     RefName::RefName(const QString& refName)
+        : Base(*new Internal::RefNamePrivate)
     {
-        d = new Internal::RefNamePrivate;
+        GW_D(RefName);
         d->fqrn = refName;
         d->isAnalyzed = false;
     }
@@ -403,13 +404,8 @@ namespace Git
 
     RefName& RefName::operator=(const RefName& other)
     {
-        d = other.d;
+        Base::operator =(other);
         return *this;
-    }
-
-    bool RefName::isValid() const
-    {
-        return d;
     }
 
     /**
@@ -420,6 +416,7 @@ namespace Git
      */
     bool RefName::isRemote()
     {
+        GW_D(RefName);
         return d ? d->ensureAnalyzed(), !d->remote.isEmpty() : false;
     }
 
@@ -431,6 +428,7 @@ namespace Git
      */
     bool RefName::isTag()
     {
+        GW_D(RefName);
         return d ? d->ensureAnalyzed(), d->isTag : false;
     }
 
@@ -442,26 +440,31 @@ namespace Git
      */
     bool RefName::isBranch()
     {
+        GW_D(RefName);
         return d ? d->ensureAnalyzed(), d->isBranch : false;
     }
 
     bool RefName::isStage()
     {
+        GW_D(RefName);
         return d ? d->ensureAnalyzed(), d->isStage : false;
     }
 
     bool RefName::isHead()
     {
+        GW_D(RefName);
         return d ? d->ensureAnalyzed(), d->isHead : false;
     }
 
     bool RefName::isMergeHead()
     {
+        GW_D(RefName);
         return d ? d->ensureAnalyzed(), d->isMergeHead : false;
     }
 
     bool RefName::isCommitNote()
     {
+        GW_D(RefName);
         return d ? d->ensureAnalyzed(), d->isCommitNote : false;
     }
 
@@ -472,41 +475,49 @@ namespace Git
 
     bool RefName::isPeculiar()
     {
+        GW_D(RefName);
         return d ? d->ensureAnalyzed(), d->isPecuiliar : false;
     }
 
     bool RefName::isScoped()
     {
+        GW_D(RefName);
         return d ? d->ensureAnalyzed(), (d->scopes.count() > 0) : false;
     }
 
     bool RefName::isNamespaced()
     {
+        GW_D(RefName);
         return d ? d->ensureAnalyzed(), (d->namespaces.count() > 0) : false;
     }
 
     bool RefName::isCustom()
     {
+        GW_D(RefName);
         return d ? d->ensureAnalyzed(), (d->customMatches.count() > 0) : false;
     }
 
     QStringList RefName::namespaces()
     {
+        GW_D(RefName);
         return d ? d->ensureAnalyzed(), d->namespaces : QStringList();
     }
 
     QStringList RefName::scopes()
     {
+        GW_D(RefName);
         return d ? d->ensureAnalyzed(), d->scopes : QStringList();
     }
 
     QString RefName::remote()
     {
+        GW_D(RefName);
         return d ? d->ensureAnalyzed(), d->remote : QString();
     }
 
     QString RefName::name()
     {
+        GW_D(RefName);
         return d ? d->ensureAnalyzed(), d->name : QString();
     }
 
@@ -518,6 +529,7 @@ namespace Git
      */
     QString RefName::fullName()
     {
+        GW_D(RefName);
         return d ? d->fqrn : QString();
     }
 
@@ -547,6 +559,7 @@ namespace Git
      */
     QString RefName::scopePrefix()
     {
+        GW_D(RefName);
         if (d) {
             int l = scopeName().length();
             return d->fqrn.left(d->fqrn.count() - l);
@@ -617,6 +630,7 @@ namespace Git
      */
     bool RefName::matchesCustomRule(int id)
     {
+        GW_D(RefName);
         if (!d) {
             return false;
         }

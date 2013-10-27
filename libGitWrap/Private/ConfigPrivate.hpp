@@ -14,8 +14,8 @@
  *
  */
 
-#include "GitWrapPrivate.hpp"
-#include "BasicObject.hpp"
+#include "libGitWrap/Private/GitWrapPrivate.hpp"
+#include "libGitWrap/Private/BasePrivate.hpp"
 
 namespace Git
 {
@@ -29,10 +29,10 @@ namespace Git
          * @brief       The ConfigPrivate class
          *
          */
-        class ConfigPrivate : public BasicObject
+        class ConfigPrivate : public BasePrivate
         {
         public:
-            ConfigPrivate( git_config* cfg );
+            ConfigPrivate(git_config* cfg);
             ~ConfigPrivate();
 
         public:

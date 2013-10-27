@@ -23,7 +23,7 @@
 #include <QStringList>
 #include <QRegExp>
 
-#include "GitWrap.hpp"
+#include "libGitWrap/Base.hpp"
 
 namespace Git
 {
@@ -35,7 +35,7 @@ namespace Git
 
     }
 
-    class GITWRAP_API RefName
+    class GITWRAP_API RefName : public Base
     {
     public:
         RefName();
@@ -43,7 +43,6 @@ namespace Git
         explicit RefName(const QString& refName);
         ~RefName();
         RefName& operator=(const RefName& other);
-        bool isValid() const;
 
     public:
         bool isRemote();
@@ -85,9 +84,6 @@ namespace Git
         static int registerExpression(void* data, const QRegExp& regExp);
         static void unregisterExpression(int id);
         static void* expressionData(int id);
-
-    private:
-        Internal::GitPtr< Internal::RefNamePrivate > d;
     };
 
 }

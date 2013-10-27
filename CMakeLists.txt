@@ -6,6 +6,12 @@ SET( libGitWrap_includes
     CACHE INTERNAL "libGitWrap include directories"
 )
 
+# Set the Include-Directory here, so we can use "libGitWrap/XXX" includes inside libGitWrap and be
+# sure forever that they will work on an installed source tree...
+INCLUDE_DIRECTORIES(
+    ${CMAKE_CURRENT_SOURCE_DIR}
+)
+
 ADD_SUBDIRECTORY(libGitWrap)
 ADD_SUBDIRECTORY(Tests)
 

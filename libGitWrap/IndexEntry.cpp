@@ -52,15 +52,14 @@ namespace Git
     {
     }
 
-    IndexEntry::IndexEntry( const IndexEntry& other )
-        : d( other.d )
+    IndexEntry::IndexEntry(const IndexEntry& other)
+        : Base(other)
     {
     }
 
-    IndexEntry::IndexEntry(Internal::IndexEntryPrivate *_d )
-        : d( _d )
+    IndexEntry::IndexEntry(Internal::IndexEntryPrivate& _d)
+        : Base(_d)
     {
-        Q_ASSERT(d);
     }
 
     IndexEntry::~IndexEntry()
@@ -69,59 +68,63 @@ namespace Git
 
     IndexEntry &IndexEntry::operator =(const IndexEntry &other)
     {
-        d = other.d;
+        Base::operator=(other);
         return *this;
-    }
-
-    bool IndexEntry::isValid() const
-    {
-        return d;
     }
 
     QString IndexEntry::path() const
     {
+        GW_CD(IndexEntry);
         return QString::fromUtf8( d->mEntry.path );
     }
 
     ObjectId IndexEntry::blobSha() const
     {
+        GW_CD(IndexEntry);
         return ObjectId::fromRaw( d->mEntry.oid.id );
     }
 
     unsigned int IndexEntry::mode() const
     {
+        GW_CD(IndexEntry);
         return d->mEntry.mode;
     }
 
     unsigned int IndexEntry::ino() const
     {
+        GW_CD(IndexEntry);
         return d->mEntry.ino;
     }
 
     unsigned int IndexEntry::uid() const
     {
+        GW_CD(IndexEntry);
         return d->mEntry.uid;
     }
 
     unsigned int IndexEntry::gid() const
     {
+        GW_CD(IndexEntry);
         return d->mEntry.gid;
     }
 
     QDateTime IndexEntry::cTime() const
     {
+        GW_CD(IndexEntry);
         git_index_time t = d->mEntry.ctime;
         return QDateTime::fromTime_t( t.seconds );
     }
 
     QDateTime IndexEntry::mTime() const
     {
+        GW_CD(IndexEntry);
         git_index_time t = d->mEntry.mtime;
         return QDateTime::fromTime_t( t.seconds );
     }
 
     int IndexEntry::stage() const
     {
+        GW_CD(IndexEntry);
         return git_index_entry_stage( &(d->mEntry) );
     }
 

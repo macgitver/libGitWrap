@@ -14,10 +14,10 @@
  *
  */
 
-#include "ObjectId.hpp"
-#include "TreeEntry.hpp"
+#include "libGitWrap/ObjectId.hpp"
+#include "libGitWrap/TreeEntry.hpp"
 
-#include "Private/TreeEntryPrivate.hpp"
+#include "libGitWrap/Private/TreeEntryPrivate.hpp"
 
 namespace Git
 {
@@ -46,13 +46,13 @@ namespace Git
     {
     }
 
-    TreeEntry::TreeEntry( const TreeEntry& other )
-        : d( other.d )
+    TreeEntry::TreeEntry(const TreeEntry& other)
+        : Base(other)
     {
     }
 
-    TreeEntry::TreeEntry( Internal::TreeEntryPrivate* _d )
-        : d( _d )
+    TreeEntry::TreeEntry(Internal::TreeEntryPrivate& _d)
+        : Base(_d)
     {
     }
 
@@ -62,33 +62,27 @@ namespace Git
 
     TreeEntry& TreeEntry::operator=( const TreeEntry& other )
     {
-        d = other.d;
+        Base::operator =(other);
         return * this;
     }
 
-    bool TreeEntry::isValid() const
-    {
-        return d;
-    }
-
-
     TreeEntry TreeEntry::clone() const
     {
-        if( !d )
-        {
+        GW_CD(TreeEntry);
+        if(!d) {
             return TreeEntry();
         }
 
         git_tree_entry* entry = git_tree_entry_dup( d->mEntry );
         Q_ASSERT( entry );
 
-        return new Internal::TreeEntryPrivate( entry );
+        return *new Internal::TreeEntryPrivate( entry );
     }
 
     ObjectId TreeEntry::sha1() const
     {
-        if( !d )
-        {
+        GW_CD(TreeEntry);
+        if (!d) {
             return ObjectId();
         }
 
@@ -103,8 +97,8 @@ namespace Git
 
     QString TreeEntry::name() const
     {
-        if( !d )
-        {
+        GW_CD(TreeEntry);
+        if (!d) {
             return QString();
         }
 
@@ -120,12 +114,12 @@ namespace Git
 
     ObjectType TreeEntry::type() const
     {
-        if( !d )
-        {
+        GW_CD(TreeEntry);
+        if (!d) {
             return otAny;
         }
 
-        return Internal::gitotype2ObjectType( git_tree_entry_type( d->mEntry ) );
+        return Internal::gitotype2ObjectType(git_tree_entry_type(d->mEntry));
     }
 
 }

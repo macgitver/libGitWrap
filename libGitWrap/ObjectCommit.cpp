@@ -30,13 +30,13 @@ namespace Git
     {
     }
 
-    ObjectCommit::ObjectCommit( Internal::ObjectPrivate* _d )
-        : Object( _d )
+    ObjectCommit::ObjectCommit(Internal::ObjectPrivate& _d)
+        : Object(_d)
     {
         Result r;
         if( ( type( r ) != otCommit ) || !r )
         {
-            d = NULL;
+            mData = NULL;
         }
     }
 
@@ -47,15 +47,7 @@ namespace Git
 
     ObjectTree ObjectCommit::tree( Result& result )
     {
-        if( !result )
-        {
-            return ObjectTree();
-        }
-        if( !d )
-        {
-            result.setInvalidObject();
-            return ObjectTree();
-        }
+        GW_D_CHECKED(Object, ObjectTree(), result)
 
         git_commit* commit = (git_commit*) d->mObj;
         git_tree* tree = 0;
@@ -66,39 +58,21 @@ namespace Git
             return ObjectTree();
         }
 
-        return new Internal::ObjectPrivate( d->repo(), (git_object*) tree );
+        return *new Internal::ObjectPrivate( d->repo(), (git_object*) tree );
     }
 
     ObjectId ObjectCommit::treeId( Result& result )
     {
-        if( !result )
-        {
-            return ObjectId();
-        }
-        if( !d )
-        {
-            result.setInvalidObject();
-            return ObjectId();
-        }
+        GW_D_CHECKED(Object, ObjectId(), result)
 
         git_commit* commit = (git_commit*) d->mObj;
-
-        return ObjectId::fromRaw( git_commit_tree_id( commit )->id );
+        return ObjectId::fromRaw(git_commit_tree_id( commit )->id);
     }
 
     ObjectIdList ObjectCommit::parentCommitIds( Result& result ) const
     {
+        GW_CD_CHECKED(Object, ObjectIdList(), result)
         ObjectIdList ids;
-
-        if( !result )
-        {
-            return ids;
-        }
-        if( !d )
-        {
-            result.setInvalidObject();
-            return ids;
-        }
 
         git_commit* commit = (git_commit*) d->mObj;
 
@@ -113,15 +87,7 @@ namespace Git
 
     ObjectCommit ObjectCommit::parentCommit(Result& result, unsigned int index) const
     {
-        if( !result )
-        {
-            return ObjectCommit();
-        }
-        if( !d )
-        {
-            result.setInvalidObject();
-            return ObjectCommit();
-        }
+        GW_D_CHECKED(Object, ObjectCommit(), result)
 
         git_commit* commit = (git_commit*) d->mObj;
         git_commit* gitparent = NULL;
@@ -132,20 +98,12 @@ namespace Git
             return ObjectCommit();
         }
 
-        return new Internal::ObjectPrivate( d->repo(), (git_object*) gitparent );
+        return *new Internal::ObjectPrivate( d->repo(), (git_object*) gitparent );
     }
 
     ObjectId ObjectCommit::parentCommitId(Result& result, unsigned int index) const
     {
-        if( !result )
-        {
-            return ObjectId();
-        }
-        if( !d )
-        {
-            result.setInvalidObject();
-            return ObjectId();
-        }
+        GW_CD_CHECKED(Object, ObjectId(), result)
 
         if( numParentCommits() > index )
         {
@@ -163,16 +121,7 @@ namespace Git
 
     ObjectCommitList ObjectCommit::parentCommits( Result& result ) const
     {
-        if( !result )
-        {
-            return ObjectCommitList();
-        }
-        if( !d )
-        {
-            result.setInvalidObject();
-            return ObjectCommitList();
-        }
-
+        GW_CD_CHECKED(Object, ObjectCommitList(), result)
         ObjectCommitList objs;
 
         git_commit* commit = (git_commit*) d->mObj;
@@ -187,7 +136,7 @@ namespace Git
                 return ObjectCommitList();
             }
 
-            objs.append( new Internal::ObjectPrivate( d->repo(), (git_object*) parent ) );
+            objs.append(*new Internal::ObjectPrivate(d->repo(), (git_object*) parent));
         }
 
         return objs;
@@ -195,8 +144,8 @@ namespace Git
 
     unsigned int ObjectCommit::numParentCommits() const
     {
-        if( !d )
-        {
+        GW_D(Object);
+        if (!d) {
             return 0;
         }
 
@@ -208,10 +157,10 @@ namespace Git
     {
         QVector< Git::ObjectCommit > parents = child.parentCommits( result );
 
-        for( int i = 0; result && i < parents.count(); i++ )
-        {
-            if( isEqual( result, parents[ i ] ) )
+        for (int i = 0; result && i < parents.count(); i++) {
+            if (isEqual(result, parents[i])) {
                 return true;
+            }
         }
 
         return false;
@@ -221,10 +170,8 @@ namespace Git
     {
         QVector< Git::ObjectCommit > children = parentCommits( result );
 
-        for( int i = 0; result && i < children.count(); i++ )
-        {
-            if( parent.isEqual( result, children[ i ] ) )
-            {
+        for (int i = 0; result && i < children.count(); i++) {
+            if (parent.isEqual(result, children[i])) {
                 return true;
             }
         }
@@ -234,20 +181,12 @@ namespace Git
 
     bool ObjectCommit::isEqual(Result& result, const Git::ObjectCommit& commit) const
     {
-        return id( result ) == commit.id( result ) && result;
+        return id(result) == commit.id(result) && result;
     }
 
     Signature ObjectCommit::author( Result& result ) const
     {
-        if( !result )
-        {
-            return Signature();
-        }
-        if( !d )
-        {
-            result.setInvalidObject();
-            return Signature();
-        }
+        GW_CD_CHECKED(Object, Signature(), result)
 
         git_commit* commit = (git_commit*) d->mObj;
         const git_signature* sig = git_commit_author( commit );
@@ -257,15 +196,7 @@ namespace Git
 
     Signature ObjectCommit::committer( Result& result ) const
     {
-        if( !result )
-        {
-            return Signature();
-        }
-        if( !d )
-        {
-            result.setInvalidObject();
-            return Signature();
-        }
+        GW_CD_CHECKED(Object, Signature(), result)
 
         git_commit* commit = (git_commit*) d->mObj;
         const git_signature* sig = git_commit_committer( commit );
@@ -275,16 +206,7 @@ namespace Git
 
     QString ObjectCommit::message( Result& result ) const
     {
-        if( !result )
-        {
-            return QString();
-        }
-
-        if( !d )
-        {
-            result.setInvalidObject();
-            return QString();
-        }
+        GW_CD_CHECKED(Object, QString(), result)
 
         git_commit* commit = (git_commit*) d->mObj;
         const char* msg = git_commit_message( commit );
@@ -300,16 +222,7 @@ namespace Git
 
     QString ObjectCommit::shortMessage( Result& result ) const
     {
-        if( !result )
-        {
-            return QString();
-        }
-
-        if( !d )
-        {
-            result.setInvalidObject();
-            return QString();
-        }
+        GW_CD_CHECKED(Object, QString(), result)
 
         git_commit* commit = (git_commit*) d->mObj;
         const char* msg = git_commit_message( commit );
@@ -342,16 +255,7 @@ namespace Git
     void ObjectCommit::checkout(Result &result, bool force, bool updateHEAD,
                                 const QStringList &paths) const
     {
-        if( !result )
-        {
-            return;
-        }
-
-        if( !d )
-        {
-            result.setInvalidObject();
-            return;
-        }
+        GW_CD_CHECKED_VOID(Object, result)
 
         git_checkout_opts opts = GIT_CHECKOUT_OPTS_INIT;
         opts.checkout_strategy = force ? GIT_CHECKOUT_FORCE : GIT_CHECKOUT_SAFE;
@@ -363,21 +267,14 @@ namespace Git
         }
 
         result = git_checkout_tree( d->repo()->mRepo, d->mObj, &opts );
-        if ( updateHEAD )
+        if (updateHEAD) {
             this->updateHEAD(result);
+        }
     }
 
     Reference ObjectCommit::createBranch(Result& result, const QString& name, bool force) const
     {
-        if( !result )
-        {
-            return Reference();
-        }
-        if( !d )
-        {
-            result.setInvalidObject();
-            return Reference();
-        }
+        GW_CD_CHECKED(Object, Reference(), result)
 
         git_reference* ref = NULL;
         result = git_branch_create( &ref, d->repo()->mRepo, name.toUtf8().constData(),
@@ -387,21 +284,12 @@ namespace Git
             return Reference();
         }
 
-        return Reference( new Internal::ReferencePrivate( d->repo(), ref ) );
+        return Reference( *new Internal::ReferencePrivate( d->repo(), ref ) );
     }
 
     DiffList ObjectCommit::diffFromParent(Result& result, unsigned int index)
     {
-        if( !result )
-        {
-            return DiffList();
-        }
-
-        if( !d )
-        {
-            result.setInvalidObject();
-            return DiffList();
-        }
+        GW_CD_CHECKED(Object, DiffList(), result)
 
         ObjectCommit parentObjCommit = parentCommit( result, index );
         ObjectTree parentObjTree = parentObjCommit.tree( result );
@@ -411,16 +299,7 @@ namespace Git
 
     DiffList ObjectCommit::diffFromAllParents( Result& result )
     {
-        if( !result )
-        {
-            return DiffList();
-        }
-
-        if( !d )
-        {
-            result.setInvalidObject();
-            return DiffList();
-        }
+        GW_CD_CHECKED(Object, DiffList(), result)
 
         if( numParentCommits() == 0 )
         {
@@ -445,14 +324,7 @@ namespace Git
      */
     void ObjectCommit::updateHEAD(Result &result) const
     {
-        if (!result) {
-            return;
-        }
-
-        if (!d ) {
-            result.setInvalidObject();
-            return;
-        }
+        GW_CD_CHECKED_VOID(Object, result)
 
         result = git_repository_set_head_detached( d->repo()->mRepo
                                                    , git_object_id( d->mObj ) );

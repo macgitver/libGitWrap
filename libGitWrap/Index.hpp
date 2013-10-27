@@ -19,7 +19,7 @@
 #ifndef GIT_INDEX_H
 #define GIT_INDEX_H
 
-#include "GitWrap.hpp"
+#include "libGitWrap/RepoObject.hpp"
 
 namespace Git
 {
@@ -29,10 +29,10 @@ namespace Git
         class IndexPrivate;
     }
 
-    class GITWRAP_API Index
+    class GITWRAP_API Index : public RepoObject
     {
     public:
-        explicit Index( Internal::IndexPrivate* _d );
+        explicit Index(Internal::IndexPrivate& _d);
 
     public:
         enum Stages {
@@ -52,7 +52,6 @@ namespace Git
         Index& operator=( const Index& other );
 
     public:
-        bool isValid() const;
         bool isBare() const;
 
         void read(Result& result);
@@ -61,8 +60,6 @@ namespace Git
         void readTree(Result& result, ObjectTree& tree);
         ObjectTree writeTree(Result& result);
         ObjectTree writeTreeTo(Result& result, Repository& repo);
-
-        Repository repository( Result& result ) const;
 
         // Methods to access and change entries
         int count( Result& result ) const;
@@ -83,9 +80,6 @@ namespace Git
 
         IndexEntry operator[](int index) const;
         IndexEntry operator[](const QString& path) const;
-
-    private:
-        Internal::GitPtr< Internal::IndexPrivate > d;
     };
 
 }

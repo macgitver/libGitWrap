@@ -19,7 +19,7 @@
 #ifndef GIT_INDEX_ENTRY_PRIVATE_HPP
 #define GIT_INDEX_ENTRY_PRIVATE_HPP
 
-#include "BasicObject.hpp"
+#include "libGitWrap/Private/BasePrivate.hpp"
 
 namespace Git
 {
@@ -31,7 +31,7 @@ namespace Git
          * @ingroup     GitWrap
          * @brief       The IndexEntryPrivate class
          */
-        class IndexEntryPrivate : public BasicObject
+        class IndexEntryPrivate : public BasePrivate
         {
         public:
             IndexEntryPrivate(const git_index_entry *entry);

@@ -17,7 +17,7 @@
 #ifndef GIT_DIFFLIST_H
 #define GIT_DIFFLIST_H
 
-#include "GitWrap.hpp"
+#include "libGitWrap/RepoObject.hpp"
 
 namespace Git
 {
@@ -32,13 +32,16 @@ namespace Git
      * @brief       List of differences between to objects
      *
      */
-    class GITWRAP_API DiffList
+    class GITWRAP_API DiffList : public RepoObject
     {
     public:
-        explicit DiffList( Internal::DiffListPrivate* _d );
+        typedef Internal::DiffListPrivate Private;
 
     public:
-        DiffList( const DiffList& other );
+        explicit DiffList(Internal::DiffListPrivate& _d);
+
+    public:
+        DiffList(const DiffList& other);
         DiffList();
         ~DiffList();
 
@@ -46,9 +49,6 @@ namespace Git
         DiffList& operator=( const DiffList& other );
 
     public:
-        bool isValid() const;
-        Repository repository( Result& result ) const;
-
         bool mergeOnto( Result& result, DiffList other ) const;
 
         bool consumePatch( Result& result, PatchConsumer* consumer ) const;
@@ -58,9 +58,6 @@ namespace Git
         ChangeList changeList(Result& result) const;
 
         bool findRenames( Result& result );
-
-    private:
-        Internal::GitPtr< Internal::DiffListPrivate > d;
     };
 
 }

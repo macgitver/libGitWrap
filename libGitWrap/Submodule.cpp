@@ -14,11 +14,11 @@
  *
  */
 
-#include "Submodule.hpp"
-#include "ObjectId.hpp"
-#include "Repository.hpp"
+#include "libGitWrap/Submodule.hpp"
+#include "libGitWrap/ObjectId.hpp"
+#include "libGitWrap/Repository.hpp"
 
-#include "Private/RepositoryPrivate.hpp"
+#include "libGitWrap/Private/RepositoryPrivate.hpp"
 
 namespace Git
 {
@@ -26,11 +26,11 @@ namespace Git
     namespace Internal
     {
 
-        class SubmodulePrivate : public BasicObject
+        class SubmodulePrivate : public BasePrivate
         {
         public:
-            GitPtr< RepositoryPrivate > mOwnerRepo;
-            GitPtr< RepositoryPrivate > mMyRepo;
+            RepositoryPrivate::Ptr mOwnerRepo;
+            RepositoryPrivate::Ptr mMyRepo;
             QString mName;
 
         public:
@@ -88,26 +88,26 @@ namespace Git
     }
 
     Submodule::Submodule()
-        : d( NULL )
     {
     }
 
-    Submodule::Submodule( const Internal::GitPtr< Internal::RepositoryPrivate >& repo,
-                          const QString& name )
+    Submodule::Submodule(Internal::RepositoryPrivate* repo, const QString& name)
+        : Base(*new Private)
     {
-        d = new Internal::SubmodulePrivate;
+        GW_D(Submodule);
+
         d->mOwnerRepo = repo;
         d->mName = name;
     }
 
-    Submodule::Submodule( const Submodule& other )
-        : d( other.d )
+    Submodule::Submodule(const Submodule& other)
+        : Base(other)
     {
     }
 
     Submodule& Submodule::operator=( const Submodule& other )
     {
-        d = other.d;
+        Base::operator =(other);
         return *this;
     }
 
@@ -115,19 +115,15 @@ namespace Git
     {
     }
 
-    bool Submodule::isValid()
-    {
-        Result r;
-        return d && ( d->getSM( r ) != NULL ) && r;
-    }
-
     QString Submodule::name() const
     {
+        GW_CD(Submodule);
         return d ? d->mName : QString();
     }
 
     QString Submodule::path( Result& r ) const
     {
+        GW_CD(Submodule);
         git_submodule* sm = d ? d->getSM( r ) : NULL;
 
         if( !r || !sm )
@@ -141,6 +137,7 @@ namespace Git
 
     QString Submodule::url( Result& r ) const
     {
+        GW_CD(Submodule);
         git_submodule* sm = d ? d->getSM( r ) : NULL;
 
         if( !r || !sm )
@@ -154,6 +151,7 @@ namespace Git
 
     bool Submodule::fetchRecursive() const
     {
+        GW_CD(Submodule);
         Result r;
         git_submodule* sm = d ? d->getSM( r ) : NULL;
 
@@ -167,6 +165,7 @@ namespace Git
 
     Submodule::IgnoreStrategy Submodule::ignoreStrategy() const
     {
+        GW_CD(Submodule);
         Result r;
         git_submodule* sm = d ? d->getSM( r ) : NULL;
 
@@ -187,6 +186,7 @@ namespace Git
 
     Submodule::UpdateStrategy Submodule::updateStrategy() const
     {
+        GW_CD(Submodule);
         Result r;
         git_submodule* sm = d ? d->getSM( r ) : NULL;
 
@@ -207,6 +207,7 @@ namespace Git
 
     ObjectId Submodule::headOid() const
     {
+        GW_CD(Submodule);
         Result r;
         git_submodule* sm = d ? d->getSM( r ) : NULL;
 
@@ -226,6 +227,7 @@ namespace Git
 
     ObjectId Submodule::indexOid() const
     {
+        GW_CD(Submodule);
         Result r;
         git_submodule* sm = d ? d->getSM( r ) : NULL;
 
@@ -245,6 +247,7 @@ namespace Git
 
     ObjectId Submodule::wdOid() const
     {
+        GW_CD(Submodule);
         Result r;
         git_submodule* sm = d ? d->getSM( r ) : NULL;
 
@@ -264,16 +267,19 @@ namespace Git
 
     Repository Submodule::repository() const
     {
-        return Repository( d->mMyRepo );
+        GW_CD(Submodule);
+        return Repository(*d->mMyRepo.data());
     }
 
     bool Submodule::isOpened() const
     {
+        GW_CD(Submodule);
         return d && d->mMyRepo;
     }
 
     StatusFlags Submodule::status(Result &result) const
     {
+        GW_CD(Submodule);
         if ( !result || !d )
         {
             return FileInvalidStatus;
@@ -287,6 +293,7 @@ namespace Git
 
     bool Submodule::open( Result& result )
     {
+        GW_D(Submodule);
         if( !result || !d )
             return false;
 
@@ -305,6 +312,7 @@ namespace Git
 
     void Submodule::close()
     {
+        GW_D(Submodule);
         d->mMyRepo = NULL;
     }
 

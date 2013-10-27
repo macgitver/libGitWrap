@@ -29,17 +29,16 @@ namespace Git
     namespace Internal
     {
 
-        ReferencePrivate::ReferencePrivate( const GitPtr< RepositoryPrivate >& repo,
-                                            git_reference* ref )
-            : RepoObject( repo )
-            , mRef( ref )
+        ReferencePrivate::ReferencePrivate(RepositoryPrivate* repo, git_reference* ref)
+            : RepoObjectPrivate(repo)
+            , mRef(ref)
         {
-            Q_ASSERT( ref );
+            Q_ASSERT(ref);
         }
 
         ReferencePrivate::~ReferencePrivate()
         {
-            git_reference_free( mRef );
+            git_reference_free(mRef);
         }
 
     }
@@ -48,13 +47,13 @@ namespace Git
     {
     }
 
-    Reference::Reference( Internal::ReferencePrivate* _d )
-        : d( _d )
+    Reference::Reference(Internal::ReferencePrivate& _d)
+        : RepoObject(_d)
     {
     }
 
     Reference::Reference( const Reference& other )
-        : d( other.d )
+        : RepoObject(other)
     {
     }
 
@@ -65,13 +64,13 @@ namespace Git
 
     Reference& Reference::operator=( const Reference& other )
     {
-        d = other.d;
+        RepoObject::operator=(other);
         return * this;
     }
 
     bool Reference::operator==(const Reference &other) const
     {
-        return d == other.d;
+        return RepoObject::operator==(other);
     }
 
     bool Reference::operator!=(const Reference &other) const
@@ -91,20 +90,17 @@ namespace Git
      */
     int Reference::compare(const Reference &other) const
     {
+        GW_CD(Reference);
+        Private* od = Private::dataOf<Reference>(other);
         if (!d) {
-            return other.d ? -1 : 0;
+            return od ? -1 : 0;
         }
 
-        if (!other.d) {
+        if (!od) {
             return 1;
         }
 
-        return git_reference_cmp( d->mRef, other.d->mRef );
-    }
-
-    bool Reference::isValid() const
-    {
-        return d;
+        return git_reference_cmp(d->mRef, od->mRef);
     }
 
     /**
@@ -114,8 +110,9 @@ namespace Git
      */
     QString Reference::name() const
     {
-        if( !isValid() )
-        {
+        GW_CD(Reference);
+
+        if (!d) {
             GitWrap::lastResult().setInvalidObject();
             return QString();
         }
@@ -147,8 +144,9 @@ namespace Git
 
     QString Reference::shorthand() const
     {
-        if ( !isValid() )
-        {
+        GW_CD(Reference);
+
+        if (!d) {
             GitWrap::lastResult().setInvalidObject();
             return QString();
         }
@@ -158,16 +156,7 @@ namespace Git
 
     Reference::Type Reference::type( Result& result ) const
     {
-        if( !result )
-        {
-            return Invalid;
-        }
-
-        if( !isValid() )
-        {
-            result.setInvalidObject();
-            return Invalid;
-        }
+        GW_CD_CHECKED(Reference, Invalid, result)
 
         switch( git_reference_type( d->mRef ) )
         {
@@ -180,12 +169,9 @@ namespace Git
 
     ObjectId Reference::objectId( Result& result ) const
     {
-        if( !result )
-        {
-            return ObjectId();
-        }
+        GW_CD_CHECKED(Reference, ObjectId(), result);
 
-        if( !type( result ) == Direct )	// Does the isValid() check for us, no need to repeat it
+        if (type(result) != Direct)
         {
             return ObjectId();
         }
@@ -195,45 +181,18 @@ namespace Git
 
     QString Reference::target( Result& result ) const
     {
-        if( !result )
-        {
+        GW_CD_CHECKED(Reference, QString(), result)
+
+        if (!type(result) == Symbolic) {
             return QString();
         }
 
-        if( !type( result ) == Symbolic )   // Does the isValid() check for us, no need to repeat it
-        {
-            return QString();
-        }
         return QString::fromUtf8( git_reference_symbolic_target( d->mRef ) );
-    }
-
-    Repository Reference::repository( Result& result ) const
-    {
-        if( !result )
-        {
-            return Repository();
-        }
-
-        if( !d )
-        {
-            return Repository();
-        }
-
-        return Repository( d->repo() );
     }
 
     Reference Reference::resolved( Result& result ) const
     {
-        if( !result )
-        {
-            return Reference();
-        }
-
-        if( !d )
-        {
-            result.setInvalidObject();
-            return Reference();
-        }
+        GW_CD_CHECKED(Reference, Reference(), result)
 
         git_reference* ref;
         result = git_reference_resolve( &ref, d->mRef );
@@ -242,30 +201,30 @@ namespace Git
             return Reference();
         }
 
-        return new Internal::ReferencePrivate( d->repo(), ref );
+        return *new Internal::ReferencePrivate( d->repo(), ref );
     }
 
     ObjectId Reference::resolveToObjectId( Result& result ) const
     {
         Reference resolvedRef = resolved( result );
-        if( !result )
-        {
+        if (!result) {
             return ObjectId();
         }
+
         return resolvedRef.objectId( result );
     }
 
     bool Reference::isCurrentBranch() const
     {
-        if ( !d ) return false;
-
-        return git_branch_is_head( d->mRef );
+        GW_CD(Reference);
+        return d && git_branch_is_head( d->mRef );
     }
 
     bool Reference::isLocal() const
     {
-        if ( !isValid() )
-        {
+        GW_CD(Reference);
+
+        if (!d) {
             GitWrap::lastResult().setInvalidObject();
             return false;
         }
@@ -275,8 +234,9 @@ namespace Git
 
     bool Reference::isRemote() const
     {
-        if ( !isValid() )
-        {
+        GW_CD(Reference);
+
+        if (!d) {
             GitWrap::lastResult().setInvalidObject();
             return false;
         }
@@ -287,16 +247,7 @@ namespace Git
     void Reference::checkout(Result &result, bool force, bool updateHEAD,
                              const QStringList &paths) const
     {
-        if (  !result )
-        {
-            return;
-        }
-
-        if( !d )
-        {
-            result.setInvalidObject();
-            return;
-        }
+        GW_CD_CHECKED_VOID(Reference, result);
 
         git_object *o = NULL;
         result = git_reference_peel( &o, d->mRef, GIT_OBJ_TREE );
@@ -316,22 +267,15 @@ namespace Git
             this->updateHEAD(result);
     }
 
-    void Reference::destroy( Result& result )
+    void Reference::destroy(Result& result)
     {
-        if( !result || !isValid() ) return;
-
+        GW_D_CHECKED_VOID(Reference, result);
         result = git_reference_delete( d->mRef );
     }
 
     void Reference::move(Result &result, const ObjectCommit &target)
     {
-        if ( !result ) return;
-
-        if ( !isValid() )
-        {
-            result.setInvalidObject();
-            return;
-        }
+        GW_D_CHECKED_VOID(Reference, result);
 
         const ObjectId &targetId = target.id(result);
         if ( !result || targetId.isNull() ) return;
@@ -347,13 +291,7 @@ namespace Git
 
     void Reference::rename(Result &result, const QString &newName, bool force)
     {
-        if ( !result ) return;
-
-        if ( !isValid() )
-        {
-            result.setInvalidObject();
-            return;
-        }
+        GW_D_CHECKED_VOID(Reference, result);
 
         git_reference* newRef = NULL;
         result = git_reference_rename( &newRef, d->mRef, newName.toUtf8().constData(), force );
@@ -366,25 +304,19 @@ namespace Git
 
     void Reference::updateHEAD(Result &result) const
     {
-        if ( !result ) return;
+        GW_D_CHECKED_VOID(Reference, result);
 
-        if ( !isValid() )
-        {
-            result.setInvalidObject();
-            return;
-        }
-
-        if( git_reference_is_branch(d->mRef) )
-        {
+        if (git_reference_is_branch(d->mRef)) {
             // reference is a local branch
-            result = git_repository_set_head(d->repo()->mRepo
-                                             , git_reference_name(d->mRef) );
+            result = git_repository_set_head(
+                        d->repo()->mRepo,
+                        git_reference_name(d->mRef));
         }
-        else
-        {
+        else {
             // reference is detached
-            result = git_repository_set_head_detached( d->repo()->mRepo
-                                                       , git_reference_target(d->mRef) );
+            result = git_repository_set_head_detached(
+                        d->repo()->mRepo,
+                        git_reference_target(d->mRef) );
         }
     }
 

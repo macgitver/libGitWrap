@@ -83,7 +83,7 @@ namespace Git
 
         struct cb_append_reference_data
         {
-            const GitPtr< RepositoryPrivate > &ptr;
+            RepositoryPrivate* ptr;
             ReferenceList refs;
         };
 
@@ -91,7 +91,7 @@ namespace Git
         {
             cb_append_reference_data *data = (cb_append_reference_data *)payload;
 
-            data->refs.append( new ReferencePrivate( data->ptr, reference ) );
+            data->refs.append(*new ReferencePrivate(data->ptr, reference));
 
             return 0;
         }
@@ -103,8 +103,8 @@ namespace Git
      * @brief       Create a Repository object
      * @param[in]   _d  Pointer to private data.
      */
-    Repository::Repository( const Internal::GitPtr< Internal::RepositoryPrivate >& _d )
-        : d( _d )
+    Repository::Repository(Internal::RepositoryPrivate& _d )
+        : Base(_d)
     {
     }
 
@@ -117,8 +117,8 @@ namespace Git
      * @param[in]   o   An existing Repository object
      *
      */
-    Repository::Repository( const Repository& o )
-        : d( o.d )
+    Repository::Repository(const Repository& other)
+        : Base(other)
     {
     }
 
@@ -143,20 +143,10 @@ namespace Git
      *
      * @return      A reference to this repository object.
      */
-    Repository& Repository::operator=( const Repository& o )
+    Repository& Repository::operator=(const Repository& other)
     {
-        d = o.d;
+        Base::operator=(other);
         return * this;
-    }
-
-    /**
-     * @brief       Check validty of this repository
-     *
-     * @return      `true`, if this repository is valid, `false` otherwise.
-     */
-    bool Repository::isValid() const
-    {
-        return d;
     }
 
     /**
@@ -196,7 +186,7 @@ namespace Git
             return Repository();
         }
 
-        return Repository( new Internal::RepositoryPrivate( repo ) );
+        return Repository(*new Internal::RepositoryPrivate(repo));
     }
 
     /**
@@ -278,7 +268,7 @@ namespace Git
             return Repository();
         }
 
-        return Repository( new Internal::RepositoryPrivate( repo ) );
+        return Repository(*new Internal::RepositoryPrivate(repo));
     }
 
     /**
@@ -291,6 +281,7 @@ namespace Git
      */
     bool Repository::isBare() const
     {
+        GW_CD(Repository);
         if( d )
         {
             return git_repository_is_bare( d->mRepo );
@@ -311,6 +302,7 @@ namespace Git
      */
     bool Repository::isHeadDetached() const
     {
+        GW_CD(Repository);
         return d && git_repository_head_detached(d->mRepo);
     }
 
@@ -327,37 +319,25 @@ namespace Git
      */
     Index Repository::index( Result& result )
     {
-        if( !result )
-        {
+        GW_D_CHECKED(Repository, Index(), result);
+
+        if( isBare() ) {
             return Index();
         }
 
-        if( !d )
-        {
-            result.setInvalidObject();
-            return Index();
-        }
-
-        if( isBare() )
-        {
-            return Index();
-        }
-
-        if( !d->mIndex )
-        {
+        if (!d->mIndex) {
             git_index* index = NULL;
 
-            result = git_repository_index( &index, d->mRepo );
+            result = git_repository_index(&index, d->mRepo);
 
-            if( !result )
-            {
+            if (!result) {
                 return Index();
             }
 
-            d->mIndex = new Internal::IndexPrivate( d, index );
+            d->mIndex = new Internal::IndexPrivate(d, index);
         }
 
-        return Index( d->mIndex );
+        return Index(*d->mIndex);
     }
 
     /**
@@ -375,15 +355,7 @@ namespace Git
     Git::StatusFlags Repository::status(Result &result, const QString &fileName) const
     {
         unsigned int status = GIT_STATUS_CURRENT;
-
-        if (!result) {
-            return FileInvalidStatus;
-        }
-
-        if (!d) {
-            result.setInvalidObject();
-            return FileInvalidStatus;
-        }
+        GW_CD_CHECKED(Repository, FileInvalidStatus, result);
 
         result = git_status_file( &status, d->mRepo, fileName.toUtf8().data() );
         if (!result) {
@@ -393,20 +365,10 @@ namespace Git
         return Internal::convertFileStatus( status );
     }
 
-    Git::StatusHash Repository::status(Result &result) const
+    StatusHash Repository::status(Result &result) const
     {
-        if( !result )
-        {
-            return Git::StatusHash();
-        }
-
-        if( !d )
-        {
-            result.setInvalidObject();
-            return Git::StatusHash();
-        }
-
-        Git::StatusHash sh;
+        StatusHash sh;
+        GW_CD_CHECKED(Repository, StatusHash(), result);
 
         git_status_options opt = GIT_STATUS_OPTIONS_INIT;
 
@@ -434,16 +396,7 @@ namespace Git
      */
     QStringList Repository::allReferenceNames( Result& result )
     {
-        if( !result )
-        {
-            return QStringList();
-        }
-
-        if( !d )
-        {
-            result.setInvalidObject();
-            return QStringList();
-        }
+        GW_D_CHECKED(Repository, QStringList(), result);
 
         git_strarray arr;
         result = git_reference_list( &arr, d->mRepo );
@@ -457,16 +410,7 @@ namespace Git
 
     ReferenceList Repository::allReferences(Result &result)
     {
-        if( !result )
-        {
-            return ReferenceList();
-        }
-
-        if( !d )
-        {
-            result.setInvalidObject();
-            return ReferenceList();
-        }
+        GW_D_CHECKED(Repository, ReferenceList(), result);
 
         Internal::cb_append_reference_data data = { d };
         result = git_reference_foreach( d->mRepo,
@@ -511,16 +455,7 @@ namespace Git
 
     ResolvedRefs Repository::allResolvedRefs( Result& result )
     {
-        if( !result )
-        {
-            return ResolvedRefs();
-        }
-
-        if( !d )
-        {
-            result.setInvalidObject();
-            return ResolvedRefs();
-        }
+        GW_CD_CHECKED(Repository, ResolvedRefs(), result);
 
         Internal::cb_enum_resolvedrefs_data data;
         data.repo = d->mRepo;
@@ -528,14 +463,12 @@ namespace Git
 
         Result tmp( git_reference_foreach( d->mRepo, &Internal::cb_enum_resolvedrefs, &data ) );
 
-        if( tmp.errorCode() == GIT_EUSER )
-        {
+        if (tmp.errorCode() == GIT_EUSER) {
             // correct error is already in result.
             return ResolvedRefs();
         }
 
-        if( !tmp )
-        {
+        if (!tmp) {
             result = tmp;
             return ResolvedRefs();
         }
@@ -570,15 +503,7 @@ namespace Git
 
     QStringList Repository::branchNames(Result& result, bool local, bool remote)
     {
-        if( !result )
-        {
-            return QStringList();
-        }
-        if( !d )
-        {
-            result.setInvalidObject();
-            return QStringList();
-        }
+        GW_CD_CHECKED(Repository, QStringList(), result);
 
         QStringList sl;
         result = git_branch_foreach( d->mRepo,
@@ -597,15 +522,7 @@ namespace Git
     bool Repository::renameBranch( const QString& oldName, const QString& newName, bool force,
                                    Result& result )
     {
-        if( !result )
-        {
-            return false;
-        }
-        if( !d )
-        {
-            result.setInvalidObject();
-            return false;
-        }
+        GW_CD_CHECKED(Repository, false, result);
 
         git_reference* ref = NULL;
 
@@ -638,16 +555,7 @@ namespace Git
 
     QStringList Repository::allTagNames( Result& result )
     {
-        if( !result )
-        {
-            return QStringList();
-        }
-
-        if( !d )
-        {
-            result.setInvalidObject();
-            return QStringList();
-        }
+        GW_CD_CHECKED(Repository, QStringList(), result);
 
         git_strarray arr;
         result = git_tag_list( &arr, d->mRepo );
@@ -662,6 +570,7 @@ namespace Git
 
     QString Repository::basePath() const
     {
+        GW_CD(Repository);
         if( !d )
         {
             GitWrap::lastResult().setInvalidObject();
@@ -673,6 +582,7 @@ namespace Git
 
     QString Repository::gitPath() const
     {
+        GW_CD(Repository);
         if( !d )
         {
             GitWrap::lastResult().setInvalidObject();
@@ -710,16 +620,7 @@ namespace Git
 
     Reference Repository::HEAD( Result& result ) const
     {
-        if( !result )
-        {
-            return Reference();
-        }
-
-        if( !d )
-        {
-            result.setInvalidObject();
-            return Reference();
-        }
+        GW_D_CHECKED(Repository, Reference(), result);
 
         git_reference* refHead = NULL;
 
@@ -729,21 +630,12 @@ namespace Git
             return Reference();
         }
 
-        return new Internal::ReferencePrivate( d, refHead );
+        return *new Internal::ReferencePrivate(d, refHead);
     }
 
     Object Repository::lookup( Result& result, const ObjectId& id, ObjectType ot )
     {
-        if( !result )
-        {
-            return Object();
-        }
-
-        if( !d )
-        {
-            result.setInvalidObject();
-            return Object();
-        }
+        GW_D_CHECKED(Repository, Object(), result);
 
         git_object* obj = NULL;
         git_otype gitObjType;
@@ -764,7 +656,7 @@ namespace Git
             return Object();
         }
 
-        return new Internal::ObjectPrivate( d, obj );
+        return *new Internal::ObjectPrivate(d, obj);
     }
 
     ObjectCommit Repository::lookupCommit(Result& result, const ObjectId& id)
@@ -814,17 +706,7 @@ namespace Git
 
     RevisionWalker Repository::newWalker( Result& result )
     {
-        if( !result )
-        {
-            return RevisionWalker();
-        }
-
-        if( !d )
-        {
-            result.setInvalidObject();
-            return RevisionWalker();
-        }
-
+        GW_D_CHECKED(Repository, RevisionWalker(), result);
         git_revwalk* walker = NULL;
 
         result = git_revwalk_new( &walker, d->mRepo );
@@ -833,21 +715,12 @@ namespace Git
             return RevisionWalker();
         }
 
-        return new Internal::RevisionWalkerPrivate( d, walker );
+        return *new Internal::RevisionWalkerPrivate(d, walker);
     }
 
     bool Repository::shouldIgnore(Result& result, const QString& filePath) const
     {
-        if( !result )
-        {
-            return false;
-        }
-
-        if( !d )
-        {
-            result.setInvalidObject();
-            return false;
-        }
+        GW_CD_CHECKED(Repository, false, result);
 
         int ignore = 0;
 
@@ -870,14 +743,7 @@ namespace Git
      */
     Remote::List Repository::allRemotes(Result& result) const
     {
-        if (!result) {
-            return Remote::List();
-        }
-
-        if (!d) {
-            result.setInvalidObject();
-            return Remote::List();
-        }
+        GW_CD_CHECKED(Repository, Remote::List(), result);
 
         git_strarray arr;
         result = git_remote_list( &arr, d->mRepo );
@@ -892,8 +758,8 @@ namespace Git
             if (!result) {
                 return Remote::List();
             }
-            Remote rm = new Internal::RemotePrivate(const_cast< Internal::RepositoryPrivate* >(*d),
-                                                    remote);
+            Remote rm = *new Internal::RemotePrivate(const_cast< Internal::RepositoryPrivate* >(d),
+                                                     remote);
             remotes.append(rm);
         }
 
@@ -910,16 +776,7 @@ namespace Git
      */
     QStringList Repository::allRemoteNames( Result& result ) const
     {
-        if( !result )
-        {
-            return QStringList();
-        }
-
-        if( !d )
-        {
-            result.setInvalidObject();
-            return QStringList();
-        }
+        GW_CD_CHECKED(Repository, QStringList(), result);
 
         git_strarray arr;
         result = git_remote_list( &arr, d->mRepo );
@@ -944,16 +801,7 @@ namespace Git
      */
     Remote Repository::remote(Result& result, const QString& remoteName) const
     {
-        if( !result )
-        {
-            return Remote();
-        }
-
-        if( !d )
-        {
-            result.setInvalidObject();
-            return Remote();
-        }
+        GW_CD_CHECKED(Repository, Remote(), result);
 
         git_remote* remote = NULL;
         result = git_remote_load( &remote, d->mRepo, remoteName.toUtf8().constData() );
@@ -963,22 +811,13 @@ namespace Git
             return Remote();
         }
 
-        return new Internal::RemotePrivate( const_cast< Internal::RepositoryPrivate* >( *d ), remote );
+        return *new Internal::RemotePrivate(const_cast<Internal::RepositoryPrivate*>(d), remote);
     }
 
     Remote Repository::createRemote(Result& result, const QString& remoteName, const QString& url,
                                     const QString& fetchSpec)
     {
-        if( !result )
-        {
-            return Remote();
-        }
-
-        if( !d )
-        {
-            result.setInvalidObject();
-            return Remote();
-        }
+        GW_D_CHECKED(Repository, Remote(), result);
 
         git_remote* remote = NULL;
         result = git_remote_create( &remote, d->mRepo, remoteName.toUtf8().constData(),
@@ -988,7 +827,7 @@ namespace Git
             return Remote();
         }
 
-        Remote remo = new Internal::RemotePrivate( *d, remote );
+        Remote remo = *new Internal::RemotePrivate(d, remote);
 
         if( !fetchSpec.isEmpty() )
         {
@@ -1025,16 +864,7 @@ namespace Git
 
     DiffList Repository::diffIndexToWorkingDir( Result& result )
     {
-        if( !result )
-        {
-            return DiffList();
-        }
-
-        if( !d )
-        {
-            result.setInvalidObject();
-            return DiffList();
-        }
+        GW_D_CHECKED(Repository, DiffList(), result);
 
         git_diff_list* diffList = NULL;
         result = git_diff_index_to_workdir( &diffList, d->mRepo, NULL, NULL );
@@ -1043,7 +873,7 @@ namespace Git
             return DiffList();
         }
 
-        return DiffList( new Internal::DiffListPrivate( d, diffList ) );
+        return DiffList(*new Internal::DiffListPrivate(d, diffList));
     }
 
     namespace Internal
@@ -1068,19 +898,8 @@ namespace Git
 
     Submodule::List Repository::submodules( Result& result )
     {
+        GW_D_CHECKED(Repository, Submodule::List(), result);
         Internal::cb_enum_submodules_t data = { d };
-
-        if( !result )
-        {
-            return data.subs;
-        }
-
-        if( !d )
-        {
-            result.setInvalidObject();
-            return data.subs;
-        }
-
 
         result = git_submodule_foreach( d->mRepo, &Internal::cb_enum_submodules, &data );
         if( !result )
@@ -1093,32 +912,13 @@ namespace Git
 
     Submodule Repository::submodule(Result& result, const QString& name)
     {
-        if( !result )
-        {
-            return Submodule();
-        }
-
-        if( !d )
-        {
-            result.setInvalidObject();
-            return Submodule();
-        }
-
-        return Submodule( d, name );
+        GW_D_CHECKED(Repository, Submodule(), result);
+        return Submodule(d, name);
     }
 
     Reference Repository::lookupRef(Result& result, const QString& refName, bool dwim)
     {
-        if( !result )
-        {
-            return Reference();
-        }
-
-        if( !d )
-        {
-            result.setInvalidObject();
-            return Reference();
-        }
+        GW_D_CHECKED(Repository, Reference(), result);
 
         git_reference* ref = NULL;
         if ( dwim )
@@ -1131,7 +931,7 @@ namespace Git
             return Reference();
         }
 
-        return new Internal::ReferencePrivate( d, ref );
+        return *new Internal::ReferencePrivate( d, ref );
     }
 
 }

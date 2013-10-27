@@ -17,8 +17,8 @@
 #ifndef GIT_TREEBUILDER_PRIVATE_H
 #define GIT_TREEBUILDER_PRIVATE_H
 
-#include "GitWrapPrivate.hpp"
-#include "RepoObject.hpp"
+#include "libGitWrap/Private/GitWrapPrivate.hpp"
+#include "libGitWrap/Private/RepoObjectPrivate.hpp"
 
 namespace Git
 {
@@ -31,10 +31,10 @@ namespace Git
          * @ingroup     GitWrap
          * @brief       The TreeBuilderPrivate class
          */
-        class TreeBuilderPrivate : public RepoObject
+        class TreeBuilderPrivate : public RepoObjectPrivate
         {
         public:
-            TreeBuilderPrivate( const GitPtr< RepositoryPrivate >& repo, git_treebuilder* builder );
+            TreeBuilderPrivate(RepositoryPrivate* repo, git_treebuilder* builder);
             ~TreeBuilderPrivate();
 
         public:

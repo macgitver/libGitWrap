@@ -1,6 +1,9 @@
 /*
  * MacGitver
- * Copyright (C) 2012-2013 Sascha Cunz <sascha@babbelbox.org>
+ * Copyright (C) 2012-2013 The MacGitver-Developers <dev@macgitver.org>
+ *
+ * (C) Sascha Cunz <sascha@macgitver.org>
+ * (C) Cunz RaD Ltd.
  *
  * This program is free software; you can redistribute it and/or modify it under the terms of the
  * GNU General Public License (Version 2) as published by the Free Software Foundation.
@@ -14,37 +17,36 @@
  *
  */
 
-#ifndef GIT_REPO_OBJECT_H
-#define GIT_REPO_OBJECT_H
+#ifndef GITWRAP_REPO_OBJECT_HPP
+#define GITWRAP_REPO_OBJECT_HPP
 
-#include "RepositoryPrivate.hpp"
+#include "libGitWrap/Base.hpp"
 
 namespace Git
 {
+
     namespace Internal
     {
 
-        /**
-         * @internal
-         * @ingroup GitWrap
-         * @brief The RepoObject class
-         *
-         */
-        class RepoObject : public BasicObject
-        {
-        public:
-            RepoObject( const GitPtr< RepositoryPrivate >& repo );
-            virtual ~RepoObject();
-
-            RepositoryPrivate* repo() const;
-
-        protected:
-            GitPtr< RepositoryPrivate > mRepo;
-        };
+        class RepoObjectPrivate;
 
     }
+
+    class GITWRAP_API RepoObject : public Base
+    {
+    public:
+        RepoObject();
+
+    public:
+        bool operator==(const RepoObject& other) const;
+
+    public:
+        Repository repository() const;
+
+    protected:
+        RepoObject(Internal::RepoObjectPrivate& _d);
+    };
 
 }
 
 #endif
-

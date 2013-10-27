@@ -116,6 +116,8 @@ ADD_DEFINITIONS( -D_FILE_OFFSET_BITS=64 -DGIT_THREADS )
 
 SET( SRC_FILES
 
+    Base.cpp
+    RepoObject.cpp
     Config.cpp
     ChangeListConsumer.cpp
     CloneOperation.cpp
@@ -145,14 +147,14 @@ SET( SRC_FILES
     TreeBuilder.cpp
     TreeEntry.cpp
 
-    Private/BasicObject.cpp
-    Private/RepoObject.cpp
     Private/FetchCallbacks.cpp
     Private/WorkerThread.cpp
 )
 
 SET( PUB_HDR_FILES
 
+    Base.hpp
+    RepoObject.hpp
     Result.hpp
     Config.hpp
     ChangeListConsumer.hpp
@@ -185,7 +187,7 @@ SET( PUB_HDR_FILES
 SET( PRI_HDR_FILES
 
     Private/GitWrapPrivate.hpp
-    Private/BasicObject.hpp
+    Private/BasePrivate.hpp
     Private/ConfigPrivate.hpp
     Private/CloneOperationPrivate.hpp
     Private/DiffListPrivate.hpp
@@ -196,7 +198,7 @@ SET( PRI_HDR_FILES
     Private/ObjectPrivate.hpp
     Private/ReferencePrivate.hpp
     Private/RemotePrivate.hpp
-    Private/RepoObject.hpp
+    Private/RepoObjectPrivate.hpp
     Private/RepositoryPrivate.hpp
     Private/RevisionWalkerPrivate.hpp
     Private/TreeBuilderPrivate.hpp

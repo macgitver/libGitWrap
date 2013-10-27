@@ -17,7 +17,7 @@
 #ifndef GIT_OBJECT_PRIVATE_H
 #define GIT_OBJECT_PRIVATE_H
 
-#include "RepoObject.hpp"
+#include "libGitWrap/Private/RepoObjectPrivate.hpp"
 
 namespace Git
 {
@@ -30,10 +30,10 @@ namespace Git
          * @brief       The ObjectPrivate class
          *
          */
-        class ObjectPrivate : public RepoObject
+        class ObjectPrivate : public RepoObjectPrivate
         {
         public:
-            ObjectPrivate( const GitPtr< RepositoryPrivate >& repo, git_object* o );
+            ObjectPrivate(RepositoryPrivate* repo, git_object* o);
             ~ObjectPrivate();
 
         public:

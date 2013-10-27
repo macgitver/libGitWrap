@@ -17,7 +17,7 @@
 #ifndef GIT_TREE_ENTRY_H
 #define GIT_TREE_ENTRY_H
 
-#include "GitWrap.hpp"
+#include "libGitWrap/Base.hpp"
 
 namespace Git
 {
@@ -31,26 +31,21 @@ namespace Git
      * @ingroup     GitWrap
      * @brief       Represents an entry in a git tree
      */
-    class GITWRAP_API TreeEntry
+    class GITWRAP_API TreeEntry : public Base
     {
     public:
         TreeEntry();
-        TreeEntry( Internal::TreeEntryPrivate* _d );
-        TreeEntry( const TreeEntry& other );
+        TreeEntry(Internal::TreeEntryPrivate& _d );
+        TreeEntry(const TreeEntry& other);
         ~TreeEntry();
         TreeEntry& operator=( const TreeEntry& other );
 
     public:
-        bool isValid() const;
-
         TreeEntry clone() const;
 
         ObjectId sha1() const;
         QString name() const;
         ObjectType type() const;
-
-    private:
-        Internal::GitPtr< Internal::TreeEntryPrivate > d;
     };
 
 }

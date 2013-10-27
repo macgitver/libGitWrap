@@ -17,8 +17,8 @@
 #ifndef GIT_REVWALKER_PRIVATE_H
 #define GIT_REVWALKER_PRIVATE_H
 
-#include "GitWrapPrivate.hpp"
-#include "RepoObject.hpp"
+#include "libGitWrap/Private/GitWrapPrivate.hpp"
+#include "libGitWrap/Private/RepoObjectPrivate.hpp"
 
 namespace Git
 {
@@ -32,10 +32,10 @@ namespace Git
          * @brief       The RevisionWalkerPrivate class
          *
          */
-        class RevisionWalkerPrivate : public RepoObject
+        class RevisionWalkerPrivate : public RepoObjectPrivate
         {
         public:
-            RevisionWalkerPrivate( const GitPtr< RepositoryPrivate >& repo, git_revwalk* walker );
+            RevisionWalkerPrivate(RepositoryPrivate* repo, git_revwalk* walker);
             ~RevisionWalkerPrivate();
 
         public:

@@ -1,6 +1,9 @@
 /*
  * MacGitver
- * Copyright (C) 2012-2013 Sascha Cunz <sascha@babbelbox.org>
+ * Copyright (C) 2012-2013 The MacGitver-Developers <dev@macgitver.org>
+ *
+ * (C) Sascha Cunz <sascha@macgitver.org>
+ * (C) Cunz RaD Ltd.
  *
  * This program is free software; you can redistribute it and/or modify it under the terms of the
  * GNU General Public License (Version 2) as published by the Free Software Foundation.
@@ -40,24 +43,9 @@ namespace Git
     {
     }
 
-    Config::Config( Internal::ConfigPrivate* cfg )
-        : d( cfg )
+    Config::Config(Internal::ConfigPrivate& _d)
+        : Base(_d)
     {
-    }
-
-    Config::Config( const Config& other )
-        : d( other.d )
-    {
-    }
-
-    Config::~Config()
-    {
-    }
-
-    Config& Config::operator=( const Config& other )
-    {
-        d = other.d;
-        return * this;
     }
 
     QString Config::globalFilePath()
@@ -105,7 +93,7 @@ namespace Git
             return Config();
         }
 
-        return new Internal::ConfigPrivate( cfg );
+        return *new Internal::ConfigPrivate(cfg);
     }
 
     Config Config::user()
@@ -125,7 +113,7 @@ namespace Git
             return Config();
         }
 
-        return new Internal::ConfigPrivate( cfg );
+        return *new Internal::ConfigPrivate(cfg);
     }
 
     Config Config::file( const QString& fileName )
@@ -139,7 +127,7 @@ namespace Git
             return Config();
         }
 
-        return new Internal::ConfigPrivate( cfg );
+        return *new Internal::ConfigPrivate(cfg);
     }
 
     Config Config::create()
@@ -152,11 +140,13 @@ namespace Git
             return Config();
         }
 
-        return new Internal::ConfigPrivate( cfg );
+        return *new Internal::ConfigPrivate(cfg);
     }
 
-    bool Config::addFile( const QString& fileName, int priority )
+    bool Config::addFile(const QString& fileName, int priority)
     {
+        GW_D(Config);
+
         if( !d || fileName.isEmpty() )
         {
             return false;
@@ -181,6 +171,7 @@ namespace Git
 
     ConfigValues Config::values()
     {
+        GW_D(Config);
         ConfigValues values;
         git_config_foreach( d->mCfg, &read_config_cb, (void*) &values );
         return values;

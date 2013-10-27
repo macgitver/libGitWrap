@@ -17,10 +17,8 @@
 #ifndef GIT_REPOSITORY_PRIVATE_H
 #define GIT_REPOSITORY_PRIVATE_H
 
-#include <QMutex>
-
-#include "GitWrapPrivate.hpp"
-#include "BasicObject.hpp"
+#include "libGitWrap/Private/GitWrapPrivate.hpp"
+#include "libGitWrap/Private/BasePrivate.hpp"
 
 namespace Git
 {
@@ -35,8 +33,11 @@ namespace Git
          * @brief The RepositoryPrivate class
          *
          */
-        class RepositoryPrivate : public BasicObject
+        class RepositoryPrivate : public BasePrivate
         {
+        public:
+            typedef QExplicitlySharedDataPointer<RepositoryPrivate> Ptr;
+
         public:
             RepositoryPrivate( git_repository* repo );
             ~RepositoryPrivate();

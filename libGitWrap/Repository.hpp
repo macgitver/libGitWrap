@@ -17,8 +17,9 @@
 #ifndef GIT_REPOSITORY_H
 #define GIT_REPOSITORY_H
 
-#include "Submodule.hpp"
-#include "Remote.hpp"
+#include "libGitWrap/Base.hpp"
+#include "libGitWrap/Submodule.hpp"
+#include "libGitWrap/Remote.hpp"
 
 namespace Git
 {
@@ -35,12 +36,13 @@ namespace Git
      * @brief       A git repository
      *
      */
-    class GITWRAP_API Repository
+    class GITWRAP_API Repository : public Base
     {
-        friend class Index;
+    public:
+        typedef Internal::RepositoryPrivate Private;
 
     public:
-        explicit Repository( const Internal::GitPtr< Internal::RepositoryPrivate >& _d );
+        explicit Repository(Internal::RepositoryPrivate& _d);
         Repository();
         Repository( const Repository& other );
         Repository& operator=( const Repository& other );
@@ -61,7 +63,6 @@ namespace Git
         static Repository open( const QString& path,
                                 Result& result );
 
-        bool isValid() const;
         bool isBare() const;
         bool isHeadDetached() const;
 
@@ -129,9 +130,6 @@ namespace Git
 
         SubmoduleList submodules( Result& result );
         Submodule submodule( Result& result, const QString& name );
-
-    private:
-        Internal::GitPtr< Internal::RepositoryPrivate > d;
     };
 
 }

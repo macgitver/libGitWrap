@@ -19,9 +19,10 @@
 #ifndef GIT_INDEX_PRIVATE_H
 #define GIT_INDEX_PRIVATE_H
 
-#include "GitWrapPrivate.hpp"
-#include "RepoObject.hpp"
 #include "IndexConflict.hpp"
+
+#include "libGitWrap/Private/GitWrapPrivate.hpp"
+#include "libGitWrap/Private/RepoObjectPrivate.hpp"
 
 namespace Git
 {
@@ -35,10 +36,10 @@ namespace Git
          * @brief The IndexPrivate class
          *
          */
-        class IndexPrivate : public RepoObject
+        class IndexPrivate : public RepoObjectPrivate
         {
         public:
-            IndexPrivate( const GitPtr< RepositoryPrivate >& repo, git_index* index );
+            IndexPrivate(RepositoryPrivate* repo, git_index* index);
             ~IndexPrivate();
 
         public:

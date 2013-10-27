@@ -19,10 +19,10 @@
 #ifndef GIT_INDEX_CONFLICT_PRIVATE_HPP
 #define GIT_INDEX_CONFLICT_PRIVATE_HPP
 
-#include "GitWrapPrivate.hpp"
+#include "libGitWrap/Private/GitWrapPrivate.hpp"
 
-#include "BasicObject.hpp"
-#include "IndexEntry.hpp"
+#include "libGitWrap/Private/BasePrivate.hpp"
+#include "libGitWrap/IndexEntry.hpp"
 
 namespace Git
 {
@@ -30,7 +30,7 @@ namespace Git
     namespace Internal
     {
 
-        class IndexConflictPrivate : public BasicObject
+        class IndexConflictPrivate : public BasePrivate
         {
         public:
             IndexConflictPrivate(const IndexEntry& _from, const IndexEntry& _ours,

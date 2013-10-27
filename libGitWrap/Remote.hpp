@@ -17,7 +17,7 @@
 #ifndef GIT_REMOTE_H
 #define GIT_REMOTE_H
 
-#include "GitWrap.hpp"
+#include "libGitWrap/RepoObject.hpp"
 
 namespace Git
 {
@@ -35,21 +35,22 @@ namespace Git
      * or on a remote site.
      *
      */
-    class GITWRAP_API Remote
+    class GITWRAP_API Remote : public RepoObject
     {
+    public:
+        typedef Internal::RemotePrivate Private;
+
     public:
         typedef RemoteList List;
 
     public:
         Remote();
-        Remote( Internal::RemotePrivate* _d );
-        Remote( const Remote& other );
+        Remote(Internal::RemotePrivate& _d);
+        Remote(const Remote& other);
         ~Remote();
         Remote& operator=( const Remote& other );
 
     public:
-        bool isValid() const;
-
         bool save( Result& result );
 
         QString name() const;
@@ -68,9 +69,6 @@ namespace Git
         void disconnect( Result& result );
         bool download( Result& result );
         bool updateTips( Result& result );
-
-    private:
-        Internal::GitPtr< Internal::RemotePrivate > d;
     };
 
 }

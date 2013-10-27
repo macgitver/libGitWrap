@@ -17,8 +17,8 @@
 #ifndef GIT_REMOTE_PRIVATE_H
 #define GIT_REMOTE_PRIVATE_H
 
-#include "GitWrapPrivate.hpp"
-#include "RepoObject.hpp"
+#include "libGitWrap/Private/GitWrapPrivate.hpp"
+#include "libGitWrap/Private/RepoObjectPrivate.hpp"
 
 namespace Git
 {
@@ -32,10 +32,10 @@ namespace Git
          * @brief The RemotePrivate class
          *
          */
-        class RemotePrivate : public RepoObject
+        class RemotePrivate : public RepoObjectPrivate
         {
         public:
-            RemotePrivate( const GitPtr< RepositoryPrivate >& repo, git_remote* remote );
+            RemotePrivate(RepositoryPrivate* repo, git_remote* remote);
             ~RemotePrivate();
 
         public:

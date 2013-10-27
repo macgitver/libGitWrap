@@ -14,38 +14,35 @@
  *
  */
 
-#ifndef GIT_BASIC_OBJECT_H
-#define GIT_BASIC_OBJECT_H
+#ifndef GIT_REPO_OBJECT_H
+#define GIT_REPO_OBJECT_H
 
-#include <QAtomicInt>
+#include "libGitWrap/Base.hpp"
 
-#include "GitWrapPrivate.hpp"
+#include "libGitWrap/Private/BasePrivate.hpp"
+#include "libGitWrap/Private/RepositoryPrivate.hpp"
 
 namespace Git
 {
     namespace Internal
     {
 
-        class RepositoryPrivate;
-
         /**
          * @internal
          * @ingroup GitWrap
-         * @brief The BaseObject class
+         * @brief The RepoObject class
          *
          */
-        class BasicObject
+        class RepoObjectPrivate : public BasePrivate
         {
         public:
-            BasicObject();
-            virtual ~BasicObject();
+            RepoObjectPrivate(RepositoryPrivate* repo);
 
         public:
-            void ref();
-            void deref();
+            RepositoryPrivate* repo() const;
 
-        private:
-            QAtomicInt mRefCounter;
+        protected:
+            RepositoryPrivate::Ptr mRepo;
         };
 
     }

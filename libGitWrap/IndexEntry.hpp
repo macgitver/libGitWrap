@@ -19,7 +19,7 @@
 #ifndef GIT_INDEX_ENTRY_H
 #define GIT_INDEX_ENTRY_H
 
-#include "GitWrap.hpp"
+#include "libGitWrap/Base.hpp"
 
 namespace Git
 {
@@ -29,21 +29,20 @@ namespace Git
         class IndexEntryPrivate;
     }
 
-    class GITWRAP_API IndexEntry
+    class GITWRAP_API IndexEntry : public Base
     {
-        friend class Index;
+    public:
+        typedef Internal::IndexEntryPrivate Private;
 
     public:
         IndexEntry();
         IndexEntry(const IndexEntry &other);
-        IndexEntry(Internal::IndexEntryPrivate* _d);
+        IndexEntry(Internal::IndexEntryPrivate& _d);
         ~IndexEntry();
 
         IndexEntry& operator=( const IndexEntry& other );
 
     public:
-        bool isValid() const;
-
         QString path() const;
         ObjectId blobSha() const;
         unsigned int mode() const;
@@ -53,9 +52,6 @@ namespace Git
         QDateTime cTime() const;
         QDateTime mTime() const;
         int stage() const;
-
-    private:
-        Internal::GitPtr< Internal::IndexEntryPrivate >   d;
     };
 
 }

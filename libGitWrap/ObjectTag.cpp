@@ -26,13 +26,13 @@ namespace Git
     {
     }
 
-    ObjectTag::ObjectTag( Internal::ObjectPrivate* _d )
-        : Object( _d )
+    ObjectTag::ObjectTag( Internal::ObjectPrivate& _d )
+        : Object(_d)
     {
         Result r;
         if( ( type( r ) != otTag ) || !r )
         {
-            d = NULL;
+            mData = NULL;
         }
     }
 

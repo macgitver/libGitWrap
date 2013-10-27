@@ -17,7 +17,7 @@
 #ifndef GIT_REFERENCE_PRIVATE_H
 #define GIT_REFERENCE_PRIVATE_H
 
-#include "RepoObject.hpp"
+#include "libGitWrap/Private/RepoObjectPrivate.hpp"
 
 namespace Git
 {
@@ -31,10 +31,10 @@ namespace Git
          * @brief       The ReferencePrivate class
          *
          */
-        class ReferencePrivate : public RepoObject
+        class ReferencePrivate : public RepoObjectPrivate
         {
         public:
-            ReferencePrivate( const GitPtr< RepositoryPrivate >& repo, git_reference* ref );
+            ReferencePrivate(RepositoryPrivate* repo, git_reference* ref);
             ~ReferencePrivate();
 
         public:

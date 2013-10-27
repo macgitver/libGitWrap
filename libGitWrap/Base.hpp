@@ -17,48 +17,43 @@
  *
  */
 
-#ifndef GITWRAP_CONFIG_H
-#define GITWRAP_CONFIG_H
+#ifndef GITWRAP_BASE_HPP
+#define GITWRAP_BASE_HPP
 
-#include "Base.hpp"
+#include <QSharedData>
+
+#include "libGitWrap/GitWrap.hpp"   // for convenience
 
 namespace Git
 {
 
     namespace Internal
     {
-        class ConfigPrivate;
+
+        class BasePrivate;
+
     }
 
-    typedef QHash< QString, QString > ConfigValues;
-
-    /**
-     * @ingroup     GitWrap
-     * @brief       Provides access git configuration files
-     *
-     */
-    class GITWRAP_API Config : public Base
+    class GITWRAP_API Base
     {
-    public:
-        Config();
-        Config(Internal::ConfigPrivate& _d);
+        friend class Internal::BasePrivate;
 
     public:
-        bool addFile( const QString& fileName, int priority );
-
-        ConfigValues values();
+        typedef Internal::BasePrivate Private;
 
     public:
-        static QString globalFilePath();
-        static QString userFilePath();
-        static Config global();
-        static Config user();
-        static Config file( const QString& fileName );
-        static Config create();
+        Base();
+        Base(const Base& other);
+        virtual ~Base();
+        Base& operator=(const Base& other);
+        bool isValid() const;
+        bool operator==(const Base& other) const;
+
+    protected:
+        Base(Internal::BasePrivate& _d);
+        QExplicitlySharedDataPointer<Internal::BasePrivate> mData;
     };
 
 }
-
-Q_DECLARE_METATYPE( Git::Config )
 
 #endif
