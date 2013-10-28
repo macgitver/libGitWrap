@@ -17,36 +17,31 @@
  *
  */
 
-#ifndef GITWRAP_REPO_OBJECT_HPP
-#define GITWRAP_REPO_OBJECT_HPP
+#include <QDir>
 
-#include "libGitWrap/Base.hpp"
+#include "libGitWrap/Result.hpp"
 
-namespace Git
+#include "Infra/Fixture.hpp"
+#include "Infra/TempDirProvider.hpp"
+#include "Infra/TempRepo.hpp"
+
+TempRepo::TempRepo(Fixture* fixture, const char* name)
 {
-
-    namespace Internal
-    {
-
-        class RepoObjectPrivate;
-
-    }
-
-    class GITWRAP_API RepoObject : public Base
-    {
-    public:
-        RepoObject();
-
-    public:
-        bool operator==(const RepoObject& other) const;
-
-    public:
-        Repository repository() const;
-
-    protected:
-        RepoObject(Internal::RepoObjectPrivate& _d);
-    };
-
+    mTempRepoDir = fixture->prepareRepo(name);
 }
 
-#endif
+TempRepo::~TempRepo()
+{
+    QDir(mTempRepoDir).rmpath(QLatin1String("."));
+}
+
+TempRepoOpener::TempRepoOpener(Fixture* fixture, const char* name)
+    : mTempRepo(fixture, name)
+{
+    Git::Result r;
+    mRepo = Git::Repository::open(mTempRepo, r);
+}
+
+TempRepoOpener::~TempRepoOpener()
+{
+}

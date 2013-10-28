@@ -14,31 +14,40 @@
  *
  */
 
-#include "GitWrapPrivate.hpp"
-#include "BasicObject.hpp"
+#ifndef GIT_REPO_OBJECT_H
+#define GIT_REPO_OBJECT_H
+
+#include "libGitWrap/Base.hpp"
+
+#include "libGitWrap/Private/BasePrivate.hpp"
+#include "libGitWrap/Private/RepositoryPrivate.hpp"
 
 namespace Git
 {
-
     namespace Internal
     {
 
         /**
          * @internal
-         * @ingroup     GitWrap
-         * @brief       The ConfigPrivate class
+         * @ingroup GitWrap
+         * @brief The RepoObject class
          *
          */
-        class ConfigPrivate : public BasicObject
+        class RepoObjectPrivate : public BasePrivate
         {
         public:
-            ConfigPrivate( git_config* cfg );
-            ~ConfigPrivate();
+            RepoObjectPrivate(RepositoryPrivate* repo);
 
         public:
-            git_config* mCfg;
+            RepositoryPrivate* repo() const;
+
+        protected:
+            RepositoryPrivate::Ptr mRepo;
         };
 
     }
 
 }
+
+#endif
+

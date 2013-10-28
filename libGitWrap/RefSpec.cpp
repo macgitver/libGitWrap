@@ -14,8 +14,9 @@
  *
  */
 
-#include "GitWrapPrivate.hpp"
 #include "RefSpec.hpp"
+
+#include "Private/GitWrapPrivate.hpp"
 
 namespace Git
 {

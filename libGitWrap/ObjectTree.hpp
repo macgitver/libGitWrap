@@ -34,8 +34,8 @@ namespace Git
     {
     public:
         ObjectTree();
-        ObjectTree( Internal::ObjectPrivate* _d );
-        ObjectTree( const ObjectTree& o );
+        ObjectTree(Internal::ObjectPrivate& _d);
+        ObjectTree(const ObjectTree& o);
 
     public:
         ObjectTree subPath( Result& result, const QString& pathName ) const;

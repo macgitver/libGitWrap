@@ -14,11 +14,10 @@
  *
  */
 
-#ifndef GIT_DIFFLIST_PRIVATE_H
-#define GIT_DIFFLIST_PRIVATE_H
+#ifndef GIT_REFERENCE_PRIVATE_H
+#define GIT_REFERENCE_PRIVATE_H
 
-#include "GitWrapPrivate.hpp"
-#include "RepoObject.hpp"
+#include "libGitWrap/Private/RepoObjectPrivate.hpp"
 
 namespace Git
 {
@@ -29,17 +28,17 @@ namespace Git
         /**
          * @internal
          * @ingroup     GitWrap
-         * @brief       The DiffListPrivate class
+         * @brief       The ReferencePrivate class
          *
          */
-        class DiffListPrivate : public RepoObject
+        class ReferencePrivate : public RepoObjectPrivate
         {
         public:
-            DiffListPrivate( const GitPtr< RepositoryPrivate >& repo, git_diff_list* difflist );
-            ~DiffListPrivate();
+            ReferencePrivate(RepositoryPrivate* repo, git_reference* ref);
+            ~ReferencePrivate();
 
         public:
-            git_diff_list*	mDiffList;
+            git_reference*  mRef;
         };
 
     }

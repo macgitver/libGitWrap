@@ -1,17 +1,41 @@
-
 PROJECT(MGV_GITWRAP_TESTS)
+
+ADD_DEFINITIONS(-DDATADIR=\"${CMAKE_CURRENT_LIST_DIR}/Data\")
 
 QT_PREPARE(Core -Gui)
 
 SET(SRC_FILES
 
+    Infra/main.cpp
+    Infra/TempRepo.cpp
+    Infra/TempDirProvider.cpp
+    Infra/Fixture.cpp
+
     TestRepository.cpp
     TestRefName.cpp
 )
 
-INCLUDE_DIRECTORIES(${libGitWrap_includes})
+SET(HDR_FILES
 
-ADD_QT_GTEST(testGitWrap ${SRC_FILES})
+    Infra/TempRepo.hpp
+    Infra/TempDirProvider.hpp
+    Infra/Fixture.hpp
+)
+
+INCLUDE_DIRECTORIES(
+    ${libGitWrap_includes}
+    ${CMAKE_CURRENT_SOURCE_DIR}
+)
+
+QT_MOC( MOC_FILES ${HDR_FILES} )
+
+ADD_CUSTOM_GTEST(
+    testGitWrap
+
+    ${SRC_FILES}
+    ${HDR_FILES}
+    ${MOC_FILES}
+)
 
 TARGET_LINK_LIBRARIES(
     testGitWrap
@@ -19,3 +43,5 @@ TARGET_LINK_LIBRARIES(
     LINK_PRIVATE
         GitWrap
 )
+
+ADVANCE_TO_QT_PROJECT(testGitWrap)

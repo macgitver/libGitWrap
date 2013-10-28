@@ -17,12 +17,12 @@
 #ifndef GIT_OBJECT_COMMIT_H
 #define GIT_OBJECT_COMMIT_H
 
-#include "GitWrap.hpp"
-#include "ObjectId.hpp"
-#include "Object.hpp"
-#include "Signature.hpp"
-#include "DiffList.hpp"
-#include "Result.hpp"
+#include "libGitWrap/GitWrap.hpp"
+#include "libGitWrap/ObjectId.hpp"
+#include "libGitWrap/Object.hpp"
+#include "libGitWrap/Signature.hpp"
+#include "libGitWrap/DiffList.hpp"
+#include "libGitWrap/Result.hpp"
 
 namespace Git
 {
@@ -36,8 +36,8 @@ namespace Git
     {
     public:
         ObjectCommit();
-        ObjectCommit( Internal::ObjectPrivate* _d );
-        ObjectCommit( const ObjectCommit& o );
+        ObjectCommit(Internal::ObjectPrivate& _d);
+        ObjectCommit(const ObjectCommit& o);
 
     public:
         bool operator==( const Git::ObjectCommit& commit ) const

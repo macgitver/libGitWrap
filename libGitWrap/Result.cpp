@@ -14,9 +14,9 @@
  *
  */
 
-#include "GitWrapPrivate.hpp"
-
 #include "Result.hpp"
+
+#include "Private/GitWrapPrivate.hpp"
 
 namespace Git
 {

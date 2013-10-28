@@ -14,28 +14,36 @@
  *
  */
 
-#include "ObjectBlob.hpp"
+#ifndef GIT_DIFFLIST_PRIVATE_H
+#define GIT_DIFFLIST_PRIVATE_H
 
-#include "Private/GitWrapPrivate.hpp"
+#include "libGitWrap/Private/GitWrapPrivate.hpp"
+#include "libGitWrap/Private/RepoObjectPrivate.hpp"
 
 namespace Git
 {
 
-    ObjectBlob::ObjectBlob()
+    namespace Internal
     {
-    }
 
-    ObjectBlob::ObjectBlob(Internal::ObjectPrivate& _d)
-        : Object(_d)
-    {
-        Result r;
-        Q_UNUSED( r );
-        Q_ASSERT( type(r) == otBlob );
-    }
+        /**
+         * @internal
+         * @ingroup     GitWrap
+         * @brief       The DiffListPrivate class
+         *
+         */
+        class DiffListPrivate : public RepoObjectPrivate
+        {
+        public:
+            DiffListPrivate(RepositoryPrivate* repo, git_diff_list* difflist);
+            ~DiffListPrivate();
 
-    ObjectBlob::ObjectBlob(const ObjectBlob& o)
-        : Object(o)
-    {
+        public:
+            git_diff_list*	mDiffList;
+        };
+
     }
 
 }
+
+#endif

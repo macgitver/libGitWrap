@@ -14,9 +14,11 @@
  *
  */
 
-#include "GitWrapPrivate.hpp"
-#include "RepositoryPrivate.hpp"
-#include "RepoObject.hpp"
+#include "libGitWrap/RepoObject.hpp"
+#include "libGitWrap/Repository.hpp"
+
+#include "libGitWrap/Private/GitWrapPrivate.hpp"
+#include "libGitWrap/Private/RepoObjectPrivate.hpp"
 
 namespace Git
 {
@@ -24,21 +26,37 @@ namespace Git
     namespace Internal
     {
 
-        RepoObject::RepoObject( const GitPtr< RepositoryPrivate >& repo )
-            : mRepo( repo )
-        {
-            Q_ASSERT( *mRepo );
-        }
-
-        RepoObject::~RepoObject()
+        RepoObjectPrivate::RepoObjectPrivate(RepositoryPrivate* repo)
+            : BasePrivate()
+            , mRepo(repo)
         {
         }
 
-        RepositoryPrivate* RepoObject::repo() const
+        RepositoryPrivate* RepoObjectPrivate::repo() const
         {
             return mRepo.data();
         }
 
+    }
+
+    RepoObject::RepoObject()
+    {
+    }
+
+    RepoObject::RepoObject(Internal::RepoObjectPrivate& _d)
+        : Base(_d)
+    {
+    }
+
+    bool RepoObject::operator==(const RepoObject& other) const
+    {
+        return Base::operator==(other);
+    }
+
+    Repository RepoObject::repository() const
+    {
+        GW_CD(RepoObject);
+        return Repository(*d->repo());
     }
 
 }

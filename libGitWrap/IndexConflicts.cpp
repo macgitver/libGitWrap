@@ -18,21 +18,22 @@
 
 #include "IndexConflict.hpp"
 #include "IndexConflicts.hpp"
-#include "IndexConflictPrivate.hpp"
 #include "Index.hpp"
-#include "IndexPrivate.hpp"
-#include "IndexEntryPrivate.hpp"
+
+#include "Private/IndexPrivate.hpp"
+#include "Private/IndexEntryPrivate.hpp"
+#include "Private/IndexConflictPrivate.hpp"
 
 namespace Git
 {
 
-    IndexConflicts::IndexConflicts(Internal::IndexPrivate* _d)
-        : d(_d)
+    IndexConflicts::IndexConflicts(Internal::IndexPrivate& _d)
+        : Base(_d)
     {
     }
 
     IndexConflicts::IndexConflicts(const IndexConflicts& other)
-        : d(other.d)
+        : Base(other)
     {
     }
 
@@ -42,28 +43,26 @@ namespace Git
 
     IndexConflicts& IndexConflicts::operator=(const IndexConflicts& other)
     {
-        d = other.d;
+        Base::operator =(other);
         return * this;
-    }
-
-    bool IndexConflicts::isValid() const
-    {
-        return d;
     }
 
     Index IndexConflicts::index() const
     {
-        return Index(d.data());
+        GW_D(Index);
+        return Index(*d);
     }
 
     void IndexConflicts::refresh()
     {
+        GW_D(Index);
         // this is a lazy refresh :)
         d->clearKnownConflicts();
     }
 
     int IndexConflicts::count()
     {
+        GW_D(Index);
         if (!d) {
             return 0;
         }
@@ -74,6 +73,7 @@ namespace Git
 
     IndexConflict IndexConflicts::at(int index)
     {
+        GW_D(Index);
         if (!d) {
             return IndexConflict();
         }

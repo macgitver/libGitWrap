@@ -14,10 +14,11 @@
  *
  */
 
-#ifndef GIT_OBJECT_PRIVATE_H
-#define GIT_OBJECT_PRIVATE_H
+#ifndef GIT_REVWALKER_PRIVATE_H
+#define GIT_REVWALKER_PRIVATE_H
 
-#include "RepoObject.hpp"
+#include "libGitWrap/Private/GitWrapPrivate.hpp"
+#include "libGitWrap/Private/RepoObjectPrivate.hpp"
 
 namespace Git
 {
@@ -26,18 +27,19 @@ namespace Git
     {
 
         /**
-         * @internal    GitWrap
-         * @brief       The ObjectPrivate class
+         * @internal
+         * @ingroup     GitWrap
+         * @brief       The RevisionWalkerPrivate class
          *
          */
-        class ObjectPrivate : public RepoObject
+        class RevisionWalkerPrivate : public RepoObjectPrivate
         {
         public:
-            ObjectPrivate( const GitPtr< RepositoryPrivate >& repo, git_object* o );
-            ~ObjectPrivate();
+            RevisionWalkerPrivate(RepositoryPrivate* repo, git_revwalk* walker);
+            ~RevisionWalkerPrivate();
 
         public:
-            git_object* mObj;
+            git_revwalk* mWalker;
         };
 
     }

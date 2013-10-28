@@ -17,7 +17,7 @@
 #ifndef GIT_REVISION_WALKER_H
 #define GIT_REVISION_WALKER_H
 
-#include "GitWrap.hpp"
+#include "libGitWrap/RepoObject.hpp"
 
 namespace Git
 {
@@ -32,17 +32,15 @@ namespace Git
      * @brief       Provides access to a git repository's history
      *
      */
-    class GITWRAP_API RevisionWalker
+    class GITWRAP_API RevisionWalker : public RepoObject
     {
     public:
         RevisionWalker();
-        RevisionWalker( Internal::RevisionWalkerPrivate* _d );
+        RevisionWalker(Internal::RevisionWalkerPrivate& _d);
         ~RevisionWalker();
         RevisionWalker& operator=( const RevisionWalker& other );
 
     public:
-        bool isValid() const;
-
         void reset( Result& result );
 
         void push( Result& result, const ObjectId& id  );
@@ -56,12 +54,9 @@ namespace Git
         void hideHead( Result& result );
 
         bool next( Result& result, ObjectId& oidNext );
-        QVector< ObjectId > all( Result& result );
+        ObjectIdList all( Result& result );
 
         void setSorting( Result& result, bool topological, bool timed );
-
-    private:
-        Internal::GitPtr< Internal::RevisionWalkerPrivate > d;
     };
 
 }

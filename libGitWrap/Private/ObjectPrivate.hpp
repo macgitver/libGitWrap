@@ -14,7 +14,10 @@
  *
  */
 
-#include "BasicObject.hpp"
+#ifndef GIT_OBJECT_PRIVATE_H
+#define GIT_OBJECT_PRIVATE_H
+
+#include "libGitWrap/Private/RepoObjectPrivate.hpp"
 
 namespace Git
 {
@@ -22,27 +25,23 @@ namespace Git
     namespace Internal
     {
 
-        BasicObject::BasicObject()
+        /**
+         * @internal    GitWrap
+         * @brief       The ObjectPrivate class
+         *
+         */
+        class ObjectPrivate : public RepoObjectPrivate
         {
-        }
+        public:
+            ObjectPrivate(RepositoryPrivate* repo, git_object* o);
+            ~ObjectPrivate();
 
-        BasicObject::~BasicObject()
-        {
-        }
-
-        void BasicObject::ref()
-        {
-            mRefCounter.ref();
-        }
-
-        void BasicObject::deref()
-        {
-            if( !mRefCounter.deref() )
-            {
-                delete this;
-            }
-        }
+        public:
+            git_object* mObj;
+        };
 
     }
 
 }
+
+#endif

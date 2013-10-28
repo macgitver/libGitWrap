@@ -14,14 +14,14 @@
  *
  */
 
-#include "GitWrapPrivate.hpp"
 #include "ChangeListConsumer.hpp"
 #include "PatchConsumer.hpp"
 #include "DiffList.hpp"
 #include "Repository.hpp"
-#include "RepositoryPrivate.hpp"
-#include "DiffListPrivate.hpp"
 
+#include "Private/GitWrapPrivate.hpp"
+#include "Private/DiffListPrivate.hpp"
+#include "Private/RepositoryPrivate.hpp"
 
 namespace Git
 {
@@ -52,12 +52,11 @@ namespace Git
             return mChanges;
         }
 
-        DiffListPrivate::DiffListPrivate( const GitPtr< RepositoryPrivate >& repo,
-                                          git_diff_list* difflist )
-            : RepoObject( repo )
-            , mDiffList( difflist )
+        DiffListPrivate::DiffListPrivate(RepositoryPrivate* repo, git_diff_list* difflist)
+            : RepoObjectPrivate(repo)
+            , mDiffList(difflist)
         {
-            Q_ASSERT( difflist );
+            Q_ASSERT(difflist);
         }
 
         DiffListPrivate::~DiffListPrivate()
@@ -184,13 +183,13 @@ namespace Git
     {
     }
 
-    DiffList::DiffList( Internal::DiffListPrivate* _d )
-        : d( _d )
+    DiffList::DiffList(Internal::DiffListPrivate& _d)
+        : RepoObject(_d)
     {
     }
 
-    DiffList::DiffList( const DiffList& o )
-        : d( o.d )
+    DiffList::DiffList(const DiffList& o)
+        : RepoObject(o)
     {
     }
 
@@ -200,63 +199,30 @@ namespace Git
 
     DiffList& DiffList::operator=( const DiffList& other )
     {
-        d = other.d;
+        RepoObject::operator=(other);
         return *this;
-    }
-
-    bool DiffList::isValid() const
-    {
-        return d;
-    }
-
-    Repository DiffList::repository( Result& result ) const
-    {
-        if( !result )
-        {
-            return Repository();
-        }
-
-        if( !d )
-        {
-            result.setInvalidObject();
-            return Repository();
-        }
-
-        return Repository( d->repo() );
     }
 
     bool DiffList::mergeOnto(Result& result, DiffList onto) const
     {
-        if( !result )
-        {
-            return false;
-        }
+        GW_CD_CHECKED(DiffList, false, result)
 
-        if( !d || !onto.isValid() )
+        if (!onto.isValid())
         {
             result.setInvalidObject();
             return false;
         }
 
-        result = git_diff_merge( onto.d->mDiffList, d->mDiffList );
+        DiffList::Private* ontoP = Private::dataOf<DiffList>(onto);
+        result = git_diff_merge( ontoP->mDiffList, d->mDiffList );
         return result;
     }
 
     bool DiffList::consumePatch(Result& result, PatchConsumer* consumer) const
     {
-        if( !result )
-        {
-            return false;
-        }
+        GW_CD_CHECKED(DiffList, false, result)
 
-        if( !d )
-        {
-            result.setInvalidObject();
-            return false;
-        }
-
-        if( !consumer )
-        {
+        if (!consumer) {
             result.setInvalidObject();
             return false;
         }
@@ -272,19 +238,9 @@ namespace Git
 
     bool DiffList::consumeChangeList(Result& result, ChangeListConsumer* consumer) const
     {
-        if( !result )
-        {
-            return false;
-        }
+        GW_CD_CHECKED(DiffList, false, result)
 
-        if( !d )
-        {
-            result.setInvalidObject();
-            return false;
-        }
-
-        if( !consumer )
-        {
+        if (!consumer) {
             result.setInvalidObject();
             return false;
         }
@@ -315,16 +271,7 @@ namespace Git
      */
     bool DiffList::findRenames( Result& result )
     {
-        if( !result )
-        {
-            return false;
-        }
-
-        if( !d )
-        {
-            result.setInvalidObject();
-            return false;
-        }
+        GW_CD_CHECKED(DiffList, false, result)
 
         git_diff_find_options opts = GIT_DIFF_FIND_OPTIONS_INIT;
         result = git_diff_find_similar( d->mDiffList, &opts );

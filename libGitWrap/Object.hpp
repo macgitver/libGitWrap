@@ -17,8 +17,9 @@
 #ifndef GIT_OBJECT_H
 #define GIT_OBJECT_H
 
-#include "GitWrap.hpp"
-#include "ObjectId.hpp"
+#include "libGitWrap/RepoObject.hpp"
+
+#include "libGitWrap/ObjectId.hpp"
 
 namespace Git
 {
@@ -34,28 +35,20 @@ namespace Git
      * @ingroup GitWrap
      * @{
      */
-    class GITWRAP_API Object
+    class GITWRAP_API Object : public RepoObject
     {
-        friend class Index;
+    public:
+        typedef Internal::ObjectPrivate Private;
 
     public:
-        Object( Internal::ObjectPrivate* _d );
-        Object( const Object& other );
+        Object(Internal::ObjectPrivate& _d);
+        Object(const Object& other);
         Object();
         ~Object();
 
     public:
         Object& operator=( const Object& other );
         bool operator==( const Object& other ) const;
-
-        /**
-         * @brief Checks, if this is a valid Git object.
-         *
-         * A Git object is valid, when it has a valid pointer.
-         *
-         * @return true or false
-         */
-        bool isValid() const;
 
         /**
          * @return the object's type
@@ -126,14 +119,6 @@ namespace Git
          * @return true or false
          */
         bool isBlob( Result& result ) const;
-
-        /**
-         * @return the owner repository or an invalid repository
-         */
-        Repository repository( Result& result ) const;
-
-    protected:
-        Internal::GitPtr< Internal::ObjectPrivate > d;
     };
 
 }

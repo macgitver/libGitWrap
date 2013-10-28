@@ -17,7 +17,7 @@
 #ifndef GIT_SUBMODULE_H
 #define GIT_SUBMODULE_H
 
-#include "GitWrap.hpp"
+#include "libGitWrap/Base.hpp"
 
 namespace Git
 {
@@ -33,8 +33,11 @@ namespace Git
      * @brief       Represents a git submodule
      *
      */
-    class GITWRAP_API Submodule
+    class GITWRAP_API Submodule : public Base
     {
+    public:
+        typedef Internal::SubmodulePrivate Private;
+
     public:
         enum IgnoreStrategy
         {
@@ -64,16 +67,12 @@ namespace Git
          * @param repo the owner repository
          * @param name is used to lookup the submodule in the owner repository
          */
-        Submodule( const Internal::GitPtr< Internal::RepositoryPrivate >& repo,
-                   const QString& name );
-        Submodule( const Submodule& other );
+        Submodule(Internal::RepositoryPrivate* repo, const QString& name);
+        Submodule(const Submodule& other);
         Submodule();
         ~Submodule();
 
         Submodule& operator=( const Submodule& other );
-
-    public:
-        bool isValid();
 
     public:
         QString name() const;
@@ -129,9 +128,6 @@ namespace Git
         bool isOpened() const;
 
         StatusFlags status(Result &result) const;
-
-    private:
-        Internal::GitPtr< Internal::SubmodulePrivate > d;
     };
 
 }

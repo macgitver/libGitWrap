@@ -16,13 +16,13 @@
  *
  */
 
-#ifndef GIT_INDEX_CONFLICT_PRIVATE_HPP
-#define GIT_INDEX_CONFLICT_PRIVATE_HPP
+#ifndef GIT_INDEX_PRIVATE_H
+#define GIT_INDEX_PRIVATE_H
 
-#include "GitWrapPrivate.hpp"
+#include "IndexConflict.hpp"
 
-#include "BasicObject.hpp"
-#include "IndexEntry.hpp"
+#include "libGitWrap/Private/GitWrapPrivate.hpp"
+#include "libGitWrap/Private/RepoObjectPrivate.hpp"
 
 namespace Git
 {
@@ -30,20 +30,26 @@ namespace Git
     namespace Internal
     {
 
-        class IndexConflictPrivate : public BasicObject
+        /**
+         * @internal
+         * @ingroup GitWrap
+         * @brief The IndexPrivate class
+         *
+         */
+        class IndexPrivate : public RepoObjectPrivate
         {
         public:
-            IndexConflictPrivate(const IndexEntry& _from, const IndexEntry& _ours,
-                                 const IndexEntry& _theirs );
-            IndexConflictPrivate(const git_index_entry* _from, const git_index_entry* _ours,
-                                 const git_index_entry* _theirs);
-            IndexConflictPrivate();
-            ~IndexConflictPrivate();
+            IndexPrivate(RepositoryPrivate* repo, git_index* index);
+            ~IndexPrivate();
 
         public:
-            const IndexEntry    from;
-            const IndexEntry    ours;
-            const IndexEntry    theirs;
+            void ensureConflictsLoaded();
+            void clearKnownConflicts();
+
+        public:
+            git_index*                  index;
+            bool                        conflictsLoaded;
+            QVector< IndexConflict >    conflicts;
         };
 
     }

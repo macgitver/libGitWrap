@@ -1,6 +1,9 @@
 /*
  * MacGitver
- * Copyright (C) 2012-2013 Sascha Cunz <sascha@babbelbox.org>
+ * Copyright (C) 2012-2013 The MacGitver-Developers <dev@macgitver.org>
+ *
+ * (C) Sascha Cunz <sascha@macgitver.org>
+ * (C) Cunz RaD Ltd.
  *
  * This program is free software; you can redistribute it and/or modify it under the terms of the
  * GNU General Public License (Version 2) as published by the Free Software Foundation.
@@ -14,28 +17,30 @@
  *
  */
 
-#include "ObjectBlob.hpp"
+#ifndef TEST_GW_FIXTURE_HPP
+#define TEST_GW_FIXTURE_HPP
 
-#include "Private/GitWrapPrivate.hpp"
+#include <QString>
+#include <QObject>
 
-namespace Git
+#include "gtest/gtest.h"
+
+class Fixture : public QObject, public ::testing::Test
 {
+    Q_OBJECT
+public:
+    Fixture();
+    ~Fixture();
 
-    ObjectBlob::ObjectBlob()
-    {
-    }
+public:
+    virtual void SetUp();
+    virtual void TearDown();
 
-    ObjectBlob::ObjectBlob(Internal::ObjectPrivate& _d)
-        : Object(_d)
-    {
-        Result r;
-        Q_UNUSED( r );
-        Q_ASSERT( type(r) == otBlob );
-    }
+public:
+    QString prepareRepo(const char* name);
 
-    ObjectBlob::ObjectBlob(const ObjectBlob& o)
-        : Object(o)
-    {
-    }
+protected:
+    QString dataDir() const;
+};
 
-}
+#endif

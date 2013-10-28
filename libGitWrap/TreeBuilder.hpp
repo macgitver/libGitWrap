@@ -17,7 +17,7 @@
 #ifndef GIT_TREE_BUILDER_H
 #define GIT_TREE_BUILDER_H
 
-#include "GitWrap.hpp"
+#include "libGitWrap/RepoObject.hpp"
 
 namespace Git
 {
@@ -31,18 +31,16 @@ namespace Git
      * @ingroup     GitWrap
      * @brief       Tool for creating tree objects
      */
-    class GITWRAP_API TreeBuilder
+    class GITWRAP_API TreeBuilder : public RepoObject
     {
     public:
         TreeBuilder();
-        TreeBuilder( Internal::TreeBuilderPrivate* _d );
-        TreeBuilder( const TreeBuilder& other );
+        TreeBuilder(Internal::TreeBuilderPrivate& _d);
+        TreeBuilder(const TreeBuilder& other);
         ~TreeBuilder();
         TreeBuilder& operator=( const TreeBuilder& other );
 
     public:
-        bool isValid() const;
-
         void clear( Result& result );
 
         TreeEntry get( Result& result, const QString& name );
@@ -50,9 +48,6 @@ namespace Git
                      Result& result );
         bool remove( Result& result, const QString& fileName );
         ObjectId write( Result& result );
-
-    private:
-        Internal::GitPtr< Internal::TreeBuilderPrivate > d;
     };
 
 }

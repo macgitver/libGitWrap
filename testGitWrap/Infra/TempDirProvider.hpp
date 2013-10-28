@@ -1,6 +1,9 @@
 /*
  * MacGitver
- * Copyright (C) 2012-2013 Sascha Cunz <sascha@babbelbox.org>
+ * Copyright (C) 2012-2013 The MacGitver-Developers <dev@macgitver.org>
+ *
+ * (C) Sascha Cunz <sascha@macgitver.org>
+ * (C) Cunz RaD Ltd.
  *
  * This program is free software; you can redistribute it and/or modify it under the terms of the
  * GNU General Public License (Version 2) as published by the Free Software Foundation.
@@ -14,35 +17,28 @@
  *
  */
 
-#ifndef GIT_REFERENCE_PRIVATE_H
-#define GIT_REFERENCE_PRIVATE_H
+#ifndef TEST_TEMP_DIR_PROVIDER_HPP
+#define TEST_TEMP_DIR_PROVIDER_HPP
 
-#include "RepoObject.hpp"
+#include <QString>
 
-namespace Git
+class TempDirProvider
 {
+public:
+    TempDirProvider();
+    ~TempDirProvider();
 
-    namespace Internal
-    {
+public:
+    static QString get();
 
-        /**
-         * @internal
-         * @ingroup     GitWrap
-         * @brief       The ReferencePrivate class
-         *
-         */
-        class ReferencePrivate : public RepoObject
-        {
-        public:
-            ReferencePrivate( const GitPtr< RepositoryPrivate >& repo, git_reference* ref );
-            ~ReferencePrivate();
+private:
+    void create();
+    void remove();
 
-        public:
-            git_reference*  mRef;
-        };
-
-    }
-
-}
+private:
+    static TempDirProvider* sSelf;
+    QString tempPath;
+    QString tempDir;
+};
 
 #endif

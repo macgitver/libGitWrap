@@ -14,11 +14,8 @@
  *
  */
 
-#ifndef GIT_TREE_ENTRY_PRIVATE_H
-#define GIT_TREE_ENTRY_PRIVATE_H
-
-#include "GitWrapPrivate.hpp"
-#include "BasicObject.hpp"
+#include "libGitWrap/Private/GitWrapPrivate.hpp"
+#include "libGitWrap/Private/BasePrivate.hpp"
 
 namespace Git
 {
@@ -29,21 +26,19 @@ namespace Git
         /**
          * @internal
          * @ingroup     GitWrap
-         * @brief       The TreeEntryPrivate class
+         * @brief       The ConfigPrivate class
+         *
          */
-        class TreeEntryPrivate : public BasicObject
+        class ConfigPrivate : public BasePrivate
         {
         public:
-            TreeEntryPrivate( const git_tree_entry* entry, bool unmanaged = false );
-            ~TreeEntryPrivate();
+            ConfigPrivate(git_config* cfg);
+            ~ConfigPrivate();
 
         public:
-            const git_tree_entry*   mEntry;
-            bool                    mUnmanaged;
+            git_config* mCfg;
         };
 
     }
 
 }
-
-#endif

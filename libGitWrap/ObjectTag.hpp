@@ -33,8 +33,8 @@ namespace Git
     {
     public:
         ObjectTag();
-        ObjectTag( Internal::ObjectPrivate* _d );
-        ObjectTag( const ObjectTag& o );
+        ObjectTag(Internal::ObjectPrivate& _d);
+        ObjectTag(const ObjectTag& o);
     };
 
 }

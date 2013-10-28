@@ -22,6 +22,7 @@
 #include <QHash>
 #include <QMetaType>
 #include <QVector>
+#include <QSharedData>
 
 /** @defgroup GitWrap Qt-based wrapper for Git revision control featuring libgit2
  * Wrapper for the LibGit2 library based on Qt4/Qt5.
@@ -35,40 +36,6 @@
 
 namespace Git
 {
-
-    namespace Internal
-    {
-
-        template< class T >
-        class GitPtr
-        {
-        public:
-            GitPtr();
-            GitPtr( const GitPtr< T >& o );
-            GitPtr( T* o );
-            ~GitPtr();
-
-            GitPtr< T >& operator=( const GitPtr< T >& o );
-            bool operator==( const GitPtr< T >& o ) const;
-            bool operator==( T* o ) const;
-
-            T* operator->();
-            const T* operator->() const;
-
-            T* operator*();
-            const T* operator*() const;
-
-            operator bool() const;
-            operator T*();
-            operator const T*() const;
-
-            T* data() const;
-
-        private:
-            T* d;
-        };
-
-    }
 
     enum ObjectType
     {

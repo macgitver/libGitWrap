@@ -15,9 +15,10 @@
  */
 
 #include "Remote.hpp"
-#include "RemotePrivate.hpp"
 #include "Reference.hpp"
 #include "RefSpec.hpp"
+
+#include "Private/RemotePrivate.hpp"
 
 namespace Git
 {
@@ -25,16 +26,16 @@ namespace Git
     namespace Internal
     {
 
-        RemotePrivate::RemotePrivate( const GitPtr<RepositoryPrivate>& repo, git_remote* remote )
-            : RepoObject( repo )
-            , mRemote( remote )
+        RemotePrivate::RemotePrivate(RepositoryPrivate* repo, git_remote* remote)
+            : RepoObjectPrivate(repo)
+            , mRemote(remote)
         {
-            Q_ASSERT( remote );
+            Q_ASSERT(remote);
         }
 
         RemotePrivate::~RemotePrivate()
         {
-            git_remote_free( mRemote );
+            git_remote_free(mRemote);
         }
 
     }
@@ -43,13 +44,13 @@ namespace Git
     {
     }
 
-    Remote::Remote( Internal::RemotePrivate* _d )
-        : d( _d )
+    Remote::Remote(Internal::RemotePrivate& _d)
+        : RepoObject(_d)
     {
     }
 
-    Remote::Remote( const Remote& other )
-        : d( other.d )
+    Remote::Remote(const Remote& other)
+        : RepoObject(other)
     {
     }
 
@@ -57,37 +58,23 @@ namespace Git
     {
     }
 
-    Remote& Remote::operator=( const Remote& other )
+    Remote& Remote::operator=(const Remote& other)
     {
-        d = other.d;
+        RepoObject::operator =(other);
         return * this;
-    }
-
-    bool Remote::isValid() const
-    {
-        return d;
     }
 
     bool Remote::save( Result& result )
     {
-        if( !result )
-        {
-            return false;
-        }
-        if( !d )
-        {
-            result.setInvalidObject();
-            return false;
-        }
-
-        result = git_remote_save( d->mRemote );
+        GW_D_CHECKED(Remote, false, result);
+        result = git_remote_save(d->mRemote);
         return result;
     }
 
     QString Remote::name() const
     {
-        if( !d )
-        {
+        GW_CD(Remote);
+        if (!d) {
             GitWrap::lastResult().setInvalidObject();
             return QString();
         }
@@ -97,8 +84,9 @@ namespace Git
 
     QString Remote::url() const
     {
-        if( !d )
-        {
+        GW_CD(Remote);
+
+        if(!d) {
             GitWrap::lastResult().setInvalidObject();
             return QString();
         }
@@ -108,15 +96,7 @@ namespace Git
 
     bool Remote::addFetchSpec(Result& result, const QString& spec)
     {
-        if( !result )
-        {
-            return false;
-        }
-        if( !d )
-        {
-            result.setInvalidObject();
-            return false;
-        }
+        GW_D_CHECKED(Remote, false, result);
 
         result = git_remote_add_fetch( d->mRemote, spec.toUtf8().constData() );
         return result;
@@ -124,15 +104,7 @@ namespace Git
 
     bool Remote::addPushSpec(Result& result, const QString& spec)
     {
-        if( !result )
-        {
-            return false;
-        }
-        if( !d )
-        {
-            result.setInvalidObject();
-            return false;
-        }
+        GW_D_CHECKED(Remote, false, result);
 
         result = git_remote_add_push( d->mRemote, spec.toUtf8().constData() );
         return result;
@@ -140,8 +112,8 @@ namespace Git
 
     QVector<RefSpec> Remote::fetchSpecs() const
     {
-        if( !d )
-        {
+        GW_CD(Remote);
+        if (!d) {
             GitWrap::lastResult().setInvalidObject();
             return QVector<RefSpec>();
         }
@@ -159,8 +131,8 @@ namespace Git
 
     QVector<RefSpec> Remote::pushSpecs() const
     {
-        if( !d )
-        {
+        GW_CD(Remote);
+        if (!d) {
             GitWrap::lastResult().setInvalidObject();
             return QVector<RefSpec>();
         }
@@ -189,16 +161,7 @@ namespace Git
 
     bool Remote::connect(Result& result, bool forFetch)
     {
-        if( !result )
-        {
-            return false;
-        }
-
-        if( !d )
-        {
-            result.setInvalidObject();
-            return false;
-        }
+        GW_D_CHECKED(Remote, false, result);
 
         result = git_remote_connect( d->mRemote, forFetch ? GIT_DIRECTION_FETCH
                                                           : GIT_DIRECTION_PUSH );
@@ -207,18 +170,9 @@ namespace Git
 
     void Remote::disconnect( Result& result )
     {
-        if( !result )
-        {
-            return;
-        }
+        GW_D_CHECKED_VOID(Remote, result);
 
-        if( !d )
-        {
-            result.setInvalidObject();
-            return;
-        }
-
-        git_remote_disconnect( d->mRemote );
+        git_remote_disconnect(d->mRemote);
     }
 
     namespace Internal
@@ -235,16 +189,7 @@ namespace Git
 
     bool Remote::download( Result& result )
     {
-        if( !result )
-        {
-            return false;
-        }
-
-        if( !d )
-        {
-            result.setInvalidObject();
-            return false;
-        }
+        GW_D_CHECKED(Remote, false, result);
 
         result = git_remote_download( d->mRemote, &Internal::download_progress,
                                       (Internal::RemotePrivate*) d );
@@ -253,16 +198,7 @@ namespace Git
 
     bool Remote::updateTips( Result& result )
     {
-        if( !result )
-        {
-            return false;
-        }
-
-        if( !d )
-        {
-            result.setInvalidObject();
-            return false;
-        }
+        GW_D_CHECKED(Remote, false, result);
 
         result = git_remote_update_tips( d->mRemote );
         return result;

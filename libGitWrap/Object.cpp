@@ -14,15 +14,16 @@
  *
  */
 
-#include "GitWrapPrivate.hpp"
-#include "ObjectId.hpp"
-#include "Object.hpp"
-#include "ObjectTree.hpp"
-#include "ObjectTag.hpp"
-#include "ObjectCommit.hpp"
-#include "ObjectBlob.hpp"
-#include "ObjectPrivate.hpp"
-#include "Repository.hpp"
+#include "libGitWrap/ObjectId.hpp"
+#include "libGitWrap/Object.hpp"
+#include "libGitWrap/ObjectTree.hpp"
+#include "libGitWrap/ObjectTag.hpp"
+#include "libGitWrap/ObjectCommit.hpp"
+#include "libGitWrap/ObjectBlob.hpp"
+#include "libGitWrap/Repository.hpp"
+
+#include "libGitWrap/Private/GitWrapPrivate.hpp"
+#include "libGitWrap/Private/ObjectPrivate.hpp"
 
 namespace Git
 {
@@ -30,27 +31,27 @@ namespace Git
     namespace Internal
     {
 
-        ObjectPrivate::ObjectPrivate( const GitPtr< RepositoryPrivate >& repo, git_object* o )
-            : RepoObject( repo )
-            , mObj( o )
+        ObjectPrivate::ObjectPrivate(RepositoryPrivate* repo, git_object* o)
+            : RepoObjectPrivate(repo)
+            , mObj(o)
         {
-            Q_ASSERT( o );
+            Q_ASSERT(o);
         }
 
         ObjectPrivate::~ObjectPrivate()
         {
-            git_object_free( mObj );
+            git_object_free(mObj);
         }
 
     }
 
-    Object::Object( Internal::ObjectPrivate* _d )
-        : d( _d )
+    Object::Object(Internal::ObjectPrivate& _d)
+        : RepoObject(_d)
     {
     }
 
-    Object::Object( const Object& other )
-        : d( other.d )
+    Object::Object(const Object& other)
+        : RepoObject(other)
     {
     }
 
@@ -64,35 +65,20 @@ namespace Git
 
     Object& Object::operator=( const Object& other )
     {
-        d = other.d;
+        RepoObject::operator =(other);
         return * this;
     }
 
     bool Object::operator==( const Object& other ) const
     {
-        return d == other.d;
+        return RepoObject::operator==(other);
     }
 
-    bool Object::isValid() const
+    ObjectType Object::type(Result& result) const
     {
-        return d;
-    }
+        GW_CD_CHECKED(Object, otAny, result)
 
-    ObjectType Object::type( Result& result ) const
-    {
-        if( !result )
-        {
-            return otAny;
-        }
-
-        if( !d )
-        {
-            result.setInvalidObject();
-            return otAny;
-        }
-
-        switch( git_object_type( d->mObj ) )
-        {
+        switch(git_object_type(d->mObj)) {
         case GIT_OBJ_BLOB:      return otBlob;
         case GIT_OBJ_TREE:      return otTree;
         case GIT_OBJ_COMMIT:    return otCommit;
@@ -102,18 +88,9 @@ namespace Git
         }
     }
 
-    ObjectId Object::id( Result& result ) const
+    ObjectId Object::id(Result& result) const
     {
-        if( !result )
-        {
-            return ObjectId();
-        }
-
-        if( !d )
-        {
-            result.setInvalidObject();
-            return ObjectId();
-        }
+        GW_CD_CHECKED(Object, ObjectId(), result)
 
         const git_oid* oid = git_object_id( d->mObj );
         return ObjectId::fromRaw( oid->id );
@@ -123,77 +100,61 @@ namespace Git
     ObjectTree Object::asTree( Result& result )
     {
         ObjectTree o;
-        if( isTree( result ) )
-        {
-            o = ObjectTree( d );
+        if (isTree(result)) {
+            GW_D(Object);
+            o = ObjectTree(*d);
         }
         return o;
     }
 
-    ObjectCommit Object::asCommit( Result& result )
+    ObjectCommit Object::asCommit(Result& result)
     {
         ObjectCommit o;
-        if( isCommit( result ) )
-        {
-            o = ObjectCommit( d );
+        if (isCommit(result)) {
+            GW_D(Object);
+            o = ObjectCommit(*d);
         }
         return o;
     }
 
-    ObjectBlob Object::asBlob( Result& result )
+    ObjectBlob Object::asBlob(Result& result)
     {
         ObjectBlob o;
-        if( isBlob( result ) )
-        {
-            o = ObjectBlob( d );
+        if (isBlob(result)) {
+            GW_D(Object);
+            o = ObjectBlob(*d);
         }
         return o;
     }
 
-    ObjectTag Object::asTag( Result& result )
+    ObjectTag Object::asTag(Result& result)
     {
         ObjectTag o;
-        if( isTag( result ) )
-        {
-            o = ObjectTag( d );
+        if (isTag(result)) {
+            GW_D(Object);
+            o = ObjectTag(*d);
         }
         return o;
     }
 
-    bool Object::isTree( Result& result ) const
+    bool Object::isTree(Result& result) const
     {
-        return type( result ) == otTree;
+        return type(result) == otTree;
     }
 
-    bool Object::isTag( Result& result ) const
+    bool Object::isTag(Result& result) const
     {
-        return type( result ) == otTag;
+        return type(result) == otTag;
     }
 
-    bool Object::isCommit( Result& result ) const
+    bool Object::isCommit(Result& result) const
     {
-        return type( result ) == otCommit;
+        return type(result) == otCommit;
     }
 
-    bool Object::isBlob( Result& result ) const
+    bool Object::isBlob(Result& result) const
     {
-        return type( result ) == otBlob;
-    }
-
-    Repository Object::repository( Result& result ) const
-    {
-        if( !result )
-        {
-            return Repository();
-        }
-
-        if( !d )
-        {
-            result.setInvalidObject();
-            return Repository();
-        }
-
-        return Repository( d->repo() );
+        return type(result) == otBlob;
     }
 
 }

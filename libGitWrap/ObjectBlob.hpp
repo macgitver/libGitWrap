@@ -33,8 +33,8 @@ namespace Git
     {
     public:
         ObjectBlob();
-        ObjectBlob( Internal::ObjectPrivate* _d );
-        ObjectBlob( const ObjectBlob& o );
+        ObjectBlob(Internal::ObjectPrivate& _d);
+        ObjectBlob(const ObjectBlob& o);
     };
 
 }

@@ -116,12 +116,12 @@ ADD_DEFINITIONS( -D_FILE_OFFSET_BITS=64 -DGIT_THREADS )
 
 SET( SRC_FILES
 
-    BasicObject.cpp
+    Base.cpp
+    RepoObject.cpp
     Config.cpp
     ChangeListConsumer.cpp
     CloneOperation.cpp
     DiffList.cpp
-    FetchCallbacks.cpp
     GitWrap.cpp
     IFetchEvents.cpp
     Index.cpp
@@ -139,7 +139,6 @@ SET( SRC_FILES
     RefSpec.cpp
     Reference.cpp
     Remote.cpp
-    RepoObject.cpp
     Repository.cpp
     Result.cpp
     RevisionWalker.cpp
@@ -147,11 +146,15 @@ SET( SRC_FILES
     Submodule.cpp
     TreeBuilder.cpp
     TreeEntry.cpp
-    WorkerThread.cpp
+
+    Private/FetchCallbacks.cpp
+    Private/WorkerThread.cpp
 )
 
 SET( PUB_HDR_FILES
 
+    Base.hpp
+    RepoObject.hpp
     Result.hpp
     Config.hpp
     ChangeListConsumer.hpp
@@ -183,24 +186,24 @@ SET( PUB_HDR_FILES
 
 SET( PRI_HDR_FILES
 
-    GitWrapPrivate.hpp
-    BasicObject.hpp
-    ConfigPrivate.hpp
-    CloneOperationPrivate.hpp
-    DiffListPrivate.hpp
-    FetchCallbacks.hpp
-    IndexPrivate.hpp
-    IndexEntryPrivate.hpp
-    IndexConflictPrivate.hpp
-    ObjectPrivate.hpp
-    ReferencePrivate.hpp
-    RemotePrivate.hpp
-    RepoObject.hpp
-    RepositoryPrivate.hpp
-    RevisionWalkerPrivate.hpp
-    TreeBuilderPrivate.hpp
-    TreeEntryPrivate.hpp
-    WorkerThread.hpp
+    Private/GitWrapPrivate.hpp
+    Private/BasePrivate.hpp
+    Private/ConfigPrivate.hpp
+    Private/CloneOperationPrivate.hpp
+    Private/DiffListPrivate.hpp
+    Private/FetchCallbacks.hpp
+    Private/IndexPrivate.hpp
+    Private/IndexEntryPrivate.hpp
+    Private/IndexConflictPrivate.hpp
+    Private/ObjectPrivate.hpp
+    Private/ReferencePrivate.hpp
+    Private/RemotePrivate.hpp
+    Private/RepoObjectPrivate.hpp
+    Private/RepositoryPrivate.hpp
+    Private/RevisionWalkerPrivate.hpp
+    Private/TreeBuilderPrivate.hpp
+    Private/TreeEntryPrivate.hpp
+    Private/WorkerThread.hpp
 )
 
 SET( HDR_FILES ${PRI_HDR_FILES} ${PUB_HDR_FILES} )

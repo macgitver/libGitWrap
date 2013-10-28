@@ -14,32 +14,37 @@
  *
  */
 
-#ifndef GIT_REVWALKER_PRIVATE_H
-#define GIT_REVWALKER_PRIVATE_H
+#ifndef GIT_REPOSITORY_PRIVATE_H
+#define GIT_REPOSITORY_PRIVATE_H
 
-#include "GitWrapPrivate.hpp"
-#include "RepoObject.hpp"
+#include "libGitWrap/Private/GitWrapPrivate.hpp"
+#include "libGitWrap/Private/BasePrivate.hpp"
 
 namespace Git
 {
 
     namespace Internal
     {
+        class StatusPrivate;
 
         /**
          * @internal
-         * @ingroup     GitWrap
-         * @brief       The RevisionWalkerPrivate class
+         * @ingroup GitWrap
+         * @brief The RepositoryPrivate class
          *
          */
-        class RevisionWalkerPrivate : public RepoObject
+        class RepositoryPrivate : public BasePrivate
         {
         public:
-            RevisionWalkerPrivate( const GitPtr< RepositoryPrivate >& repo, git_revwalk* walker );
-            ~RevisionWalkerPrivate();
+            typedef QExplicitlySharedDataPointer<RepositoryPrivate> Ptr;
 
         public:
-            git_revwalk* mWalker;
+            RepositoryPrivate( git_repository* repo );
+            ~RepositoryPrivate();
+
+        public:
+            git_repository* mRepo;
+            IndexPrivate*   mIndex;
         };
 
     }

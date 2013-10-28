@@ -14,36 +14,31 @@
  *
  */
 
-#ifndef GIT_REPOSITORY_PRIVATE_H
-#define GIT_REPOSITORY_PRIVATE_H
+#ifndef GIT_TREE_ENTRY_PRIVATE_H
+#define GIT_TREE_ENTRY_PRIVATE_H
 
-#include <QMutex>
-
-#include "GitWrapPrivate.hpp"
-#include "BasicObject.hpp"
+#include "libGitWrap/Private/BasePrivate.hpp"
 
 namespace Git
 {
 
     namespace Internal
     {
-        class StatusPrivate;
 
         /**
          * @internal
-         * @ingroup GitWrap
-         * @brief The RepositoryPrivate class
-         *
+         * @ingroup     GitWrap
+         * @brief       The TreeEntryPrivate class
          */
-        class RepositoryPrivate : public BasicObject
+        class TreeEntryPrivate : public BasePrivate
         {
         public:
-            RepositoryPrivate( git_repository* repo );
-            ~RepositoryPrivate();
+            TreeEntryPrivate( const git_tree_entry* entry, bool unmanaged = false );
+            ~TreeEntryPrivate();
 
         public:
-            git_repository* mRepo;
-            IndexPrivate*   mIndex;
+            const git_tree_entry*   mEntry;
+            bool                    mUnmanaged;
         };
 
     }

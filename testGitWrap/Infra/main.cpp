@@ -1,8 +1,9 @@
 /*
- * libGitWrap - A Qt wrapper library for libgit2
+ * MacGitver
  * Copyright (C) 2012-2013 The MacGitver-Developers <dev@macgitver.org>
  *
- * (C) Nils Fenner <nilsfenner@web.de>
+ * (C) Sascha Cunz <sascha@macgitver.org>
+ * (C) Cunz RaD Ltd.
  *
  * This program is free software; you can redistribute it and/or modify it under the terms of the
  * GNU General Public License (Version 2) as published by the Free Software Foundation.
@@ -16,32 +17,19 @@
  *
  */
 
-#ifndef GIT_INDEX_ENTRY_PRIVATE_HPP
-#define GIT_INDEX_ENTRY_PRIVATE_HPP
+#include <QCoreApplication>
 
-#include "BasicObject.hpp"
+#include "libGitWrap/GitWrap.hpp"
 
-namespace Git
+#include "gtest/gtest.h"
+
+#include "Infra/TempDirProvider.hpp"
+
+int main(int argc, char** argv)
 {
-    namespace Internal
-    {
-
-        /**
-         * @internal
-         * @ingroup     GitWrap
-         * @brief       The IndexEntryPrivate class
-         */
-        class IndexEntryPrivate : public BasicObject
-        {
-        public:
-            IndexEntryPrivate(const git_index_entry *entry);
-            ~IndexEntryPrivate();
-
-        public:
-            git_index_entry     mEntry;
-        };
-
-    }
+    QCoreApplication app(argc, argv);
+    Git::GitWrap gw;
+    TempDirProvider tdp;
+    testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
 }
-
-#endif

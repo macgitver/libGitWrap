@@ -14,13 +14,13 @@
  *
  */
 
-#include "TreeEntry.hpp"
-#include "TreeEntryPrivate.hpp"
-#include "TreeBuilder.hpp"
-#include "TreeBuilderPrivate.hpp"
-#include "ObjectId.hpp"
+#include "libGitWrap/TreeEntry.hpp"
+#include "libGitWrap/TreeBuilder.hpp"
+#include "libGitWrap/ObjectId.hpp"
 
-#include "RepositoryPrivate.hpp"
+#include "libGitWrap/Private/TreeEntryPrivate.hpp"
+#include "libGitWrap/Private/TreeBuilderPrivate.hpp"
+#include "libGitWrap/Private/RepositoryPrivate.hpp"
 
 namespace Git
 {
@@ -28,17 +28,16 @@ namespace Git
     namespace Internal
     {
 
-        TreeBuilderPrivate::TreeBuilderPrivate( const GitPtr< RepositoryPrivate >& repo,
-                                                git_treebuilder* builder )
-            : RepoObject( repo )
+        TreeBuilderPrivate::TreeBuilderPrivate(RepositoryPrivate* repo, git_treebuilder* builder )
+            : RepoObjectPrivate( repo )
             , mBuilder( builder )
         {
-            Q_ASSERT( mBuilder );
+            Q_ASSERT(mBuilder);
         }
 
         TreeBuilderPrivate::~TreeBuilderPrivate()
         {
-            git_treebuilder_free( mBuilder );
+            git_treebuilder_free(mBuilder);
         }
 
     }
@@ -47,13 +46,13 @@ namespace Git
     {
     }
 
-    TreeBuilder::TreeBuilder( const TreeBuilder& other )
-        : d( other.d )
+    TreeBuilder::TreeBuilder(const TreeBuilder& other)
+        : RepoObject(other)
     {
     }
 
-    TreeBuilder::TreeBuilder( Internal::TreeBuilderPrivate* _d )
-        : d( _d )
+    TreeBuilder::TreeBuilder(Internal::TreeBuilderPrivate& _d)
+        : RepoObject(_d)
     {
     }
 
@@ -61,46 +60,21 @@ namespace Git
     {
     }
 
-    TreeBuilder& TreeBuilder::operator=( const TreeBuilder& other )
+    TreeBuilder& TreeBuilder::operator=(const TreeBuilder& other)
     {
-        d = other.d;
+        RepoObject::operator =(other);
         return * this;
-    }
-
-    bool TreeBuilder::isValid() const
-    {
-        return d;
     }
 
     void TreeBuilder::clear( Result& result )
     {
-        if( !result )
-        {
-            return;
-        }
-
-        if( !d )
-        {
-            result.setInvalidObject();
-            return;
-        }
-
+        GW_D_CHECKED_VOID(TreeBuilder, result);
         git_treebuilder_clear( d->mBuilder );
     }
 
     bool TreeBuilder::remove(Result& result, const QString& fileName)
     {
-        if( !result )
-        {
-            return false;
-        }
-
-        if( !d )
-        {
-            result.setInvalidObject();
-            return false;
-        }
-
+        GW_D_CHECKED(TreeBuilder, false, result);
 
         result = git_treebuilder_remove( d->mBuilder, fileName.toUtf8().constData() );
         return result;
@@ -109,16 +83,7 @@ namespace Git
     bool TreeBuilder::insert( const QString& fileName, TreeEntryAttributes type,
                               const ObjectId& oid, Result& result )
     {
-        if( !result )
-        {
-            return false;
-        }
-
-        if( !d )
-        {
-            result.setInvalidObject();
-            return false;
-        }
+        GW_D_CHECKED(TreeBuilder, false, result);
 
         const git_tree_entry* te = NULL;
         git_filemode_t fm = Internal::teattr2filemode( type );
@@ -132,16 +97,7 @@ namespace Git
 
     ObjectId TreeBuilder::write( Result& result )
     {
-        if( !result )
-        {
-            return ObjectId();
-        }
-
-        if( !d )
-        {
-            result.setInvalidObject();
-            return ObjectId();
-        }
+        GW_D_CHECKED(TreeBuilder, ObjectId(), result);
 
         git_oid oid;
         result = git_treebuilder_write( &oid, d->repo()->mRepo, d->mBuilder );
@@ -157,16 +113,7 @@ namespace Git
 
     TreeEntry TreeBuilder::get(Result& result, const QString& name)
     {
-        if( !result )
-        {
-            return TreeEntry();
-        }
-
-        if( !d )
-        {
-            result.setInvalidObject();
-            return TreeEntry();
-        }
+        GW_D_CHECKED(TreeBuilder, TreeEntry(), result);
 
         const git_tree_entry* entry = git_treebuilder_get( d->mBuilder, name.toUtf8().constData() );
         if( !entry )
@@ -174,7 +121,7 @@ namespace Git
             return TreeEntry();
         }
 
-        return new Internal::TreeEntryPrivate( entry, true );
+        return *new Internal::TreeEntryPrivate(entry, true);
     }
 
 }

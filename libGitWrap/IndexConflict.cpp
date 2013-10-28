@@ -16,9 +16,10 @@
  *
  */
 
-#include "IndexConflict.hpp"
-#include "IndexConflictPrivate.hpp"
-#include "IndexEntryPrivate.hpp"
+#include "libGitWrap/IndexConflict.hpp"
+
+#include "libGitWrap/Private/IndexConflictPrivate.hpp"
+#include "libGitWrap/Private/IndexEntryPrivate.hpp"
 
 namespace Git
 {
@@ -29,9 +30,9 @@ namespace Git
         IndexConflictPrivate::IndexConflictPrivate(const git_index_entry *_from,
                                                    const git_index_entry *_ours,
                                                    const git_index_entry *_theirs)
-            : from(new IndexEntryPrivate(_from))
-            , ours(new IndexEntryPrivate(_ours))
-            , theirs(new IndexEntryPrivate(_theirs))
+            : from  (*new IndexEntryPrivate(_from))
+            , ours  (*new IndexEntryPrivate(_ours))
+            , theirs(*new IndexEntryPrivate(_theirs))
         {
         }
 
@@ -54,50 +55,38 @@ namespace Git
     {
     }
 
-    IndexConflict::IndexConflict(const IndexConflict& other)
-        : d(other.d)
-    {
-    }
-
-    IndexConflict::IndexConflict(Internal::IndexConflictPrivate* _d)
-        : d(_d)
+    IndexConflict::IndexConflict(Internal::IndexConflictPrivate& _d)
+        : Base(_d)
     {
     }
 
     IndexConflict::IndexConflict(const IndexEntry& from,
                                  const IndexEntry& ours,
                                  const IndexEntry& theirs)
-    {
-        d = new Internal::IndexConflictPrivate(from, ours, theirs);
-    }
-
-    bool IndexConflict::isValid() const
-    {
-        return d;
-    }
-
-    IndexConflict::~IndexConflict()
+        : Base(*new Internal::IndexConflictPrivate(from, ours, theirs))
     {
     }
 
-    IndexConflict& IndexConflict::operator=(const IndexConflict& other)
+    IndexConflict::IndexConflict(const IndexConflict& other)
+        : Base(other)
     {
-        d = other.d;
-        return *this;
     }
 
     IndexEntry IndexConflict::from() const
     {
+        GW_CD(IndexConflict);
         return d ? d->from : IndexEntry();
     }
 
     IndexEntry IndexConflict::ours() const
     {
+        GW_CD(IndexConflict);
         return d ? d->ours : IndexEntry();
     }
 
     IndexEntry IndexConflict::theirs() const
     {
+        GW_CD(IndexConflict);
         return d ? d->theirs : IndexEntry();
     }
 

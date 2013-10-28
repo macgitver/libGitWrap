@@ -17,7 +17,7 @@
 #ifndef GIT_REFERENCE_H
 #define GIT_REFERENCE_H
 
-#include "GitWrap.hpp"
+#include "libGitWrap/RepoObject.hpp"
 
 namespace Git
 {
@@ -32,9 +32,11 @@ namespace Git
      * @brief       Represents a git reference
      *
      */
-    class GITWRAP_API Reference
+    class GITWRAP_API Reference : public RepoObject
     {
     public:
+        typedef Internal::ReferencePrivate Private;
+
         enum Type
         {
             Direct, Symbolic, Invalid = -1
@@ -42,7 +44,7 @@ namespace Git
 
     public:
         Reference();
-        Reference( Internal::ReferencePrivate* p );
+        Reference(Internal::ReferencePrivate& _d);
         Reference( const Reference& other );
         ~Reference();
         Reference& operator=( const Reference& other );
@@ -53,7 +55,6 @@ namespace Git
         int compare( const Reference& other ) const;
 
     public:
-        bool isValid() const;
         QString name() const;
         QString prefix() const;
         QString shorthand() const;
@@ -64,7 +65,6 @@ namespace Git
         ObjectId objectId( Result& result ) const;
         QString target( Result& result ) const;
 
-        Repository repository( Result& result ) const;
         Reference resolved( Result& result ) const;
         ObjectId resolveToObjectId( Result& result ) const;
 
@@ -83,9 +83,6 @@ namespace Git
         void rename(Result &result, const QString &newName , bool force = false );
 
         void updateHEAD(Result &result) const;
-
-    private:
-        Internal::GitPtr< Internal::ReferencePrivate > d;
     };
 
 }
