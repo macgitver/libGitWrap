@@ -947,12 +947,12 @@ namespace Git
      * @return          `true` on success, `false` otherwise.
      *
      */
-    bool Repository::detachHead(Result& r)
+    bool Repository::detachHead(Result& result)
     {
-        GW_D_CHECKED(Repository, false, r);
+        GW_D_CHECKED(Repository, false, result);
 
-        r = git_repository_detach_head(d->mRepo);
-        return r;
+        result = git_repository_detach_head(d->mRepo);
+        return result;
     }
 
 }

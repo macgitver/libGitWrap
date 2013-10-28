@@ -66,7 +66,7 @@ namespace Git
         bool isBare() const;
         bool isHeadDetached() const;
 
-        bool detachHead(Result& r);
+        bool detachHead(Result& result);
 
         QString basePath() const;
         QString gitPath() const;

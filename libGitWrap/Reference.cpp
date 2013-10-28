@@ -104,6 +104,90 @@ namespace Git
     }
 
     /**
+     * @brief           Create a new reference
+     *
+     * Creates a new reference named @a name that is pointing to the SHA1 @a sha in the repository
+     * @a repo.
+     *
+     * @param[in,out]   result  A Result object; see @ref GitWrapErrorHandling
+     *
+     * @param[in]       repo    The repository in which the reference shall be created.
+     *
+     * @param[in]       name    The full qualified name of the reference to be created. i.e.
+     *                          `refs/heads/foobar` for branch `foobar`.
+     *
+     * @param[in]       sha     The SHA1 where the reference shall point to.
+     *
+     * @return          The created reference object or an invalid reference object, if the an error
+     *                  occured while creating the reference.
+     *
+     * @note    This method does not test whether the repository really has an object with the id
+     *          @a sha.
+     *
+     */
+    Reference Reference::create(Result& result, Repository repo,
+                                const QString& name, const ObjectId& sha)
+    {
+        if (!result) {
+            return Reference();
+        }
+
+        if (!repo.isValid()) {
+            result.setInvalidObject();
+            return Reference();
+        }
+
+        Repository::Private* repop = Private::dataOf<Repository>(repo);
+
+        git_reference* ref = NULL;
+        QByteArray utf8Name = name.toUtf8();
+
+        result = git_reference_create(
+                    &ref,
+                    repop->mRepo,
+                    utf8Name.constData(),
+                    Private::sha(sha),
+                    0);
+
+        if (!result) {
+            return Reference();
+        }
+
+        return *new Private(repop, ref);
+    }
+
+
+    /**
+     * @brief           Create a new reference
+     *
+     * Creates a new reference named @a name that is pointing to the commit @a commit in the
+     * repository @a repo.
+     *
+     * @param[in,out]   result  A Result object; see @ref GitWrapErrorHandling
+     *
+     * @param[in]       repo    The repository in which the reference shall be created.
+     *
+     * @param[in]       name    The full qualified name of the reference to be created. i.e.
+     *                          `refs/heads/foobar` for branch `foobar`.
+     *
+     * @param[in]       commit  The commit object where the new reference shall point to.
+     *
+     * @return          The created reference object or an invalid reference object, if the an error
+     *                  occured while creating the reference.
+     *
+     */
+    Reference Reference::create(Result& result, Repository repo,
+                                const QString& name, const ObjectCommit& commit)
+    {
+        if (!commit.isValid()) {
+            return Reference();
+        }
+
+        ObjectId sha = commit.id(result);
+        return create(result, repo, name, sha);
+    }
+
+    /**
      * @brief       This reference's name
      *
      * @return      Returns the reference name (fully qualified)

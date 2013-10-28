@@ -55,6 +55,19 @@ namespace Git
         int compare( const Reference& other ) const;
 
     public:
+        static Reference create(
+                Result& result,
+                Repository repo,
+                const QString& name,
+                const ObjectId& sha);
+
+        static Reference create(
+                Result& result,
+                Repository repo,
+                const QString& name,
+                const ObjectCommit& commit);
+
+    public:
         QString name() const;
         QString prefix() const;
         QString shorthand() const;
