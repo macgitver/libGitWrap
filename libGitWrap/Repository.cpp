@@ -934,4 +934,12 @@ namespace Git
         return *new Internal::ReferencePrivate( d, ref );
     }
 
+    bool Repository::detachHead(Result& r)
+    {
+        GW_D_CHECKED(Repository, false, r);
+
+        r = git_repository_detach_head(d->mRepo);
+        return r;
+    }
+
 }
