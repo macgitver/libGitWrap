@@ -934,4 +934,25 @@ namespace Git
         return *new Internal::ReferencePrivate( d, ref );
     }
 
+    /**
+     * @brief           Detach the current HEAD
+     *
+     * Detachs the HEAD. If HEAD is already detached, this is a no-op and successful. If HEAD points
+     * to a commit, it will be detached at that commit. If it points to a tag, the tag will be
+     * peeled into a commit and HEAD is detached at the commit. It is an error, if HEAD points
+     * somewhere else.
+     *
+     * @param[in,out]   result  A Result object; see @ref GitWrapErrorHandling
+     *
+     * @return          `true` on success, `false` otherwise.
+     *
+     */
+    bool Repository::detachHead(Result& r)
+    {
+        GW_D_CHECKED(Repository, false, r);
+
+        r = git_repository_detach_head(d->mRepo);
+        return r;
+    }
+
 }
