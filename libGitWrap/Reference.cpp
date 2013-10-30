@@ -366,7 +366,7 @@ namespace Git
         result = git_checkout_tree(d->repo()->mRepo, Private::objectOf(o), &opts);
 
         if (updateHEAD) {
-            this->updateHEAD(result);
+            setAsHEAD(result);
         }
     }
 
@@ -415,7 +415,7 @@ namespace Git
      * @param[in,out]   result  A Result object; see @ref GitWrapErrorHandling
      *
      */
-    void Reference::setAsHEAD(Result& result)
+    void Reference::setAsHEAD(Result& result) const
     {
         GW_D_CHECKED_VOID(Reference, result);
 
