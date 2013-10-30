@@ -244,6 +244,7 @@ namespace Git
      * @a path.
      *
      * @param[in]       path    The path of the repository to open.
+     *
      * @param[in,out]   result  A result object; see @ref GitWrapErrorHandling
      *
      * @return  If successful, a `Repository` object for the opened repostiory will be returned.
@@ -269,6 +270,22 @@ namespace Git
         }
 
         return Repository(*new Internal::RepositoryPrivate(repo));
+    }
+
+    /**
+     * @brief           Open a independant instance of this repository
+     *
+     * @param[in,out]   result  A result object; see @ref GitWrapErrorHandling
+     *
+     * @return          A Repository object that refers to the same repository, but actually is
+     *                  absolutely independant of this repository object.
+     *
+     * The repository is opened using the working directory path, not the .git path.
+     *
+     */
+    Repository Repository::reopen(Result& result) const
+    {
+        return open(basePath(), result);
     }
 
     /**

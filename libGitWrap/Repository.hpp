@@ -63,6 +63,8 @@ namespace Git
         static Repository open( const QString& path,
                                 Result& result );
 
+        Repository reopen(Result& result) const;
+
         bool isBare() const;
         bool isHeadDetached() const;
 
