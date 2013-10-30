@@ -361,16 +361,13 @@ namespace Git
 
         git_checkout_opts opts = GIT_CHECKOUT_OPTS_INIT;
         opts.checkout_strategy = force ? GIT_CHECKOUT_FORCE : GIT_CHECKOUT_SAFE;
-        if ( !paths.isEmpty() )
-        {
-            // TODO: don't copy, just map paths here
-            result = git_strarray_copy( &opts.paths, Internal::StrArrayWrapper( paths ) );
-            if ( !result ) return;
-        }
-        result = git_checkout_tree( d->repo()->mRepo, Private::objectOf(o), &opts );
+        Internal::StrArray(opts.paths, paths);
 
-        if ( updateHEAD )
+        result = git_checkout_tree(d->repo()->mRepo, Private::objectOf(o), &opts);
+
+        if (updateHEAD) {
             this->updateHEAD(result);
+        }
     }
 
     void Reference::destroy(Result& result)
