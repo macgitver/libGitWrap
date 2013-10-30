@@ -17,9 +17,11 @@
  *
  */
 
-#include "Base.hpp"
+#include "libGitWrap/Base.hpp"
+#include "libGitWrap/Object.hpp"
 
-#include "Private/BasePrivate.hpp"
+#include "libGitWrap/Private/BasePrivate.hpp"
+#include "libGitWrap/Private/ObjectPrivate.hpp"
 
 namespace Git
 {
