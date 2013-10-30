@@ -95,6 +95,8 @@ namespace Git
 
         void destroy( Result& result );
 
+        void setAsHEAD(Result& result);
+
         void move( Result &result, const ObjectCommit &target );
         void rename(Result &result, const QString &newName , bool force = false );
 
