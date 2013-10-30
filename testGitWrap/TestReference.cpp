@@ -20,6 +20,7 @@
 #include "gtest/gtest.h"
 
 #include "libGitWrap/Result.hpp"
+#include "libGitWrap/ObjectId.hpp"
 #include "libGitWrap/Repository.hpp"
 #include "libGitWrap/Reference.hpp"
 
@@ -38,6 +39,7 @@ TEST_F(ReferenceFixture, CanLookup)
     Git::Reference ref = repo.lookupRef(r, QLatin1String("refs/heads/master"));
     ASSERT_TRUE(r);
     ASSERT_TRUE(ref.isValid());
+    ASSERT_FALSE(ref.wasDestroyed());
 
     EXPECT_TRUE(ref.isCurrentBranch());
     EXPECT_TRUE(ref.isLocal());
@@ -61,6 +63,7 @@ TEST_F(ReferenceFixture, CanLookupShorthand)
     Git::Reference ref = repo.lookupRef(r, QLatin1String("master"), true);
     ASSERT_TRUE(r);
     ASSERT_TRUE(ref.isValid());
+    ASSERT_FALSE(ref.wasDestroyed());
 
     EXPECT_TRUE(ref.isCurrentBranch());
     EXPECT_TRUE(ref.isLocal());
@@ -69,3 +72,29 @@ TEST_F(ReferenceFixture, CanLookupShorthand)
     EXPECT_STREQ("refs/heads/master", qPrintable(ref.name()));
 }
 
+TEST_F(ReferenceFixture, CanDestroyRef)
+{
+    TempRepoOpener tempRepo(this, "SimpleRepo1");
+    Git::Repository repo(tempRepo);
+    ASSERT_TRUE(repo.isValid());
+
+    Git::Result r;
+    Git::Reference ref = repo.lookupRef(r, QLatin1String("master"), true);
+    ASSERT_FALSE(ref.wasDestroyed());
+
+    ref.destroy(r);
+    ASSERT_TRUE(r);
+    ASSERT_TRUE(ref.wasDestroyed());
+
+    ref.objectId(r);
+    ASSERT_FALSE(r);
+    r.clear();
+
+    // counter check
+    Git::Repository repo2 = repo.reopen(r);
+    ASSERT_TRUE(r);
+
+    QStringList sl = repo2.allBranchNames(r);
+    ASSERT_TRUE(r);
+    ASSERT_EQ(0, sl.count());
+}
