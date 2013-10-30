@@ -67,6 +67,25 @@ namespace Git
 
     /**
      * @internal
+     * @brief       Set an error text.
+     *
+     * Sets @a szErrorText as text and @a code as error code. Sets the class to -1, which cannot be
+     * confused with libgit2 error classes.
+     *
+     * @param[in]   szErrorText     The text to set as error code.
+     *
+     * @param[in]   code            An error code to use. (Default to GIT_ERROR)
+     *
+     */
+    void Result::setError(const char* szErrorText, int code)
+    {
+        mClass = -1;
+        mCode = code;
+        mText = QString::fromUtf8(szErrorText);
+    }
+
+    /**
+     * @internal
      * @brief       Assignment operator
      *
      * @param[in]   resultCode  The result code as returned from `libgit2`

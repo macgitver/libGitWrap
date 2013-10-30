@@ -53,7 +53,8 @@ namespace Git
         void clear();
 
     public:
-        void setError( int resultCode );
+        void setError(const char* szErrorText, int code);
+        void setError(int resultCode);
         void setInvalidObject();
 
     private:
