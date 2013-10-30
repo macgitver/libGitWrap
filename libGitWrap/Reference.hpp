@@ -81,6 +81,8 @@ namespace Git
         Reference resolved( Result& result ) const;
         ObjectId resolveToObjectId( Result& result ) const;
 
+        Object peeled(Result& result, ObjectType ot) const;
+
         bool isCurrentBranch() const;
         bool isBranch() const;
         bool isLocal() const;

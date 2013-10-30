@@ -335,14 +335,29 @@ namespace Git
         return git_reference_is_remote( d->mRef );
     }
 
+    Object Reference::peeled(Result& result, ObjectType ot) const
+    {
+        GW_CD_CHECKED(Reference, Object(), result);
+
+        git_object* o = NULL;
+        result = git_reference_peel(&o, d->mRef, Internal::objectType2gitotype(ot));
+
+        if (!result) {
+            return Object();
+        }
+
+        return *new Object::Private(d->repo(), o);
+    }
+
     void Reference::checkout(Result &result, bool force, bool updateHEAD,
                              const QStringList &paths) const
     {
         GW_CD_CHECKED_VOID(Reference, result);
 
-        git_object *o = NULL;
-        result = git_reference_peel( &o, d->mRef, GIT_OBJ_TREE );
-        if ( !result ) return;
+        Object o = peeled(result, otTree);
+        if (!result) {
+            return;
+        }
 
         git_checkout_opts opts = GIT_CHECKOUT_OPTS_INIT;
         opts.checkout_strategy = force ? GIT_CHECKOUT_FORCE : GIT_CHECKOUT_SAFE;
@@ -352,7 +367,7 @@ namespace Git
             result = git_strarray_copy( &opts.paths, Internal::StrArrayWrapper( paths ) );
             if ( !result ) return;
         }
-        result = git_checkout_tree( d->repo()->mRepo, o, &opts );
+        result = git_checkout_tree( d->repo()->mRepo, Private::objectOf(o), &opts );
 
         if ( updateHEAD )
             this->updateHEAD(result);
