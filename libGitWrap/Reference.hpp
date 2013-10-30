@@ -87,6 +87,7 @@ namespace Git
         bool isBranch() const;
         bool isLocal() const;
         bool isRemote() const;
+        bool wasDestroyed() const;
 
         void checkout( Result& result,
                        bool force = false,

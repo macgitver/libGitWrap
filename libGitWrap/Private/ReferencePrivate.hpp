@@ -38,7 +38,8 @@ namespace Git
             ~ReferencePrivate();
 
         public:
-            git_reference*  mRef;
+            bool            wasDeleted;
+            git_reference*  reference;
         };
 
     }
