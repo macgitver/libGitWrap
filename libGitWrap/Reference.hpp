@@ -82,6 +82,7 @@ namespace Git
         ObjectId resolveToObjectId( Result& result ) const;
 
         bool isCurrentBranch() const;
+        bool isBranch() const;
         bool isLocal() const;
         bool isRemote() const;
 

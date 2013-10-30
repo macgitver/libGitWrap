@@ -305,6 +305,12 @@ namespace Git
         return d && git_branch_is_head( d->mRef );
     }
 
+    bool Reference::isBranch() const
+    {
+        GW_CD(Reference);
+        return d && git_reference_is_branch(d->mRef);
+    }
+
     bool Reference::isLocal() const
     {
         GW_CD(Reference);
