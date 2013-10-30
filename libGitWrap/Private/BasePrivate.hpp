@@ -65,7 +65,7 @@ namespace Git
 
 #define GW_CD(CLASS) \
     const Internal::CLASS##Private* d = \
-        static_cast<const Internal::CLASS##Private*>(mData.data())
+        static_cast<const Internal::CLASS##Private*>(mData.constData())
 
 #define GW_D_CHECKED(CLASS, returns, result) \
     GW_D(CLASS); \
