@@ -97,16 +97,37 @@ namespace Git
          * @param[in]   otype   LibGit2's object type
          * @return      LibGitWrap's object type
          */
-        static inline ObjectType gitotype2ObjectType( git_otype otype )
+        static inline ObjectType gitotype2ObjectType(git_otype otype)
         {
-            switch( otype )
-            {
+            switch (otype) {
+            default:                Q_ASSERT(false);
+            case GIT_OBJ_ANY:       return otAny;
             case GIT_OBJ_BLOB:      return otBlob;
             case GIT_OBJ_COMMIT:    return otCommit;
             case GIT_OBJ_TREE:      return otTree;
             case GIT_OBJ_TAG:       return otTag;
-            default:                Q_ASSERT( false );
-                                    return otAny;
+            }
+        }
+
+        /**
+         * @internal
+         * @ingroup     GitWrap
+         * @brief       Convert ObjectType to GIT_OBJ_xxx constant
+         *
+         * @param[in]   ot      The ObjectType to convert
+         *
+         * @return      The GIT_OBJ_xxx constant
+         *
+         */
+        static inline git_otype objectType2gitotype(ObjectType ot)
+        {
+            switch (ot) {
+            default:        Q_ASSERT(false);
+            case otAny:     return GIT_OBJ_ANY;
+            case otBlob:    return GIT_OBJ_BLOB;
+            case otCommit:  return GIT_OBJ_COMMIT;
+            case otTree:    return GIT_OBJ_TREE;
+            case otTag:     return GIT_OBJ_TAG;
             }
         }
 
