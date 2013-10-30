@@ -52,9 +52,6 @@ namespace Git
          */
         class StrArrayWrapper
         {
-            git_strarray a;
-            QStringList internalCopy;
-
         public:
             StrArrayWrapper(const QStringList& sl);
             ~StrArrayWrapper();
@@ -65,6 +62,26 @@ namespace Git
         private:
             StrArrayWrapper();
             StrArrayWrapper(const StrArrayWrapper&);
+            StrArrayWrapper& operator=(const StrArrayWrapper&);
+
+        private:
+            git_strarray a;
+            QStringList internalCopy;
+        };
+
+        class StrArray
+        {
+        public:
+            StrArray(git_strarray& _a, const QStringList& sl);
+            ~StrArray();
+
+        private:
+            /* Cannot privatize Copy+Default ctor because of the member-by-reference */
+            StrArray& operator=(const StrArray&);
+
+        private:
+            git_strarray& a;
+            QStringList internalCopy;
         };
 
         /**

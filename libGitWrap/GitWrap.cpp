@@ -46,12 +46,22 @@ namespace Git
             return sl;
         }
 
+        //-- StrArrayWrapper -------------------------------------------------------------------- >8
+
         StrArrayWrapper::StrArrayWrapper()
         {
+            Q_ASSERT(false);
         }
 
         StrArrayWrapper::StrArrayWrapper( const StrArrayWrapper & )
         {
+            Q_ASSERT(false);
+        }
+
+        StrArrayWrapper& StrArrayWrapper::operator=(const StrArrayWrapper&)
+        {
+            Q_ASSERT(false);
+            return *this;
         }
 
         StrArrayWrapper::StrArrayWrapper(const QStringList& sl)
@@ -80,6 +90,32 @@ namespace Git
         StrArrayWrapper::operator const git_strarray *() const
         {
             return &a;
+        }
+
+        //-- StrArray --------------------------------------------------------------------------- >8
+
+        StrArray& StrArray::operator=(const StrArray&)
+        {
+            Q_ASSERT(false);
+            return *this;
+        }
+
+        StrArray::StrArray(git_strarray& _a, const QStringList& sl)
+            : a(_a)
+            , internalCopy(sl)
+        {
+            a.count = internalCopy.count();
+            a.strings = new char *[a.count];
+
+            for(int i=0; i < internalCopy.count(); ++i )
+            {
+                a.strings[i] = internalCopy[i].toUtf8().data();
+            }
+        }
+
+        StrArray::~StrArray()
+        {
+            delete[] a.strings;
         }
 
     }
