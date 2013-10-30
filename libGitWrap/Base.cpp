@@ -42,6 +42,17 @@ namespace Git
             return reinterpret_cast<const git_oid*>(id.raw());
         }
 
+        git_object* BasePrivate::objectOf(const Object& o)
+        {
+            Object::Private* op = dataOf<Object>(o);
+
+            if (!op) {
+                return NULL;
+            }
+
+            return op->mObj;
+        }
+
     }
 
     Base::Base()

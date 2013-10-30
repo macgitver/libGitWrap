@@ -24,6 +24,8 @@
 namespace Git
 {
 
+    class Object;
+
     namespace Internal
     {
 
@@ -53,6 +55,8 @@ namespace Git
             }
 
             static const git_oid* sha(const ObjectId& id);
+            static git_object* objectOf(const Object& o);
+
         };
 
     }
