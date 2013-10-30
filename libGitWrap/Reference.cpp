@@ -419,7 +419,7 @@ namespace Git
     bool Reference::wasDestroyed() const
     {
         GW_D(Reference);
-        return d && !d->wasDeleted;
+        return d && d->wasDeleted;
     }
 
     void Reference::move(Result &result, const ObjectCommit &target)
