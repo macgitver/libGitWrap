@@ -955,4 +955,45 @@ namespace Git
         return result;
     }
 
+    /**
+     * @brief           Set the HEAD to follow a branch
+     *
+     * @param[in,out]   result      A Result object; see @ref GitWrapErrorHandling
+     *
+     * @param[in]       branchName  The full qualified reference name of the branch to follow. The
+     *                              branch doesn't need to exist. If it doesn't exist, the HEAD will
+     *                              become orphaned but point to the branch once it is created.
+     *
+     * If the branchName is not a branch (doesn't start with `refs/heads`), but still is a valid
+     * reference and can be peeled into a commit object, the HEAD will be detached and point to the
+     * peeled commit.
+     *
+     */
+    void Repository::setHEAD(Result& result, const QString& branchName)
+    {
+        GW_D_CHECKED_VOID(Repository, result);
+
+        result = git_repository_set_head(d->mRepo, branchName.toUtf8().constData());
+    }
+
+    /**
+     * @brief           Set the HEAD detached to a commit
+     *
+     * @param[in,out]   result  A Result object; see @ref GitWrapErrorHandling
+     *
+     * @param[in]       commit  The commit to point to.
+     *
+     */
+    void Repository::setHEAD(Result& result, const ObjectCommit& commit)
+    {
+        GW_D_CHECKED_VOID(Repository, result);
+
+        if (!commit.isValid()) {
+            result.setInvalidObject();
+            return;
+        }
+
+        result = git_repository_set_head_detached(d->mRepo, Private::sha(commit.id(result)));
+    }
+
 }
