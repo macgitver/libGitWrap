@@ -14,27 +14,27 @@
  *
  */
 
-#include "Result.hpp"
-#include "Index.hpp"
-#include "Remote.hpp"
-#include "Repository.hpp"
-#include "Reference.hpp"
-#include "DiffList.hpp"
-#include "Object.hpp"
-#include "ObjectTag.hpp"
-#include "ObjectTree.hpp"
-#include "ObjectBlob.hpp"
-#include "ObjectCommit.hpp"
-#include "RevisionWalker.hpp"
+#include "libGitWrap/Result.hpp"
+#include "libGitWrap/Index.hpp"
+#include "libGitWrap/Remote.hpp"
+#include "libGitWrap/Repository.hpp"
+#include "libGitWrap/Reference.hpp"
+#include "libGitWrap/DiffList.hpp"
+#include "libGitWrap/Object.hpp"
+#include "libGitWrap/Tag.hpp"
+#include "libGitWrap/Tree.hpp"
+#include "libGitWrap/Blob.hpp"
+#include "libGitWrap/Commit.hpp"
+#include "libGitWrap/RevisionWalker.hpp"
 
-#include "Private/GitWrapPrivate.hpp"
-#include "Private/IndexPrivate.hpp"
-#include "Private/RemotePrivate.hpp"
-#include "Private/RepositoryPrivate.hpp"
-#include "Private/ReferencePrivate.hpp"
-#include "Private/DiffListPrivate.hpp"
-#include "Private/ObjectPrivate.hpp"
-#include "Private/RevisionWalkerPrivate.hpp"
+#include "libGitWrap/Private/GitWrapPrivate.hpp"
+#include "libGitWrap/Private/IndexPrivate.hpp"
+#include "libGitWrap/Private/RemotePrivate.hpp"
+#include "libGitWrap/Private/RepositoryPrivate.hpp"
+#include "libGitWrap/Private/ReferencePrivate.hpp"
+#include "libGitWrap/Private/DiffListPrivate.hpp"
+#include "libGitWrap/Private/ObjectPrivate.hpp"
+#include "libGitWrap/Private/RevisionWalkerPrivate.hpp"
 
 #include <QDir>
 
@@ -665,22 +665,22 @@ namespace Git
         return *new Internal::ObjectPrivate(d, obj);
     }
 
-    ObjectCommit Repository::lookupCommit(Result& result, const ObjectId& id)
+    Commit Repository::lookupCommit(Result& result, const ObjectId& id)
     {
         return lookup( result, id, otCommit ).asCommit( result );
     }
 
-    ObjectTree Repository::lookupTree(Result& result, const ObjectId& id)
+    Tree Repository::lookupTree(Result& result, const ObjectId& id)
     {
         return lookup( result, id, otTree ).asTree( result );
     }
 
-    ObjectBlob Repository::lookupBlob(Result& result, const ObjectId& id)
+    Blob Repository::lookupBlob(Result& result, const ObjectId& id)
     {
         return lookup( result, id, otBlob ).asBlob( result );
     }
 
-    ObjectTag Repository::lookupTag(Result& result, const ObjectId& id)
+    Tag Repository::lookupTag(Result& result, const ObjectId& id)
     {
         return lookup( result, id, otTag ).asTag( result );
     }
@@ -690,22 +690,22 @@ namespace Git
         return lookup( result, lookupRef( result, refName ).resolveToObjectId( result ), ot );
     }
 
-    ObjectCommit Repository::lookupCommit(Result& result, const QString& refName)
+    Commit Repository::lookupCommit(Result& result, const QString& refName)
     {
         return lookupCommit( result, lookupRef( result, refName ).resolveToObjectId( result ) );
     }
 
-    ObjectTree Repository::lookupTree(Result& result, const QString& refName)
+    Tree Repository::lookupTree(Result& result, const QString& refName)
     {
         return lookupTree( result, lookupRef( result, refName ).resolveToObjectId( result ) );
     }
 
-    ObjectBlob Repository::lookupBlob(Result& result, const QString& refName)
+    Blob Repository::lookupBlob(Result& result, const QString& refName)
     {
         return lookupBlob( result, lookupRef( result, refName ).resolveToObjectId( result ) );
     }
 
-    ObjectTag Repository::lookupTag(Result& result, const QString& refName)
+    Tag Repository::lookupTag(Result& result, const QString& refName)
     {
         return lookupTag( result, lookupRef( result, refName ).resolveToObjectId( result ) );
     }
@@ -847,23 +847,23 @@ namespace Git
         return remo;
     }
 
-    DiffList Repository::diffCommitToCommit( Result& result, ObjectCommit oldCommit,
-                                             ObjectCommit newCommit )
+    DiffList Repository::diffCommitToCommit( Result& result, Commit oldCommit,
+                                             Commit newCommit )
     {
         return diffTreeToTree( result, oldCommit.tree( result ), newCommit.tree( result ) );
     }
 
-    DiffList Repository::diffTreeToTree(Result& result, ObjectTree oldTree, ObjectTree newTree)
+    DiffList Repository::diffTreeToTree(Result& result, Tree oldTree, Tree newTree)
     {
         return oldTree.diffToTree( result, newTree );
     }
 
-    DiffList Repository::diffIndexToTree(Result& result, ObjectTree oldTree)
+    DiffList Repository::diffIndexToTree(Result& result, Tree oldTree)
     {
         return oldTree.diffToIndex( result );
     }
 
-    DiffList Repository::diffTreeToWorkingDir(Result& result, ObjectTree oldTree)
+    DiffList Repository::diffTreeToWorkingDir(Result& result, Tree oldTree)
     {
         return oldTree.diffToWorkingDir( result );
     }
@@ -990,7 +990,7 @@ namespace Git
      * @param[in]       commit  The commit to point to.
      *
      */
-    void Repository::setHEAD(Result& result, const ObjectCommit& commit)
+    void Repository::setHEAD(Result& result, const Commit& commit)
     {
         GW_D_CHECKED_VOID(Repository, result);
 

@@ -19,7 +19,7 @@
 
 #include <QSharedData>
 
-#include "GitWrapPrivate.hpp"
+#include "libGitWrap/Private/GitWrapPrivate.hpp"
 
 namespace Git
 {

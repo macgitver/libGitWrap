@@ -64,11 +64,11 @@ namespace Git
     class IndexConflicts;
     class IndexEntry;
     class Object;
-    class ObjectBlob;
-    class ObjectCommit;
     class ObjectId;
-    class ObjectTag;
-    class ObjectTree;
+    class Blob;
+    class Commit;
+    class Tag;
+    class Tree;
     class PatchConsumer;
     class RefName;
     class RefSpec;
@@ -86,7 +86,9 @@ namespace Git
     typedef QVector< Reference >        ReferenceList;
     typedef QVector< Remote >           RemoteList;
     typedef QVector< Submodule >        SubmoduleList;
-    typedef QVector< ObjectCommit >     ObjectCommitList;
+    typedef QVector< Commit >           CommitList;
+
+    typedef Q_DECL_DEPRECATED CommitList ObjectCommitList;
 
     /**
      * @enum        Status

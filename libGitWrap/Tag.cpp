@@ -14,30 +14,31 @@
  *
  */
 
-#include "libGitWrap/Private/WorkerThread.hpp"
+#include "libGitWrap/Tag.hpp"
+
+#include "libGitWrap/Private/ObjectPrivate.hpp"
+#include "libGitWrap/Private/GitWrapPrivate.hpp"
 
 namespace Git
 {
 
-    namespace Internal
+    Tag::Tag()
     {
+    }
 
-        Worker::~Worker()
+    Tag::Tag( Internal::ObjectPrivate& _d )
+        : Object(_d)
+    {
+        Result r;
+        if( ( type( r ) != otTag ) || !r )
         {
+            mData = NULL;
         }
+    }
 
-        WorkerThread::WorkerThread( QObject* parent, Worker* worker )
-            : QThread( parent )
-            , mWorker( worker )
-        {
-        }
-
-        void WorkerThread::run()
-        {
-            Q_ASSERT( mWorker );
-            mWorker->run();
-        }
-
+    Tag::Tag( const Tag& o )
+        : Object( o )
+    {
     }
 
 }

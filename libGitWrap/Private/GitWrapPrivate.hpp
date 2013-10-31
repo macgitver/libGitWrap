@@ -22,9 +22,9 @@
 
 #include "git2.h"
 
-#include "GitWrap.hpp"
-#include "Result.hpp"
-#include "ObjectId.hpp"
+#include "libGitWrap/GitWrap.hpp"
+#include "libGitWrap/Result.hpp"
+#include "libGitWrap/ObjectId.hpp"
 
 namespace Git
 {

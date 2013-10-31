@@ -17,7 +17,7 @@
 #ifndef GIT_ERROR_H
 #define GIT_ERROR_H
 
-#include "GitWrap.hpp"
+#include "libGitWrap/GitWrap.hpp"
 
 namespace Git
 {

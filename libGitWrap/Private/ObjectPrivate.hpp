@@ -36,6 +36,9 @@ namespace Git
             Q_DECL_DEPRECATED ObjectPrivate(RepositoryPrivate* repo, git_object* o);
             ~ObjectPrivate();
 
+            git_object* o() { return mObj; }
+            const git_object* o() const { return mObj; }
+
         public:
             git_object* mObj;
         };
@@ -57,8 +60,8 @@ namespace Git
         // Without usage of C++11, we cannot provide these typedefs as X::Private typedefs, too.
         // That means, Private::dataOf won't work with these, unless we specialize it. But even that
         // requires some support of C++11...
-        typedef ObjectTPrivate<git_commit>  ObjectCommitPrivate;
-        typedef ObjectTPrivate<git_tree>    ObjectTreePrivate;
+        typedef ObjectTPrivate<git_commit>  CommitPrivate;
+        typedef ObjectTPrivate<git_tree>    TreePrivate;
         typedef ObjectTPrivate<git_blob>    ObjectBlobPrivate;
         typedef ObjectTPrivate<git_tag>     ObjectTagPrivate;
 

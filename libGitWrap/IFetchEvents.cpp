@@ -14,7 +14,7 @@
  *
  */
 
-#include "IFetchEvents.hpp"
+#include "libGitWrap/IFetchEvents.hpp"
 
 namespace Git
 {

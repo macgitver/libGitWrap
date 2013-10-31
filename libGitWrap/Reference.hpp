@@ -66,7 +66,7 @@ namespace Git
                 Result& result,
                 Repository repo,
                 const QString& name,
-                const ObjectCommit& commit);
+                const Commit& commit);
 
     public:
         QString name() const;
@@ -102,7 +102,7 @@ namespace Git
 
         void setAsHEAD(Result& result) const;
 
-        void move( Result &result, const ObjectCommit &target );
+        void move( Result &result, const Commit &target );
         void rename(Result &result, const QString &newName , bool force = false );
 
         void updateHEAD(Result &result) const;

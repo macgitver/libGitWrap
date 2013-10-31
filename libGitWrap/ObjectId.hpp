@@ -17,7 +17,7 @@
 #ifndef GIT_OBJECT_ID_H
 #define GIT_OBJECT_ID_H
 
-#include "GitWrap.hpp"
+#include "libGitWrap/GitWrap.hpp"
 
 namespace Git
 {

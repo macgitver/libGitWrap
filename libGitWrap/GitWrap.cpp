@@ -14,10 +14,10 @@
  *
  */
 
-#include "Index.hpp"
-#include "Repository.hpp"
+#include "libGitWrap/Index.hpp"
+#include "libGitWrap/Repository.hpp"
 
-#include "Private/GitWrapPrivate.hpp"
+#include "libGitWrap/Private/GitWrapPrivate.hpp"
 
 namespace Git
 {

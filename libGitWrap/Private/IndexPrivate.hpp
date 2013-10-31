@@ -19,7 +19,7 @@
 #ifndef GIT_INDEX_PRIVATE_H
 #define GIT_INDEX_PRIVATE_H
 
-#include "IndexConflict.hpp"
+#include "libGitWrap/IndexConflict.hpp"
 
 #include "libGitWrap/Private/GitWrapPrivate.hpp"
 #include "libGitWrap/Private/RepoObjectPrivate.hpp"

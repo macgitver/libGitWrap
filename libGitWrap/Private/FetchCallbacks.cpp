@@ -14,8 +14,9 @@
  *
  */
 
-#include "IFetchEvents.hpp"
-#include "FetchCallbacks.hpp"
+#include "libGitWrap/IFetchEvents.hpp"
+
+#include "libGitWrap/Private/FetchCallbacks.hpp"
 
 #if 0
 #define debugEvents qDebug

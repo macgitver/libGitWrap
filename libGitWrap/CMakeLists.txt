@@ -129,11 +129,7 @@ SET( SRC_FILES
     IndexConflict.cpp
     IndexConflicts.cpp
     Object.cpp
-    ObjectBlob.cpp
-    ObjectCommit.cpp
     ObjectId.cpp
-    ObjectTag.cpp
-    ObjectTree.cpp
     PatchConsumer.cpp
     RefName.cpp
     RefSpec.cpp
@@ -146,6 +142,10 @@ SET( SRC_FILES
     Submodule.cpp
     TreeBuilder.cpp
     TreeEntry.cpp
+    Tag.cpp
+    Tree.cpp
+    Commit.cpp
+    Blob.cpp
 
     Private/FetchCallbacks.cpp
     Private/WorkerThread.cpp
@@ -182,6 +182,10 @@ SET( PUB_HDR_FILES
     Submodule.hpp
     TreeBuilder.hpp
     TreeEntry.hpp
+    Tag.hpp
+    Tree.hpp
+    Commit.hpp
+    Blob.hpp
 )
 
 SET( PRI_HDR_FILES

@@ -14,7 +14,7 @@
  *
  */
 
-#include "ChangeListConsumer.hpp"
+#include "libGitWrap/ChangeListConsumer.hpp"
 
 namespace Git
 {

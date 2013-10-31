@@ -57,9 +57,9 @@ namespace Git
         void read(Result& result);
         void write(Result& result);
         void clear();
-        void readTree(Result& result, ObjectTree& tree);
-        ObjectTree writeTree(Result& result);
-        ObjectTree writeTreeTo(Result& result, Repository& repo);
+        void readTree(Result& result, Tree& tree);
+        Tree writeTree(Result& result);
+        Tree writeTreeTo(Result& result, Repository& repo);
 
         // Methods to access and change entries
         int count( Result& result ) const;

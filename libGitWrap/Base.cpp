@@ -45,7 +45,7 @@ namespace Git
                 return NULL;
             }
 
-            return op->mObj;
+            return op->o();
         }
 
     }

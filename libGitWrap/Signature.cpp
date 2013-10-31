@@ -14,9 +14,9 @@
  *
  */
 
-#include "Signature.hpp"
+#include "libGitWrap/Signature.hpp"
 
-#include "Private/GitWrapPrivate.hpp"
+#include "libGitWrap/Private/GitWrapPrivate.hpp"
 
 namespace Git
 {

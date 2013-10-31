@@ -1,4 +1,4 @@
-   /*
+/*
  * MacGitver
  * Copyright (C) 2012-2013 Sascha Cunz <sascha@babbelbox.org>
  *
@@ -14,35 +14,40 @@
  *
  */
 
-#ifndef GITWRAP_PATCH_CONSUMER_H
-#define GITWRAP_PATCH_CONSUMER_H
+#ifndef GIT_OBJECT_TAG_H
+#define GIT_OBJECT_TAG_H
 
 #include "libGitWrap/GitWrap.hpp"
-#include "libGitWrap/ChangeListConsumer.hpp"
+#include "libGitWrap/ObjectId.hpp"
+#include "libGitWrap/Object.hpp"
 
 namespace Git
 {
 
     /**
      * @ingroup     GitWrap
-     * @brief       Callback interface to consume a list of differences
+     * @brief       Represents a git tag object.
      *
      */
-    class GITWRAP_API PatchConsumer : public ChangeListConsumer
+    class GITWRAP_API Tag : public Object
     {
     public:
-        PatchConsumer();
-        virtual ~PatchConsumer();
+        enum { ObjectTypeId = otTag };
 
     public:
-        virtual bool startHunkChange( int newStart, int newLines, int oldStart, int oldLines,
-                                      const QString& header );
-
-        virtual bool appendContext( const QString& content );
-        virtual bool appendAddition( const QString& content );
-        virtual bool appendDeletion( const QString& content );
+        Tag();
+        Tag(Internal::ObjectPrivate& _d);
+        Tag(const Tag& o);
     };
 
+    template<>
+    inline Tag Object::as(Result& result) const
+    {
+        return asTag(result);
+    }
+
 }
+
+Q_DECLARE_METATYPE(Git::Tag)
 
 #endif

@@ -14,9 +14,10 @@
  *
  */
 
-#include "GitWrapPrivate.hpp"
-#include "Result.hpp"
-#include "WorkerThread.hpp"
+#include "libGitWrap/Result.hpp"
+
+#include "libGitWrap/Private/GitWrapPrivate.hpp"
+#include "libGitWrap/Private/WorkerThread.hpp"
 
 namespace Git
 {

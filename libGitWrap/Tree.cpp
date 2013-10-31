@@ -14,24 +14,24 @@
  *
  */
 
-#include "DiffList.hpp"
-#include "ObjectTree.hpp"
-#include "Repository.hpp"
+#include "libGitWrap/DiffList.hpp"
+#include "libGitWrap/Tree.hpp"
+#include "libGitWrap/Repository.hpp"
 
-#include "Private/GitWrapPrivate.hpp"
-#include "Private/DiffListPrivate.hpp"
-#include "Private/ObjectPrivate.hpp"
-#include "Private/RepositoryPrivate.hpp"
-#include "Private/TreeEntryPrivate.hpp"
+#include "libGitWrap/Private/GitWrapPrivate.hpp"
+#include "libGitWrap/Private/DiffListPrivate.hpp"
+#include "libGitWrap/Private/ObjectPrivate.hpp"
+#include "libGitWrap/Private/RepositoryPrivate.hpp"
+#include "libGitWrap/Private/TreeEntryPrivate.hpp"
 
 namespace Git
 {
 
-    ObjectTree::ObjectTree()
+    Tree::Tree()
     {
     }
 
-    ObjectTree::ObjectTree(Internal::ObjectPrivate& _d)
+    Tree::Tree(Internal::ObjectPrivate& _d)
         : Object( _d )
     {
         Result r;
@@ -41,45 +41,45 @@ namespace Git
         }
     }
 
-    ObjectTree::ObjectTree( const ObjectTree& o )
+    Tree::Tree( const Tree& o )
         : Object( o )
     {
     }
 
-    ObjectTree ObjectTree::subPath(Result& result , const QString& pathName) const
+    Tree Tree::subPath(Result& result , const QString& pathName) const
     {
-        GW_CD_CHECKED(Object, ObjectTree(), result)
+        GW_CD_CHECKED(Object, Tree(), result)
 
         git_tree* d2 = (git_tree*) d->mObj;
 
         const git_tree_entry* entry = git_tree_entry_byname( d2, pathName.toUtf8().constData() );
         if( !entry )
         {
-            return ObjectTree();
+            return Tree();
         }
 
         git_object* subObject = 0;
         result = git_tree_entry_to_object( &subObject, d->repo()->mRepo, entry );
         if( !result )
         {
-            return ObjectTree();
+            return Tree();
         }
 
         if( git_object_type( subObject ) != GIT_OBJ_TREE )
         {
             git_object_free( subObject );
-            return ObjectTree();
+            return Tree();
         }
 
         return *new Object::Private(d->repo(), subObject);
     }
 
-    DiffList ObjectTree::diffToTree(Result& result , ObjectTree newTree)
+    DiffList Tree::diffToTree(Result& result , Tree newTree)
     {
-        GW_D_CHECKED(ObjectTree, DiffList(), result)
+        GW_D_CHECKED(Tree, DiffList(), result)
 
         Object::Private* op = Base::Private::dataOf<Object>(newTree);
-        Internal::ObjectTreePrivate* otp = static_cast<Internal::ObjectTreePrivate*>(op);
+        Internal::TreePrivate* otp = static_cast<Internal::TreePrivate*>(op);
 
         git_diff_list* diffList = NULL;
         result = git_diff_tree_to_tree( &diffList, d->repo()->mRepo, d->o(), otp->o(), NULL );
@@ -91,9 +91,9 @@ namespace Git
         return DiffList(*new Internal::DiffListPrivate(d->repo(), diffList));
     }
 
-    DiffList ObjectTree::diffToIndex( Result& result )
+    DiffList Tree::diffToIndex( Result& result )
     {
-        GW_D_CHECKED(ObjectTree, DiffList(), result)
+        GW_D_CHECKED(Tree, DiffList(), result)
         git_diff_list* diffList = NULL;
 
         result = git_diff_tree_to_index( &diffList, d->repo()->mRepo, d->o(), NULL, NULL );
@@ -104,9 +104,9 @@ namespace Git
         return DiffList(*new Internal::DiffListPrivate(d->repo(), diffList));
     }
 
-    DiffList ObjectTree::diffToWorkingDir( Result& result )
+    DiffList Tree::diffToWorkingDir( Result& result )
     {
-        GW_D_CHECKED(ObjectTree, DiffList(), result)
+        GW_D_CHECKED(Tree, DiffList(), result)
 
         git_diff_list* diffList = NULL;
         result = git_diff_tree_to_workdir( &diffList, d->repo()->mRepo, d->o(), NULL );
@@ -117,15 +117,15 @@ namespace Git
         return DiffList(*new Internal::DiffListPrivate(d->repo(), diffList));
     }
 
-    size_t ObjectTree::entryCount() const
+    size_t Tree::entryCount() const
     {
-        GW_CD(ObjectTree);
+        GW_CD(Tree);
         return d ? git_tree_entrycount(d->o()) : 0;
     }
 
-    TreeEntry ObjectTree::entryAt( size_t index ) const
+    TreeEntry Tree::entryAt( size_t index ) const
     {
-        GW_CD(ObjectTree);
+        GW_CD(Tree);
 
         if(!d) {
             return TreeEntry();
@@ -134,9 +134,9 @@ namespace Git
         return *new Internal::TreeEntryPrivate(entry);
     }
 
-    TreeEntry ObjectTree::entry( const QString& fileName ) const
+    TreeEntry Tree::entry( const QString& fileName ) const
     {
-        GW_CD(ObjectTree);
+        GW_CD(Tree);
 
         if(!d) {
             return TreeEntry();
@@ -146,7 +146,7 @@ namespace Git
         return *new Internal::TreeEntryPrivate( entry );
     }
 
-    void ObjectTree::checkout(Result& result, bool force, const QStringList &paths) const
+    void Tree::checkout(Result& result, bool force, const QStringList &paths) const
     {
         GW_CD_CHECKED_VOID(Object, result);
 

@@ -20,7 +20,7 @@
 #ifndef GITWRAP_CONFIG_H
 #define GITWRAP_CONFIG_H
 
-#include "Base.hpp"
+#include "libGitWrap/Base.hpp"
 
 namespace Git
 {

@@ -17,7 +17,7 @@
 #ifndef GIT_SIGNATURE_H
 #define GIT_SIGNATURE_H
 
-#include "GitWrap.hpp"
+#include "libGitWrap/GitWrap.hpp"
 
 namespace Git
 {

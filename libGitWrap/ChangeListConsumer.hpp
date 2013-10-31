@@ -17,7 +17,7 @@
 #ifndef GIT_CHANGELIST_CONSUMER_H
 #define GIT_CHANGELIST_CONSUMER_H
 
-#include "GitWrap.hpp"
+#include "libGitWrap/GitWrap.hpp"
 
 namespace Git
 {

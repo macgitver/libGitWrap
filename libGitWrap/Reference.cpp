@@ -14,8 +14,8 @@
  *
  */
 
-#include "libGitWrap/ObjectCommit.hpp"
-#include "libGitWrap/ObjectTree.hpp"
+#include "libGitWrap/Commit.hpp"
+#include "libGitWrap/Tree.hpp"
 #include "libGitWrap/ObjectId.hpp"
 #include "libGitWrap/Repository.hpp"
 #include "libGitWrap/Reference.hpp"
@@ -196,7 +196,7 @@ namespace Git
      *
      */
     Reference Reference::create(Result& result, Repository repo,
-                                const QString& name, const ObjectCommit& commit)
+                                const QString& name, const Commit& commit)
     {
         if (!commit.isValid()) {
             result.setInvalidObject();
@@ -375,7 +375,7 @@ namespace Git
         GW_CD_CHECKED_VOID(Reference, result);
         CHECK_DELETED_VOID(result);
 
-        peeled<ObjectTree>(result).checkout(result, force, paths);
+        peeled<Tree>(result).checkout(result, force, paths);
 
         if (result && updateHEAD) {
             setAsHEAD(result);
@@ -410,7 +410,7 @@ namespace Git
         return d && d->wasDeleted;
     }
 
-    void Reference::move(Result &result, const ObjectCommit &target)
+    void Reference::move(Result &result, const Commit &target)
     {
         GW_D_CHECKED_VOID(Reference, result);
         CHECK_DELETED_VOID(result);
@@ -467,7 +467,7 @@ namespace Git
             }
         }
         else {
-            peeled<ObjectCommit>(result).setAsHEAD(result);
+            peeled<Commit>(result).setAsHEAD(result);
         }
     }
 

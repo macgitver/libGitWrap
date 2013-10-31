@@ -14,11 +14,11 @@
  *
  */
 
-#include "Remote.hpp"
-#include "Reference.hpp"
-#include "RefSpec.hpp"
+#include "libGitWrap/Remote.hpp"
+#include "libGitWrap/Reference.hpp"
+#include "libGitWrap/RefSpec.hpp"
 
-#include "Private/RemotePrivate.hpp"
+#include "libGitWrap/Private/RemotePrivate.hpp"
 
 namespace Git
 {

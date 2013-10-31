@@ -16,18 +16,18 @@
  *
  */
 
-#include "Index.hpp"
-#include "IndexEntry.hpp"
-#include "IndexConflict.hpp"
-#include "IndexConflicts.hpp"
-#include "Repository.hpp"
-#include "ObjectTree.hpp"
+#include "libGitWrap/Index.hpp"
+#include "libGitWrap/IndexEntry.hpp"
+#include "libGitWrap/IndexConflict.hpp"
+#include "libGitWrap/IndexConflicts.hpp"
+#include "libGitWrap/Repository.hpp"
+#include "libGitWrap/Tree.hpp"
 
-#include "Private/IndexPrivate.hpp"
-#include "Private/IndexEntryPrivate.hpp"
-#include "Private/IndexConflictPrivate.hpp"
-#include "Private/RepositoryPrivate.hpp"
-#include "Private/ObjectPrivate.hpp"
+#include "libGitWrap/Private/IndexPrivate.hpp"
+#include "libGitWrap/Private/IndexEntryPrivate.hpp"
+#include "libGitWrap/Private/IndexConflictPrivate.hpp"
+#include "libGitWrap/Private/RepositoryPrivate.hpp"
+#include "libGitWrap/Private/ObjectPrivate.hpp"
 
 namespace Git
 {
@@ -108,7 +108,7 @@ namespace Git
      * Index i;
      * i.readTree(result, rootTree);
      * // modify i...
-     * ObjectTree newRoot = i.writeTreeTo(result, repository);
+     * Tree newRoot = i.writeTreeTo(result, repository);
      * @endcode
      *
      */
@@ -526,7 +526,7 @@ namespace Git
      *
      * The index is cleared and recursively populated with all tree entries contained in @a tree.
      */
-    void Index::readTree(Result& result, ObjectTree& tree)
+    void Index::readTree(Result& result, Tree& tree)
     {
         GW_D_CHECKED_VOID(Index, result);
 
@@ -536,7 +536,7 @@ namespace Git
         }
 
         Internal::ObjectPrivate* op = Internal::BasePrivate::dataOf<Object>(tree);
-        const git_tree* treeobj = (const git_tree*) op->mObj;
+        const git_tree* treeobj = (const git_tree*) op->o();
 
         result = git_index_read_tree(d->index, treeobj);
 
@@ -550,8 +550,7 @@ namespace Git
      *
      * @param[in,out]   result  A Result object; see @ref GitWrapErrorHandling
      *
-     * @return      The root tree as ObjectTree on success; an invalid ObjectTree in case of any
-     *              failure.
+     * @return      The root tree as Tree on success; an invalid Tree in case of any failure.
      *
      * The Index object must not be bare (isBare() must return @c false) and be associated to a
      * repository. It must also not contain any conflict entries (hasConflicts() must return
@@ -564,14 +563,14 @@ namespace Git
      * tree objects.
      *
      */
-    ObjectTree Index::writeTree(Result& result)
+    Tree Index::writeTree(Result& result)
     {
-        GW_D_CHECKED(Index, ObjectTree(), result)
+        GW_D_CHECKED(Index, Tree(), result)
 
         git_oid treeGitOid;
         result = git_index_write_tree(&treeGitOid, d->index);
         if (!result) {
-            return ObjectTree();
+            return Tree();
         }
 
         return repository().lookupTree(result, ObjectId::fromRaw(treeGitOid.id));
@@ -584,8 +583,7 @@ namespace Git
      *
      * @param[in]       repo    The repository to store objects into
      *
-     * @return      The root tree as ObjectTree on success; an invalid ObjectTree in case of any
-     *              failure.
+     * @return      The root tree as Tree on success; an invalid Tree in case of any failure.
      *
      * The Index must not contain any conflict entries (hasConflicts() must return @c false).
      *
@@ -593,20 +591,20 @@ namespace Git
      * as tree objects.
      *
      */
-    ObjectTree Index::writeTreeTo(Result& result, Repository& repo)
+    Tree Index::writeTreeTo(Result& result, Repository& repo)
     {
-        GW_D_CHECKED(Index, ObjectTree(), result)
+        GW_D_CHECKED(Index, Tree(), result)
 
         if (!repo.isValid()) {
             result.setInvalidObject();
-            return ObjectTree();
+            return Tree();
         }
 
         git_oid treeGitOid;
         Repository::Private* rp = Private::dataOf<Repository>(repo);
         result = git_index_write_tree_to(&treeGitOid, d->index, rp->mRepo);
         if (!result) {
-            return ObjectTree();
+            return Tree();
         }
 
         return repo.lookupTree(result, ObjectId::fromRaw(treeGitOid.id));

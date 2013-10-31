@@ -70,7 +70,7 @@ namespace Git
 
         bool detachHead(Result& result);
         void setHEAD(Result& result, const QString& branchName);
-        void setHEAD(Result& result, const ObjectCommit& commit);
+        void setHEAD(Result& result, const Commit& commit);
 
         QString basePath() const;
         QString gitPath() const;
@@ -102,17 +102,17 @@ namespace Git
 
         Object lookup(Result& result, const ObjectId& id, ObjectType ot /* = otAny */);
 
-        ObjectCommit lookupCommit( Result& result, const ObjectId& id );
-        ObjectTree lookupTree( Result& result, const ObjectId& id );
-        ObjectBlob lookupBlob( Result& result, const ObjectId& id );
-        ObjectTag lookupTag( Result& result, const ObjectId& id );
+        Commit lookupCommit( Result& result, const ObjectId& id );
+        Tree lookupTree( Result& result, const ObjectId& id );
+        Blob lookupBlob( Result& result, const ObjectId& id );
+        Tag lookupTag( Result& result, const ObjectId& id );
 
         Object lookup(Result& result, const QString& refName, ObjectType ot /* = otAny */);
 
-        ObjectCommit lookupCommit( Result& result, const QString& refName );
-        ObjectTree lookupTree( Result& result, const QString& refName );
-        ObjectBlob lookupBlob( Result& result, const QString& refName );
-        ObjectTag lookupTag( Result& result, const QString& refName );
+        Commit lookupCommit( Result& result, const QString& refName );
+        Tree lookupTree( Result& result, const QString& refName );
+        Blob lookupBlob( Result& result, const QString& refName );
+        Tag lookupTag( Result& result, const QString& refName );
 
         bool shouldIgnore( Result& result, const QString& filePath ) const;
 
@@ -124,14 +124,14 @@ namespace Git
         Remote createRemote( Result& result, const QString& remoteName, const QString& url,
                              const QString& fetchSpec );
 
-        DiffList diffCommitToCommit(Result& result, ObjectCommit oldCommit, ObjectCommit newCommit);
+        DiffList diffCommitToCommit(Result& result, Commit oldCommit, Commit newCommit);
 
-        DiffList diffTreeToTree( Result& result, ObjectTree oldTree,
-                                 ObjectTree newTree);
+        DiffList diffTreeToTree( Result& result, Tree oldTree,
+                                 Tree newTree);
 
-        DiffList diffIndexToTree( Result& result, ObjectTree oldTree );
+        DiffList diffIndexToTree( Result& result, Tree oldTree );
 
-        DiffList diffTreeToWorkingDir( Result& result, ObjectTree oldTree );
+        DiffList diffTreeToWorkingDir( Result& result, Tree oldTree );
         DiffList diffIndexToWorkingDir( Result& result );
 
         SubmoduleList submodules( Result& result );

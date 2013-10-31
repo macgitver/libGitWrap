@@ -65,64 +65,64 @@ namespace Git
         /**
          * @brief Converts a generic object into a Git tree object.
          *
-         * @return the valid or invalid converted ObjectTree
+         * @return the valid or invalid converted Tree
          *
          * @see isValid()
          */
-        ObjectTree asTree( Result& result ) const;
+        Tree asTree( Result& result ) const;
 
         /**
          * @brief Converts a generic object into a Git commit object.
          *
-         * @return the valid or invalid converted ObjectCommit
+         * @return the valid or invalid converted Commit
          *
          * @see isValid()
          */
-        ObjectCommit asCommit( Result& result ) const;
+        Commit asCommit( Result& result ) const;
 
         /**
          * @brief Converts a generic object into a Git BLOB object.
          *
-         * @return the valid or invalid converted ObjectBlob
+         * @return the valid or invalid converted Blob
          *
          * @see isValid()
          */
-        ObjectBlob asBlob( Result& result ) const;
+        Blob asBlob( Result& result ) const;
 
         /**
          * @brief Converts a generic object into a Git tag object.
          *
-         * @return the valid or invalid converted ObjectTag
+         * @return the valid or invalid converted Tag
          *
          * @see isValid()
          */
-        ObjectTag asTag( Result& result ) const;
+        Tag asTag( Result& result ) const;
 
         // This method has no general implementation. There are four implementations that are all
-        // located in the reimplementation headers of this class (i.e. ObjectTag.hpp)
+        // located in the reimplementation headers of this class (i.e. Tag.hpp)
         template< class T >
         T as(Result& result) const;
 
         /**
-         * @brief Checks, if this is a ObjectTree object.
+         * @brief Checks, if this is a Tree object.
          * @return true or false
          */
         bool isTree( Result& result ) const;
 
         /**
-         * @brief Checks, if this is a ObjectTree object.
+         * @brief Checks, if this is a Tag object.
          * @return true or false
          */
         bool isTag( Result& result ) const;
 
         /**
-         * @brief Checks, if this is a ObjectTree object.
+         * @brief Checks, if this is a Commit object.
          * @return true or false
          */
         bool isCommit( Result& result ) const;
 
         /**
-         * @brief Checks, if this is a ObjectTree object.
+         * @brief Checks, if this is a Blob object.
          * @return true or false
          */
         bool isBlob( Result& result ) const;

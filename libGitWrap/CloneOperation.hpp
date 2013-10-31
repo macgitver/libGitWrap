@@ -17,7 +17,7 @@
 #ifndef GITWRAP_CLONE_OPERATION_HPP
 #define GITWRAP_CLONE_OPERATION_HPP
 
-#include "IFetchEvents.hpp"
+#include "libGitWrap/IFetchEvents.hpp"
 
 namespace Git
 {

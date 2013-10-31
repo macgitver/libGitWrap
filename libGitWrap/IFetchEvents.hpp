@@ -17,8 +17,8 @@
 #ifndef GITWRAP_IFETCH_EVENTS_HPP
 #define GITWRAP_IFETCH_EVENTS_HPP
 
-#include "GitWrap.hpp"
-#include "ObjectId.hpp"
+#include "libGitWrap/GitWrap.hpp"
+#include "libGitWrap/ObjectId.hpp"
 
 namespace Git
 {

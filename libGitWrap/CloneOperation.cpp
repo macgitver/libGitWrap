@@ -14,10 +14,10 @@
  *
  */
 
-#include "CloneOperation.hpp"
+#include "libGitWrap/CloneOperation.hpp"
 
-#include "Private/CloneOperationPrivate.hpp"
-#include "Private/FetchCallbacks.hpp"
+#include "libGitWrap/Private/CloneOperationPrivate.hpp"
+#include "libGitWrap/Private/FetchCallbacks.hpp"
 
 namespace Git
 {

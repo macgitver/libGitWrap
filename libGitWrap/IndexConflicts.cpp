@@ -16,13 +16,13 @@
  *
  */
 
-#include "IndexConflict.hpp"
-#include "IndexConflicts.hpp"
-#include "Index.hpp"
+#include "libGitWrap/IndexConflict.hpp"
+#include "libGitWrap/IndexConflicts.hpp"
+#include "libGitWrap/Index.hpp"
 
-#include "Private/IndexPrivate.hpp"
-#include "Private/IndexEntryPrivate.hpp"
-#include "Private/IndexConflictPrivate.hpp"
+#include "libGitWrap/Private/IndexPrivate.hpp"
+#include "libGitWrap/Private/IndexEntryPrivate.hpp"
+#include "libGitWrap/Private/IndexConflictPrivate.hpp"
 
 namespace Git
 {

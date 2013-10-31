@@ -14,18 +14,18 @@
  *
  */
 
-#include "ObjectBlob.hpp"
+#include "libGitWrap/Blob.hpp"
 
-#include "Private/GitWrapPrivate.hpp"
+#include "libGitWrap/Private/GitWrapPrivate.hpp"
 
 namespace Git
 {
 
-    ObjectBlob::ObjectBlob()
+    Blob::Blob()
     {
     }
 
-    ObjectBlob::ObjectBlob(Internal::ObjectPrivate& _d)
+    Blob::Blob(Internal::ObjectPrivate& _d)
         : Object(_d)
     {
         Result r;
@@ -33,7 +33,7 @@ namespace Git
         Q_ASSERT( type(r) == otBlob );
     }
 
-    ObjectBlob::ObjectBlob(const ObjectBlob& o)
+    Blob::Blob(const Blob& o)
         : Object(o)
     {
     }

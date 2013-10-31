@@ -16,10 +16,10 @@
 
 #include "libGitWrap/ObjectId.hpp"
 #include "libGitWrap/Object.hpp"
-#include "libGitWrap/ObjectTree.hpp"
-#include "libGitWrap/ObjectTag.hpp"
-#include "libGitWrap/ObjectCommit.hpp"
-#include "libGitWrap/ObjectBlob.hpp"
+#include "libGitWrap/Tree.hpp"
+#include "libGitWrap/Tag.hpp"
+#include "libGitWrap/Commit.hpp"
+#include "libGitWrap/Blob.hpp"
 #include "libGitWrap/Repository.hpp"
 
 #include "libGitWrap/Private/GitWrapPrivate.hpp"
@@ -104,42 +104,42 @@ namespace Git
     }
 
 
-    ObjectTree Object::asTree( Result& result ) const
+    Tree Object::asTree( Result& result ) const
     {
-        ObjectTree o;
+        Tree o;
         if (isTree(result)) {
             GW_D(Object);
-            o = ObjectTree(*d);
+            o = Tree(*d);
         }
         return o;
     }
 
-    ObjectCommit Object::asCommit(Result& result) const
+    Commit Object::asCommit(Result& result) const
     {
-        ObjectCommit o;
+        Commit o;
         if (isCommit(result)) {
             GW_D(Object);
-            o = ObjectCommit(*d);
+            o = Commit(*d);
         }
         return o;
     }
 
-    ObjectBlob Object::asBlob(Result& result) const
+    Blob Object::asBlob(Result& result) const
     {
-        ObjectBlob o;
+        Blob o;
         if (isBlob(result)) {
             GW_D(Object);
-            o = ObjectBlob(*d);
+            o = Blob(*d);
         }
         return o;
     }
 
-    ObjectTag Object::asTag(Result& result) const
+    Tag Object::asTag(Result& result) const
     {
-        ObjectTag o;
+        Tag o;
         if (isTag(result)) {
             GW_D(Object);
-            o = ObjectTag(*d);
+            o = Tag(*d);
         }
         return o;
     }

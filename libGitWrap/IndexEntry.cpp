@@ -16,10 +16,10 @@
  *
  */
 
-#include "IndexEntry.hpp"
-#include "ObjectId.hpp"
+#include "libGitWrap/IndexEntry.hpp"
+#include "libGitWrap/ObjectId.hpp"
 
-#include "Private/IndexEntryPrivate.hpp"
+#include "libGitWrap/Private/IndexEntryPrivate.hpp"
 
 namespace Git
 {
