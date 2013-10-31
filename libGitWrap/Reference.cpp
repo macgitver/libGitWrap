@@ -199,11 +199,10 @@ namespace Git
                                 const QString& name, const ObjectCommit& commit)
     {
         if (!commit.isValid()) {
+            result.setInvalidObject();
             return Reference();
         }
-
-        ObjectId sha = commit.id(result);
-        return create(result, repo, name, sha);
+        return create(result, repo, name, commit.id());
     }
 
     /**
@@ -376,20 +375,9 @@ namespace Git
         GW_CD_CHECKED_VOID(Reference, result);
         CHECK_DELETED_VOID(result);
 
-        Object o = peeled(result, otTree);
-        if (!result) {
-            return;
-        }
+        peeled<ObjectTree>(result).checkout(result, force, paths);
 
-        // ### o.asTree(...).checkout() ?
-
-        git_checkout_opts opts = GIT_CHECKOUT_OPTS_INIT;
-        opts.checkout_strategy = force ? GIT_CHECKOUT_FORCE : GIT_CHECKOUT_SAFE;
-        Internal::StrArray(opts.paths, paths);
-
-        result = git_checkout_tree(d->repo()->mRepo, Private::objectOf(o), &opts);
-
-        if (updateHEAD) {
+        if (result && updateHEAD) {
             setAsHEAD(result);
         }
     }
@@ -427,8 +415,8 @@ namespace Git
         GW_D_CHECKED_VOID(Reference, result);
         CHECK_DELETED_VOID(result);
 
-        const ObjectId &targetId = target.id(result);
-        if (!result || targetId.isNull()) {
+        ObjectId targetId = target.id();
+        if (targetId.isNull()) {
             return;
         }
 
@@ -479,7 +467,7 @@ namespace Git
             }
         }
         else {
-            repository().setHEAD(result, peeled(result, otCommit).asCommit(result));
+            peeled<ObjectCommit>(result).setAsHEAD(result);
         }
     }
 

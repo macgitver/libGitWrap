@@ -58,7 +58,9 @@ namespace Git
         /**
          * @return the object's id (OID)
          */
-        ObjectId id( Result& result ) const;
+        ObjectId id() const;
+
+        Q_DECL_DEPRECATED ObjectId id( Result& result ) const;
 
         /**
          * @brief Converts a generic object into a Git tree object.

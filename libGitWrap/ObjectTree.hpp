@@ -51,6 +51,10 @@ namespace Git
         TreeEntry entryAt( size_t index ) const;
         TreeEntry entry( const QString& fileName ) const;
 
+        void checkout(Result& result,
+                      bool force = false,
+                      const QStringList &paths = QStringList()) const;
+
     public:
         inline TreeEntry operator[]( size_t index ) const
         {

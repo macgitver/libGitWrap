@@ -16,6 +16,7 @@
 
 #include "DiffList.hpp"
 #include "ObjectTree.hpp"
+#include "Repository.hpp"
 
 #include "Private/GitWrapPrivate.hpp"
 #include "Private/DiffListPrivate.hpp"
@@ -70,19 +71,18 @@ namespace Git
             return ObjectTree();
         }
 
-        return *new Internal::ObjectPrivate( d->repo(), subObject );
+        return *new Object::Private(d->repo(), subObject);
     }
 
     DiffList ObjectTree::diffToTree(Result& result , ObjectTree newTree)
     {
-        GW_CD_CHECKED(Object, DiffList(), result)
+        GW_D_CHECKED(ObjectTree, DiffList(), result)
 
-        git_tree* gitTree = (git_tree*) d->mObj;
         Object::Private* op = Base::Private::dataOf<Object>(newTree);
-        git_tree* gitNewTree = (git_tree*) op->mObj;
+        Internal::ObjectTreePrivate* otp = static_cast<Internal::ObjectTreePrivate*>(op);
 
         git_diff_list* diffList = NULL;
-        result = git_diff_tree_to_tree( &diffList, d->repo()->mRepo, gitTree, gitNewTree, NULL );
+        result = git_diff_tree_to_tree( &diffList, d->repo()->mRepo, d->o(), otp->o(), NULL );
         if( !result )
         {
             return DiffList();
@@ -93,15 +93,11 @@ namespace Git
 
     DiffList ObjectTree::diffToIndex( Result& result )
     {
-        GW_CD_CHECKED(Object, DiffList(), result)
-
-        git_tree* gitTree = (git_tree*) d->mObj;
-
+        GW_D_CHECKED(ObjectTree, DiffList(), result)
         git_diff_list* diffList = NULL;
 
-        result = git_diff_tree_to_index( &diffList, d->repo()->mRepo, gitTree, NULL, NULL );
-        if( !result )
-        {
+        result = git_diff_tree_to_index( &diffList, d->repo()->mRepo, d->o(), NULL, NULL );
+        if (!result) {
             return DiffList();
         }
 
@@ -110,14 +106,11 @@ namespace Git
 
     DiffList ObjectTree::diffToWorkingDir( Result& result )
     {
-        GW_CD_CHECKED(Object, DiffList(), result)
-
-        git_tree* gitTree = (git_tree*) d->mObj;
+        GW_D_CHECKED(ObjectTree, DiffList(), result)
 
         git_diff_list* diffList = NULL;
-        result = git_diff_tree_to_workdir( &diffList, d->repo()->mRepo, gitTree, NULL );
-        if( !result )
-        {
+        result = git_diff_tree_to_workdir( &diffList, d->repo()->mRepo, d->o(), NULL );
+        if (!result) {
             return DiffList();
         }
 
@@ -126,43 +119,42 @@ namespace Git
 
     size_t ObjectTree::entryCount() const
     {
-        GW_D(Object);
-
-        if(!d) {
-            return 0;
-        }
-
-        git_tree* gitTree = (git_tree*) d->mObj;
-        return git_tree_entrycount( gitTree );
+        GW_CD(ObjectTree);
+        return d ? git_tree_entrycount(d->o()) : 0;
     }
 
     TreeEntry ObjectTree::entryAt( size_t index ) const
     {
-        GW_D(Object);
+        GW_CD(ObjectTree);
 
         if(!d) {
             return TreeEntry();
         }
-
-        git_tree* gitTree = (git_tree*) d->mObj;
-
-        const git_tree_entry* entry = git_tree_entry_byindex( gitTree, index );
-        return *new Internal::TreeEntryPrivate( entry );
+        const git_tree_entry* entry = git_tree_entry_byindex(d->o(), index);
+        return *new Internal::TreeEntryPrivate(entry);
     }
 
     TreeEntry ObjectTree::entry( const QString& fileName ) const
     {
-        GW_D(Object);
+        GW_CD(ObjectTree);
 
         if(!d) {
             return TreeEntry();
         }
 
-        git_tree* gitTree = (git_tree*) d->mObj;
-
-        const git_tree_entry* entry = git_tree_entry_byname( gitTree,
-                                                             fileName.toUtf8().constData() );
+        const git_tree_entry* entry = git_tree_entry_byname(d->o(), fileName.toUtf8().constData());
         return *new Internal::TreeEntryPrivate( entry );
+    }
+
+    void ObjectTree::checkout(Result& result, bool force, const QStringList &paths) const
+    {
+        GW_CD_CHECKED_VOID(Object, result);
+
+        git_checkout_opts opts = GIT_CHECKOUT_OPTS_INIT;
+        opts.checkout_strategy = force ? GIT_CHECKOUT_FORCE : GIT_CHECKOUT_SAFE;
+        Internal::StrArray(opts.paths, paths);
+
+        result = git_checkout_tree(d->repo()->mRepo, d->mObj, &opts);
     }
 
 }

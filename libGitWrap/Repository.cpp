@@ -655,21 +655,10 @@ namespace Git
         GW_D_CHECKED(Repository, Object(), result);
 
         git_object* obj = NULL;
-        git_otype gitObjType;
+        git_otype gitObjType = Internal::objectType2gitotype(ot);
 
-        switch( ot )
-        {
-        case otAny:     gitObjType = GIT_OBJ_ANY;       break;
-        case otCommit:  gitObjType = GIT_OBJ_COMMIT;    break;
-        case otTree:    gitObjType = GIT_OBJ_TREE;      break;
-        case otTag:     gitObjType = GIT_OBJ_TAG;       break;
-        case otBlob:    gitObjType = GIT_OBJ_BLOB;      break;
-        default:        Q_ASSERT( false ); return Object();
-        }
-
-        result = git_object_lookup( &obj, d->mRepo, (git_oid*) id.raw(), gitObjType );
-        if( !result )
-        {
+        result = git_object_lookup(&obj, d->mRepo, Private::sha(id), gitObjType);
+        if (!result) {
             return Object();
         }
 
@@ -1010,7 +999,7 @@ namespace Git
             return;
         }
 
-        result = git_repository_set_head_detached(d->mRepo, Private::sha(commit.id(result)));
+        result = git_repository_set_head_detached(d->mRepo, Private::sha(commit.id()));
     }
 
 }

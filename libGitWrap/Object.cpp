@@ -90,10 +90,17 @@ namespace Git
 
     ObjectId Object::id(Result& result) const
     {
-        GW_CD_CHECKED(Object, ObjectId(), result)
+        return id();
+    }
 
-        const git_oid* oid = git_object_id( d->mObj );
-        return ObjectId::fromRaw( oid->id );
+    ObjectId Object::id() const
+    {
+        GW_CD(Object);
+        if (!d) {
+            return ObjectId();
+        }
+
+        return Private::oid2sha(git_object_id(d->mObj));
     }
 
 

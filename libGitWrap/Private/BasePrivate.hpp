@@ -54,7 +54,16 @@ namespace Git
                 return static_cast<typename T::Private*>(o.mData.data());
             }
 
-            static const git_oid* sha(const ObjectId& id);
+            static inline const git_oid* sha(const ObjectId& id)
+            {
+                return reinterpret_cast<const git_oid*>(id.raw());
+            }
+
+            static inline ObjectId oid2sha(const git_oid* oid)
+            {
+                return ObjectId::fromRaw(oid->id);
+            }
+
             static git_object* objectOf(const Object& o);
 
         };

@@ -56,8 +56,8 @@ namespace Git
         }
 
     public:
-        ObjectTree tree( Result& result );
-        ObjectId treeId( Result& result );
+        ObjectTree tree( Result& result ) const;
+        ObjectId treeId( Result& result ) const;
 
         ObjectIdList parentCommitIds( Result& result ) const;
         ObjectCommitList parentCommits( Result& result ) const;
@@ -69,11 +69,16 @@ namespace Git
         bool isChildOf( Result& result, const Git::ObjectCommit& parent ) const;
         bool isEqual( Result& result, const Git::ObjectCommit& commit ) const;
 
-        Signature author( Result& result ) const;
-        Signature committer( Result& result ) const;
+        Q_DECL_DEPRECATED Signature author( Result& result ) const;
+        Q_DECL_DEPRECATED Signature committer( Result& result ) const;
+        Q_DECL_DEPRECATED QString message( Result& result ) const;
+        Q_DECL_DEPRECATED QString shortMessage( Result& result ) const;
 
-        QString message( Result& result ) const;
-        QString shortMessage( Result& result ) const;
+        Signature author() const;
+        Signature committer() const;
+
+        QString message() const;
+        QString shortMessage() const;
 
         void checkout( Result &result,
                        bool force = false,
@@ -84,6 +89,7 @@ namespace Git
         DiffList diffFromParent( Result& result, unsigned int index );
         DiffList diffFromAllParents( Result& result );
 
+        void setAsHEAD(Result& result) const;
         void updateHEAD(Result &result) const;
     };
 
@@ -97,10 +103,9 @@ namespace Git
      * @ingroup     GitWrap
      * @brief       qHash() for Git::ObjectCommit
      */
-    inline uint qHash( const ObjectCommit& c )
+    inline uint qHash(const ObjectCommit& c)
     {
-        Result r;
-        return qHash( c.id( r ) );
+        return qHash(c.id());
     }
 
 }

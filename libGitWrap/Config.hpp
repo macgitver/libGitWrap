@@ -46,7 +46,7 @@ namespace Git
     public:
         bool addFile( const QString& fileName, int priority );
 
-        ConfigValues values();
+        ConfigValues values() const;
 
     public:
         static QString globalFilePath();

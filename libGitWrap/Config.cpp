@@ -169,9 +169,9 @@ namespace Git
         return 0;
     }
 
-    ConfigValues Config::values()
+    ConfigValues Config::values() const
     {
-        GW_D(Config);
+        GW_CD(Config);
         ConfigValues values;
         git_config_foreach( d->mCfg, &read_config_cb, (void*) &values );
         return values;

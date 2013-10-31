@@ -46,8 +46,10 @@ namespace Git
         Base(const Base& other);
         virtual ~Base();
         Base& operator=(const Base& other);
-        bool isValid() const;
         bool operator==(const Base& other) const;
+
+    public:
+        bool isValid() const;
 
     protected:
         Base(Internal::BasePrivate& _d);
