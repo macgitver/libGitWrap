@@ -32,10 +32,19 @@ namespace Git
     class GITWRAP_API ObjectBlob : public Object
     {
     public:
+        enum { ObjectTypeId = otBlob };
+
+    public:
         ObjectBlob();
         ObjectBlob(Internal::ObjectPrivate& _d);
         ObjectBlob(const ObjectBlob& o);
     };
+
+    template<>
+    inline ObjectBlob Object::as(Result& result) const
+    {
+        return asBlob(result);
+    }
 
 }
 

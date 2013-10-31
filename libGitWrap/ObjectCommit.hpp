@@ -35,6 +35,9 @@ namespace Git
     class GITWRAP_API ObjectCommit : public Object
     {
     public:
+        enum { ObjectTypeId = otCommit };
+
+    public:
         ObjectCommit();
         ObjectCommit(Internal::ObjectPrivate& _d);
         ObjectCommit(const ObjectCommit& o);
@@ -83,6 +86,12 @@ namespace Git
 
         void updateHEAD(Result &result) const;
     };
+
+    template<>
+    inline ObjectCommit Object::as(Result& result) const
+    {
+        return asCommit(result);
+    }
 
     /**
      * @ingroup     GitWrap

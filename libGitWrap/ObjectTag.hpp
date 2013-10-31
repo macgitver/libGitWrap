@@ -32,10 +32,19 @@ namespace Git
     class GITWRAP_API ObjectTag : public Object
     {
     public:
+        enum { ObjectTypeId = otTag };
+
+    public:
         ObjectTag();
         ObjectTag(Internal::ObjectPrivate& _d);
         ObjectTag(const ObjectTag& o);
     };
+
+    template<>
+    inline ObjectTag Object::as(Result& result) const
+    {
+        return asTag(result);
+    }
 
 }
 

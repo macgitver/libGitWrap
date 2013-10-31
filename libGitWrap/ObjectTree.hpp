@@ -33,6 +33,9 @@ namespace Git
     class GITWRAP_API ObjectTree : public Object
     {
     public:
+        enum { ObjectTypeId = otTree };
+
+    public:
         ObjectTree();
         ObjectTree(Internal::ObjectPrivate& _d);
         ObjectTree(const ObjectTree& o);
@@ -59,6 +62,12 @@ namespace Git
             return entry( fileName );
         }
     };
+
+    template<>
+    inline ObjectTree Object::as(Result& result) const
+    {
+        return asTree(result);
+    }
 
 }
 

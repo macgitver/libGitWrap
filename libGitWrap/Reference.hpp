@@ -18,6 +18,7 @@
 #define GIT_REFERENCE_H
 
 #include "libGitWrap/RepoObject.hpp"
+#include "libGitWrap/Object.hpp"
 
 namespace Git
 {
@@ -83,6 +84,9 @@ namespace Git
 
         Object peeled(Result& result, ObjectType ot) const;
 
+        template< class T >
+        T peeled(Result& result) const;
+
         bool isCurrentBranch() const;
         bool isBranch() const;
         bool isLocal() const;
@@ -103,6 +107,12 @@ namespace Git
 
         void updateHEAD(Result &result) const;
     };
+
+    template< class T >
+    inline T Reference::peeled(Result& result) const
+    {
+        return peeled(result, ObjectType(T::ObjectTypeId)).as<T>(result);
+    }
 
 }
 

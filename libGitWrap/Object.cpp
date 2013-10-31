@@ -97,7 +97,7 @@ namespace Git
     }
 
 
-    ObjectTree Object::asTree( Result& result )
+    ObjectTree Object::asTree( Result& result ) const
     {
         ObjectTree o;
         if (isTree(result)) {
@@ -107,7 +107,7 @@ namespace Git
         return o;
     }
 
-    ObjectCommit Object::asCommit(Result& result)
+    ObjectCommit Object::asCommit(Result& result) const
     {
         ObjectCommit o;
         if (isCommit(result)) {
@@ -117,7 +117,7 @@ namespace Git
         return o;
     }
 
-    ObjectBlob Object::asBlob(Result& result)
+    ObjectBlob Object::asBlob(Result& result) const
     {
         ObjectBlob o;
         if (isBlob(result)) {
@@ -127,7 +127,7 @@ namespace Git
         return o;
     }
 
-    ObjectTag Object::asTag(Result& result)
+    ObjectTag Object::asTag(Result& result) const
     {
         ObjectTag o;
         if (isTag(result)) {

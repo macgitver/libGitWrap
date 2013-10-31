@@ -67,7 +67,7 @@ namespace Git
          *
          * @see isValid()
          */
-        ObjectTree asTree( Result& result );
+        ObjectTree asTree( Result& result ) const;
 
         /**
          * @brief Converts a generic object into a Git commit object.
@@ -76,7 +76,7 @@ namespace Git
          *
          * @see isValid()
          */
-        ObjectCommit asCommit( Result& result );
+        ObjectCommit asCommit( Result& result ) const;
 
         /**
          * @brief Converts a generic object into a Git BLOB object.
@@ -85,7 +85,7 @@ namespace Git
          *
          * @see isValid()
          */
-        ObjectBlob asBlob( Result& result );
+        ObjectBlob asBlob( Result& result ) const;
 
         /**
          * @brief Converts a generic object into a Git tag object.
@@ -94,7 +94,12 @@ namespace Git
          *
          * @see isValid()
          */
-        ObjectTag asTag( Result& result );
+        ObjectTag asTag( Result& result ) const;
+
+        // This method has no general implementation. There are four implementations that are all
+        // located in the reimplementation headers of this class (i.e. ObjectTag.hpp)
+        template< class T >
+        T as(Result& result) const;
 
         /**
          * @brief Checks, if this is a ObjectTree object.
