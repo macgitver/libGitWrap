@@ -2,5 +2,5 @@
 
 namespace Git
 {
-    typedef Q_DECL_DEPRECATED Commit ObjectCommit;
+    typedef GW_DEPRECATED Commit ObjectCommit;
 }

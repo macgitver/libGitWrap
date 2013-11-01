@@ -111,7 +111,7 @@ namespace Git
     template< class T >
     inline T Reference::peeled(Result& result) const
     {
-        return peeled(result, ObjectType(T::ObjectTypeId)).as<T>(result);
+        return peeled(result, ObjectType(T::ObjectTypeId)).as<T>();
     }
 
 }

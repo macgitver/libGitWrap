@@ -23,85 +23,107 @@
 #include "libGitWrap/Private/ObjectPrivate.hpp"
 #include "libGitWrap/Private/RepositoryPrivate.hpp"
 #include "libGitWrap/Private/TreeEntryPrivate.hpp"
+#include "libGitWrap/Private/TreePrivate.hpp"
 
 namespace Git
 {
+
+    namespace Internal {
+
+        TreePrivate::TreePrivate(RepositoryPrivate* repo, git_tree* o)
+            : ObjectPrivate(repo, reinterpret_cast<git_object*>(o))
+        {
+            Q_ASSERT(o);
+        }
+
+        TreePrivate::TreePrivate(RepositoryPrivate* repo, git_object* o)
+            : ObjectPrivate(repo, o)
+        {
+            Q_ASSERT(o);
+            Q_ASSERT(git_object_type(o) == GIT_OBJ_TREE);
+        }
+
+        git_otype TreePrivate::otype() const
+        {
+            return GIT_OBJ_TREE;
+        }
+
+        ObjectType TreePrivate::objectType() const
+        {
+            return otTree;
+        }
+
+    }
 
     Tree::Tree()
     {
     }
 
-    Tree::Tree(Internal::ObjectPrivate& _d)
+    Tree::Tree(Private& _d)
         : Object( _d )
     {
-        Result r;
-        if( ( type( r ) != otTree ) || !r )
-        {
+        GW_D(Tree);
+        // This is just for safety
+        // can only occur in case of a bad static_cast, which we usually avoid
+        if (d->objectType() != otTree) {
             mData = NULL;
         }
     }
 
-    Tree::Tree( const Tree& o )
+    Tree::Tree(const Tree& o)
         : Object( o )
     {
     }
 
     Tree Tree::subPath(Result& result , const QString& pathName) const
     {
-        GW_CD_CHECKED(Object, Tree(), result)
+        GW_CD_CHECKED(Tree, Tree(), result)
 
-        git_tree* d2 = (git_tree*) d->mObj;
-
-        const git_tree_entry* entry = git_tree_entry_byname( d2, pathName.toUtf8().constData() );
-        if( !entry )
-        {
+        const git_tree_entry* entry = git_tree_entry_byname(d->o(), pathName.toUtf8().constData());
+        if (!entry) {
             return Tree();
         }
 
         git_object* subObject = 0;
-        result = git_tree_entry_to_object( &subObject, d->repo()->mRepo, entry );
-        if( !result )
-        {
+        result = git_tree_entry_to_object(&subObject, d->repo()->mRepo, entry);
+        if (!result) {
             return Tree();
         }
 
-        if( git_object_type( subObject ) != GIT_OBJ_TREE )
-        {
-            git_object_free( subObject );
+        if (git_object_type(subObject) != GIT_OBJ_TREE) {
+            git_object_free(subObject);
             return Tree();
         }
 
-        return *new Object::Private(d->repo(), subObject);
+        return *new Tree::Private(d->repo(), subObject);
     }
 
     DiffList Tree::diffToTree(Result& result , Tree newTree)
     {
         GW_D_CHECKED(Tree, DiffList(), result)
 
-        Object::Private* op = Base::Private::dataOf<Object>(newTree);
-        Internal::TreePrivate* otp = static_cast<Internal::TreePrivate*>(op);
+        Tree::Private* tp = Base::Private::dataOf<Tree>(newTree);
 
         git_diff_list* diffList = NULL;
-        result = git_diff_tree_to_tree( &diffList, d->repo()->mRepo, d->o(), otp->o(), NULL );
-        if( !result )
-        {
-            return DiffList();
-        }
-
-        return DiffList(*new Internal::DiffListPrivate(d->repo(), diffList));
-    }
-
-    DiffList Tree::diffToIndex( Result& result )
-    {
-        GW_D_CHECKED(Tree, DiffList(), result)
-        git_diff_list* diffList = NULL;
-
-        result = git_diff_tree_to_index( &diffList, d->repo()->mRepo, d->o(), NULL, NULL );
+        result = git_diff_tree_to_tree(&diffList, d->repo()->mRepo, d->o(), tp->o(), NULL);
         if (!result) {
             return DiffList();
         }
 
-        return DiffList(*new Internal::DiffListPrivate(d->repo(), diffList));
+        return DiffList(*new DiffList::Private(d->repo(), diffList));
+    }
+
+    DiffList Tree::diffToIndex(Result& result)
+    {
+        GW_D_CHECKED(Tree, DiffList(), result)
+        git_diff_list* diffList = NULL;
+
+        result = git_diff_tree_to_index(&diffList, d->repo()->mRepo, d->o(), NULL, NULL);
+        if (!result) {
+            return DiffList();
+        }
+
+        return DiffList(*new DiffList::Private(d->repo(), diffList));
     }
 
     DiffList Tree::diffToWorkingDir( Result& result )
@@ -114,7 +136,7 @@ namespace Git
             return DiffList();
         }
 
-        return DiffList(*new Internal::DiffListPrivate(d->repo(), diffList));
+        return DiffList(*new DiffList::Private(d->repo(), diffList));
     }
 
     size_t Tree::entryCount() const
@@ -131,24 +153,24 @@ namespace Git
             return TreeEntry();
         }
         const git_tree_entry* entry = git_tree_entry_byindex(d->o(), index);
-        return *new Internal::TreeEntryPrivate(entry);
+        return *new TreeEntry::Private(entry);
     }
 
-    TreeEntry Tree::entry( const QString& fileName ) const
+    TreeEntry Tree::entry(const QString& fileName) const
     {
         GW_CD(Tree);
 
-        if(!d) {
+        if (!d) {
             return TreeEntry();
         }
 
         const git_tree_entry* entry = git_tree_entry_byname(d->o(), fileName.toUtf8().constData());
-        return *new Internal::TreeEntryPrivate( entry );
+        return *new TreeEntry::Private(entry);
     }
 
     void Tree::checkout(Result& result, bool force, const QStringList &paths) const
     {
-        GW_CD_CHECKED_VOID(Object, result);
+        GW_CD_CHECKED_VOID(Tree, result);
 
         git_checkout_opts opts = GIT_CHECKOUT_OPTS_INIT;
         opts.checkout_strategy = force ? GIT_CHECKOUT_FORCE : GIT_CHECKOUT_SAFE;

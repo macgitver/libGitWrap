@@ -17,20 +17,51 @@
 #include "libGitWrap/Blob.hpp"
 
 #include "libGitWrap/Private/GitWrapPrivate.hpp"
+#include "libGitWrap/Private/BlobPrivate.hpp"
 
 namespace Git
 {
+
+    namespace Internal {
+
+        BlobPrivate::BlobPrivate(RepositoryPrivate* repo, git_blob* o)
+            : ObjectPrivate(repo, reinterpret_cast<git_object*>(o))
+        {
+            Q_ASSERT(o);
+        }
+
+        BlobPrivate::BlobPrivate(RepositoryPrivate* repo, git_object* o)
+            : ObjectPrivate(repo, o)
+        {
+            Q_ASSERT(o);
+            Q_ASSERT(git_object_type(o) == GIT_OBJ_BLOB);
+        }
+
+        git_otype BlobPrivate::otype() const
+        {
+            return GIT_OBJ_BLOB;
+        }
+
+        ObjectType BlobPrivate::objectType() const
+        {
+            return otBlob;
+        }
+
+    }
 
     Blob::Blob()
     {
     }
 
-    Blob::Blob(Internal::ObjectPrivate& _d)
+    Blob::Blob(Private& _d)
         : Object(_d)
     {
-        Result r;
-        Q_UNUSED( r );
-        Q_ASSERT( type(r) == otBlob );
+        GW_D(Blob);
+        // This is just for safety
+        // can only occur in case of a bad static_cast, which we usually avoid
+        if (d->objectType() != otBlob) {
+            mData = NULL;
+        }
     }
 
     Blob::Blob(const Blob& o)

@@ -60,7 +60,7 @@ namespace Git
          */
         ObjectId id() const;
 
-        Q_DECL_DEPRECATED ObjectId id( Result& result ) const;
+        GW_DEPRECATED ObjectId id( Result& result ) const;
 
         /**
          * @brief Converts a generic object into a Git tree object.
@@ -69,7 +69,7 @@ namespace Git
          *
          * @see isValid()
          */
-        Tree asTree( Result& result ) const;
+        Tree asTree() const;
 
         /**
          * @brief Converts a generic object into a Git commit object.
@@ -78,7 +78,7 @@ namespace Git
          *
          * @see isValid()
          */
-        Commit asCommit( Result& result ) const;
+        Commit asCommit() const;
 
         /**
          * @brief Converts a generic object into a Git BLOB object.
@@ -87,7 +87,7 @@ namespace Git
          *
          * @see isValid()
          */
-        Blob asBlob( Result& result ) const;
+        Blob asBlob() const;
 
         /**
          * @brief Converts a generic object into a Git tag object.
@@ -96,36 +96,50 @@ namespace Git
          *
          * @see isValid()
          */
-        Tag asTag( Result& result ) const;
+        Tag asTag() const;
 
         // This method has no general implementation. There are four implementations that are all
         // located in the reimplementation headers of this class (i.e. Tag.hpp)
         template< class T >
-        T as(Result& result) const;
+        T as() const;
 
         /**
          * @brief Checks, if this is a Tree object.
          * @return true or false
          */
-        bool isTree( Result& result ) const;
+        bool isTree() const;
 
         /**
          * @brief Checks, if this is a Tag object.
          * @return true or false
          */
-        bool isTag( Result& result ) const;
+        bool isTag() const;
 
         /**
          * @brief Checks, if this is a Commit object.
          * @return true or false
          */
-        bool isCommit( Result& result ) const;
+        bool isCommit() const;
 
         /**
          * @brief Checks, if this is a Blob object.
          * @return true or false
          */
-        bool isBlob( Result& result ) const;
+        bool isBlob() const;
+
+        GW_DEPRECATED bool isTree   (Result& result) const { return isTree();   }
+        GW_DEPRECATED bool isTag    (Result& result) const { return isTag();    }
+        GW_DEPRECATED bool isCommit (Result& result) const { return isCommit(); }
+        GW_DEPRECATED bool isBlob   (Result& result) const { return isBlob();   }
+
+        GW_DEPRECATED Tree   asTree  (Result& result) const;
+        GW_DEPRECATED Commit asCommit(Result& result) const;
+        GW_DEPRECATED Blob   asBlob  (Result& result) const;
+        GW_DEPRECATED Tag    asTag   (Result& result) const;
+
+        template< class T >
+        GW_DEPRECATED T as(Result& result) const { return as<T>(); }
+
     };
 
 }

@@ -23,20 +23,50 @@
 #include "libGitWrap/Private/ObjectPrivate.hpp"
 #include "libGitWrap/Private/RepositoryPrivate.hpp"
 #include "libGitWrap/Private/ReferencePrivate.hpp"
+#include "libGitWrap/Private/CommitPrivate.hpp"
+#include "libGitWrap/Private/TreePrivate.hpp"
 
 namespace Git
 {
+
+    namespace Internal {
+
+        CommitPrivate::CommitPrivate(RepositoryPrivate *repo, git_commit *o)
+            : ObjectPrivate(repo, reinterpret_cast<git_object*>(o))
+        {
+            Q_ASSERT(o);
+        }
+
+        CommitPrivate::CommitPrivate(RepositoryPrivate *repo, git_object *o)
+            : ObjectPrivate(repo, o)
+        {
+            Q_ASSERT(o);
+            Q_ASSERT(git_object_type(o) == GIT_OBJ_TREE);
+        }
+
+        git_otype CommitPrivate::otype() const
+        {
+            return GIT_OBJ_TREE;
+        }
+
+        ObjectType CommitPrivate::objectType() const
+        {
+            return otCommit;
+        }
+
+    }
 
     Commit::Commit()
     {
     }
 
-    Commit::Commit(Internal::ObjectPrivate& _d)
+    Commit::Commit(Private& _d)
         : Object(_d)
     {
-        Result r;
-        if( ( type( r ) != otCommit ) || !r )
-        {
+        GW_D(Commit);
+        // This is just for safety
+        // can only occur in case of a bad static_cast, which we usually avoid
+        if (d->objectType() != otCommit) {
             mData = NULL;
         }
     }
@@ -56,7 +86,7 @@ namespace Git
             return Tree();
         }
 
-        return *new Internal::TreePrivate(d->repo(), tree);
+        return *new Tree::Private(d->repo(), tree);
     }
 
     ObjectId Commit::treeId( Result& result ) const
@@ -257,7 +287,7 @@ namespace Git
     void Commit::checkout(Result &result, bool force, bool updateHEAD,
                                 const QStringList &paths) const
     {
-        GW_CD_CHECKED_VOID(Object, result);
+        GW_CD_CHECKED_VOID(Commit, result);
 
         tree(result).checkout(result, force, paths);
 
@@ -282,7 +312,7 @@ namespace Git
 
     DiffList Commit::diffFromParent(Result& result, unsigned int index)
     {
-        GW_CD_CHECKED(Object, DiffList(), result)
+        GW_CD_CHECKED(Commit, DiffList(), result)
 
         Commit parentObjCommit = parentCommit( result, index );
         Tree parentObjTree = parentObjCommit.tree( result );
@@ -292,16 +322,14 @@ namespace Git
 
     DiffList Commit::diffFromAllParents( Result& result )
     {
-        GW_CD_CHECKED(Object, DiffList(), result)
+        GW_CD_CHECKED(Commit, DiffList(), result)
 
-        if( numParentCommits() == 0 )
-        {
+        if (numParentCommits() == 0) {
             return DiffList();
         }
 
         DiffList dl = diffFromParent( result, 0 );
-        for( unsigned int i = 1; i < numParentCommits(); i++ )
-        {
+        for (unsigned int i = 1; i < numParentCommits(); i++) {
             DiffList dl2 = diffFromParent( result, i );
             dl2.mergeOnto( result, dl );
         }
@@ -311,7 +339,7 @@ namespace Git
 
     void Commit::setAsHEAD(Result& result) const
     {
-        GW_CD_CHECKED_VOID(Object, result);
+        GW_CD_CHECKED_VOID(Commit, result);
         repository().setHEAD(result, *this);
     }
 
@@ -323,7 +351,7 @@ namespace Git
      */
     void Commit::updateHEAD(Result &result) const
     {
-        GW_CD_CHECKED_VOID(Object, result)
+        GW_CD_CHECKED_VOID(Commit, result)
 
         result = git_repository_set_head_detached( d->repo()->mRepo
                                                    , git_object_id( d->mObj ) );

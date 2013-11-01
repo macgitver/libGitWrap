@@ -366,7 +366,7 @@ namespace Git
             return Object();
         }
 
-        return *new Object::Private(d->repo(), o);
+        return Object::Private::create(d->repo(), o);
     }
 
     void Reference::checkout(Result &result, bool force, bool updateHEAD,

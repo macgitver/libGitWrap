@@ -2,5 +2,5 @@
 
 namespace Git
 {
-    typedef Q_DECL_DEPRECATED Tag ObjectTag;
+    typedef GW_DEPRECATED Tag ObjectTag;
 }

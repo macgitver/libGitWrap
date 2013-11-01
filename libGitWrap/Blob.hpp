@@ -24,6 +24,13 @@
 namespace Git
 {
 
+    namespace Internal
+    {
+
+        class BlobPrivate;
+
+    }
+
     /**
      * @ingroup     GitWrap
      * @brief       Provides access to git BLOB (Binary Large Object) objects
@@ -32,18 +39,19 @@ namespace Git
     class GITWRAP_API Blob : public Object
     {
     public:
+        typedef Internal::BlobPrivate Private;
         enum { ObjectTypeId = otBlob };
 
     public:
         Blob();
-        Blob(Internal::ObjectPrivate& _d);
+        Blob(Private& _d);
         Blob(const Blob& o);
     };
 
     template<>
-    inline Blob Object::as(Result& result) const
+    inline Blob Object::as() const
     {
-        return asBlob(result);
+        return asBlob();
     }
 
 }

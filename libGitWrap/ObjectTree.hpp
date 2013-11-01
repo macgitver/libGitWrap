@@ -2,5 +2,5 @@
 
 namespace Git
 {
-    typedef Q_DECL_DEPRECATED Tree ObjectTree;
+    typedef GW_DEPRECATED Tree ObjectTree;
 }

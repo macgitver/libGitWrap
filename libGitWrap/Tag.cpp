@@ -16,22 +16,50 @@
 
 #include "libGitWrap/Tag.hpp"
 
-#include "libGitWrap/Private/ObjectPrivate.hpp"
 #include "libGitWrap/Private/GitWrapPrivate.hpp"
+#include "libGitWrap/Private/TagPrivate.hpp"
 
 namespace Git
 {
+
+    namespace Internal {
+
+        TagPrivate::TagPrivate(RepositoryPrivate* repo, git_tag* o)
+            : ObjectPrivate(repo, reinterpret_cast<git_object*>(o))
+        {
+            Q_ASSERT(o);
+        }
+
+        TagPrivate::TagPrivate(RepositoryPrivate* repo, git_object* o)
+            : ObjectPrivate(repo, o)
+        {
+            Q_ASSERT(o);
+            Q_ASSERT(git_object_type(o) == GIT_OBJ_TAG);
+        }
+
+        git_otype TagPrivate::otype() const
+        {
+            return GIT_OBJ_TAG;
+        }
+
+        ObjectType TagPrivate::objectType() const
+        {
+            return otTag;
+        }
+
+    }
 
     Tag::Tag()
     {
     }
 
-    Tag::Tag( Internal::ObjectPrivate& _d )
+    Tag::Tag(Private& _d)
         : Object(_d)
     {
-        Result r;
-        if( ( type( r ) != otTag ) || !r )
-        {
+        GW_D(Tag);
+        // This is just for safety
+        // can only occur in case of a bad static_cast, which we usually avoid
+        if (d->objectType() != otTag) {
             mData = NULL;
         }
     }

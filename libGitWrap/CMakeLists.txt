@@ -190,24 +190,29 @@ SET( PUB_HDR_FILES
 
 SET( PRI_HDR_FILES
 
-    Private/GitWrapPrivate.hpp
     Private/BasePrivate.hpp
-    Private/ConfigPrivate.hpp
+    Private/BlobPrivate.hpp
     Private/CloneOperationPrivate.hpp
+    Private/CommitPrivate.hpp
+    Private/ConfigPrivate.hpp
     Private/DiffListPrivate.hpp
     Private/FetchCallbacks.hpp
-    Private/IndexPrivate.hpp
-    Private/IndexEntryPrivate.hpp
+    Private/GitWrapPrivate.hpp
     Private/IndexConflictPrivate.hpp
+    Private/IndexEntryPrivate.hpp
+    Private/IndexPrivate.hpp
     Private/ObjectPrivate.hpp
     Private/ReferencePrivate.hpp
     Private/RemotePrivate.hpp
     Private/RepoObjectPrivate.hpp
     Private/RepositoryPrivate.hpp
     Private/RevisionWalkerPrivate.hpp
+    Private/TagPrivate.hpp
     Private/TreeBuilderPrivate.hpp
     Private/TreeEntryPrivate.hpp
+    Private/TreePrivate.hpp
     Private/WorkerThread.hpp
+
 )
 
 SET( HDR_FILES ${PRI_HDR_FILES} ${PUB_HDR_FILES} )

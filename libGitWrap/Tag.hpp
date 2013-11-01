@@ -24,6 +24,11 @@
 namespace Git
 {
 
+    namespace Internal
+    {
+        class TagPrivate;
+    }
+
     /**
      * @ingroup     GitWrap
      * @brief       Represents a git tag object.
@@ -32,18 +37,19 @@ namespace Git
     class GITWRAP_API Tag : public Object
     {
     public:
+        typedef Internal::TagPrivate Private;
         enum { ObjectTypeId = otTag };
 
     public:
         Tag();
-        Tag(Internal::ObjectPrivate& _d);
+        Tag(Private& _d);
         Tag(const Tag& o);
     };
 
     template<>
-    inline Tag Object::as(Result& result) const
+    inline Tag Object::as() const
     {
-        return asTag(result);
+        return asTag();
     }
 
 }

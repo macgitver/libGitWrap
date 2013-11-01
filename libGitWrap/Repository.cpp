@@ -662,27 +662,27 @@ namespace Git
             return Object();
         }
 
-        return *new Internal::ObjectPrivate(d, obj);
+        return Object::Private::create(d, obj);
     }
 
     Commit Repository::lookupCommit(Result& result, const ObjectId& id)
     {
-        return lookup( result, id, otCommit ).asCommit( result );
+        return lookup( result, id, otCommit ).asCommit();
     }
 
     Tree Repository::lookupTree(Result& result, const ObjectId& id)
     {
-        return lookup( result, id, otTree ).asTree( result );
+        return lookup( result, id, otTree ).asTree();
     }
 
     Blob Repository::lookupBlob(Result& result, const ObjectId& id)
     {
-        return lookup( result, id, otBlob ).asBlob( result );
+        return lookup( result, id, otBlob ).asBlob();
     }
 
     Tag Repository::lookupTag(Result& result, const ObjectId& id)
     {
-        return lookup( result, id, otTag ).asTag( result );
+        return lookup( result, id, otTag ).asTag();
     }
 
     Object Repository::lookup( Result& result, const QString& refName, ObjectType ot )

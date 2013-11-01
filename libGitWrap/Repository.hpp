@@ -20,6 +20,7 @@
 #include "libGitWrap/Base.hpp"
 #include "libGitWrap/Submodule.hpp"
 #include "libGitWrap/Remote.hpp"
+#include "libGitWrap/Object.hpp"
 
 namespace Git
 {
@@ -100,19 +101,26 @@ namespace Git
         Reference lookupRef(Result& result, const QString& refName , bool dwim = false);
         ObjectId resolveRef( Result& result, const QString& refName );
 
-        Object lookup(Result& result, const ObjectId& id, ObjectType ot /* = otAny */);
-
         Commit lookupCommit( Result& result, const ObjectId& id );
-        Tree lookupTree( Result& result, const ObjectId& id );
-        Blob lookupBlob( Result& result, const ObjectId& id );
-        Tag lookupTag( Result& result, const ObjectId& id );
-
-        Object lookup(Result& result, const QString& refName, ObjectType ot /* = otAny */);
-
         Commit lookupCommit( Result& result, const QString& refName );
+
+        Tree lookupTree( Result& result, const ObjectId& id );
         Tree lookupTree( Result& result, const QString& refName );
+
+        Blob lookupBlob( Result& result, const ObjectId& id );
         Blob lookupBlob( Result& result, const QString& refName );
+
+        Tag lookupTag( Result& result, const ObjectId& id );
         Tag lookupTag( Result& result, const QString& refName );
+
+        Object lookup(Result& result, const ObjectId& id, ObjectType ot);
+        Object lookup(Result& result, const QString& refName, ObjectType ot);
+
+        template< class T >
+        T lookup(Result& result, const ObjectId& id);
+
+        template< class T >
+        T lookup(Result& result, const QString& refName);
 
         bool shouldIgnore( Result& result, const QString& filePath ) const;
 
@@ -137,6 +145,30 @@ namespace Git
         SubmoduleList submodules( Result& result );
         Submodule submodule( Result& result, const QString& name );
     };
+
+    template< class T >
+    inline T Repository::lookup(Result& result, const ObjectId& id)
+    {
+        return lookup(result, id, ObjectType(T::ObjectTypeId)).as<T>();
+    }
+
+    template< class T >
+    inline T Repository::lookup(Result& result, const QString& refName)
+    {
+        return lookup(result, refName, ObjectType(T::ObjectTypeId)).as<T>();
+    }
+
+    template<>
+    inline Object Repository::lookup(Result& result, const ObjectId& id)
+    {
+        return lookup(result, id, otAny);
+    }
+
+    template<>
+    inline Object Repository::lookup(Result& result, const QString& refName)
+    {
+        return lookup(result, refName, otAny);
+    }
 
 }
 

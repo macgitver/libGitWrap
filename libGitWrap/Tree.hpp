@@ -25,6 +25,11 @@
 namespace Git
 {
 
+    namespace Internal
+    {
+        class TreePrivate;
+    }
+
     /**
      * @ingroup     GitWrap
      * @brief       Represents a git tree object
@@ -33,11 +38,12 @@ namespace Git
     class GITWRAP_API Tree : public Object
     {
     public:
+        typedef Internal::TreePrivate Private;
         enum { ObjectTypeId = otTree };
 
     public:
         Tree();
-        Tree(Internal::ObjectPrivate& _d);
+        Tree(Private& _d);
         Tree(const Tree& o);
 
     public:
@@ -68,9 +74,9 @@ namespace Git
     };
 
     template<>
-    inline Tree Object::as(Result& result) const
+    inline Tree Object::as() const
     {
-        return asTree(result);
+        return asTree();
     }
 
 }

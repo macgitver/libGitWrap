@@ -23,7 +23,10 @@
 #include "libGitWrap/Repository.hpp"
 
 #include "libGitWrap/Private/GitWrapPrivate.hpp"
-#include "libGitWrap/Private/ObjectPrivate.hpp"
+#include "libGitWrap/Private/CommitPrivate.hpp"
+#include "libGitWrap/Private/TreePrivate.hpp"
+#include "libGitWrap/Private/TagPrivate.hpp"
+#include "libGitWrap/Private/BlobPrivate.hpp"
 
 namespace Git
 {
@@ -41,6 +44,20 @@ namespace Git
         ObjectPrivate::~ObjectPrivate()
         {
             git_object_free(mObj);
+        }
+
+        ObjectPrivate& ObjectPrivate::create(RepositoryPrivate* repo, git_object* o)
+        {
+            Q_ASSERT(o);
+            switch (git_object_type(o)) {
+            case GIT_OBJ_TAG:     return *new TagPrivate(    repo, reinterpret_cast<git_tag*   >(o));
+            case GIT_OBJ_COMMIT:  return *new CommitPrivate( repo, reinterpret_cast<git_commit*>(o));
+            case GIT_OBJ_BLOB:    return *new TreePrivate(   repo, reinterpret_cast<git_tree*  >(o));
+            case GIT_OBJ_TREE:    return *new BlobPrivate(   repo, reinterpret_cast<git_blob*  >(o));
+            // Please, close your eyes before reading the next line...
+            default:              return *reinterpret_cast<ObjectPrivate*>(NULL);
+            // Oh, I told you to close your eyes. Well, looks evil? It is! So, what? ^^
+            }
         }
 
     }
@@ -104,64 +121,73 @@ namespace Git
     }
 
 
-    Tree Object::asTree( Result& result ) const
+    Tree Object::asTree() const
     {
         Tree o;
-        if (isTree(result)) {
-            GW_D(Object);
+        if (isTree()) {
+            GW_D(Tree);
             o = Tree(*d);
         }
         return o;
     }
 
-    Commit Object::asCommit(Result& result) const
+    Commit Object::asCommit() const
     {
         Commit o;
-        if (isCommit(result)) {
-            GW_D(Object);
+        if (isCommit()) {
+            GW_D(Commit);
             o = Commit(*d);
         }
         return o;
     }
 
-    Blob Object::asBlob(Result& result) const
+    Blob Object::asBlob() const
     {
         Blob o;
-        if (isBlob(result)) {
-            GW_D(Object);
+        if (isBlob()) {
+            GW_D(Blob);
             o = Blob(*d);
         }
         return o;
     }
 
-    Tag Object::asTag(Result& result) const
+    Tag Object::asTag() const
     {
         Tag o;
-        if (isTag(result)) {
-            GW_D(Object);
+        if (isTag()) {
+            GW_D(Tag);
             o = Tag(*d);
         }
         return o;
     }
 
-    bool Object::isTree(Result& result) const
+    bool Object::isTree() const
     {
-        return type(result) == otTree;
+        GW_D(Object);
+        return d && d->objectType() == otTree;
     }
 
-    bool Object::isTag(Result& result) const
+    bool Object::isTag() const
     {
-        return type(result) == otTag;
+        GW_D(Object);
+        return d && d->objectType() == otTag;
     }
 
-    bool Object::isCommit(Result& result) const
+    bool Object::isCommit() const
     {
-        return type(result) == otCommit;
+        GW_D(Object);
+        return d && d->objectType() == otCommit;
     }
 
-    bool Object::isBlob(Result& result) const
+    bool Object::isBlob() const
     {
-        return type(result) == otBlob;
+        GW_D(Object);
+        return d && d->objectType() == otBlob;
     }
+
+    Tree   Object::asTree  (Result& result) const { return asTree();   }
+    Commit Object::asCommit(Result& result) const { return asCommit(); }
+    Blob   Object::asBlob  (Result& result) const { return asBlob();   }
+    Tag    Object::asTag   (Result& result) const { return asTag();    }
 
 }

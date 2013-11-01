@@ -32,38 +32,25 @@ namespace Git
          */
         class ObjectPrivate : public RepoObjectPrivate
         {
+        protected:
+            ObjectPrivate(RepositoryPrivate* repo, git_object* o);
+
         public:
-            Q_DECL_DEPRECATED ObjectPrivate(RepositoryPrivate* repo, git_object* o);
             ~ObjectPrivate();
 
             git_object* o() { return mObj; }
             const git_object* o() const { return mObj; }
 
         public:
+            static ObjectPrivate& create(RepositoryPrivate* repo, git_object* o);
+
+        public:
+            virtual git_otype otype() const = 0;
+            virtual ObjectType objectType() const = 0;
+
+        public:
             git_object* mObj;
         };
-
-        template< class T >
-        class ObjectTPrivate : public ObjectPrivate
-        {
-        public:
-            ObjectTPrivate(RepositoryPrivate* _repo, T* _o)
-                : ObjectPrivate(_repo, reinterpret_cast<git_object*>(_o))
-            {
-            }
-
-        public:
-            T* o()              { return reinterpret_cast< T* >(mObj); }
-            const T* o() const  { return reinterpret_cast< const T* >(mObj); }
-        };
-
-        // Without usage of C++11, we cannot provide these typedefs as X::Private typedefs, too.
-        // That means, Private::dataOf won't work with these, unless we specialize it. But even that
-        // requires some support of C++11...
-        typedef ObjectTPrivate<git_commit>  CommitPrivate;
-        typedef ObjectTPrivate<git_tree>    TreePrivate;
-        typedef ObjectTPrivate<git_blob>    ObjectBlobPrivate;
-        typedef ObjectTPrivate<git_tag>     ObjectTagPrivate;
 
     }
 

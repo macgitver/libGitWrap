@@ -34,6 +34,12 @@
 #	define GITWRAP_API Q_DECL_IMPORT
 #endif
 
+#ifndef GW_NO_DEPRECATION
+#   define GW_DEPRECATED Q_DECL_DEPRECATED
+#else
+#   define GW_DEPRECATED
+#endif
+
 namespace Git
 {
 
@@ -88,7 +94,7 @@ namespace Git
     typedef QVector< Submodule >        SubmoduleList;
     typedef QVector< Commit >           CommitList;
 
-    typedef Q_DECL_DEPRECATED CommitList ObjectCommitList;
+    typedef GW_DEPRECATED CommitList ObjectCommitList;
 
     /**
      * @enum        Status

@@ -2,5 +2,5 @@
 
 namespace Git
 {
-    typedef Q_DECL_DEPRECATED Blob ObjectBlob;
+    typedef GW_DEPRECATED Blob ObjectBlob;
 }

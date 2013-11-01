@@ -34,8 +34,11 @@ namespace Git
     class GITWRAP_API TreeEntry : public Base
     {
     public:
+        typedef Internal::TreeEntryPrivate Private;
+
+    public:
         TreeEntry();
-        TreeEntry(Internal::TreeEntryPrivate& _d );
+        TreeEntry(Private& _d);
         TreeEntry(const TreeEntry& other);
         ~TreeEntry();
         TreeEntry& operator=( const TreeEntry& other );

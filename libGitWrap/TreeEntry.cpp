@@ -51,7 +51,7 @@ namespace Git
     {
     }
 
-    TreeEntry::TreeEntry(Internal::TreeEntryPrivate& _d)
+    TreeEntry::TreeEntry(Private& _d)
         : Base(_d)
     {
     }
@@ -69,14 +69,14 @@ namespace Git
     TreeEntry TreeEntry::clone() const
     {
         GW_CD(TreeEntry);
-        if(!d) {
+        if (!d) {
             return TreeEntry();
         }
 
-        git_tree_entry* entry = git_tree_entry_dup( d->mEntry );
-        Q_ASSERT( entry );
+        git_tree_entry* entry = git_tree_entry_dup(d->mEntry);
+        Q_ASSERT(entry);
 
-        return *new Internal::TreeEntryPrivate( entry );
+        return *new Private(entry);
     }
 
     ObjectId TreeEntry::sha1() const
@@ -86,13 +86,12 @@ namespace Git
             return ObjectId();
         }
 
-        const git_oid* oid = git_tree_entry_id( d->mEntry );
-        if( !oid )
-        {
+        const git_oid* oid = git_tree_entry_id(d->mEntry);
+        if (!oid) {
             return ObjectId();
         }
 
-        return ObjectId::fromRaw( oid->id );
+        return Private::oid2sha(oid);
     }
 
     QString TreeEntry::name() const
@@ -102,14 +101,13 @@ namespace Git
             return QString();
         }
 
-        const char* szName = git_tree_entry_name( d->mEntry );
+        const char* szName = git_tree_entry_name(d->mEntry);
 
-        if( !szName )
-        {
+        if (!szName) {
             return QString();
         }
 
-        return QString::fromUtf8( szName );
+        return QString::fromUtf8(szName);
     }
 
     ObjectType TreeEntry::type() const

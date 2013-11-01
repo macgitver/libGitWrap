@@ -27,6 +27,11 @@
 namespace Git
 {
 
+    namespace Internal
+    {
+        class CommitPrivate;
+    }
+
     /**
      * @ingroup     GitWrap
      * @brief       Represents a git commit object.
@@ -35,11 +40,12 @@ namespace Git
     class GITWRAP_API Commit : public Object
     {
     public:
+        typedef Internal::CommitPrivate Private;
         enum { ObjectTypeId = otCommit };
 
     public:
         Commit();
-        Commit(Internal::ObjectPrivate& _d);
+        Commit(Private& _d);
         Commit(const Commit& o);
 
     public:
@@ -69,10 +75,10 @@ namespace Git
         bool isChildOf( Result& result, const Git::Commit& parent ) const;
         bool isEqual( Result& result, const Git::Commit& commit ) const;
 
-        Q_DECL_DEPRECATED Signature author( Result& result ) const;
-        Q_DECL_DEPRECATED Signature committer( Result& result ) const;
-        Q_DECL_DEPRECATED QString message( Result& result ) const;
-        Q_DECL_DEPRECATED QString shortMessage( Result& result ) const;
+        GW_DEPRECATED Signature author( Result& result ) const;
+        GW_DEPRECATED Signature committer( Result& result ) const;
+        GW_DEPRECATED QString message( Result& result ) const;
+        GW_DEPRECATED QString shortMessage( Result& result ) const;
 
         Signature author() const;
         Signature committer() const;
@@ -94,9 +100,9 @@ namespace Git
     };
 
     template<>
-    inline Commit Object::as(Result& result) const
+    inline Commit Object::as() const
     {
-        return asCommit(result);
+        return asCommit();
     }
 
     /**
