@@ -28,11 +28,6 @@ namespace Git
         class ReferencePrivate;
     }
 
-    /**
-     * @ingroup     GitWrap
-     * @brief       Represents a git reference
-     *
-     */
     class GITWRAP_API Reference : public RepoObject
     {
     public:
@@ -45,15 +40,15 @@ namespace Git
 
     public:
         Reference();
-        Reference(Internal::ReferencePrivate& _d);
-        Reference( const Reference& other );
+        Reference(Private& _d);
+        Reference(const Reference& other);
         ~Reference();
-        Reference& operator=( const Reference& other );
+        Reference& operator=(const Reference& other);
 
-        bool operator==( const Reference& other ) const;
-        bool operator!=( const Reference& other ) const;
+        bool operator==(const Reference& other) const;
+        bool operator!=(const Reference& other) const;
 
-        int compare( const Reference& other ) const;
+        int compare(const Reference& other) const;
 
     public:
         static Reference create(
@@ -94,8 +89,7 @@ namespace Git
         bool wasDestroyed() const;
 
         void checkout( Result& result,
-                       bool force = false,
-                       bool updateHEAD = true,
+                       CheckoutOptions opts = CheckoutNone,
                        const QStringList &paths = QStringList() ) const;
 
         void destroy( Result& result );
@@ -116,6 +110,6 @@ namespace Git
 
 }
 
-Q_DECLARE_METATYPE( Git::Reference )
+Q_DECLARE_METATYPE(Git::Reference)
 
 #endif

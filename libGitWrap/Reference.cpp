@@ -39,6 +39,12 @@
 
 namespace Git
 {
+    /**
+     * @class       Reference
+     * @ingroup     GitWrap
+     * @brief       Represents a git reference
+     *
+     */
 
     namespace Internal
     {
@@ -63,7 +69,7 @@ namespace Git
     {
     }
 
-    Reference::Reference(Internal::ReferencePrivate& _d)
+    Reference::Reference(Private& _d)
         : RepoObject(_d)
     {
     }
@@ -369,15 +375,20 @@ namespace Git
         return Object::Private::create(d->repo(), o);
     }
 
-    void Reference::checkout(Result &result, bool force, bool updateHEAD,
+    void Reference::checkout(Result &result,
+                             CheckoutOptions opts,
                              const QStringList &paths) const
     {
         GW_CD_CHECKED_VOID(Reference, result);
         CHECK_DELETED_VOID(result);
 
-        peeled<Tree>(result).checkout(result, force, paths);
+        peeled<Tree>(result).checkout(result, opts.testFlag(CheckoutForce), paths);
 
-        if (result && updateHEAD) {
+        if (!result) {
+            return;
+        }
+
+        if (opts.testFlag(CheckoutUpdateHEAD)) {
             setAsHEAD(result);
         }
     }

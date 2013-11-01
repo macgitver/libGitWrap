@@ -43,26 +43,6 @@
 namespace Git
 {
 
-    enum ObjectType
-    {
-        otTree,
-        otCommit,
-        otBlob,
-        otTag,
-
-        otAny = -1
-    };
-
-    enum TreeEntryAttributes
-    {
-        UnkownAttr          = 0,
-        TreeAttr            = 0040000,
-        FileAttr            = 0100644,
-        FileExecutableAttr  = 0100755,
-        GitLinkAttr         = 0120000,
-        SubmoduleAttr       = 0160000
-    };
-
     class ChangeListConsumer;
     class DiffList;
     class Index;
@@ -228,7 +208,39 @@ namespace Git
     };
     Q_DECLARE_FLAGS ( StatusFlags, Status )
 
-    typedef QHash< QString, StatusFlags > StatusHash;
+        enum ObjectType
+    {
+        otTree,
+        otCommit,
+        otBlob,
+        otTag,
+
+        otAny = -1
+    };
+
+    enum TreeEntryAttributes
+    {
+        UnkownAttr          = 0,
+        TreeAttr            = 0040000,
+        FileAttr            = 0100644,
+        FileExecutableAttr  = 0100755,
+        GitLinkAttr         = 0120000,
+        SubmoduleAttr       = 0160000
+    };
+
+    enum CheckoutOption
+    {
+        CheckoutUpdateHEAD          = (1 << 0),
+        CheckoutAllowDetachHEAD     = (1 << 1),
+        CheckoutForceDetachHEAD     = (1 << 2),
+        CheckoutCreateLocalBranch   = (1 << 3),
+        CheckoutForce               = (1 << 4),
+        CheckoutNone                = 0
+    };
+
+    typedef QFlags<CheckoutOption> CheckoutOptions;
+
+    typedef QHash<QString, StatusFlags> StatusHash;
 
     class Result;
 
