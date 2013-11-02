@@ -14,13 +14,44 @@
  *
  */
 
-#include "libGitWrap/IFetchEvents.hpp"
+#ifndef GITWRAP_WORKER_THREAD_HPP
+#define GITWRAP_WORKER_THREAD_HPP
+
+#include <QSharedData>
+#include <QThread>
 
 namespace Git
 {
 
-    IFetchEvents::~IFetchEvents()
+    namespace Internal
     {
+
+        class Worker : public QSharedData
+        {
+        public:
+            typedef QExplicitlySharedDataPointer<Worker> Ptr;
+        public:
+            virtual ~Worker();
+
+        public:
+            virtual void run() = 0;
+        };
+
+        class WorkerThread : public QThread
+        {
+            Q_OBJECT
+        public:
+            WorkerThread(QObject* parent, const Worker::Ptr& worker);
+
+        public:
+            void run();
+
+        private:
+            Worker::Ptr mWorker;
+        };
+
     }
 
 }
+
+#endif

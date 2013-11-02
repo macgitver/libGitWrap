@@ -72,34 +72,5 @@ namespace Git
 
 }
 
-#define GW_D(CLASS) \
-    Internal::CLASS##Private* d = \
-        static_cast<Internal::CLASS##Private*>(mData.data())
-
-#define GW_CD(CLASS) \
-    const Internal::CLASS##Private* d = \
-        static_cast<const Internal::CLASS##Private*>(mData.constData())
-
-#define GW_D_CHECKED(CLASS, returns, result) \
-    GW_D(CLASS); \
-    if (!result) { return returns; } \
-    if (!d) { result.setInvalidObject(); return returns; }
-
-#define GW_CD_CHECKED(CLASS, returns, result) \
-    GW_CD(CLASS); \
-    if (!result) { return returns; } \
-    if (!d) { result.setInvalidObject(); return returns; }
-
-// Wherever we have to use one of those two, we've made bad API design!
-#define GW_D_CHECKED_VOID(CLASS, result) \
-    GW_D(CLASS); \
-    if (!result) { return; } \
-    if (!d) { result.setInvalidObject(); return; }
-
-#define GW_CD_CHECKED_VOID(CLASS, result) \
-    GW_CD(CLASS); \
-    if (!result) { return; } \
-    if (!d) { result.setInvalidObject(); return; }
-
 #endif
 

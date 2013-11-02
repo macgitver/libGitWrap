@@ -17,7 +17,8 @@
 #ifndef GITWRAP_CLONE_OPERATION_HPP
 #define GITWRAP_CLONE_OPERATION_HPP
 
-#include "libGitWrap/IFetchEvents.hpp"
+#include "libGitWrap/Operations/IFetchEvents.hpp"
+#include "libGitWrap/Operations/BaseOperation.hpp"
 
 namespace Git
 {
@@ -30,9 +31,12 @@ namespace Git
         class CloneOperationPrivate;
     }
 
-    class GITWRAP_API CloneOperation : public QObject, public IFetchEvents
+    class GITWRAP_API CloneOperation : public BaseOperation, public IFetchEvents
     {
         Q_OBJECT
+    public:
+        typedef Internal::CloneOperationPrivate Private;
+
     public:
         CloneOperation( QObject* parent = 0 );
         ~CloneOperation();
@@ -41,28 +45,24 @@ namespace Git
         Result execute();
 
     public slots:
-        void setBackgroundMode( bool backgroundMode );
-        void setUrl( const QString& url );
-        void setPath( const QString& path );
-        void setBare( bool bare );
-        void setRemoteName( const QByteArray& remoteName );
-        void setFetchSpec( const QByteArray& fetchSpec );
-        void setPushSpec( const QByteArray& pushSpec );
-        void setPushUrl( const QByteArray& pushUrl );
+        void setUrl(const QString& url);
+        void setPath(const QString& path);
+        void setBare(bool bare);
+        void setRemoteName(const QString& remoteName);
+        void setRemoteName(const QByteArray& remoteName);
+        void setFetchSpec(const QByteArray& fetchSpec);
+        void setPushSpec(const QByteArray& pushSpec);
+        void setPushUrl(const QByteArray& pushUrl);
 
     public:
         QString url() const;
         QString path() const;
         bool bare() const;
-        bool backgroundMode() const;
-        bool isRunning() const;
 
         QByteArray remoteName() const;
         QByteArray fetchSpec() const;
         QByteArray pushSpec() const;
         QByteArray pushUrl() const;
-
-        Result result() const;
 
     signals:
         void askCredentials( CredentialRequest& request );
@@ -77,13 +77,6 @@ namespace Git
         void updateTip( const QString& branchName,
                         const Git::ObjectId& from,
                         const Git::ObjectId& to );
-        void finished();
-
-    private slots:
-        void workerFinished();
-
-    private:
-        Internal::CloneOperationPrivate* d;
     };
 
 }

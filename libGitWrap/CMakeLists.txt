@@ -117,17 +117,16 @@ ADD_DEFINITIONS( -D_FILE_OFFSET_BITS=64 -DGIT_THREADS )
 SET( SRC_FILES
 
     Base.cpp
-    RepoObject.cpp
-    Config.cpp
+    Blob.cpp
     ChangeListConsumer.cpp
-    CloneOperation.cpp
+    Commit.cpp
+    Config.cpp
     DiffList.cpp
     GitWrap.cpp
-    IFetchEvents.cpp
     Index.cpp
-    IndexEntry.cpp
     IndexConflict.cpp
     IndexConflicts.cpp
+    IndexEntry.cpp
     Object.cpp
     ObjectId.cpp
     PatchConsumer.cpp
@@ -135,68 +134,71 @@ SET( SRC_FILES
     RefSpec.cpp
     Reference.cpp
     Remote.cpp
+    RepoObject.cpp
     Repository.cpp
     Result.cpp
     RevisionWalker.cpp
     Signature.cpp
     Submodule.cpp
-    TreeBuilder.cpp
-    TreeEntry.cpp
     Tag.cpp
     Tree.cpp
-    Commit.cpp
-    Blob.cpp
+    TreeBuilder.cpp
+    TreeEntry.cpp
 
-    Private/FetchCallbacks.cpp
-    Private/WorkerThread.cpp
+    Operations/BaseOperation.cpp
+    Operations/CloneOperation.cpp
+    Operations/IFetchEvents.cpp
+
+    Operations/Private/FetchCallbacks.cpp
+    Operations/Private/WorkerThread.cpp
 )
 
 SET( PUB_HDR_FILES
 
     Base.hpp
-    RepoObject.hpp
-    Result.hpp
-    Config.hpp
+    Blob.hpp
     ChangeListConsumer.hpp
-    CloneOperation.hpp
+    Commit.hpp
+    Config.hpp
     DiffList.hpp
     GitWrap.hpp
-    IFetchEvents.hpp
     Index.hpp
-    IndexEntry.hpp
     IndexConflict.hpp
     IndexConflicts.hpp
+    IndexEntry.hpp
     Object.hpp
     ObjectBlob.hpp
     ObjectCommit.hpp
     ObjectId.hpp
     ObjectTag.hpp
     ObjectTree.hpp
-    RefSpec.hpp
     RefName.hpp
+    RefSpec.hpp
     Reference.hpp
     Remote.hpp
+    RepoObject.hpp
     Repository.hpp
+    Result.hpp
     RevisionWalker.hpp
     Signature.hpp
     Submodule.hpp
-    TreeBuilder.hpp
-    TreeEntry.hpp
     Tag.hpp
     Tree.hpp
-    Commit.hpp
-    Blob.hpp
+    TreeBuilder.hpp
+    TreeEntry.hpp
+
+    Operations/BaseOperation.hpp
+    Operations/CloneOperation.hpp
+    Operations/IFetchEvents.hpp
 )
 
 SET( PRI_HDR_FILES
 
     Private/BasePrivate.hpp
     Private/BlobPrivate.hpp
-    Private/CloneOperationPrivate.hpp
     Private/CommitPrivate.hpp
     Private/ConfigPrivate.hpp
     Private/DiffListPrivate.hpp
-    Private/FetchCallbacks.hpp
     Private/GitWrapPrivate.hpp
     Private/IndexConflictPrivate.hpp
     Private/IndexEntryPrivate.hpp
@@ -211,8 +213,11 @@ SET( PRI_HDR_FILES
     Private/TreeBuilderPrivate.hpp
     Private/TreeEntryPrivate.hpp
     Private/TreePrivate.hpp
-    Private/WorkerThread.hpp
 
+    Operations/Private/BaseOperationPrivate.hpp
+    Operations/Private/CloneOperationPrivate.hpp
+    Operations/Private/FetchCallbacks.hpp
+    Operations/Private/WorkerThread.hpp
 )
 
 SET( HDR_FILES ${PRI_HDR_FILES} ${PUB_HDR_FILES} )

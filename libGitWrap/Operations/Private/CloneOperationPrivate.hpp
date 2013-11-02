@@ -17,7 +17,8 @@
 #include "libGitWrap/Result.hpp"
 
 #include "libGitWrap/Private/GitWrapPrivate.hpp"
-#include "libGitWrap/Private/WorkerThread.hpp"
+
+#include "libGitWrap/Operations/Private/BaseOperationPrivate.hpp"
 
 namespace Git
 {
@@ -32,10 +33,10 @@ namespace Git
          * @ingroup     GitWrap
          *
          */
-        class CloneOperationPrivate : public Worker
+        class CloneOperationPrivate : public BaseOperationPrivate
         {
         public:
-            CloneOperationPrivate( CloneOperation* owner );
+            CloneOperationPrivate(CloneOperation* owner);
             ~CloneOperationPrivate();
 
         public:
@@ -45,9 +46,6 @@ namespace Git
             QString                 mUrl;
             QString                 mPath;
 
-            CloneOperation*         mOwner;
-            bool                    mBackgroundMode;
-
             QByteArray              mRemoteName;
             QByteArray              mFetchSpec;
             QByteArray              mPushSpec;
@@ -55,9 +53,6 @@ namespace Git
 
             git_clone_options       mGitCloneOptions;
             git_remote_callbacks    mRemoteCallbacks;
-
-            Result                  mResult;
-            WorkerThread*           mThread;
         };
 
     }

@@ -14,41 +14,48 @@
  *
  */
 
-#ifndef GITWRAP_WORKER_THREAD_HPP
-#define GITWRAP_WORKER_THREAD_HPP
+#ifndef GITWRAP_OPS_BASEOP_PRIVATE_HPP
+#define GITWRAP_OPS_BASEOP_PRIVATE_HPP
+#pragma once
 
-#include <QThread>
+#include "libGitWrap/Result.hpp"
+
+#include "libGitWrap/Private/GitWrapPrivate.hpp"
+
+#include "libGitWrap/Operations/Private/WorkerThread.hpp"
 
 namespace Git
 {
 
+    class BaseOperation;
+
     namespace Internal
     {
 
-        class Worker
+        /**
+         * @internal
+         * @ingroup     GitWrap
+         *
+         */
+        class BaseOperationPrivate : public Worker
         {
         public:
-            virtual ~Worker();
+            BaseOperationPrivate(BaseOperation* owner);
+            ~BaseOperationPrivate();
 
         public:
-            virtual void run() = 0;
-        };
+            BaseOperation*          mOwner;
+            bool                    mBackgroundMode;
 
-        class WorkerThread : public QThread
-        {
-            Q_OBJECT
-        public:
-            WorkerThread( QObject* parent, Worker* worker );
-
-        public:
-            void run();
-
-        private:
-            Worker* mWorker;
+            Result                  mResult;
+            WorkerThread*           mThread;
         };
 
     }
 
 }
+
+#define GW_OP_OWNER(CLS) \
+    CLS* owner = static_cast<CLS>(mData)
 
 #endif

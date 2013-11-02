@@ -14,30 +14,13 @@
  *
  */
 
-#include "libGitWrap/Private/WorkerThread.hpp"
+#include "libGitWrap/Operations/IFetchEvents.hpp"
 
 namespace Git
 {
 
-    namespace Internal
+    IFetchEvents::~IFetchEvents()
     {
-
-        Worker::~Worker()
-        {
-        }
-
-        WorkerThread::WorkerThread( QObject* parent, Worker* worker )
-            : QThread( parent )
-            , mWorker( worker )
-        {
-        }
-
-        void WorkerThread::run()
-        {
-            Q_ASSERT( mWorker );
-            mWorker->run();
-        }
-
     }
 
 }
