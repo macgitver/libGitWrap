@@ -44,7 +44,7 @@ namespace Git
         void clear( Result& result );
 
         TreeEntry get( Result& result, const QString& name );
-        bool insert( const QString& fileName, TreeEntryAttributes type, const ObjectId& oid,
+        bool insert( const QString& fileName, FileModes type, const ObjectId& oid,
                      Result& result );
         bool remove( Result& result, const QString& fileName );
         ObjectId write( Result& result );

@@ -92,7 +92,7 @@ namespace Git
          * @param[in]   attr    GitWrap's TreeEntryAttributes
          * @return      LibGit2's git_filemode_t
          */
-        static inline git_filemode_t teattr2filemode( TreeEntryAttributes attr )
+        static inline git_filemode_t teattr2filemode( FileModes attr )
         {
             switch( attr )
             {

@@ -218,7 +218,7 @@ namespace Git
         otAny = -1
     };
 
-    enum TreeEntryAttributes
+    enum FileModes
     {
         UnkownAttr          = 0,
         TreeAttr            = 0040000,

@@ -80,7 +80,7 @@ namespace Git
         return result;
     }
 
-    bool TreeBuilder::insert( const QString& fileName, TreeEntryAttributes type,
+    bool TreeBuilder::insert( const QString& fileName, FileModes type,
                               const ObjectId& oid, Result& result )
     {
         GW_D_CHECKED(TreeBuilder, false, result);
