@@ -210,7 +210,8 @@ namespace Git
 
 #define GW_D(CLASS) \
     Internal::CLASS##Private* d = \
-        static_cast<Internal::CLASS##Private*>(mData.data())
+        static_cast<Internal::CLASS##Private*>(mData.data()); \
+    d->ensureThisIsNotConst()
 
 #define GW_CD(CLASS) \
     const Internal::CLASS##Private* d = \
