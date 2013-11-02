@@ -161,6 +161,7 @@ SET( PUB_HDR_FILES
     Commit.hpp
     Config.hpp
     DiffList.hpp
+    FileInfo.hpp
     GitWrap.hpp
     Index.hpp
     IndexConflict.hpp

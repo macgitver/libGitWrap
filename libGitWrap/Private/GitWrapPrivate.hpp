@@ -29,6 +29,7 @@
 namespace Git
 {
 
+    class FileInfo;
     class Signature;
     class RefSpec;
 
