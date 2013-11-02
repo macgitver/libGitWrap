@@ -208,7 +208,7 @@ namespace Git
     };
     Q_DECLARE_FLAGS ( StatusFlags, Status )
 
-        enum ObjectType
+    enum ObjectType
     {
         otTree,
         otCommit,

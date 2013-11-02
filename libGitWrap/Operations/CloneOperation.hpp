@@ -41,9 +41,6 @@ namespace Git
         CloneOperation( QObject* parent = 0 );
         ~CloneOperation();
 
-    public:
-        Result execute();
-
     public slots:
         void setUrl(const QString& url);
         void setPath(const QString& path);
