@@ -42,14 +42,6 @@ namespace Git
         };
 
     public:
-        Index();
-        Index(const Index& other);
-        ~Index();
-
-    public:
-        Index& operator=( const Index& other );
-
-    public:
         static Index createInMemory();
         static Index openPath(Result& result, const QString& path);
 

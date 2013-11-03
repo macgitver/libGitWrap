@@ -51,25 +51,13 @@ namespace Git
 
     }
 
-    IndexConflict::IndexConflict()
-    {
-    }
-
-    IndexConflict::IndexConflict(const PrivatePtr& _d)
-        : Base(_d)
-    {
-    }
+    GW_PRIVATE_IMPL(IndexConflict, Base)
 
     IndexConflict IndexConflict::create(const IndexEntry& from,
                                         const IndexEntry& ours,
                                         const IndexEntry& theirs)
     {
         return PrivatePtr(new Private(from, ours, theirs));
-    }
-
-    IndexConflict::IndexConflict(const IndexConflict& other)
-        : Base(other)
-    {
     }
 
     IndexEntry IndexConflict::from() const

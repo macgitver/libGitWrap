@@ -40,13 +40,6 @@ namespace Git
         GW_PRIVATE_DECL(Object, RepoObject, public);
 
     public:
-        Object(const Object& other);
-        Object();
-        ~Object();
-
-    public:
-        Object& operator=( const Object& other );
-        bool operator==( const Object& other ) const;
 
         /**
          * @return the object's type

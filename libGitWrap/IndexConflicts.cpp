@@ -27,25 +27,7 @@
 namespace Git
 {
 
-    IndexConflicts::IndexConflicts(const IndexConflicts& other)
-        : RepoObject(other)
-    {
-    }
-
-    IndexConflicts::IndexConflicts(const PrivatePtr& _d)
-        : RepoObject(_d)
-    {
-    }
-
-    IndexConflicts::~IndexConflicts()
-    {
-    }
-
-    IndexConflicts& IndexConflicts::operator=(const IndexConflicts& other)
-    {
-        RepoObject::operator =(other);
-        return * this;
-    }
+    GW_PRIVATE_IMPL(IndexConflicts, RepoObject)
 
     Index IndexConflicts::index() const
     {

@@ -40,14 +40,6 @@ namespace Git
         };
 
     public:
-        Reference();
-        Reference(const Reference& other);
-        ~Reference();
-        Reference& operator=(const Reference& other);
-
-        bool operator==(const Reference& other) const;
-        bool operator!=(const Reference& other) const;
-
         int compare(const Reference& other) const;
 
     public:

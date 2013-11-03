@@ -37,13 +37,9 @@ namespace Git
      */
     class GITWRAP_API Tree : public Object
     {
-        GW_PRIVATE_DECL(Tree, Object, public);
+        GW_PRIVATE_DECL(Tree, Object, public)
     public:
         enum { ObjectTypeId = otTree };
-
-    public:
-        Tree();
-        Tree(const Tree& o);
 
     public:
         Tree subPath( Result& result, const QString& pathName ) const;

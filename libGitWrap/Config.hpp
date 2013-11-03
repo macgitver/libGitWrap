@@ -39,9 +39,7 @@ namespace Git
      */
     class GITWRAP_API Config : public Base
     {
-        GW_PRIVATE_DECL(Config, Base, protected);
-    public:
-        Config();
+        GW_PRIVATE_DECL(Config, Base, public)
 
     public:
         bool addFile( const QString& fileName, int priority );
@@ -59,6 +57,6 @@ namespace Git
 
 }
 
-Q_DECLARE_METATYPE( Git::Config )
+Q_DECLARE_METATYPE(Git::Config)
 
 #endif

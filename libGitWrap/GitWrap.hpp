@@ -277,22 +277,43 @@ namespace Git
 // Note, that macros like these are also a good way to hide the nasty administrative stuff from
 // Doxygen, later...
 
-#define GW_PRIVATE_DECL(CLASS, BASE, SCOPE) \
-    public: \
-        typedef Internal::CLASS##Private Private; \
-        typedef QExplicitlySharedDataPointer<Private> PrivatePtr; \
-    SCOPE: \
-        CLASS(const PrivatePtr& _d)
-
 #define GW_PRIVATE_DECL_EX(SHARE, CLASS, BASE, SCOPE) \
     public: \
         typedef Internal::SHARE##Private Private; \
         typedef QExplicitlySharedDataPointer<Private> PrivatePtr; \
+    \
     SCOPE: \
-        CLASS(const PrivatePtr& _d)
+        CLASS() \
+            : BASE() \
+            {} \
+        \
+        CLASS(Private* _d); \
+        CLASS(const PrivatePtr& _d); \
+        \
+        CLASS(const CLASS& other) \
+            : BASE(other) \
+            {} \
+        \
+        CLASS& operator=(const CLASS& other) \
+            { return static_cast<CLASS&>(BASE::operator=(other)); } \
+        \
+        bool operator==(const CLASS& other) const \
+            { return BASE::operator==(other); } \
+        \
+    public: \
+        ~CLASS() \
+            {}
 
-#define GW_PRIVATE_DECL_INLINE(CLASS, BASE, SCOPE) \
-    GW_PRIVATE_DECL(CLASS, BASE, SCOPE) \
-        : BASE(_d) {}
+#define GW_PRIVATE_IMPL(CLASS, BASE) \
+    CLASS::CLASS(Private* _d) \
+        : BASE(PrivatePtr(_d)) \
+        {} \
+    \
+    CLASS::CLASS(const PrivatePtr& _d) \
+        : BASE(_d) \
+        {}
+
+#define GW_PRIVATE_DECL(CLASS, BASE, SCOPE) \
+    GW_PRIVATE_DECL_EX(CLASS, CLASS, BASE, SCOPE)
 
 #endif

@@ -64,34 +64,7 @@ namespace Git
 
     }
 
-    Object::Object(const PrivatePtr& _d)
-        : RepoObject(_d)
-    {
-    }
-
-    Object::Object(const Object& other)
-        : RepoObject(other)
-    {
-    }
-
-    Object::Object()
-    {
-    }
-
-    Object::~Object()
-    {
-    }
-
-    Object& Object::operator=( const Object& other )
-    {
-        RepoObject::operator =(other);
-        return * this;
-    }
-
-    bool Object::operator==( const Object& other ) const
-    {
-        return RepoObject::operator==(other);
-    }
+    GW_PRIVATE_IMPL(Object, RepoObject)
 
     ObjectType Object::type(Result& result) const
     {

@@ -114,52 +114,7 @@ namespace Git
      *
      */
 
-
-    /**
-     * @brief       Constructor
-     *
-     */
-    Index::Index()
-    {
-    }
-
-    Index::Index(const PrivatePtr& _d)
-        : RepoObject(_d)
-    {
-    }
-
-    /**
-     * @brief       Constructor (Copy)
-     *
-     * @param[in]   o   The Index object to create a copy of.
-     *
-     */
-    Index::Index(const Index& o)
-        : RepoObject(o)
-    {
-    }
-
-    /**
-     * @brief       Destructor
-     *
-     * Does nothing.
-     */
-    Index::~Index()
-    {
-    }
-
-    /**
-     * @brief       Assignment operator
-     *
-     * @param[in]   other   The Index object to assign to @c this
-     *
-     * @return      A reference to @c this.
-     */
-    Index& Index::operator=( const Index& other )
-    {
-        RepoObject::operator=(other);
-        return *this;
-    }
+    GW_PRIVATE_IMPL(Index, RepoObject)
 
     /**
      * @brief       Create an in-memory index

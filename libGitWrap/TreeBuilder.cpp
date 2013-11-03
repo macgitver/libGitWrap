@@ -42,29 +42,7 @@ namespace Git
 
     }
 
-    TreeBuilder::TreeBuilder()
-    {
-    }
-
-    TreeBuilder::TreeBuilder(const TreeBuilder& other)
-        : RepoObject(other)
-    {
-    }
-
-    TreeBuilder::TreeBuilder(const PrivatePtr& _d)
-        : RepoObject(_d)
-    {
-    }
-
-    TreeBuilder::~TreeBuilder()
-    {
-    }
-
-    TreeBuilder& TreeBuilder::operator=(const TreeBuilder& other)
-    {
-        RepoObject::operator =(other);
-        return * this;
-    }
+    GW_PRIVATE_IMPL(TreeBuilder, RepoObject)
 
     void TreeBuilder::clear( Result& result )
     {

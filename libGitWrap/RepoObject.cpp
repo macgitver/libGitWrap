@@ -44,19 +44,7 @@ namespace Git
 
     }
 
-    RepoObject::RepoObject()
-    {
-    }
-
-    RepoObject::RepoObject(const PrivatePtr& _d)
-        : Base(_d)
-    {
-    }
-
-    bool RepoObject::operator==(const RepoObject& other) const
-    {
-        return Base::operator==(other);
-    }
+    GW_PRIVATE_IMPL(RepoObject, Base)
 
     Repository RepoObject::repository(Result &result) const
     {

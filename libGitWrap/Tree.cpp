@@ -55,25 +55,7 @@ namespace Git
 
     }
 
-    Tree::Tree()
-    {
-    }
-
-    Tree::Tree(const PrivatePtr& _d)
-        : Object( _d )
-    {
-        GW_D(Tree);
-        // This is just for safety
-        // can only occur in case of a bad static_cast, which we usually avoid
-        if (d->objectType() != otTree) {
-            mData = NULL;
-        }
-    }
-
-    Tree::Tree(const Tree& o)
-        : Object( o )
-    {
-    }
+    GW_PRIVATE_IMPL(Tree, Object)
 
     Tree Tree::subPath(Result& result , const QString& pathName) const
     {

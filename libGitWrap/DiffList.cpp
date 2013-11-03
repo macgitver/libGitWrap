@@ -179,29 +179,7 @@ namespace Git
 
     }
 
-    DiffList::DiffList()
-    {
-    }
-
-    DiffList::DiffList(const PrivatePtr& _d)
-        : RepoObject(_d)
-    {
-    }
-
-    DiffList::DiffList(const DiffList& o)
-        : RepoObject(o)
-    {
-    }
-
-    DiffList::~DiffList()
-    {
-    }
-
-    DiffList& DiffList::operator=( const DiffList& other )
-    {
-        RepoObject::operator=(other);
-        return *this;
-    }
+    GW_PRIVATE_IMPL(DiffList, RepoObject)
 
     bool DiffList::mergeOnto(Result& result, DiffList onto) const
     {

@@ -31,13 +31,7 @@ namespace Git
 
     class IndexConflicts : public RepoObject
     {
-        GW_PRIVATE_DECL_EX(Index, IndexConflicts, RepoObject, public);
-
-    public:
-        IndexConflicts(const IndexConflicts& other);
-        ~IndexConflicts();
-
-        IndexConflicts& operator=(const IndexConflicts& other);
+        GW_PRIVATE_DECL_EX(Index, IndexConflicts, RepoObject, public)
 
     public:
         Index index() const;

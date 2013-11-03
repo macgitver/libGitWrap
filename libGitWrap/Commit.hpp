@@ -44,23 +44,6 @@ namespace Git
         enum { ObjectTypeId = otCommit };
 
     public:
-        Commit();
-        Commit(const Commit& o);
-
-    public:
-        bool operator==( const Git::Commit& commit ) const
-        {
-            Result r;
-            return isEqual( r, commit ) && r;
-        }
-
-        bool operator!=( const Git::Commit& commit ) const
-        {
-            Result r;
-            return !isEqual( r, commit ) && r;
-        }
-
-    public:
         Tree tree( Result& result ) const;
         ObjectId treeId( Result& result ) const;
 

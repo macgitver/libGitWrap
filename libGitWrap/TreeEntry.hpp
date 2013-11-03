@@ -33,13 +33,7 @@ namespace Git
      */
     class GITWRAP_API TreeEntry : public Base
     {
-        GW_PRIVATE_DECL(TreeEntry, Base, public);
-
-    public:
-        TreeEntry();
-        TreeEntry(const TreeEntry& other);
-        ~TreeEntry();
-        TreeEntry& operator=( const TreeEntry& other );
+        GW_PRIVATE_DECL(TreeEntry, Base, public)
 
     public:
         TreeEntry clone() const;

@@ -39,14 +39,7 @@ namespace Git
 
     }
 
-    Config::Config()
-    {
-    }
-
-    Config::Config(const PrivatePtr& _d)
-        : Base(_d)
-    {
-    }
+    GW_PRIVATE_IMPL(Config, Base)
 
     QString Config::globalFilePath()
     {

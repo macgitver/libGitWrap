@@ -331,19 +331,7 @@ namespace Git
 
     }
 
-    RefName::RefName()
-    {
-    }
-
-    RefName::RefName(const PrivatePtr& _d)
-        : RepoObject(_d)
-    {
-    }
-
-    RefName::RefName(const RefName& other)
-        : RepoObject(other)
-    {
-    }
+    GW_PRIVATE_IMPL(RefName, RepoObject)
 
     RefName::RefName(const QString& refName)
         : RepoObject(PrivatePtr(new Internal::RefNamePrivate))
@@ -351,16 +339,6 @@ namespace Git
         GW_D(RefName);
         d->fqrn = refName;
         d->isAnalyzed = false;
-    }
-
-    RefName::~RefName()
-    {
-    }
-
-    RefName& RefName::operator=(const RefName& other)
-    {
-        Base::operator =(other);
-        return *this;
     }
 
     /**

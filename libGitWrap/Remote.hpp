@@ -43,12 +43,6 @@ namespace Git
         typedef RemoteList List;
 
     public:
-        Remote();
-        Remote(const Remote& other);
-        ~Remote();
-        Remote& operator=( const Remote& other );
-
-    public:
         bool save( Result& result );
 
         QString name() const;

@@ -25,6 +25,7 @@
 #include "libGitWrap/Private/ReferencePrivate.hpp"
 #include "libGitWrap/Private/CommitPrivate.hpp"
 #include "libGitWrap/Private/TreePrivate.hpp"
+#include "libGitWrap/Private/DiffListPrivate.hpp"
 
 namespace Git
 {
@@ -56,25 +57,7 @@ namespace Git
 
     }
 
-    Commit::Commit()
-    {
-    }
-
-    Commit::Commit(const PrivatePtr& _d)
-        : Object(_d)
-    {
-        GW_D(Commit);
-        // This is just for safety
-        // can only occur in case of a bad static_cast, which we usually avoid
-        if (d->objectType() != otCommit) {
-            mData = NULL;
-        }
-    }
-
-    Commit::Commit( const Commit& o )
-        : Object( o )
-    {
-    }
+    GW_PRIVATE_IMPL(Commit, Object)
 
     Tree Commit::tree( Result& result ) const
     {

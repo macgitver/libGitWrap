@@ -34,11 +34,7 @@ namespace Git
      */
     class GITWRAP_API RevisionWalker : public RepoObject
     {
-        GW_PRIVATE_DECL(RevisionWalker, RepoObject, public);
-    public:
-        RevisionWalker();
-        ~RevisionWalker();
-        RevisionWalker& operator=( const RevisionWalker& other );
+        GW_PRIVATE_DECL(RevisionWalker, RepoObject, public)
 
     public:
         void reset( Result& result );

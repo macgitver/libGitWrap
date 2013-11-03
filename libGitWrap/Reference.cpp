@@ -85,39 +85,7 @@ namespace Git
 
     }
 
-    Reference::Reference()
-    {
-    }
-
-    Reference::Reference(const PrivatePtr& _d)
-        : RepoObject(_d)
-    {
-    }
-
-    Reference::Reference( const Reference& other )
-        : RepoObject(other)
-    {
-    }
-
-    Reference::~Reference()
-    {
-    }
-
-    Reference& Reference::operator=( const Reference& other )
-    {
-        RepoObject::operator=(other);
-        return * this;
-    }
-
-    bool Reference::operator==(const Reference &other) const
-    {
-        return RepoObject::operator==(other);
-    }
-
-    bool Reference::operator!=(const Reference &other) const
-    {
-        return !( *this == other );
-    }
+    GW_PRIVATE_IMPL(Reference, RepoObject)
 
     /**
      * @brief       Compares two reference objects.

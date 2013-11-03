@@ -34,14 +34,7 @@ namespace Git
 
     class GITWRAP_API RepoObject : public Base
     {
-        GW_PRIVATE_DECL(RepoObject, Base, protected);
-
-    public:
-        RepoObject();
-
-    public:
-        bool operator==(const RepoObject& other) const;
-
+        GW_PRIVATE_DECL(RepoObject, Base, protected)
     public:
         GW_DEPRECATED Repository repository(Result &result) const;
         Repository repository() const;

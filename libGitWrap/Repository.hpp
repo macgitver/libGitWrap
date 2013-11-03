@@ -38,15 +38,7 @@ namespace Git
      */
     class GITWRAP_API Repository : public Base
     {
-        GW_PRIVATE_DECL(Repository, Base, public);
-
-    public:
-        Repository();
-        Repository( const Repository& other );
-        Repository& operator=( const Repository& other );
-
-    public:
-        ~Repository();
+        GW_PRIVATE_DECL(Repository, Base, public)
 
     public:
         static Repository create( const QString& path,

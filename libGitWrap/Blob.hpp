@@ -41,10 +41,6 @@ namespace Git
     public:
         GW_PRIVATE_DECL(Blob, Object, public);
         enum { ObjectTypeId = otBlob };
-
-    public:
-        Blob();
-        Blob(const Blob& o);
     };
 
     template<>

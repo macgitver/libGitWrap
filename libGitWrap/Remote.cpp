@@ -40,29 +40,7 @@ namespace Git
 
     }
 
-    Remote::Remote()
-    {
-    }
-
-    Remote::Remote(const PrivatePtr& _d)
-        : RepoObject(_d)
-    {
-    }
-
-    Remote::Remote(const Remote& other)
-        : RepoObject(other)
-    {
-    }
-
-    Remote::~Remote()
-    {
-    }
-
-    Remote& Remote::operator=(const Remote& other)
-    {
-        RepoObject::operator =(other);
-        return * this;
-    }
+    GW_PRIVATE_IMPL(Remote, RepoObject)
 
     bool Remote::save( Result& result )
     {

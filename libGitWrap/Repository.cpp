@@ -102,56 +102,7 @@ namespace Git
 
     }
 
-    /**
-     * @internal
-     * @brief       Create a Repository object
-     * @param[in]   _d  Pointer to private data.
-     */
-    Repository::Repository(const PrivatePtr& _d)
-        : Base(_d)
-    {
-    }
-
-    /**
-     * @brief       Copy Constructor
-     *
-     * Creates a Repository object that represents the same repository as @a o. If @a o is an
-     * invalid Repository object, this will become an invalid one too.
-     *
-     * @param[in]   o   An existing Repository object
-     *
-     */
-    Repository::Repository(const Repository& other)
-        : Base(other)
-    {
-    }
-
-    /**
-     * @brief       Create an invalid Repository object
-     */
-    Repository::Repository()
-    {
-    }
-
-    /**
-     * @brief       Destructor
-     */
-    Repository::~Repository()
-    {
-    }
-
-    /**
-     * @brief       Assignment operator
-     *
-     * @param[in]   o   An existing Repository object
-     *
-     * @return      A reference to this repository object.
-     */
-    Repository& Repository::operator=(const Repository& other)
-    {
-        Base::operator=(other);
-        return * this;
-    }
+    GW_PRIVATE_IMPL(Repository, Base)
 
     /**
      * @brief       Create a new repository

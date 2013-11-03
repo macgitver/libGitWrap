@@ -49,24 +49,6 @@ namespace Git
 
     }
 
-    Blob::Blob()
-    {
-    }
-
-    Blob::Blob(const PrivatePtr& _d)
-        : Object(_d)
-    {
-        GW_D(Blob);
-        // This is just for safety
-        // can only occur in case of a bad static_cast, which we usually avoid
-        if (d->objectType() != otBlob) {
-            mData = NULL;
-        }
-    }
-
-    Blob::Blob(const Blob& o)
-        : Object(o)
-    {
-    }
+    GW_PRIVATE_IMPL(Blob, Object)
 
 }

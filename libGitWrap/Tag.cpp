@@ -49,24 +49,6 @@ namespace Git
 
     }
 
-    Tag::Tag()
-    {
-    }
-
-    Tag::Tag(const PrivatePtr& _d)
-        : Object(_d)
-    {
-        GW_D(Tag);
-        // This is just for safety
-        // can only occur in case of a bad static_cast, which we usually avoid
-        if (d->objectType() != otTag) {
-            mData = NULL;
-        }
-    }
-
-    Tag::Tag( const Tag& o )
-        : Object( o )
-    {
-    }
+    GW_PRIVATE_IMPL(Tag, Object)
 
 }

@@ -33,13 +33,7 @@ namespace Git
      */
     class GITWRAP_API TreeBuilder : public RepoObject
     {
-        GW_PRIVATE_DECL(TreeBuilder, RepoObject, public);
-
-    public:
-        TreeBuilder();
-        TreeBuilder(const TreeBuilder& other);
-        ~TreeBuilder();
-        TreeBuilder& operator=( const TreeBuilder& other );
+        GW_PRIVATE_DECL(TreeBuilder, RepoObject, public)
 
     public:
         void clear( Result& result );

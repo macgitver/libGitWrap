@@ -33,11 +33,7 @@ namespace Git
 
     class IndexConflict : public Base
     {
-        GW_PRIVATE_DECL(IndexConflict, Base, public);
-
-    public:
-        IndexConflict();
-        IndexConflict(const IndexConflict& other);
+        GW_PRIVATE_DECL(IndexConflict, Base, public)
 
     public:
         static IndexConflict create(const IndexEntry& from,

@@ -38,14 +38,10 @@ namespace Git
 
     class GITWRAP_API RefName : public RepoObject
     {
-        GW_PRIVATE_DECL(RefName, RepoObject, public);
+        GW_PRIVATE_DECL(RefName, RepoObject, public)
 
     public:
-        RefName();
-        RefName(const RefName& other);
         explicit RefName(const QString& refName);
-        ~RefName();
-        RefName& operator=(const RefName& other);
 
     public:
         bool isRemote();

@@ -37,14 +37,6 @@ namespace Git
         GW_PRIVATE_DECL(DiffList, RepoObject, public);
 
     public:
-        DiffList(const DiffList& other);
-        DiffList();
-        ~DiffList();
-
-    public:
-        DiffList& operator=( const DiffList& other );
-
-    public:
         bool mergeOnto( Result& result, DiffList other ) const;
 
         bool consumePatch( Result& result, PatchConsumer* consumer ) const;

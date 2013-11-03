@@ -42,29 +42,7 @@ namespace Git
 
     }
 
-    TreeEntry::TreeEntry()
-    {
-    }
-
-    TreeEntry::TreeEntry(const TreeEntry& other)
-        : Base(other)
-    {
-    }
-
-    TreeEntry::TreeEntry(const PrivatePtr& _d)
-        : Base(_d)
-    {
-    }
-
-    TreeEntry::~TreeEntry()
-    {
-    }
-
-    TreeEntry& TreeEntry::operator=( const TreeEntry& other )
-    {
-        Base::operator =(other);
-        return * this;
-    }
+    GW_PRIVATE_IMPL(TreeEntry, Base)
 
     TreeEntry TreeEntry::clone() const
     {

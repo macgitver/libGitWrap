@@ -48,29 +48,7 @@ namespace Git
      * An IndexEntry object is a very short lived data container for an index' entry.
      */
 
-    IndexEntry::IndexEntry()
-    {
-    }
-
-    IndexEntry::IndexEntry(const PrivatePtr& _d)
-        : Base(_d)
-    {
-    }
-
-    IndexEntry::IndexEntry(const IndexEntry& other)
-        : Base(other)
-    {
-    }
-
-    IndexEntry::~IndexEntry()
-    {
-    }
-
-    IndexEntry &IndexEntry::operator =(const IndexEntry &other)
-    {
-        Base::operator=(other);
-        return *this;
-    }
+    GW_PRIVATE_IMPL(IndexEntry, Base)
 
     QString IndexEntry::path() const
     {

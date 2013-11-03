@@ -40,25 +40,7 @@ namespace Git
 
     }
 
-    RevisionWalker::RevisionWalker()
-    {
-    }
-
-
-    RevisionWalker::RevisionWalker(const RevisionWalker::PrivatePtr& _d)
-        : RepoObject(_d)
-    {
-    }
-
-    RevisionWalker::~RevisionWalker()
-    {
-    }
-
-    RevisionWalker& RevisionWalker::operator=(const RevisionWalker& other)
-    {
-        RepoObject::operator=(other);
-        return * this;
-    }
+    GW_PRIVATE_IMPL(RevisionWalker, RepoObject)
 
     void RevisionWalker::reset( Result& result )
     {
