@@ -45,6 +45,7 @@ namespace Git
         git_signature* signature2git( Result& result, const Signature& sig );
         RefSpec mkRefSpec( const git_refspec* refspec );
         QStringList slFromStrArray( git_strarray* arry );
+        FileInfo mkFileInfo(const git_diff_file* df);
 
         /**
          * @internal

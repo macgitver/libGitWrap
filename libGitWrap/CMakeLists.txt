@@ -146,6 +146,7 @@ SET( SRC_FILES
     TreeEntry.cpp
 
     Operations/BaseOperation.cpp
+    Operations/CheckoutOperation.cpp
     Operations/CloneOperation.cpp
     Operations/IFetchEvents.cpp
 
@@ -189,6 +190,7 @@ SET( PUB_HDR_FILES
     TreeEntry.hpp
 
     Operations/BaseOperation.hpp
+    Operations/CheckoutOperation.hpp
     Operations/CloneOperation.hpp
     Operations/IFetchEvents.hpp
 )
@@ -216,6 +218,7 @@ SET( PRI_HDR_FILES
     Private/TreePrivate.hpp
 
     Operations/Private/BaseOperationPrivate.hpp
+    Operations/Private/CheckoutOperationPrivate.hpp
     Operations/Private/CloneOperationPrivate.hpp
     Operations/Private/FetchCallbacks.hpp
     Operations/Private/WorkerThread.hpp

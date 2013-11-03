@@ -49,7 +49,6 @@ namespace Git
 
             Result                  mResult;
             WorkerThread*           mThread;
-
         };
 
     }
@@ -57,6 +56,6 @@ namespace Git
 }
 
 #define GW_OP_OWNER(CLS) \
-    CLS* owner = static_cast<CLS>(mData)
+    CLS* owner = static_cast<CLS*>(mOwner)
 
 #endif

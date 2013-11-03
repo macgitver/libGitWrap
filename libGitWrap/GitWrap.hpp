@@ -228,14 +228,34 @@ namespace Git
         SubmoduleAttr       = 0160000
     };
 
+    enum CheckoutMode
+    {
+        CheckoutDryRun,
+        CheckoutSafe,
+        CheckoutSafeCreate,
+        CheckoutForce
+    };
+
     enum CheckoutOption
     {
-        CheckoutUpdateHEAD          = (1 << 0),
-        CheckoutAllowDetachHEAD     = (1 << 1),
-        CheckoutForceDetachHEAD     = (1 << 2),
-        CheckoutCreateLocalBranch   = (1 << 3),
-        CheckoutForce               = (1 << 4),
-        CheckoutNone                = 0
+        CheckoutUpdateHEAD              = (1UL <<  0),
+        CheckoutAllowDetachHEAD         = (1UL <<  1),
+        CheckoutForceDetachHEAD         = (1UL <<  2),
+        CheckoutCreateLocalBranch       = (1UL <<  3),
+
+        CheckoutForce = (1UL<<4), // Kept temporary
+
+        /* these are LG2 flags: */
+        CheckoutAllowConflicts          = (1UL <<  8),
+        CheckoutRemoveUntracked         = (1UL <<  9),
+        CheckoutRemoveIgnored           = (1UL << 10),
+        CheckoutNoRefresh               = (1UL << 11),
+        CheckoutUpdateOnly              = (1UL << 12),
+        CheckoutDontUpdateIndex         = (1UL << 13),
+        CheckoutDisablePathSpecMatch    = (1UL << 14),
+        CheckoutSkipLockedDirectories   = (1UL << 15),
+
+        CheckoutNone                    = 0
     };
 
     typedef QFlags<CheckoutOption> CheckoutOptions;
