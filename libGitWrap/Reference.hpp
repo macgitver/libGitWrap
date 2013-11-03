@@ -28,6 +28,8 @@ namespace Git
         class ReferencePrivate;
     }
 
+    class CheckoutBaseOperation;
+
     class GITWRAP_API Reference : public RepoObject
     {
         GW_PRIVATE_DECL(Reference, RepoObject, public);
@@ -86,8 +88,10 @@ namespace Git
         bool isRemote() const;
         bool wasDestroyed() const;
 
+        CheckoutBaseOperation* checkoutOperation(Result& result) const;
         void checkout( Result& result,
                        CheckoutOptions opts = CheckoutNone,
+                       CheckoutMode mode = CheckoutSafeCreate,
                        const QStringList &paths = QStringList() ) const;
 
         void destroy( Result& result );

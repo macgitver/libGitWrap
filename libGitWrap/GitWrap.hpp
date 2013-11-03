@@ -243,8 +243,6 @@ namespace Git
         CheckoutForceDetachHEAD         = (1UL <<  2),
         CheckoutCreateLocalBranch       = (1UL <<  3),
 
-        CheckoutForce = (1UL<<4), // Kept temporary
-
         /* these are LG2 flags: */
         CheckoutAllowConflicts          = (1UL <<  8),
         CheckoutRemoveUntracked         = (1UL <<  9),

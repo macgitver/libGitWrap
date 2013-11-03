@@ -14,12 +14,16 @@
  *
  */
 
+#include <QScopedPointer>
+
 #include "libGitWrap/Commit.hpp"
 #include "libGitWrap/Tree.hpp"
 #include "libGitWrap/ObjectId.hpp"
 #include "libGitWrap/Repository.hpp"
 #include "libGitWrap/Reference.hpp"
 #include "libGitWrap/RefName.hpp"
+
+#include "libGitWrap/Operations/CheckoutOperation.hpp"
 
 #include "libGitWrap/Private/GitWrapPrivate.hpp"
 #include "libGitWrap/Private/ObjectPrivate.hpp"
@@ -375,22 +379,67 @@ namespace Git
         return Object::Private::create(d->repo(), o);
     }
 
-    void Reference::checkout(Result &result,
-                             CheckoutOptions opts,
-                             const QStringList &paths) const
+    CheckoutBaseOperation* Reference::checkoutOperation(Result& result) const
     {
+        GW_CD_CHECKED(Reference, NULL, result);
+
+        QScopedPointer<CheckoutTreeOperation> op(new CheckoutTreeOperation);
+        op->setTree(peeled<Tree>(result));
+
+        if (!result) {
+            return NULL;
+        }
+
+        return op.take();
+    }
+
+    void Reference::checkout(Result&            result,
+                             CheckoutOptions    opts,
+                             CheckoutMode       mode,
+                             const QStringList& paths) const
+    {
+    #if 0
         GW_CD_CHECKED_VOID(Reference, result);
         CHECK_DELETED_VOID(result);
 
-        peeled<Tree>(result).checkout(result, opts.testFlag(CheckoutForce), paths);
+        QString refToUpdate = name();
 
+        QScopedPointer<CheckoutBaseOperation> op(checkoutOperation(result));
         if (!result) {
             return;
         }
 
-        if (opts.testFlag(CheckoutUpdateHEAD)) {
-            setAsHEAD(result);
+        bool doCreateLocal   = opts.testFlag(CheckoutCreateLocalBranch);
+        bool doUpdateHEAD    = opts.testFlag(CheckoutUpdateHEAD);
+        bool doAllowDetached = opts.testFlag(CheckoutAllowDetachHEAD);
+        bool doForceDetached = opts.testFlag(CheckoutForceDetachHEAD);
+
+        if (doCreateLocal) {
+            refToUpdate = createDownstreamBranch(result);
+            if (!result) {
+                return;
+            }
         }
+
+        opts = opts &~ (CheckoutCreateLocalBranch|
+                        CheckoutAllowDetachHEAD|
+                        CheckoutForceDetachHEAD|
+                        CheckoutUpdateHEAD);
+
+        op->setOptions(opts);
+        op->setMode(mode);
+        op->setCheckoutPaths(paths);
+        op->setBackgroundMode(false);
+
+        result = op->execute();
+        if (!result) {
+            return;
+        }
+
+        if (doUpdateHEAD) {
+
+        }
+    #endif
     }
 
     /**
