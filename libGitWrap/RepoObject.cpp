@@ -53,6 +53,11 @@ namespace Git
         return Base::operator==(other);
     }
 
+    Repository RepoObject::repository(Result &result) const
+    {
+        return repository();
+    }
+
     Repository RepoObject::repository() const
     {
         GW_CD(RepoObject);
