@@ -49,7 +49,7 @@ namespace Git
     namespace Internal
     {
 
-        ReferencePrivate::ReferencePrivate(RepositoryPrivate* repo, git_reference* ref)
+        ReferencePrivate::ReferencePrivate(const RepositoryPrivate::Ptr& repo, git_reference* ref)
             : RepoObjectPrivate(repo)
             , wasDeleted(false)
             , reference(ref)
@@ -69,7 +69,7 @@ namespace Git
     {
     }
 
-    Reference::Reference(Private& _d)
+    Reference::Reference(const PrivatePtr& _d)
         : RepoObject(_d)
     {
     }
@@ -162,7 +162,7 @@ namespace Git
             return Reference();
         }
 
-        Repository::Private* repop = Private::dataOf<Repository>(repo);
+        Repository::PrivatePtr repop(Private::dataOf<Repository>(repo));
 
         git_reference* ref = NULL;
         QByteArray utf8Name = name.toUtf8();
@@ -178,7 +178,7 @@ namespace Git
             return Reference();
         }
 
-        return *new Private(repop, ref);
+        return PrivatePtr(new Private(repop, ref));
     }
 
 
@@ -311,7 +311,7 @@ namespace Git
             return Reference();
         }
 
-        return *new Private(d->repo(), ref);
+        return PrivatePtr(new Private(d->repo(), ref));
     }
 
     ObjectId Reference::resolveToObjectId( Result& result ) const
@@ -417,7 +417,7 @@ namespace Git
 
     bool Reference::wasDestroyed() const
     {
-        GW_D(Reference);
+        GW_CD(Reference);
         return d && d->wasDeleted;
     }
 
@@ -466,7 +466,7 @@ namespace Git
      */
     void Reference::setAsHEAD(Result& result) const
     {
-        GW_D_CHECKED_VOID(Reference, result);
+        GW_CD_CHECKED_VOID(Reference, result);
         CHECK_DELETED_VOID(result);
 
         if (isBranch()) {
@@ -484,7 +484,7 @@ namespace Git
 
     void Reference::updateHEAD(Result &result) const
     {
-        GW_D_CHECKED_VOID(Reference, result);
+        GW_CD_CHECKED_VOID(Reference, result);
         CHECK_DELETED_VOID(result);
 
         if (git_reference_is_branch(d->reference)) {

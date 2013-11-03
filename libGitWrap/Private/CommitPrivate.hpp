@@ -32,8 +32,8 @@ namespace Git
         class CommitPrivate : public ObjectPrivate
         {
         public:
-            CommitPrivate(RepositoryPrivate* repo, git_object* o);
-            CommitPrivate(RepositoryPrivate* repo, git_commit* o);
+            CommitPrivate(const RepositoryPrivate::Ptr& repo, git_object* o);
+            CommitPrivate(const RepositoryPrivate::Ptr& repo, git_commit* o);
 
         public:
             git_commit* o()             { return reinterpret_cast<git_commit*>(mObj); }

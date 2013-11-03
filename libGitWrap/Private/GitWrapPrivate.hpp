@@ -208,34 +208,53 @@ namespace Git
 
 }
 
+#define GW__CHECK(returns, result)\
+    if (!result) { return returns; } \
+    if (!d) { result.setInvalidObject(); return returns; }
+
+#define GW__CHECK_VOID(result)\
+    if (!result) { return; } \
+    if (!d) { result.setInvalidObject(); return; }
+
 #define GW_D(CLASS) \
     Internal::CLASS##Private* d = \
         static_cast<Internal::CLASS##Private*>(mData.data()); \
-    d->ensureThisIsNotConst()
+    ensureThisIsNotConst()
+
+#define GW_D_EX(CLASS) \
+    PrivatePtr d(static_cast<Private*>(mData.data())); \
+    ensureThisIsNotConst()
 
 #define GW_CD(CLASS) \
     const Internal::CLASS##Private* d = \
         static_cast<const Internal::CLASS##Private*>(mData.constData())
 
+#define GW_CD_EX(CLASS) \
+    const PrivatePtr d(static_cast<Private*>(mData.data()))
+
+#define GW_CD_EX_CHECKED(CLASS, returns, result) \
+    GW_CD_EX(CLASS); \
+    GW__CHECK(returns, result)
+
 #define GW_D_CHECKED(CLASS, returns, result) \
     GW_D(CLASS); \
-    if (!result) { return returns; } \
-    if (!d) { result.setInvalidObject(); return returns; }
+    GW__CHECK(returns, result)
+
+#define GW_D_EX_CHECKED(CLASS, returns, result) \
+    GW_D_EX(CLASS); \
+    GW__CHECK(returns, result)
 
 #define GW_CD_CHECKED(CLASS, returns, result) \
     GW_CD(CLASS); \
-    if (!result) { return returns; } \
-    if (!d) { result.setInvalidObject(); return returns; }
+    GW__CHECK(returns, result)
 
 // Wherever we have to use one of those two, we've made bad API design!
 #define GW_D_CHECKED_VOID(CLASS, result) \
     GW_D(CLASS); \
-    if (!result) { return; } \
-    if (!d) { result.setInvalidObject(); return; }
+    GW__CHECK_VOID(result)
 
 #define GW_CD_CHECKED_VOID(CLASS, result) \
     GW_CD(CLASS); \
-    if (!result) { return; } \
-    if (!d) { result.setInvalidObject(); return; }
+    GW__CHECK_VOID(result)
 
 #endif

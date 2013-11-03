@@ -27,13 +27,8 @@
 namespace Git
 {
 
-    IndexConflicts::IndexConflicts(Internal::IndexPrivate& _d)
-        : Base(_d)
-    {
-    }
-
     IndexConflicts::IndexConflicts(const IndexConflicts& other)
-        : Base(other)
+        : RepoObject(other)
     {
     }
 
@@ -43,14 +38,14 @@ namespace Git
 
     IndexConflicts& IndexConflicts::operator=(const IndexConflicts& other)
     {
-        Base::operator =(other);
+        RepoObject::operator =(other);
         return * this;
     }
 
     Index IndexConflicts::index() const
     {
-        GW_D(Index);
-        return Index(*d);
+        GW_CD_EX(Index);
+        return d;
     }
 
     void IndexConflicts::refresh()

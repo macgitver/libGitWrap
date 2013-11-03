@@ -30,9 +30,9 @@ namespace Git
         IndexConflictPrivate::IndexConflictPrivate(const git_index_entry *_from,
                                                    const git_index_entry *_ours,
                                                    const git_index_entry *_theirs)
-            : from  (*new IndexEntryPrivate(_from))
-            , ours  (*new IndexEntryPrivate(_ours))
-            , theirs(*new IndexEntryPrivate(_theirs))
+            : from  (IndexEntry::PrivatePtr(new IndexEntryPrivate(_from)))
+            , ours  (IndexEntry::PrivatePtr(new IndexEntryPrivate(_ours)))
+            , theirs(IndexEntry::PrivatePtr(new IndexEntryPrivate(_theirs)))
         {
         }
 
@@ -55,15 +55,10 @@ namespace Git
     {
     }
 
-    IndexConflict::IndexConflict(Internal::IndexConflictPrivate& _d)
-        : Base(_d)
-    {
-    }
-
     IndexConflict::IndexConflict(const IndexEntry& from,
                                  const IndexEntry& ours,
                                  const IndexEntry& theirs)
-        : Base(*new Internal::IndexConflictPrivate(from, ours, theirs))
+        : Base(PrivatePtr(new Private(from, ours, theirs)))
     {
     }
 

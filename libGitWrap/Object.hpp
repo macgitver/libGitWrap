@@ -37,11 +37,9 @@ namespace Git
      */
     class GITWRAP_API Object : public RepoObject
     {
-    public:
-        typedef Internal::ObjectPrivate Private;
+        GW_PRIVATE_DECL(Object, RepoObject, public);
 
     public:
-        Object(Internal::ObjectPrivate& _d);
         Object(const Object& other);
         Object();
         ~Object();

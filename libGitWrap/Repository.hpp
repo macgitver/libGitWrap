@@ -18,7 +18,6 @@
 #define GIT_REPOSITORY_H
 
 #include "libGitWrap/Base.hpp"
-#include "libGitWrap/Submodule.hpp"
 #include "libGitWrap/Remote.hpp"
 #include "libGitWrap/Object.hpp"
 
@@ -39,11 +38,9 @@ namespace Git
      */
     class GITWRAP_API Repository : public Base
     {
-    public:
-        typedef Internal::RepositoryPrivate Private;
+        GW_PRIVATE_DECL(Repository, Base, public);
 
     public:
-        explicit Repository(Internal::RepositoryPrivate& _d);
         Repository();
         Repository( const Repository& other );
         Repository& operator=( const Repository& other );

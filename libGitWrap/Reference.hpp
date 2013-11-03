@@ -30,9 +30,8 @@ namespace Git
 
     class GITWRAP_API Reference : public RepoObject
     {
+        GW_PRIVATE_DECL(Reference, RepoObject, public);
     public:
-        typedef Internal::ReferencePrivate Private;
-
         enum Type
         {
             Direct, Symbolic, Invalid = -1
@@ -40,7 +39,6 @@ namespace Git
 
     public:
         Reference();
-        Reference(Private& _d);
         Reference(const Reference& other);
         ~Reference();
         Reference& operator=(const Reference& other);

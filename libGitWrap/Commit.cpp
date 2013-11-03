@@ -31,13 +31,13 @@ namespace Git
 
     namespace Internal {
 
-        CommitPrivate::CommitPrivate(RepositoryPrivate *repo, git_commit *o)
+        CommitPrivate::CommitPrivate(const RepositoryPrivate::Ptr& repo, git_commit *o)
             : ObjectPrivate(repo, reinterpret_cast<git_object*>(o))
         {
             Q_ASSERT(o);
         }
 
-        CommitPrivate::CommitPrivate(RepositoryPrivate *repo, git_object *o)
+        CommitPrivate::CommitPrivate(const RepositoryPrivate::Ptr& repo, git_object *o)
             : ObjectPrivate(repo, o)
         {
             Q_ASSERT(o);
@@ -60,7 +60,7 @@ namespace Git
     {
     }
 
-    Commit::Commit(Private& _d)
+    Commit::Commit(const PrivatePtr& _d)
         : Object(_d)
     {
         GW_D(Commit);
@@ -78,7 +78,7 @@ namespace Git
 
     Tree Commit::tree( Result& result ) const
     {
-        GW_D_CHECKED(Commit, Tree(), result);
+        GW_CD_CHECKED(Commit, Tree(), result);
         git_tree* tree = NULL;
 
         result = git_commit_tree(&tree, d->o());
@@ -86,12 +86,12 @@ namespace Git
             return Tree();
         }
 
-        return *new Tree::Private(d->repo(), tree);
+        return Tree::PrivatePtr(new Tree::Private(d->repo(), tree));
     }
 
     ObjectId Commit::treeId( Result& result ) const
     {
-        GW_D_CHECKED(Commit, ObjectId(), result);
+        GW_CD_CHECKED(Commit, ObjectId(), result);
         return Private::oid2sha(git_commit_tree_id(d->o()));
     }
 
@@ -110,7 +110,7 @@ namespace Git
 
     Commit Commit::parentCommit(Result& result, unsigned int index) const
     {
-        GW_D_CHECKED(Commit, Commit(), result);
+        GW_CD_CHECKED(Commit, Commit(), result);
         git_commit* gitparent = NULL;
 
         result = git_commit_parent(&gitparent, d->o(), index);
@@ -118,7 +118,7 @@ namespace Git
             return Commit();
         }
 
-        return *new Internal::CommitPrivate(d->repo(), gitparent);
+        return PrivatePtr(new Private(d->repo(), gitparent));
     }
 
     ObjectId Commit::parentCommitId(Result& result, unsigned int index) const
@@ -149,7 +149,7 @@ namespace Git
                 return CommitList();
             }
 
-            objs.append(*new Internal::CommitPrivate(d->repo(), parent));
+            objs.append(PrivatePtr(new Private(d->repo(), parent)));
         }
 
         return objs;
@@ -157,7 +157,7 @@ namespace Git
 
     unsigned int Commit::numParentCommits() const
     {
-        GW_D(Commit);
+        GW_CD(Commit);
         if (!d) {
             return 0;
         }
@@ -307,7 +307,7 @@ namespace Git
             return Reference();
         }
 
-        return Reference( *new Reference::Private(d->repo(), ref));
+        return Reference::PrivatePtr(new Reference::Private(d->repo(), ref));
     }
 
     DiffList Commit::diffFromParent(Result& result, unsigned int index)

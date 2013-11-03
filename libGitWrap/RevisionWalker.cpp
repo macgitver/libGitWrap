@@ -26,7 +26,7 @@ namespace Git
     namespace Internal
     {
 
-        RevisionWalkerPrivate::RevisionWalkerPrivate(RepositoryPrivate* repo, git_revwalk* walker )
+        RevisionWalkerPrivate::RevisionWalkerPrivate(const RepositoryPrivate::Ptr& repo, git_revwalk* walker )
             : RepoObjectPrivate(repo)
             , mWalker(walker)
         {
@@ -44,7 +44,8 @@ namespace Git
     {
     }
 
-    RevisionWalker::RevisionWalker(Internal::RevisionWalkerPrivate& _d)
+
+    RevisionWalker::RevisionWalker(const RevisionWalker::PrivatePtr& _d)
         : RepoObject(_d)
     {
     }

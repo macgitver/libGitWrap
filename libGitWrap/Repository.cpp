@@ -26,6 +26,7 @@
 #include "libGitWrap/Blob.hpp"
 #include "libGitWrap/Commit.hpp"
 #include "libGitWrap/RevisionWalker.hpp"
+#include "libGitWrap/Submodule.hpp"
 
 #include "libGitWrap/Private/GitWrapPrivate.hpp"
 #include "libGitWrap/Private/IndexPrivate.hpp"
@@ -91,7 +92,10 @@ namespace Git
         {
             cb_append_reference_data *data = (cb_append_reference_data *)payload;
 
-            data->refs.append(*new ReferencePrivate(data->ptr, reference));
+            Repository::PrivatePtr repo(data->ptr);
+            Reference::PrivatePtr ref(new ReferencePrivate(repo, reference));
+
+            data->refs.append(ref);
 
             return 0;
         }
@@ -103,7 +107,7 @@ namespace Git
      * @brief       Create a Repository object
      * @param[in]   _d  Pointer to private data.
      */
-    Repository::Repository(Internal::RepositoryPrivate& _d )
+    Repository::Repository(const PrivatePtr& _d)
         : Base(_d)
     {
     }
@@ -186,7 +190,7 @@ namespace Git
             return Repository();
         }
 
-        return Repository(*new Internal::RepositoryPrivate(repo));
+        return PrivatePtr(new Private(repo));
     }
 
     /**
@@ -269,7 +273,7 @@ namespace Git
             return Repository();
         }
 
-        return Repository(*new Internal::RepositoryPrivate(repo));
+        return PrivatePtr(new Private(repo));
     }
 
     /**
@@ -351,10 +355,10 @@ namespace Git
                 return Index();
             }
 
-            d->mIndex = new Internal::IndexPrivate(d, index);
+            d->mIndex = new Index::Private(PrivatePtr(d), index);
         }
 
-        return Index(*d->mIndex);
+        return Index::PrivatePtr(d->mIndex);
     }
 
     /**
@@ -637,7 +641,7 @@ namespace Git
 
     Reference Repository::HEAD( Result& result ) const
     {
-        GW_D_CHECKED(Repository, Reference(), result);
+        GW_CD_EX_CHECKED(Repository, Reference(), result);
 
         git_reference* refHead = NULL;
 
@@ -647,12 +651,12 @@ namespace Git
             return Reference();
         }
 
-        return *new Internal::ReferencePrivate(d, refHead);
+        return Reference::PrivatePtr(new Reference::Private(PrivatePtr(d), refHead));
     }
 
     Object Repository::lookup( Result& result, const ObjectId& id, ObjectType ot )
     {
-        GW_D_CHECKED(Repository, Object(), result);
+        GW_D_EX_CHECKED(Repository, Object(), result);
 
         git_object* obj = NULL;
         git_otype gitObjType = Internal::objectType2gitotype(ot);
@@ -712,7 +716,7 @@ namespace Git
 
     RevisionWalker Repository::newWalker( Result& result )
     {
-        GW_D_CHECKED(Repository, RevisionWalker(), result);
+        GW_D_EX_CHECKED(Repository, RevisionWalker(), result);
         git_revwalk* walker = NULL;
 
         result = git_revwalk_new( &walker, d->mRepo );
@@ -721,7 +725,7 @@ namespace Git
             return RevisionWalker();
         }
 
-        return *new Internal::RevisionWalkerPrivate(d, walker);
+        return RevisionWalker::PrivatePtr(new RevisionWalker::Private(d, walker));
     }
 
     bool Repository::shouldIgnore(Result& result, const QString& filePath) const
@@ -749,7 +753,7 @@ namespace Git
      */
     Remote::List Repository::allRemotes(Result& result) const
     {
-        GW_CD_CHECKED(Repository, Remote::List(), result);
+        GW_CD_EX_CHECKED(Repository, Remote::List(), result);
 
         git_strarray arr;
         result = git_remote_list( &arr, d->mRepo );
@@ -764,8 +768,7 @@ namespace Git
             if (!result) {
                 return Remote::List();
             }
-            Remote rm = *new Internal::RemotePrivate(const_cast< Internal::RepositoryPrivate* >(d),
-                                                     remote);
+            Remote rm = Remote::PrivatePtr(new Remote::Private(d, remote));
             remotes.append(rm);
         }
 
@@ -807,7 +810,7 @@ namespace Git
      */
     Remote Repository::remote(Result& result, const QString& remoteName) const
     {
-        GW_CD_CHECKED(Repository, Remote(), result);
+        GW_CD_EX_CHECKED(Repository, Remote(), result);
 
         git_remote* remote = NULL;
         result = git_remote_load( &remote, d->mRepo, remoteName.toUtf8().constData() );
@@ -817,13 +820,14 @@ namespace Git
             return Remote();
         }
 
-        return *new Internal::RemotePrivate(const_cast<Internal::RepositoryPrivate*>(d), remote);
+        return Remote::PrivatePtr(new Remote::Private(d, remote));
     }
 
+    // ### Move To REMOTE
     Remote Repository::createRemote(Result& result, const QString& remoteName, const QString& url,
                                     const QString& fetchSpec)
     {
-        GW_D_CHECKED(Repository, Remote(), result);
+        GW_D_EX_CHECKED(Repository, Remote(), result);
 
         git_remote* remote = NULL;
         result = git_remote_create( &remote, d->mRepo, remoteName.toUtf8().constData(),
@@ -833,7 +837,7 @@ namespace Git
             return Remote();
         }
 
-        Remote remo = *new Internal::RemotePrivate(d, remote);
+        Remote remo = Remote::PrivatePtr(new Remote::Private(d, remote));
 
         if( !fetchSpec.isEmpty() )
         {
@@ -870,7 +874,7 @@ namespace Git
 
     DiffList Repository::diffIndexToWorkingDir( Result& result )
     {
-        GW_D_CHECKED(Repository, DiffList(), result);
+        GW_D_EX_CHECKED(Repository, DiffList(), result);
 
         git_diff_list* diffList = NULL;
         result = git_diff_index_to_workdir( &diffList, d->mRepo, NULL, NULL );
@@ -879,7 +883,7 @@ namespace Git
             return DiffList();
         }
 
-        return DiffList(*new Internal::DiffListPrivate(d, diffList));
+        return DiffList::PrivatePtr(new DiffList::Private(d, diffList));
     }
 
     namespace Internal
@@ -896,7 +900,8 @@ namespace Git
             cb_enum_submodules_t* d = static_cast< cb_enum_submodules_t* >( payload );
             Q_ASSERT( d && name );
 
-            d->subs.append( Submodule( d->repo, QString::fromUtf8( name ) ) );
+            Repository::PrivatePtr repo(d->repo);
+            d->subs.append( Submodule(repo, QString::fromUtf8( name ) ) );
             return 0;
         }
 
@@ -918,13 +923,13 @@ namespace Git
 
     Submodule Repository::submodule(Result& result, const QString& name)
     {
-        GW_D_CHECKED(Repository, Submodule(), result);
+        GW_D_EX_CHECKED(Repository, Submodule(), result);
         return Submodule(d, name);
     }
 
     Reference Repository::lookupRef(Result& result, const QString& refName, bool dwim)
     {
-        GW_D_CHECKED(Repository, Reference(), result);
+        GW_D_EX_CHECKED(Repository, Reference(), result);
 
         git_reference* ref = NULL;
         if ( dwim )
@@ -937,7 +942,7 @@ namespace Git
             return Reference();
         }
 
-        return *new Internal::ReferencePrivate( d, ref );
+        return Reference::PrivatePtr(new Reference::Private(d, ref));
     }
 
     /**

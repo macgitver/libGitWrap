@@ -43,7 +43,7 @@ namespace Git
     {
     }
 
-    Config::Config(Internal::ConfigPrivate& _d)
+    Config::Config(const PrivatePtr& _d)
         : Base(_d)
     {
     }
@@ -93,7 +93,7 @@ namespace Git
             return Config();
         }
 
-        return *new Internal::ConfigPrivate(cfg);
+        return PrivatePtr(new Private(cfg));
     }
 
     Config Config::user()
@@ -113,7 +113,7 @@ namespace Git
             return Config();
         }
 
-        return *new Internal::ConfigPrivate(cfg);
+        return PrivatePtr(new Private(cfg));
     }
 
     Config Config::file( const QString& fileName )
@@ -127,7 +127,7 @@ namespace Git
             return Config();
         }
 
-        return *new Internal::ConfigPrivate(cfg);
+        return PrivatePtr(new Private(cfg));
     }
 
     Config Config::create()
@@ -140,7 +140,7 @@ namespace Git
             return Config();
         }
 
-        return *new Internal::ConfigPrivate(cfg);
+        return PrivatePtr(new Private(cfg));
     }
 
     bool Config::addFile(const QString& fileName, int priority)

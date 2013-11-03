@@ -256,4 +256,25 @@ namespace Git
 
 }
 
+// Note, that macros like these are also a good way to hide the nasty administrative stuff from
+// Doxygen, later...
+
+#define GW_PRIVATE_DECL(CLASS, BASE, SCOPE) \
+    public: \
+        typedef Internal::CLASS##Private Private; \
+        typedef QExplicitlySharedDataPointer<Private> PrivatePtr; \
+    SCOPE: \
+        CLASS(const PrivatePtr& _d)
+
+#define GW_PRIVATE_DECL_EX(SHARE, CLASS, BASE, SCOPE) \
+    public: \
+        typedef Internal::SHARE##Private Private; \
+        typedef QExplicitlySharedDataPointer<Private> PrivatePtr; \
+    SCOPE: \
+        CLASS(const PrivatePtr& _d)
+
+#define GW_PRIVATE_DECL_INLINE(CLASS, BASE, SCOPE) \
+    GW_PRIVATE_DECL(CLASS, BASE, SCOPE) \
+        : BASE(_d) {}
+
 #endif

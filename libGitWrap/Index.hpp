@@ -31,8 +31,7 @@ namespace Git
 
     class GITWRAP_API Index : public RepoObject
     {
-    public:
-        explicit Index(Internal::IndexPrivate& _d);
+        GW_PRIVATE_DECL(Index, RepoObject, public);
 
     public:
         enum Stages {

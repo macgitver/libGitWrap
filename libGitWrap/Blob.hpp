@@ -39,12 +39,11 @@ namespace Git
     class GITWRAP_API Blob : public Object
     {
     public:
-        typedef Internal::BlobPrivate Private;
+        GW_PRIVATE_DECL(Blob, Object, public);
         enum { ObjectTypeId = otBlob };
 
     public:
         Blob();
-        Blob(Private& _d);
         Blob(const Blob& o);
     };
 

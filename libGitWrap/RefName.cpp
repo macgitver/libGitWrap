@@ -391,7 +391,7 @@ namespace Git
     }
 
     RefName::RefName(const QString& refName)
-        : Base(*new Internal::RefNamePrivate)
+        : Base(PrivatePtr(new Internal::RefNamePrivate))
     {
         GW_D(RefName);
         d->fqrn = refName;

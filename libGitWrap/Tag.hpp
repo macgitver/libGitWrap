@@ -36,13 +36,12 @@ namespace Git
      */
     class GITWRAP_API Tag : public Object
     {
+        GW_PRIVATE_DECL(Tag, Object, public);
     public:
-        typedef Internal::TagPrivate Private;
         enum { ObjectTypeId = otTag };
 
     public:
         Tag();
-        Tag(Private& _d);
         Tag(const Tag& o);
     };
 

@@ -33,8 +33,7 @@ namespace Git
 
     class IndexConflict : public Base
     {
-    public:
-        explicit IndexConflict(Internal::IndexConflictPrivate& _d);
+        GW_PRIVATE_DECL(IndexConflict, Base, public);
 
     public:
         IndexConflict();

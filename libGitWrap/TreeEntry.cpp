@@ -51,7 +51,7 @@ namespace Git
     {
     }
 
-    TreeEntry::TreeEntry(Private& _d)
+    TreeEntry::TreeEntry(const PrivatePtr& _d)
         : Base(_d)
     {
     }
@@ -76,7 +76,7 @@ namespace Git
         git_tree_entry* entry = git_tree_entry_dup(d->mEntry);
         Q_ASSERT(entry);
 
-        return *new Private(entry);
+        return PrivatePtr(new Private(entry));
     }
 
     ObjectId TreeEntry::sha1() const

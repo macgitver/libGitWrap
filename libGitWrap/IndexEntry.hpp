@@ -31,13 +31,11 @@ namespace Git
 
     class GITWRAP_API IndexEntry : public Base
     {
-    public:
-        typedef Internal::IndexEntryPrivate Private;
+        GW_PRIVATE_DECL(IndexEntry, Base, public);
 
     public:
         IndexEntry();
         IndexEntry(const IndexEntry &other);
-        IndexEntry(Internal::IndexEntryPrivate& _d);
         ~IndexEntry();
 
         IndexEntry& operator=( const IndexEntry& other );

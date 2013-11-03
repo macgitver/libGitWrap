@@ -33,7 +33,7 @@ namespace Git
         class ObjectPrivate : public RepoObjectPrivate
         {
         protected:
-            ObjectPrivate(RepositoryPrivate* repo, git_object* o);
+            ObjectPrivate(const RepositoryPrivate::Ptr& repo, git_object* o);
 
         public:
             ~ObjectPrivate();
@@ -42,7 +42,7 @@ namespace Git
             const git_object* o() const { return mObj; }
 
         public:
-            static ObjectPrivate& create(RepositoryPrivate* repo, git_object* o);
+            static Object::PrivatePtr create(const RepositoryPrivate::Ptr& repo, git_object* o);
 
         public:
             virtual git_otype otype() const = 0;

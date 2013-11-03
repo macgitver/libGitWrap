@@ -28,7 +28,7 @@ namespace Git
     namespace Internal
     {
 
-        TreeBuilderPrivate::TreeBuilderPrivate(RepositoryPrivate* repo, git_treebuilder* builder )
+        TreeBuilderPrivate::TreeBuilderPrivate(const RepositoryPrivate::Ptr& repo, git_treebuilder* builder )
             : RepoObjectPrivate( repo )
             , mBuilder( builder )
         {
@@ -51,7 +51,7 @@ namespace Git
     {
     }
 
-    TreeBuilder::TreeBuilder(Internal::TreeBuilderPrivate& _d)
+    TreeBuilder::TreeBuilder(const PrivatePtr& _d)
         : RepoObject(_d)
     {
     }
@@ -121,7 +121,7 @@ namespace Git
             return TreeEntry();
         }
 
-        return *new Internal::TreeEntryPrivate(entry, true);
+        return TreeEntry::PrivatePtr(new TreeEntry::Private(entry, true));
     }
 
 }

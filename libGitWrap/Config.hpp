@@ -39,9 +39,9 @@ namespace Git
      */
     class GITWRAP_API Config : public Base
     {
+        GW_PRIVATE_DECL(Config, Base, protected);
     public:
         Config();
-        Config(Internal::ConfigPrivate& _d);
 
     public:
         bool addFile( const QString& fileName, int priority );

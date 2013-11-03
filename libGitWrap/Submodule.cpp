@@ -91,8 +91,8 @@ namespace Git
     {
     }
 
-    Submodule::Submodule(Internal::RepositoryPrivate* repo, const QString& name)
-        : Base(*new Private)
+    Submodule::Submodule(const Repository::PrivatePtr& repo, const QString& name)
+        : Base(PrivatePtr(new Private))
     {
         GW_D(Submodule);
 
@@ -268,7 +268,7 @@ namespace Git
     Repository Submodule::repository() const
     {
         GW_CD(Submodule);
-        return Repository(*d->mMyRepo.data());
+        return d->mMyRepo;
     }
 
     bool Submodule::isOpened() const

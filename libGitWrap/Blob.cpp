@@ -24,13 +24,13 @@ namespace Git
 
     namespace Internal {
 
-        BlobPrivate::BlobPrivate(RepositoryPrivate* repo, git_blob* o)
+        BlobPrivate::BlobPrivate(const RepositoryPrivate::Ptr& repo, git_blob* o)
             : ObjectPrivate(repo, reinterpret_cast<git_object*>(o))
         {
             Q_ASSERT(o);
         }
 
-        BlobPrivate::BlobPrivate(RepositoryPrivate* repo, git_object* o)
+        BlobPrivate::BlobPrivate(const RepositoryPrivate::Ptr& repo, git_object* o)
             : ObjectPrivate(repo, o)
         {
             Q_ASSERT(o);
@@ -53,7 +53,7 @@ namespace Git
     {
     }
 
-    Blob::Blob(Private& _d)
+    Blob::Blob(const PrivatePtr& _d)
         : Object(_d)
     {
         GW_D(Blob);

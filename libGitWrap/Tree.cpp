@@ -30,13 +30,13 @@ namespace Git
 
     namespace Internal {
 
-        TreePrivate::TreePrivate(RepositoryPrivate* repo, git_tree* o)
+        TreePrivate::TreePrivate(const RepositoryPrivate::Ptr& repo, git_tree* o)
             : ObjectPrivate(repo, reinterpret_cast<git_object*>(o))
         {
             Q_ASSERT(o);
         }
 
-        TreePrivate::TreePrivate(RepositoryPrivate* repo, git_object* o)
+        TreePrivate::TreePrivate(const RepositoryPrivate::Ptr& repo, git_object* o)
             : ObjectPrivate(repo, o)
         {
             Q_ASSERT(o);
@@ -59,7 +59,7 @@ namespace Git
     {
     }
 
-    Tree::Tree(Private& _d)
+    Tree::Tree(const PrivatePtr& _d)
         : Object( _d )
     {
         GW_D(Tree);
@@ -95,7 +95,7 @@ namespace Git
             return Tree();
         }
 
-        return *new Tree::Private(d->repo(), subObject);
+        return PrivatePtr(new Tree::Private(d->repo(), subObject));
     }
 
     DiffList Tree::diffToTree(Result& result , Tree newTree)
@@ -110,7 +110,7 @@ namespace Git
             return DiffList();
         }
 
-        return DiffList(*new DiffList::Private(d->repo(), diffList));
+        return DiffList::PrivatePtr(new DiffList::Private(d->repo(), diffList));
     }
 
     DiffList Tree::diffToIndex(Result& result)
@@ -123,7 +123,7 @@ namespace Git
             return DiffList();
         }
 
-        return DiffList(*new DiffList::Private(d->repo(), diffList));
+        return DiffList::PrivatePtr(new DiffList::Private(d->repo(), diffList));
     }
 
     DiffList Tree::diffToWorkingDir( Result& result )
@@ -136,7 +136,7 @@ namespace Git
             return DiffList();
         }
 
-        return DiffList(*new DiffList::Private(d->repo(), diffList));
+        return DiffList::PrivatePtr(new DiffList::Private(d->repo(), diffList));
     }
 
     size_t Tree::entryCount() const
@@ -153,7 +153,7 @@ namespace Git
             return TreeEntry();
         }
         const git_tree_entry* entry = git_tree_entry_byindex(d->o(), index);
-        return *new TreeEntry::Private(entry);
+        return TreeEntry::PrivatePtr(new TreeEntry::Private(entry));
     }
 
     TreeEntry Tree::entry(const QString& fileName) const
@@ -165,7 +165,7 @@ namespace Git
         }
 
         const git_tree_entry* entry = git_tree_entry_byname(d->o(), fileName.toUtf8().constData());
-        return *new TreeEntry::Private(entry);
+        return TreeEntry::PrivatePtr(new TreeEntry::Private(entry));
     }
 
     void Tree::checkout(Result& result, bool force, const QStringList &paths) const

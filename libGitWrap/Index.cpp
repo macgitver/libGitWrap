@@ -35,7 +35,7 @@ namespace Git
     namespace Internal
     {
 
-        IndexPrivate::IndexPrivate(RepositoryPrivate *repo, git_index* index)
+        IndexPrivate::IndexPrivate(const RepositoryPrivate::Ptr& repo, git_index* index)
             : RepoObjectPrivate(repo)
             , index(index)
             , conflictsLoaded(false)
@@ -134,7 +134,7 @@ namespace Git
             // Out-Of-Memory case.
             git_index_new(&index);
 
-            mData = new Internal::IndexPrivate(NULL, index);
+            mData = new Internal::IndexPrivate(Repository::PrivatePtr(), index);
         }
     }
 
@@ -164,19 +164,7 @@ namespace Git
             return;
         }
 
-        mData = new Internal::IndexPrivate( NULL, index );
-    }
-
-    /**
-     * @internal
-     * @brief       Constructor
-     *
-     * @param[in]   _d  Internal data pointer to use for construction.
-     *
-     */
-    Index::Index(Internal::IndexPrivate& _d)
-        : RepoObject( _d )
-    {
+        mData = new Private(Repository::PrivatePtr(), index );
     }
 
     /**
@@ -221,7 +209,7 @@ namespace Git
     bool Index::isBare() const
     {
         GW_CD(Index);
-        return d->repo() == NULL;
+        return d->repo().data() == NULL;
     }
 
     /**
@@ -265,7 +253,7 @@ namespace Git
             result.setError(GIT_ENOTFOUND);
         }
 
-        return IndexEntry(*new Internal::IndexEntryPrivate(entry));
+        return IndexEntry::PrivatePtr(new IndexEntry::Private(entry));
     }
 
     /**
@@ -296,7 +284,7 @@ namespace Git
             result.setError(GIT_ENOTFOUND);
         }
 
-        return IndexEntry(*new Internal::IndexEntryPrivate(entry));
+        return IndexEntry::PrivatePtr(new IndexEntry::Private(entry));
     }
 
     /**
@@ -618,8 +606,8 @@ namespace Git
      */
     IndexConflicts Index::conflicts() const
     {
-        GW_D(Index);
-        return IndexConflicts(*d);
+        GW_CD_EX(Index);
+        return d;
     }
 
     /**
@@ -631,7 +619,7 @@ namespace Git
      */
     bool Index::hasConflicts() const
     {
-        GW_D(Index);
+        GW_CD(Index);
         return d && git_index_has_conflicts(d->index);
     }
 

@@ -39,7 +39,7 @@ namespace Git
         class IndexPrivate : public RepoObjectPrivate
         {
         public:
-            IndexPrivate(RepositoryPrivate* repo, git_index* index);
+            IndexPrivate(const RepositoryPrivate::Ptr& repo, git_index* index);
             ~IndexPrivate();
 
         public:

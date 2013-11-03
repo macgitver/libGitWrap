@@ -61,6 +61,15 @@ namespace Git
 
     protected:
         QExplicitlySharedDataPointer<Private> mData;
+
+    protected:
+        inline void ensureThisIsNotConst()
+        {
+            // This method is invoked from the GW_D macro. Its only purpose is to error out at
+            // compile time, if we casted from a const outer object. This is actually neccessary
+            // because QExplicitlySharedDataPointer seems to give a shit about const
+            // correctness.
+        }
     };
 
 }

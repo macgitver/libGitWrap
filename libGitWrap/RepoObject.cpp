@@ -26,15 +26,15 @@ namespace Git
     namespace Internal
     {
 
-        RepoObjectPrivate::RepoObjectPrivate(RepositoryPrivate* repo)
+        RepoObjectPrivate::RepoObjectPrivate(const RepositoryPrivate::Ptr& repo)
             : BasePrivate()
             , mRepo(repo)
         {
         }
 
-        RepositoryPrivate* RepoObjectPrivate::repo() const
+        Repository::PrivatePtr RepoObjectPrivate::repo() const
         {
-            return mRepo.data();
+            return mRepo;
         }
 
     }
@@ -43,7 +43,7 @@ namespace Git
     {
     }
 
-    RepoObject::RepoObject(Internal::RepoObjectPrivate& _d)
+    RepoObject::RepoObject(const PrivatePtr& _d)
         : Base(_d)
     {
     }
@@ -61,7 +61,7 @@ namespace Git
     Repository RepoObject::repository() const
     {
         GW_CD(RepoObject);
-        return Repository(*d->repo());
+        return d->repo();
     }
 
 }

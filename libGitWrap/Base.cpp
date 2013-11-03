@@ -54,8 +54,8 @@ namespace Git
     {
     }
 
-    Base::Base(Internal::BasePrivate &_d)
-        : mData(&_d)
+    Base::Base(const PrivatePtr& _d)
+        : mData(_d)
     {
     }
 

@@ -39,13 +39,12 @@ namespace Git
      */
     class GITWRAP_API Commit : public Object
     {
+        GW_PRIVATE_DECL(Commit, Object, public);
     public:
-        typedef Internal::CommitPrivate Private;
         enum { ObjectTypeId = otCommit };
 
     public:
         Commit();
-        Commit(Private& _d);
         Commit(const Commit& o);
 
     public:

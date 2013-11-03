@@ -57,11 +57,6 @@ namespace Git
     {
     }
 
-    IndexEntry::IndexEntry(Internal::IndexEntryPrivate& _d)
-        : Base(_d)
-    {
-    }
-
     IndexEntry::~IndexEntry()
     {
     }

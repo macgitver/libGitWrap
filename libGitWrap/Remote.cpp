@@ -26,7 +26,7 @@ namespace Git
     namespace Internal
     {
 
-        RemotePrivate::RemotePrivate(RepositoryPrivate* repo, git_remote* remote)
+        RemotePrivate::RemotePrivate(const RepositoryPrivate::Ptr& repo, git_remote* remote)
             : RepoObjectPrivate(repo)
             , mRemote(remote)
         {
@@ -44,7 +44,7 @@ namespace Git
     {
     }
 
-    Remote::Remote(Internal::RemotePrivate& _d)
+    Remote::Remote(const PrivatePtr& _d)
         : RepoObject(_d)
     {
     }

@@ -34,7 +34,7 @@ namespace Git
         class ReferencePrivate : public RepoObjectPrivate
         {
         public:
-            ReferencePrivate(RepositoryPrivate* repo, git_reference* ref);
+            ReferencePrivate(const RepositoryPrivate::Ptr& repo, git_reference* ref);
             ~ReferencePrivate();
 
         public:

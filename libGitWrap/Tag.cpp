@@ -24,13 +24,13 @@ namespace Git
 
     namespace Internal {
 
-        TagPrivate::TagPrivate(RepositoryPrivate* repo, git_tag* o)
+        TagPrivate::TagPrivate(const RepositoryPrivate::Ptr& repo, git_tag* o)
             : ObjectPrivate(repo, reinterpret_cast<git_object*>(o))
         {
             Q_ASSERT(o);
         }
 
-        TagPrivate::TagPrivate(RepositoryPrivate* repo, git_object* o)
+        TagPrivate::TagPrivate(const RepositoryPrivate::Ptr& repo, git_object* o)
             : ObjectPrivate(repo, o)
         {
             Q_ASSERT(o);
@@ -53,7 +53,7 @@ namespace Git
     {
     }
 
-    Tag::Tag(Private& _d)
+    Tag::Tag(const PrivatePtr& _d)
         : Object(_d)
     {
         GW_D(Tag);

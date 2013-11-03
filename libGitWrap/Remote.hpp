@@ -37,15 +37,13 @@ namespace Git
      */
     class GITWRAP_API Remote : public RepoObject
     {
-    public:
-        typedef Internal::RemotePrivate Private;
+        GW_PRIVATE_DECL(Remote, RepoObject, public);
 
     public:
         typedef RemoteList List;
 
     public:
         Remote();
-        Remote(Internal::RemotePrivate& _d);
         Remote(const Remote& other);
         ~Remote();
         Remote& operator=( const Remote& other );

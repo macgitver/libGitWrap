@@ -34,7 +34,7 @@ namespace Git
     namespace Internal
     {
 
-        ObjectPrivate::ObjectPrivate(RepositoryPrivate* repo, git_object* o)
+        ObjectPrivate::ObjectPrivate(const RepositoryPrivate::Ptr& repo, git_object* o)
             : RepoObjectPrivate(repo)
             , mObj(o)
         {
@@ -46,23 +46,25 @@ namespace Git
             git_object_free(mObj);
         }
 
-        ObjectPrivate& ObjectPrivate::create(RepositoryPrivate* repo, git_object* o)
+        Object::PrivatePtr ObjectPrivate::create(const RepositoryPrivate::Ptr& repo, git_object* o)
         {
             Q_ASSERT(o);
+            ObjectPrivate* op = NULL;
+
             switch (git_object_type(o)) {
-            case GIT_OBJ_TAG:     return *new TagPrivate(    repo, reinterpret_cast<git_tag*   >(o));
-            case GIT_OBJ_COMMIT:  return *new CommitPrivate( repo, reinterpret_cast<git_commit*>(o));
-            case GIT_OBJ_BLOB:    return *new TreePrivate(   repo, reinterpret_cast<git_tree*  >(o));
-            case GIT_OBJ_TREE:    return *new BlobPrivate(   repo, reinterpret_cast<git_blob*  >(o));
-            // Please, close your eyes before reading the next line...
-            default:              return *reinterpret_cast<ObjectPrivate*>(NULL);
-            // Oh, I told you to close your eyes. Well, looks evil? It is! So, what? ^^
+            case GIT_OBJ_TAG:    op = new TagPrivate(   repo, reinterpret_cast<git_tag*   >(o)); break;
+            case GIT_OBJ_COMMIT: op = new CommitPrivate(repo, reinterpret_cast<git_commit*>(o)); break;
+            case GIT_OBJ_BLOB:   op = new TreePrivate(  repo, reinterpret_cast<git_tree*  >(o)); break;
+            case GIT_OBJ_TREE:   op = new BlobPrivate(  repo, reinterpret_cast<git_blob*  >(o)); break;
+            default:             break;
             }
+
+            return Object::PrivatePtr(op);
         }
 
     }
 
-    Object::Object(Internal::ObjectPrivate& _d)
+    Object::Object(const PrivatePtr& _d)
         : RepoObject(_d)
     {
     }
@@ -125,8 +127,8 @@ namespace Git
     {
         Tree o;
         if (isTree()) {
-            GW_D(Tree);
-            o = Tree(*d);
+            GW_CD_EX(Tree);
+            o = Tree(d);
         }
         return o;
     }
@@ -135,8 +137,8 @@ namespace Git
     {
         Commit o;
         if (isCommit()) {
-            GW_D(Commit);
-            o = Commit(*d);
+            GW_CD_EX(Commit);
+            o = Commit(d);
         }
         return o;
     }
@@ -145,8 +147,8 @@ namespace Git
     {
         Blob o;
         if (isBlob()) {
-            GW_D(Blob);
-            o = Blob(*d);
+            GW_CD_EX(Blob);
+            o = Blob(d);
         }
         return o;
     }
@@ -155,33 +157,33 @@ namespace Git
     {
         Tag o;
         if (isTag()) {
-            GW_D(Tag);
-            o = Tag(*d);
+            GW_CD_EX(Tag);
+            o = Tag(d);
         }
         return o;
     }
 
     bool Object::isTree() const
     {
-        GW_D(Object);
+        GW_CD(Object);
         return d && d->objectType() == otTree;
     }
 
     bool Object::isTag() const
     {
-        GW_D(Object);
+        GW_CD(Object);
         return d && d->objectType() == otTag;
     }
 
     bool Object::isCommit() const
     {
-        GW_D(Object);
+        GW_CD(Object);
         return d && d->objectType() == otCommit;
     }
 
     bool Object::isBlob() const
     {
-        GW_D(Object);
+        GW_CD(Object);
         return d && d->objectType() == otBlob;
     }
 

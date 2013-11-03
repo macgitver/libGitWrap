@@ -34,9 +34,9 @@ namespace Git
      */
     class GITWRAP_API RevisionWalker : public RepoObject
     {
+        GW_PRIVATE_DECL(RevisionWalker, RepoObject, public);
     public:
         RevisionWalker();
-        RevisionWalker(Internal::RevisionWalkerPrivate& _d);
         ~RevisionWalker();
         RevisionWalker& operator=( const RevisionWalker& other );
 
@@ -61,6 +61,6 @@ namespace Git
 
 }
 
-Q_DECLARE_METATYPE( Git::RevisionWalker )
+Q_DECLARE_METATYPE(Git::RevisionWalker)
 
 #endif

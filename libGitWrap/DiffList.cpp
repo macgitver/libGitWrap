@@ -52,7 +52,7 @@ namespace Git
             return mChanges;
         }
 
-        DiffListPrivate::DiffListPrivate(RepositoryPrivate* repo, git_diff_list* difflist)
+        DiffListPrivate::DiffListPrivate(const RepositoryPrivate::Ptr& repo, git_diff_list* difflist)
             : RepoObjectPrivate(repo)
             , mDiffList(difflist)
         {
@@ -180,11 +180,6 @@ namespace Git
     }
 
     DiffList::DiffList()
-    {
-    }
-
-    DiffList::DiffList(Internal::DiffListPrivate& _d)
-        : RepoObject(_d)
     {
     }
 

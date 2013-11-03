@@ -32,8 +32,8 @@ namespace Git
         class TagPrivate : public ObjectPrivate
         {
         public:
-            TagPrivate(RepositoryPrivate* repo, git_object* o);
-            TagPrivate(RepositoryPrivate* repo, git_tag* o);
+            TagPrivate(const RepositoryPrivate::Ptr& repo, git_object* o);
+            TagPrivate(const RepositoryPrivate::Ptr& repo, git_tag* o);
 
         public:
             git_tag* o()                { return reinterpret_cast<git_tag*>(mObj); }

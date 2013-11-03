@@ -18,6 +18,7 @@
 #define GIT_SUBMODULE_H
 
 #include "libGitWrap/Base.hpp"
+#include "libGitWrap/Repository.hpp"
 
 namespace Git
 {
@@ -67,7 +68,7 @@ namespace Git
          * @param repo the owner repository
          * @param name is used to lookup the submodule in the owner repository
          */
-        Submodule(Internal::RepositoryPrivate* repo, const QString& name);
+        Submodule(const Repository::PrivatePtr& repo, const QString& name);
         Submodule(const Submodule& other);
         Submodule();
         ~Submodule();
