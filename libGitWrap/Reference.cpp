@@ -59,6 +59,16 @@ namespace Git
             , reference(ref)
         {
             Q_ASSERT(reference);
+            fqrn = QString::fromUtf8(git_reference_name(reference));
+        }
+
+        ReferencePrivate::ReferencePrivate(const RepositoryPrivate::Ptr& repo, const QString& name,
+                                           git_reference* ref)
+            : RefNamePrivate(repo, name)
+            , wasDeleted(false)
+            , reference(ref)
+        {
+            Q_ASSERT(reference);
         }
 
         ReferencePrivate::~ReferencePrivate()
@@ -92,7 +102,6 @@ namespace Git
     Reference::~Reference()
     {
     }
-
 
     Reference& Reference::operator=( const Reference& other )
     {
@@ -188,7 +197,7 @@ namespace Git
             return Reference();
         }
 
-        return PrivatePtr(new Private(repop, ref));
+        return PrivatePtr(new Private(repop, name, ref));
     }
 
 
@@ -235,7 +244,7 @@ namespace Git
             return QString();
         }
 
-        return QString::fromUtf8(git_reference_name(d->reference));
+        return d->fqrn;
     }
 
     /**
@@ -258,7 +267,7 @@ namespace Git
     QString Reference::prefix() const
     {
         const QString tmpName = name();
-        return tmpName.left( tmpName.length() - shorthand().length() );
+        return tmpName.left(tmpName.length() - shorthand().length());
     }
 
     QString Reference::shorthand() const
@@ -491,6 +500,8 @@ namespace Git
         result = git_reference_set_target(&newRef, d->reference, Private::sha(targetId));
 
         if (result && (newRef != d->reference)) {
+            // even though we have a nre d->reference now, the name did not change. So nothing to
+            // update down in RefName's data.
             git_reference_free(d->reference);
             d->reference = newRef;
         }
@@ -506,7 +517,10 @@ namespace Git
 
         if (result && (newRef != d->reference)) {
             git_reference_free(d->reference);
-            d->reference = newRef;
+
+            d->reference    = newRef;
+            d->fqrn         = newName;  // Reset RefName's data
+            d->isAnalyzed   = false;
         }
     }
 

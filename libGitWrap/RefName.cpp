@@ -229,6 +229,12 @@ namespace Git
         {
         }
 
+        RefNamePrivate::RefNamePrivate(const RepositoryPrivate::Ptr& repo, const QString& name)
+            : RepoObjectPrivate(repo)
+            , fqrn(name)
+        {
+        }
+
         bool RefNamePrivate::isRealReference() const
         {
             return false;

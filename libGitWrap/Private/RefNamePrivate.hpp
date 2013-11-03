@@ -75,6 +75,7 @@ namespace Git
         {
         protected:
             RefNamePrivate(const RepositoryPrivate::Ptr& repo);
+            RefNamePrivate(const RepositoryPrivate::Ptr& repo, const QString& name);
 
         public:
             RefNamePrivate();
