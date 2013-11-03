@@ -208,6 +208,7 @@ SET( PRI_HDR_FILES
     Private/IndexPrivate.hpp
     Private/ObjectPrivate.hpp
     Private/ReferencePrivate.hpp
+    Private/RefNamePrivate.hpp
     Private/RemotePrivate.hpp
     Private/RepoObjectPrivate.hpp
     Private/RepositoryPrivate.hpp

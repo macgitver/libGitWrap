@@ -23,6 +23,7 @@
 #include "libGitWrap/RefName.hpp"
 
 #include "libGitWrap/Private/BasePrivate.hpp"
+#include "libGitWrap/Private/RefNamePrivate.hpp"
 #include "libGitWrap/Private/GitWrapPrivate.hpp"
 
 namespace Git
@@ -196,52 +197,6 @@ namespace Git
     namespace Internal
     {
 
-        struct CustomMatches
-        {
-        public:
-            CustomMatches()
-                : id(-1)
-                , payload(NULL)
-            {
-            }/*
-
-            CustomMatches(const CustomMatches& o)
-                : id(o.id)
-                , regExp(o.regExp)
-                , payload(o.payload)
-            {
-            }*/
-
-            CustomMatches(const QRegExp& _re, int _id, void* _payload)
-                : id(_id)
-                , regExp(_re)
-                , payload(_payload)
-            {
-            }
-
-        public:
-            int                 id;
-            /*const*/ QRegExp   regExp;
-            void*               payload;
-        };
-
-        class RefNameMatches
-        {
-        public:
-            static RefNameMatches& self();
-
-        public:
-            const QRegExp           reNamespaces;
-            const QRegExp           reRemote;
-            const QRegExp           reScopes;
-            QVector<CustomMatches>  customMatches;
-            int                     nextId;
-
-        private:
-            static RefNameMatches* sSelf;
-            RefNameMatches();
-        };
-
         RefNameMatches* RefNameMatches::sSelf = NULL;
 
         RefNameMatches& RefNameMatches::self()
@@ -259,36 +214,6 @@ namespace Git
             , nextId(0)
         {
         }
-
-        class RefNamePrivate : public BasePrivate
-        {
-        public:
-            bool isAnalyzed     : 1;
-
-            bool isStage        : 1;
-            bool isBranch       : 1;
-            bool isTag          : 1;
-            bool isHead         : 1;
-            bool isMergeHead    : 1;
-            bool isCommitNote   : 1;
-            bool isPecuiliar    : 1;
-
-            QString fqrn;
-
-            QString remote;
-            QString name;
-            QStringList scopes;
-            QStringList namespaces;
-            QVector<int> customMatches;
-
-        public:
-            void ensureAnalyzed();
-            void analyze();
-
-        private:
-            void scopeTest(QString sub);
-            bool analyzeCustom();
-        };
 
         void RefNamePrivate::ensureAnalyzed()
         {
