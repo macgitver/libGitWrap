@@ -60,11 +60,11 @@ namespace Git
     {
     }
 
-    IndexConflict::IndexConflict(const IndexEntry& from,
-                                 const IndexEntry& ours,
-                                 const IndexEntry& theirs)
-        : Base(PrivatePtr(new Private(from, ours, theirs)))
+    IndexConflict IndexConflict::create(const IndexEntry& from,
+                                        const IndexEntry& ours,
+                                        const IndexEntry& theirs)
     {
+        return PrivatePtr(new Private(from, ours, theirs));
     }
 
     IndexConflict::IndexConflict(const IndexConflict& other)

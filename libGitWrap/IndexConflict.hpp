@@ -38,7 +38,11 @@ namespace Git
     public:
         IndexConflict();
         IndexConflict(const IndexConflict& other);
-        IndexConflict(const IndexEntry& from, const IndexEntry& ours, const IndexEntry& theirs);
+
+    public:
+        static IndexConflict create(const IndexEntry& from,
+                                    const IndexEntry& ours,
+                                    const IndexEntry& theirs);
 
     public:
         IndexEntry from() const;
