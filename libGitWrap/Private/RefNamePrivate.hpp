@@ -24,7 +24,7 @@
 #include <QStringList>
 #include <QRegExp>
 
-#include "libGitWrap/Private/BasePrivate.hpp"
+#include "libGitWrap/Private/RepoObjectPrivate.hpp"
 
 namespace Git
 {
@@ -71,8 +71,14 @@ namespace Git
             RefNameMatches();
         };
 
-        class RefNamePrivate : public BasePrivate
+        class RefNamePrivate : public RepoObjectPrivate
         {
+        protected:
+            RefNamePrivate(const RepositoryPrivate::Ptr& repo);
+
+        public:
+            RefNamePrivate();
+
         public:
             bool isAnalyzed     : 1;
 
@@ -93,6 +99,7 @@ namespace Git
             QVector<int> customMatches;
 
         public:
+            virtual bool isRealReference() const;
             void ensureAnalyzed();
             void analyze();
 

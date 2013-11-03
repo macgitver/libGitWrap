@@ -21,9 +21,11 @@
 #include <QStringBuilder>
 
 #include "libGitWrap/RefName.hpp"
+#include "libGitWrap/Reference.hpp"
 
 #include "libGitWrap/Private/BasePrivate.hpp"
 #include "libGitWrap/Private/RefNamePrivate.hpp"
+#include "libGitWrap/Private/ReferencePrivate.hpp"
 #include "libGitWrap/Private/GitWrapPrivate.hpp"
 
 namespace Git
@@ -215,6 +217,23 @@ namespace Git
         {
         }
 
+        // -- RefNamePrivate -------------------------------------------------------------------- >8
+
+        RefNamePrivate::RefNamePrivate()
+            : RepoObjectPrivate()
+        {
+        }
+
+        RefNamePrivate::RefNamePrivate(const RepositoryPrivate::Ptr& repo)
+            : RepoObjectPrivate(repo)
+        {
+        }
+
+        bool RefNamePrivate::isRealReference() const
+        {
+            return false;
+        }
+
         void RefNamePrivate::ensureAnalyzed()
         {
             if (isAnalyzed) {
@@ -310,13 +329,18 @@ namespace Git
     {
     }
 
+    RefName::RefName(const PrivatePtr& _d)
+        : RepoObject(_d)
+    {
+    }
+
     RefName::RefName(const RefName& other)
-        : Base(other)
+        : RepoObject(other)
     {
     }
 
     RefName::RefName(const QString& refName)
-        : Base(PrivatePtr(new Internal::RefNamePrivate))
+        : RepoObject(PrivatePtr(new Internal::RefNamePrivate))
     {
         GW_D(RefName);
         d->fqrn = refName;
@@ -670,6 +694,17 @@ namespace Git
         }
 
         return segments.join(QChar(L'/'));
+    }
+
+    Reference RefName::reference() const
+    {
+        GW_CD_EX(Reference);
+
+        if (d && d->isRealReference()) {
+            return Reference(d);
+        }
+
+        return Reference();
     }
 
 }

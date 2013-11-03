@@ -54,7 +54,7 @@ namespace Git
     {
 
         ReferencePrivate::ReferencePrivate(const RepositoryPrivate::Ptr& repo, git_reference* ref)
-            : RepoObjectPrivate(repo)
+            : RefNamePrivate(repo)
             , wasDeleted(false)
             , reference(ref)
         {
@@ -65,6 +65,12 @@ namespace Git
         {
             // We have to free the reference, no matter whether it was deleted or not.
             git_reference_free(reference);
+        }
+
+        bool ReferencePrivate::isRealReference() const
+        {
+            // This is used in RefName to determine if we can safely cast back to a Reference.
+            return true;
         }
 
     }
@@ -240,7 +246,8 @@ namespace Git
      */
     RefName Reference::nameAnalyzer() const
     {
-        return RefName(name());
+        GW_CD_EX(Reference);
+        return RefName(d);
     }
 
     /**

@@ -35,7 +35,8 @@ namespace Git
          */
         class RepoObjectPrivate : public BasePrivate
         {
-        public:
+        protected:
+            RepoObjectPrivate();
             RepoObjectPrivate(const RepositoryPrivate::Ptr& repo);
 
         public:

@@ -26,6 +26,11 @@ namespace Git
     namespace Internal
     {
 
+        RepoObjectPrivate::RepoObjectPrivate()
+            : BasePrivate()
+        {
+        }
+
         RepoObjectPrivate::RepoObjectPrivate(const RepositoryPrivate::Ptr& repo)
             : BasePrivate()
             , mRepo(repo)

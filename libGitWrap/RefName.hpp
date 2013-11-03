@@ -24,7 +24,7 @@
 #include <QStringList>
 #include <QRegExp>
 
-#include "libGitWrap/Base.hpp"
+#include "libGitWrap/RepoObject.hpp"
 
 namespace Git
 {
@@ -36,8 +36,10 @@ namespace Git
 
     }
 
-    class GITWRAP_API RefName : public Base
+    class GITWRAP_API RefName : public RepoObject
     {
+        GW_PRIVATE_DECL(RefName, RepoObject, public);
+
     public:
         RefName();
         RefName(const RefName& other);
@@ -80,6 +82,8 @@ namespace Git
         QString shorthand();
 
         bool matchesCustomRule(int id);
+
+        Reference reference() const;
 
     public:
         static int registerExpression(void* data, const QRegExp& regExp);
