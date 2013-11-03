@@ -28,6 +28,7 @@
 #include "libGitWrap/Private/IndexConflictPrivate.hpp"
 #include "libGitWrap/Private/RepositoryPrivate.hpp"
 #include "libGitWrap/Private/ObjectPrivate.hpp"
+#include "libGitWrap/Private/TreePrivate.hpp"
 
 namespace Git
 {
@@ -523,10 +524,8 @@ namespace Git
             return;
         }
 
-        Internal::ObjectPrivate* op = Internal::BasePrivate::dataOf<Object>(tree);
-        const git_tree* treeobj = (const git_tree*) op->o();
-
-        result = git_index_read_tree(d->index, treeobj);
+        Tree::Private* tp = Private::dataOf<Tree>(tree);
+        result = git_index_read_tree(d->index, tp->o());
 
         if (result) {
             d->clearKnownConflicts();
