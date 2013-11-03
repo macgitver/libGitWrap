@@ -32,6 +32,11 @@ namespace Git
     {
     }
 
+    IndexConflicts::IndexConflicts(const PrivatePtr& _d)
+        : RepoObject(_d)
+    {
+    }
+
     IndexConflicts::~IndexConflicts()
     {
     }

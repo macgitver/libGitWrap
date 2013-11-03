@@ -52,6 +52,11 @@ namespace Git
     {
     }
 
+    IndexEntry::IndexEntry(const PrivatePtr& _d)
+        : Base(_d)
+    {
+    }
+
     IndexEntry::IndexEntry(const IndexEntry& other)
         : Base(other)
     {

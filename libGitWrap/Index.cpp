@@ -139,6 +139,11 @@ namespace Git
         }
     }
 
+    Index::Index(const PrivatePtr& _d)
+        : RepoObject(_d)
+    {
+    }
+
     /**
      * @brief           Constructor
      *

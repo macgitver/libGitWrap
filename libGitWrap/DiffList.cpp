@@ -183,6 +183,11 @@ namespace Git
     {
     }
 
+    DiffList::DiffList(const PrivatePtr& _d)
+        : RepoObject(_d)
+    {
+    }
+
     DiffList::DiffList(const DiffList& o)
         : RepoObject(o)
     {

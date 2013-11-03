@@ -55,6 +55,11 @@ namespace Git
     {
     }
 
+    IndexConflict::IndexConflict(const PrivatePtr& _d)
+        : Base(_d)
+    {
+    }
+
     IndexConflict::IndexConflict(const IndexEntry& from,
                                  const IndexEntry& ours,
                                  const IndexEntry& theirs)

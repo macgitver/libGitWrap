@@ -178,6 +178,11 @@ namespace Git
 
         // -- CheckoutIndexOperationPrivate ----------------------------------------------------- >8
 
+        CheckoutIndexOperationPrivate::CheckoutIndexOperationPrivate(CheckoutIndexOperation *owner)
+            : CheckoutBaseOperationPrivate(owner)
+        {
+        }
+
         void CheckoutIndexOperationPrivate::run()
         {
             git_repository* grepo = NULL;
@@ -201,6 +206,11 @@ namespace Git
         }
 
         // -- CheckoutTreeOperationPrivate ------------------------------------------------------ >8
+
+        CheckoutTreeOperationPrivate::CheckoutTreeOperationPrivate(CheckoutTreeOperation *owner)
+            : CheckoutBaseOperationPrivate(owner)
+        {
+        }
 
         void CheckoutTreeOperationPrivate::run()
         {

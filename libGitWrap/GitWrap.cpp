@@ -119,6 +119,20 @@ namespace Git
             delete[] a.strings;
         }
 
+        FileInfo mkFileInfo(const git_diff_file* df)
+        {
+            if (!df) {
+                return FileInfo();
+            }
+
+            QString path;
+            if (df->path) {
+                path = QString::fromUtf8(df->path);
+            }
+            return FileInfo(path, ObjectId::fromRaw(df->oid.id), df->size, FileModes(df->mode),
+                            false, (df->flags & GIT_DIFF_FLAG_VALID_OID) != 0);
+        }
+
     }
 
     GitWrap::GitWrap()
@@ -150,20 +164,6 @@ namespace Git
 
         Internal::GitWrapTLS* tls = Internal::GitWrapPrivate::self->mTLStore.localData();
         return tls->mLastResult;
-    }
-
-    FileInfo mkFileInfo(const git_diff_file* df)
-    {
-        if (!df) {
-            return FileInfo();
-        }
-
-        QString path;
-        if (df->path) {
-            path = QString::fromUtf8(df->path);
-        }
-        return FileInfo(path, ObjectId::fromRaw(df->oid.id), df->size, FileModes(df->mode),
-                        false, (df->flags & GIT_DIFF_FLAG_VALID_OID) != 0);
     }
 
 }
