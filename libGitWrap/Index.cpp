@@ -118,59 +118,14 @@ namespace Git
     /**
      * @brief       Constructor
      *
-     * @param[in]   create      If `true`, an _in-memory_ Index will be created. An in-memory index
-     *                          can be used to perform index operations, but cannot be written to
-     *                          disc.
-     *                          If `false` (the default), an invalid Index object will be
-     *                          constructed, which is equal to a default constructed object.
-     *
      */
-    Index::Index( bool create )
+    Index::Index()
     {
-        if( create )
-        {
-            git_index* index = NULL;
-
-            // We can't do anything with a potential error; anyway: it can only error out in
-            // Out-Of-Memory case.
-            git_index_new(&index);
-
-            mData = new Internal::IndexPrivate(Repository::PrivatePtr(), index);
-        }
     }
 
     Index::Index(const PrivatePtr& _d)
         : RepoObject(_d)
     {
-    }
-
-    /**
-     * @brief           Constructor
-     *
-     * @param[in]       path    Path to read an index from.
-     *
-     * @param[in,out]   result  A Result object; see @ref GitWrapErrorHandling
-     *
-     * Creates a so called _bare_ index. A bare index is loaded from disc (from the @a path file)
-     * and can be stored back there. It is _not_ associated with any repository.
-     *
-     */
-    Index::Index(Result& result, const QString& path)
-    {
-        if(!result) {
-            // Simply keep ourselves invalid, as we cannot report
-            return;
-        }
-
-        git_index* index = NULL;
-
-        result = git_index_open( &index, path.toUtf8().constData() );
-        if (!result) {
-            // Simply keep ourselves invalid, as we cannot report
-            return;
-        }
-
-        mData = new Private(Repository::PrivatePtr(), index );
     }
 
     /**
@@ -204,6 +159,54 @@ namespace Git
     {
         RepoObject::operator=(other);
         return *this;
+    }
+
+    /**
+     * @brief       Create an in-memory index
+     *
+     * @return      The created _in-memory_ Index.
+     *
+     * An in-memory index can be used to perform index operations, but cannot be written to disc.
+     *
+     */
+    Index Index::createInMemory()
+    {
+        git_index* index = NULL;
+
+        // We can't do anything with a potential error; anyway: it can only error out in
+        // Out-Of-Memory case.
+        git_index_new(&index);
+
+        return PrivatePtr(new Private(Repository::PrivatePtr(), index));
+    }
+
+    /**
+     * @brief           Open an existing on disc index
+     *
+     * @param[in,out]   result  A Result object; see @ref GitWrapErrorHandling
+     *
+     * @param[in]       path    Path to read an index from.
+     *
+     * @return          The loaded index or an invalid Index object if anything went wrong.
+     *
+     * Creates a so called _bare_ index. A bare index is loaded from disc (from the @a path file)
+     * and can be stored back there. It is _not_ associated with any repository.
+     *
+     */
+    Index Index::openPath(Result& result, const QString& path)
+    {
+        if (!result) {
+            return Index();
+        }
+
+        git_index* index = NULL;
+        result = git_index_open( &index, path.toUtf8().constData() );
+
+        if (!result) {
+            return Index();
+        }
+
+        return PrivatePtr(new Private(Repository::PrivatePtr(), index));
     }
 
     /**
