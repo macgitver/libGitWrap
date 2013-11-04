@@ -132,6 +132,7 @@ namespace Git
         DiffList diffIndexToWorkingDir( Result& result );
 
         SubmoduleList submodules(Result& result);
+        QStringList submoduleNames(Result& result) const;
         Submodule submodule(Result& result, const QString& name) const;
     };
 

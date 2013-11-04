@@ -847,13 +847,21 @@ namespace Git
             Submodule::List     subs;
         };
 
-        static int cb_enum_submodules( git_submodule* sm, const char* name, void* payload )
+        static int cb_enum_submodules(git_submodule* sm, const char* name, void* payload)
         {
-            cb_enum_submodules_t* d = static_cast< cb_enum_submodules_t* >( payload );
-            Q_ASSERT( d && name );
+            cb_enum_submodules_t* d = static_cast<cb_enum_submodules_t*>(payload);
+            Q_ASSERT(d && name);
 
             Repository::PrivatePtr repo(d->repo);
             d->subs.append(new SubmodulePrivate(repo, QString::fromUtf8(name)));
+            return 0;
+        }
+
+        static int cb_enum_submodule_names(git_submodule* sm, const char* name, void* payload)
+        {
+            QStringList* sl = static_cast<QStringList*>(payload);
+            Q_ASSERT(sl && name);
+            sl->append(QString::fromUtf8(name));
             return 0;
         }
 
@@ -873,10 +881,28 @@ namespace Git
         return data.subs;
     }
 
+    QStringList Repository::submoduleNames(Result& result) const
+    {
+        GW_CD_CHECKED(Repository, QStringList(), result);
+        QStringList names;
+
+        result = git_submodule_foreach(d->mRepo, &Internal::cb_enum_submodule_names, &names);
+        if (!result) {
+            return QStringList();
+        }
+
+        return names;
+    }
+
     Submodule Repository::submodule(Result& result, const QString& name) const
     {
         GW_CD_EX_CHECKED(Repository, Submodule(), result);
-        return new Submodule::Private(d, name);
+
+        if (submoduleNames(result).contains(name)) {
+            return new Submodule::Private(d, name);
+        }
+
+        return Submodule();
     }
 
     Reference Repository::lookupRef(Result& result, const QString& refName, bool dwim)
