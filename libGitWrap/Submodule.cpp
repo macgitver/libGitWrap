@@ -19,38 +19,13 @@
 #include "libGitWrap/Repository.hpp"
 
 #include "libGitWrap/Private/RepositoryPrivate.hpp"
+#include "libGitWrap/Private/SubmodulePrivate.hpp"
 
 namespace Git
 {
 
     namespace Internal
     {
-
-        class SubmodulePrivate : public BasePrivate
-        {
-        public:
-            RepositoryPrivate::Ptr mOwnerRepo;
-            RepositoryPrivate::Ptr mMyRepo;
-            QString mName;
-
-        public:
-            inline git_submodule* getSM( Result& rc ) const
-            {
-                git_submodule* sm = NULL;
-
-                if( rc && mOwnerRepo && !mName.isEmpty() )
-                {
-                    rc = git_submodule_lookup( &sm, mOwnerRepo->mRepo,
-                                               mName.toUtf8().constData() );
-                    if( !rc )
-                    {
-                        return NULL;
-                    }
-                }
-
-                return sm;
-            }
-        };
 
         /**
          * @internal
@@ -85,35 +60,30 @@ namespace Git
 
             return s;
         }
+
+        SubmodulePrivate::SubmodulePrivate(const Repository::PrivatePtr& repo, const QString& name)
+            : RepoObjectPrivate(repo)
+        {
+            mName = name;
+        }
+
+        git_submodule* SubmodulePrivate::getSM(Result& rc) const
+        {
+            git_submodule* sm = NULL;
+
+            if (rc && repo() && !mName.isEmpty()) {
+                rc = git_submodule_lookup(&sm, repo()->mRepo, mName.toUtf8().constData());
+                if (!rc) {
+                    return NULL;
+                }
+            }
+
+            return sm;
+        }
     }
 
-    Submodule::Submodule()
-    {
-    }
+    GW_PRIVATE_IMPL(Submodule, RepoObject)
 
-    Submodule::Submodule(const Repository::PrivatePtr& repo, const QString& name)
-        : Base(PrivatePtr(new Private))
-    {
-        GW_D(Submodule);
-
-        d->mOwnerRepo = repo;
-        d->mName = name;
-    }
-
-    Submodule::Submodule(const Submodule& other)
-        : Base(other)
-    {
-    }
-
-    Submodule& Submodule::operator=( const Submodule& other )
-    {
-        Base::operator =(other);
-        return *this;
-    }
-
-    Submodule::~Submodule()
-    {
-    }
 
     QString Submodule::name() const
     {
@@ -265,7 +235,7 @@ namespace Git
         return ObjectId::fromRaw( oid->id );
     }
 
-    Repository Submodule::repository() const
+    Repository Submodule::subRepository() const
     {
         GW_CD(Submodule);
         return d->mMyRepo;

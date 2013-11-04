@@ -131,8 +131,8 @@ namespace Git
         DiffList diffTreeToWorkingDir( Result& result, Tree oldTree );
         DiffList diffIndexToWorkingDir( Result& result );
 
-        SubmoduleList submodules( Result& result );
-        Submodule submodule( Result& result, const QString& name );
+        SubmoduleList submodules(Result& result);
+        Submodule submodule(Result& result, const QString& name) const;
     };
 
     template< class T >

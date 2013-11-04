@@ -213,6 +213,7 @@ SET( PRI_HDR_FILES
     Private/RepoObjectPrivate.hpp
     Private/RepositoryPrivate.hpp
     Private/RevisionWalkerPrivate.hpp
+    Private/SubmodulePrivate.hpp
     Private/TagPrivate.hpp
     Private/TreeBuilderPrivate.hpp
     Private/TreeEntryPrivate.hpp

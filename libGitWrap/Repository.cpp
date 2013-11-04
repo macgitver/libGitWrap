@@ -35,6 +35,7 @@
 #include "libGitWrap/Private/ReferencePrivate.hpp"
 #include "libGitWrap/Private/DiffListPrivate.hpp"
 #include "libGitWrap/Private/ObjectPrivate.hpp"
+#include "libGitWrap/Private/SubmodulePrivate.hpp"
 #include "libGitWrap/Private/RevisionWalkerPrivate.hpp"
 
 #include <QDir>
@@ -852,7 +853,7 @@ namespace Git
             Q_ASSERT( d && name );
 
             Repository::PrivatePtr repo(d->repo);
-            d->subs.append( Submodule(repo, QString::fromUtf8( name ) ) );
+            d->subs.append(new SubmodulePrivate(repo, QString::fromUtf8(name)));
             return 0;
         }
 
@@ -872,10 +873,10 @@ namespace Git
         return data.subs;
     }
 
-    Submodule Repository::submodule(Result& result, const QString& name)
+    Submodule Repository::submodule(Result& result, const QString& name) const
     {
-        GW_D_EX_CHECKED(Repository, Submodule(), result);
-        return Submodule(d, name);
+        GW_CD_EX_CHECKED(Repository, Submodule(), result);
+        return new Submodule::Private(d, name);
     }
 
     Reference Repository::lookupRef(Result& result, const QString& refName, bool dwim)
