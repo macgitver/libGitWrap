@@ -97,22 +97,7 @@ namespace Git
         ObjectId wdOid() const;
 
     public:
-        Git::Repository subRepository() const;
-
-        /**
-         * @brief Opens a submodule's repository.
-         *
-         * @return true, when repoitory could be opened successfully; false otherwise
-         */
-        bool open(Result &result);
-
-        /**
-         * @brief Closes the submodule's repository.
-         */
-        void close();
-
-        bool isOpened() const;
-
+        Repository subRepository(Result& result);
         StatusFlags status(Result &result) const;
     };
 

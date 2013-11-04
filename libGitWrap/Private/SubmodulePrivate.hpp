@@ -36,10 +36,11 @@ namespace Git
 
         public:
             git_submodule* getSM( Result& rc ) const;
+            bool open(Result& result);
 
         public:
-            QString mName;
-            RepositoryPrivate::Ptr mMyRepo;
+            QString             mName;
+            RepositoryPrivate*  mSubRepo;
         };
 
     }

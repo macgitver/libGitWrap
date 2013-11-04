@@ -63,8 +63,9 @@ namespace Git
 
         SubmodulePrivate::SubmodulePrivate(const Repository::PrivatePtr& repo, const QString& name)
             : RepoObjectPrivate(repo)
+            , mName(name)
+            , mSubRepo(NULL)
         {
-            mName = name;
         }
 
         git_submodule* SubmodulePrivate::getSM(Result& rc) const
@@ -80,6 +81,28 @@ namespace Git
 
             return sm;
         }
+
+        bool SubmodulePrivate::open(Result& result)
+        {
+            if (!result) {
+                return false;
+            }
+
+            // already open?
+            if (mSubRepo) {
+                return true;
+            }
+
+            git_repository* submodule_repo = NULL;
+            result = git_submodule_open(&submodule_repo, getSM(result));
+            if (!result) {
+                return false;
+            }
+
+            mSubRepo = new Repository::Private(submodule_repo);
+            return true;
+        }
+
     }
 
     GW_PRIVATE_IMPL(Submodule, RepoObject)
@@ -235,16 +258,29 @@ namespace Git
         return ObjectId::fromRaw( oid->id );
     }
 
-    Repository Submodule::subRepository() const
+    /**
+     * @brief           Get a Repository object for the submodule
+     *
+     * This method tries to open the submodule as a Repository and returns it. Subsequent calls will
+     * return the same Repository object until that goes totally out of scope.
+     *
+     * @param[in,out]	result  A Result object; see @ref GitWrapErrorHandling
+     *
+     * @return          An existing or new Repository object for the submodule. An invalid
+     *                  Repository object if the submodule cannot be opened.
+     *
+     */
+    Repository Submodule::subRepository(Result& result)
     {
-        GW_CD(Submodule);
-        return d->mMyRepo;
-    }
+        GW_D_CHECKED(Submodule, Repository(), result);
 
-    bool Submodule::isOpened() const
-    {
-        GW_CD(Submodule);
-        return d && d->mMyRepo;
+        if (!d->mSubRepo) {
+            if (!d->open(result)) {
+                return Repository();
+            }
+        }
+
+        return d->mSubRepo;
     }
 
     StatusFlags Submodule::status(Result &result) const
@@ -259,31 +295,6 @@ namespace Git
         result = git_submodule_status( &status, d->getSM( result ) );
 
         return Internal::convertSubmoduleStatus( status );
-    }
-
-    bool Submodule::open( Result& result )
-    {
-        GW_D(Submodule);
-        if( !result || !d )
-            return false;
-
-        // already open?
-        if( d->mMyRepo )
-            return true;
-
-        git_repository *submodule_repo = 0;
-        result = git_submodule_open(&submodule_repo, d->getSM( result ) );
-        if (!result)
-            return false;
-
-        d->mMyRepo = new Internal::RepositoryPrivate( submodule_repo );
-        return true;
-    }
-
-    void Submodule::close()
-    {
-        GW_D(Submodule);
-        d->mMyRepo = NULL;
     }
 
 }

@@ -56,6 +56,12 @@ namespace Git
         {
             Q_ASSERT( mRepo );
 
+            if (openedFrom.isValid()) {
+                Submodule::Private* smp = dataOf<Submodule>(openedFrom);
+                Q_ASSERT(smp);
+                smp->mSubRepo = NULL;
+            }
+
             // This assert may not look right in the first place, but it IS:
             // mIndex is of type IndexPrivate* and will get a value as soon as Repository::index()
             // is called for the first time. IndexPrivate is a RepoObject and as such it increases
@@ -983,6 +989,40 @@ namespace Git
         }
 
         result = git_repository_set_head_detached(d->mRepo, Private::sha(commit.id()));
+    }
+
+    /**
+     * @brief       Access the superproject for this repository
+     *
+     * @return      If this repository was opened via Submodule::subRepository(), the Repository
+     *              that owns the Submodule object from which this repository was opened. Otherwise
+     *              an invalid Repository() object will be returned.
+     *
+     */
+    Repository Repository::superproject() const
+    {
+        return superprojectSubmodule().repository();
+    }
+
+    /**
+     * @brief       Access the superproject's submodule for this repository
+     *
+     * @return      If this repository was opened via Submodule::subRepository(), this will return
+     *              the Submodule object from which it was opened.
+     *
+     */
+    Submodule Repository::superprojectSubmodule() const
+    {
+        GW_CD(Repository);
+        if (!d) {
+            return Submodule();
+        }
+
+        if (!d->openedFrom.isValid()) {
+            return Submodule();
+        }
+
+        return d->openedFrom;
     }
 
 }

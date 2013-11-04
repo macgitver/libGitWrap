@@ -81,6 +81,9 @@ namespace Git
         bool renameBranch( const QString& oldName, const QString& newName, bool force /* = false */,
                            Result& result );
 
+        Repository superproject() const;
+        Submodule superprojectSubmodule() const;
+
         Index index( Result& result );
 
         Git::StatusFlags status(Result &result, const QString &fileName) const;
