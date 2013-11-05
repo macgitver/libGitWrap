@@ -118,6 +118,7 @@ SET( SRC_FILES
 
     Base.cpp
     Blob.cpp
+    BranchRef.cpp
     ChangeListConsumer.cpp
     Commit.cpp
     Config.cpp
@@ -127,6 +128,7 @@ SET( SRC_FILES
     IndexConflict.cpp
     IndexConflicts.cpp
     IndexEntry.cpp
+    NoteRef.cpp
     Object.cpp
     ObjectId.cpp
     PatchConsumer.cpp
@@ -141,6 +143,7 @@ SET( SRC_FILES
     Signature.cpp
     Submodule.cpp
     Tag.cpp
+    TagRef.cpp
     Tree.cpp
     TreeBuilder.cpp
     TreeEntry.cpp
@@ -158,6 +161,7 @@ SET( PUB_HDR_FILES
 
     Base.hpp
     Blob.hpp
+    BranchRef.hpp
     ChangeListConsumer.hpp
     Commit.hpp
     Config.hpp
@@ -168,6 +172,7 @@ SET( PUB_HDR_FILES
     IndexConflict.hpp
     IndexConflicts.hpp
     IndexEntry.hpp
+    NoteRef.hpp
     Object.hpp
     ObjectBlob.hpp
     ObjectCommit.hpp
@@ -185,6 +190,7 @@ SET( PUB_HDR_FILES
     Signature.hpp
     Submodule.hpp
     Tag.hpp
+    TagRef.hpp
     Tree.hpp
     TreeBuilder.hpp
     TreeEntry.hpp
