@@ -71,6 +71,13 @@ namespace Git
             Q_ASSERT(reference);
         }
 
+        ReferencePrivate::ReferencePrivate(git_reference* ref, const RefNamePrivate* refName)
+            : RefNamePrivate(refName)
+            , wasDeleted(false)
+            , reference(ref)
+        {
+        }
+
         ReferencePrivate::~ReferencePrivate()
         {
             // We have to free the reference, no matter whether it was deleted or not.

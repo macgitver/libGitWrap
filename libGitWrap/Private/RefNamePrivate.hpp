@@ -32,6 +32,8 @@ namespace Git
     namespace Internal
     {
 
+        class ReferencePrivate;
+
         struct CustomMatches
         {
         public:
@@ -74,6 +76,8 @@ namespace Git
         class RefNamePrivate : public RepoObjectPrivate
         {
         protected:
+            RefNamePrivate(const RefNamePrivate* refName);
+        public:
             RefNamePrivate(const RepositoryPrivate::Ptr& repo);
             RefNamePrivate(const RepositoryPrivate::Ptr& repo, const QString& name);
 

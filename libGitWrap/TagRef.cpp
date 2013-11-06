@@ -2,6 +2,7 @@
  * MacGitver
  * Copyright (C) 2012-2013 The MacGitver-Developers <dev@macgitver.org>
  *
+ * (C) Sascha Cunz <sascha@macgitver.org>
  * (C) Nils Fenner <nilsfenner@web.de>
  * (C) Cunz RaD Ltd.
  *
@@ -17,14 +18,7 @@
  *
  */
 
-/**
- * @class       TagRef
- * @ingroup     GitWrap
- * @brief       Represents a git tag reference object.
- *
- */
-
-#include "TagRef.hpp"
+#include "libGitWrap/TagRef.hpp"
 
 namespace Git
 {

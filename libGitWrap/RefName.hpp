@@ -41,6 +41,7 @@ namespace Git
         GW_PRIVATE_DECL(RefName, RepoObject, public)
 
     public:
+        explicit RefName(const Repository& repo, const QString& refName);
         explicit RefName(const QString& refName);
 
     public:

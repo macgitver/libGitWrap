@@ -2,6 +2,7 @@
  * MacGitver
  * Copyright (C) 2012-2013 The MacGitver-Developers <dev@macgitver.org>
  *
+ * (C) Sascha Cunz <sascha@macgitver.org>
  * (C) Nils Fenner <nilsfenner@web.de>
  * (C) Cunz RaD Ltd.
  *
@@ -17,18 +18,31 @@
  *
  */
 
-/**
- * @class       BranchRef
- * @ingroup     GitWrap
- * @brief       Represents a git branch reference object.
- *
- */
-
-#include "BranchRef.hpp"
+#include "libGitWrap/BranchRef.hpp"
+#include "libGitWrap/Private/BranchRefPrivate.hpp"
 
 namespace Git
 {
 
+    namespace Internal
+    {
 
+        BranchRefPrivate::BranchRefPrivate(const RepositoryPrivate::Ptr& repo,
+                                           git_reference* reference)
+            : ReferencePrivate(repo, reference)
+        {
+            #ifdef QT_DEBUG
+            // We want this constructor to analyze only for the assert...
+            ensureAnalyzed();
+            Q_ASSERT(isBranch);
+            #endif
+        }
+
+        BranchRefPrivate::BranchRefPrivate(git_reference* reference, const RefNamePrivate* refName)
+            : ReferencePrivate(reference, refName)
+        {
+        }
+
+    }
 
 }

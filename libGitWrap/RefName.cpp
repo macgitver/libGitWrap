@@ -221,16 +221,39 @@ namespace Git
 
         RefNamePrivate::RefNamePrivate()
             : RepoObjectPrivate()
+            , isAnalyzed(false)
+        {
+        }
+
+        RefNamePrivate::RefNamePrivate(const RefNamePrivate* refName)
+            : RepoObjectPrivate(refName->repo())
+            , isAnalyzed(refName->isAnalyzed)
+            , isStage(refName->isStage)
+            , isBranch(refName->isBranch)
+            , isTag(refName->isTag)
+            , isNote(refName->isNote)
+            , isHead(refName->isHead)
+            , isMergeHead(refName->isMergeHead)
+            , isCommitNote(refName->isCommitNote)
+            , isPecuiliar(refName->isPecuiliar)
+            , fqrn(refName->fqrn)
+            , remote(refName->remote)
+            , name(refName->name)
+            , scopes(refName->scopes)
+            , namespaces(refName->namespaces)
+            , customMatches(refName->customMatches)
         {
         }
 
         RefNamePrivate::RefNamePrivate(const RepositoryPrivate::Ptr& repo)
             : RepoObjectPrivate(repo)
+            , isAnalyzed(false)
         {
         }
 
         RefNamePrivate::RefNamePrivate(const RepositoryPrivate::Ptr& repo, const QString& name)
             : RepoObjectPrivate(repo)
+            , isAnalyzed(false)
             , fqrn(name)
         {
         }
@@ -336,12 +359,32 @@ namespace Git
 
     GW_PRIVATE_IMPL(RefName, RepoObject)
 
+    /**
+     * @brief       Create a RefName (without Repository association)
+     *
+     * @param[in]   refName     Fully qualified reference name to analyze.
+     *
+     * Some kind of analyzations can only be performed when a repository is given.
+     *
+     */
     RefName::RefName(const QString& refName)
-        : RepoObject(PrivatePtr(new Internal::RefNamePrivate))
+        : RepoObject(new Private)
     {
         GW_D(RefName);
         d->fqrn = refName;
-        d->isAnalyzed = false;
+    }
+
+    /**
+     * @brief       Create a RefName (with Repository association)
+     *
+     * @param[in]   refName     Fully qualified reference name to analyze.
+     *
+     * Some kind of analyzations can only be performed when a repository is given.
+     *
+     */
+    RefName::RefName(const Repository& repo, const QString& refName)
+        : RepoObject(new Private(Repository::PrivatePtr(Private::dataOf<Repository>(repo)),refName))
+    {
     }
 
     /**

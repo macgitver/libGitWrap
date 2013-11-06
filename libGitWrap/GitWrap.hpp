@@ -52,8 +52,11 @@ namespace Git
     class Object;
     class ObjectId;
     class Blob;
+    class BranchRef;
     class Commit;
+    class NoteRef;
     class Tag;
+    class TagRef;
     class Tree;
     class PatchConsumer;
     class RefName;

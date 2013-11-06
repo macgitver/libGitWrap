@@ -2,6 +2,7 @@
  * MacGitver
  * Copyright (C) 2012-2013 The MacGitver-Developers <dev@macgitver.org>
  *
+ * (C) Sascha Cunz <sascha@macgitver.org>
  * (C) Nils Fenner <nilsfenner@web.de>
  * (C) Cunz RaD Ltd.
  *
@@ -17,18 +18,26 @@
  *
  */
 
-#ifndef GIT_TAG_REF_H
-#define GIT_TAG_REF_H
+#ifndef GITWRAP_TAG_REF_HPP
+#define GITWRAP_TAG_REF_HPP
 
-#include "libGitWrap/GitWrap.hpp"
 #include "libGitWrap/Reference.hpp"
 
 namespace Git
 {
 
+    namespace Internal
+    {
+
+        class TagRefPrivate;
+
+    }
+
     class GITWRAP_API TagRef : public Reference
     {
-        //GW_PRIVATE_DECL(TagRef, Reference, public)
+        GW_PRIVATE_DECL(TagRef, Reference, public)
+
+    public:
     };
 
 }

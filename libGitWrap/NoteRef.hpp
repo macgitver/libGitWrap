@@ -2,6 +2,7 @@
  * MacGitver
  * Copyright (C) 2012-2013 The MacGitver-Developers <dev@macgitver.org>
  *
+ * (C) Sascha Cunz <sascha@macgitver.org>
  * (C) Nils Fenner <nilsfenner@web.de>
  * (C) Cunz RaD Ltd.
  *
@@ -17,18 +18,26 @@
  *
  */
 
-#ifndef GIT_NOTE_REF_H
-#define GIT_NOTE_REF_H
+#ifndef GITWRAP_NOTE_REF_HPP
+#define GITWRAP_NOTE_REF_HPP
 
-#include "libGitWrap/GitWrap.hpp"
 #include "libGitWrap/Reference.hpp"
 
 namespace Git
 {
 
+    namespace Internal
+    {
+
+        class NoteRefPrivate;
+
+    }
+
     class GITWRAP_API NoteRef : public Reference
     {
-        //GW_PRIVATE_DECL(NoteRef, Reference, public)
+        GW_PRIVATE_DECL(NoteRef, Reference, public)
+
+    public:
     };
 
 }

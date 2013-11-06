@@ -1,10 +1,6 @@
 /*
  * MacGitver
- * Copyright (C) 2012-2013 The MacGitver-Developers <dev@macgitver.org>
- *
- * (C) Sascha Cunz <sascha@macgitver.org>
- * (C) Nils Fenner <nilsfenner@web.de>
- * (C) Cunz RaD Ltd.
+ * Copyright (C) 2012-2013 Sascha Cunz <sascha@babbelbox.org>
  *
  * This program is free software; you can redistribute it and/or modify it under the terms of the
  * GNU General Public License (Version 2) as published by the Free Software Foundation.
@@ -18,11 +14,11 @@
  *
  */
 
-#ifndef GITWRAP_BRANCH_REF_HPP
-#define GITWRAP_BRANCH_REF_HPP
+#ifndef GITWRAP_BRANCH_REF_PRIVATE_HPP
+#define GITWRAP_BRANCH_REF_PRIVATE_HPP
 #pragma once
 
-#include "libGitWrap/Reference.hpp"
+#include "libGitWrap/Private/ReferencePrivate.hpp"
 
 namespace Git
 {
@@ -30,19 +26,15 @@ namespace Git
     namespace Internal
     {
 
-        class BranchRefPrivate;
+        class BranchRefPrivate : public ReferencePrivate
+        {
+        public:
+            BranchRefPrivate(const RepositoryPrivate::Ptr& repo, git_reference* reference);
+            BranchRefPrivate(git_reference* reference, const RefNamePrivate* refName);
+        };
 
     }
 
-    class GITWRAP_API BranchRef : public Reference
-    {
-        GW_PRIVATE_DECL(BranchRef, Reference, public)
-
-    public:
-    };
-
 }
-
-Q_DECLARE_METATYPE(Git::BranchRef)
 
 #endif
