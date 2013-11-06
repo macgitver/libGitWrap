@@ -205,6 +205,7 @@ SET( PRI_HDR_FILES
 
     Private/BasePrivate.hpp
     Private/BlobPrivate.hpp
+    Private/BranchRefPrivate.hpp
     Private/CommitPrivate.hpp
     Private/ConfigPrivate.hpp
     Private/DiffListPrivate.hpp
@@ -213,6 +214,7 @@ SET( PRI_HDR_FILES
     Private/IndexEntryPrivate.hpp
     Private/IndexPrivate.hpp
     Private/ObjectPrivate.hpp
+    Private/NoteRefPrivate.hpp
     Private/ReferencePrivate.hpp
     Private/RefNamePrivate.hpp
     Private/RemotePrivate.hpp
@@ -221,6 +223,7 @@ SET( PRI_HDR_FILES
     Private/RevisionWalkerPrivate.hpp
     Private/SubmodulePrivate.hpp
     Private/TagPrivate.hpp
+    Private/TagRefPrivate.hpp
     Private/TreeBuilderPrivate.hpp
     Private/TreeEntryPrivate.hpp
     Private/TreePrivate.hpp
