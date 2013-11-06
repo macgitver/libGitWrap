@@ -35,6 +35,9 @@ namespace Git
         public:
             NoteRefPrivate(const RepositoryPrivate::Ptr& repo, git_reference* reference);
             NoteRefPrivate(git_reference* reference, const RefNamePrivate* refName);
+
+        public:
+            ReferenceKinds kind() const;
         };
 
     }

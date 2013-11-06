@@ -231,6 +231,23 @@ namespace Git
         SubmoduleAttr       = 0160000
     };
 
+    enum ReferenceTypes
+    {
+        ReferenceDirect,
+        ReferenceSymbolic,
+
+        ReferenceInvalid = -1
+    };
+
+    enum ReferenceKinds
+    {
+        BranchReference,
+        TagReference,
+        NoteReference,
+
+        UnknownReference
+    };
+
     enum CheckoutMode
     {
         CheckoutDryRun,

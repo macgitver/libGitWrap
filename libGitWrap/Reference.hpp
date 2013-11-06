@@ -34,12 +34,6 @@ namespace Git
     {
         GW_PRIVATE_DECL(Reference, RepoObject, public)
     public:
-        enum Type
-        {
-            Direct, Symbolic, Invalid = -1
-        };
-
-    public:
         int compare(const Reference& other) const;
 
     public:
@@ -62,11 +56,11 @@ namespace Git
 
         RefName nameAnalyzer() const;
 
-        GW_DEPRECATED Type type( Result& result ) const             { return type(); }
-        GW_DEPRECATED ObjectId objectId( Result& result ) const     { return objectId(); }
-        GW_DEPRECATED QString target( Result& result ) const        { return target(); }
+        GW_DEPRECATED ReferenceTypes type(Result& result) const   { return type(); }
+        GW_DEPRECATED ObjectId objectId(Result& result) const     { return objectId(); }
+        GW_DEPRECATED QString target(Result& result) const        { return target(); }
 
-        Type type() const;
+        ReferenceTypes type() const;
         ObjectId objectId() const;
         QString target() const;
 
@@ -77,6 +71,8 @@ namespace Git
 
         template< class T >
         T peeled(Result& result) const;
+
+        ReferenceKinds kind() const;
 
         bool isCurrentBranch() const;
         bool isBranch() const;

@@ -43,6 +43,11 @@ namespace Git
         {
         }
 
+        ReferenceKinds NoteRefPrivate::kind() const
+        {
+            return NoteReference;
+        }
+
     }
 
 }

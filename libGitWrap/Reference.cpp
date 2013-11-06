@@ -78,6 +78,11 @@ namespace Git
             return true;
         }
 
+        ReferenceKinds ReferencePrivate::kind() const
+        {
+            return UnknownReference;
+        }
+
         bool ReferencePrivate::isValidObject(Result &r) const
         {
             if (wasDeleted) {
@@ -254,18 +259,18 @@ namespace Git
         return QString::fromUtf8(git_reference_shorthand(d->reference));
     }
 
-    Reference::Type Reference::type() const
+    ReferenceTypes Reference::type() const
     {
         GW_CD(Reference);
         if (!d || d->wasDeleted) {
-            return Invalid;
+            return ReferenceInvalid;
         }
 
         switch (git_reference_type(d->reference)) {
         default:
-        case GIT_REF_INVALID:   return Invalid;
-        case GIT_REF_SYMBOLIC:  return Symbolic;
-        case GIT_REF_OID:       return Direct;
+        case GIT_REF_INVALID:   return ReferenceInvalid;
+        case GIT_REF_SYMBOLIC:  return ReferenceSymbolic;
+        case GIT_REF_OID:       return ReferenceDirect;
         }
     }
 
@@ -276,7 +281,7 @@ namespace Git
             return ObjectId();
         }
 
-        if (type() != Direct) {
+        if (type() != ReferenceDirect) {
             return ObjectId();
         }
 
@@ -290,7 +295,7 @@ namespace Git
             return QString();
         }
 
-        if (type() != Symbolic) {
+        if (type() != ReferenceSymbolic) {
             return QString();
         }
 
@@ -540,4 +545,14 @@ namespace Git
         }
     }
 
+    ReferenceKinds Reference::kind() const
+    {
+        GW_CD(Reference);
+
+        if (d && !d->wasDeleted) {
+            return d->kind();
+        }
+
+        return UnknownReference;
+    }
 }

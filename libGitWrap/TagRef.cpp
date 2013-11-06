@@ -43,6 +43,11 @@ namespace Git
         {
         }
 
+        ReferenceKinds TagRefPrivate::kind() const
+        {
+            return TagReference;
+        }
+
     }
 
 }

@@ -43,6 +43,11 @@ namespace Git
         {
         }
 
+        ReferenceKinds BranchRefPrivate::kind() const
+        {
+            return BranchReference;
+        }
+
     }
 
 }

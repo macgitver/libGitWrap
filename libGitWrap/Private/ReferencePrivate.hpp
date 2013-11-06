@@ -50,6 +50,9 @@ namespace Git
             bool isValidObject(Result &r) const;
 
         public:
+            virtual ReferenceKinds kind() const;
+
+        public:
             bool            wasDeleted;
             git_reference*  reference;
         };

@@ -35,6 +35,9 @@ namespace Git
         public:
             TagRefPrivate(const RepositoryPrivate::Ptr& repo, git_reference* reference);
             TagRefPrivate(git_reference* reference, const RefNamePrivate* refName);
+
+        public:
+            ReferenceKinds kind() const;
         };
 
     }
