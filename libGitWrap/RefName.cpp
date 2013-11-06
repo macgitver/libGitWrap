@@ -22,10 +22,16 @@
 
 #include "libGitWrap/RefName.hpp"
 #include "libGitWrap/Reference.hpp"
+#include "libGitWrap/TagRef.hpp"
+#include "libGitWrap/BranchRef.hpp"
+#include "libGitWrap/NoteRef.hpp"
 
 #include "libGitWrap/Private/BasePrivate.hpp"
 #include "libGitWrap/Private/RefNamePrivate.hpp"
 #include "libGitWrap/Private/ReferencePrivate.hpp"
+#include "libGitWrap/Private/TagRefPrivate.hpp"
+#include "libGitWrap/Private/BranchRefPrivate.hpp"
+#include "libGitWrap/Private/NoteRefPrivate.hpp"
 #include "libGitWrap/Private/GitWrapPrivate.hpp"
 
 namespace Git
@@ -355,6 +361,64 @@ namespace Git
             }
 
             isAnalyzed = true;
+        }
+
+        ReferencePrivate* RefNamePrivate::cloned(git_reference* lgo)
+        {
+            ensureAnalyzed();
+
+            if (isBranch) {
+                return cloneAs<BranchRef>(lgo);
+            }
+
+            if (isTag) {
+                return cloneAs<TagRef>(lgo);
+            }
+
+            if (isNote) {
+                return cloneAs<NoteRef>(lgo);
+            }
+
+            return cloneAs<Reference>(lgo);
+        }
+
+        /**
+         * @internal
+         * @brief       Factory to create the correct ReferencePrivate
+         *
+         * @param[in]   repo    The repository for which to create the reference object.
+         *
+         * @param[in]   name    A fully qualified reference name.
+         *
+         * @param[in]   lgo     The libgit2 git_reference object. This is optional and defaults to
+         *                      `NULL`. If given, the new ReferencePrivate will point to it. If not
+         *                      given, we have to look it up first.
+         *
+         * @return      A new ReferencePrivate object capable of holding a reference type that
+         *              matches @a name.
+         *
+         * This works relatively efficient and reliable: We create a RefNamePrivate (on the stack,
+         * not the heap) and let it clone itself. Before cloning, it has to analyze itself in order
+         * to decide what reference private object to create.
+         *
+         * The cloning mechanism will then move over all the (already) analyzed data from the stack
+         * based RefNamePrivate.
+         *
+         * If no @a lgo is given and it cannot be looked up in @a repo under the @a name, `NULL`
+         * will be returned, as the resulting ReferencePrivate would be invalid and we cannot
+         * express that state in the private object.
+         *
+         */
+        ReferencePrivate* RefNamePrivate::createRefObject(const RepositoryPrivate::Ptr& repo,
+                                                          const QString& name, git_reference* lgo)
+        {
+            if (!lgo) {
+                if (git_reference_lookup(&lgo, repo->mRepo, name.toUtf8().constData()) < 0) {
+                    return NULL;
+                }
+            }
+
+            return RefNamePrivate(repo, name).cloned(lgo);
         }
 
     }

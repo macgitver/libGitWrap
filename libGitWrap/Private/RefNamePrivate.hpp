@@ -105,9 +105,22 @@ namespace Git
             QVector<int> customMatches;
 
         public:
+            static ReferencePrivate* createRefObject(const RepositoryPrivate::Ptr& repo,
+                                                     const QString& name, git_reference* lgo);
+
+        public:
             virtual bool isRealReference() const;
             void ensureAnalyzed();
             void analyze();
+
+            ReferencePrivate* cloned(git_reference* lgo);
+
+        private:
+            template<class T>
+            typename T::Private* cloneAs(git_reference* lgo) const
+            {
+                return new typename T::Private(lgo, this);
+            }
 
         private:
             void scopeTest(QString sub);
