@@ -42,6 +42,10 @@ namespace Git
             virtual ~BasePrivate();
 
         public:
+            static bool isValid(Result& r, const BasePrivate* d);
+            virtual bool isValidObject(Result& r) const;
+
+        public:
             template< class T>
             static typename T::Private* dataOf(T* o)
             {

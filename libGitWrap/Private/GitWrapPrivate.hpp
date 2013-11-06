@@ -209,17 +209,21 @@ namespace Git
 
 }
 
-#define GW__CHECK(returns, result)\
-    if (!result) { return returns; } \
-    if (!d) { result.setInvalidObject(); return returns; }
+#define GW__CHECK(returns, result) \
+    if (!Private::isValid(result, d)) { return returns; }
 
-#define GW__CHECK_VOID(result)\
-    if (!result) { return; } \
-    if (!d) { result.setInvalidObject(); return; }
+#define GW__CHECK_VOID(result) \
+    if (!Private::isValid(result, d)) { return; }
+
+
+#define GW__EX_CHECK(returns, result) \
+    if (!Private::isValid(result, d.constData())) { return returns; }
+
+#define GW__EX_CHECK_VOID(result) \
+    if (!Private::isValid(result, d.constData())) { return; }
 
 #define GW_D(CLASS) \
-    Internal::CLASS##Private* d = \
-        static_cast<Internal::CLASS##Private*>(mData.data()); \
+    Private* d = static_cast<Private*>(mData.data()); \
     ensureThisIsNotConst()
 
 #define GW_D_EX(CLASS) \
@@ -227,15 +231,14 @@ namespace Git
     ensureThisIsNotConst()
 
 #define GW_CD(CLASS) \
-    const Internal::CLASS##Private* d = \
-        static_cast<const Internal::CLASS##Private*>(mData.constData())
+    const Private* d = static_cast<const Private*>(mData.constData())
 
 #define GW_CD_EX(CLASS) \
     const PrivatePtr d(static_cast<Private*>(mData.data()))
 
 #define GW_CD_EX_CHECKED(CLASS, returns, result) \
     GW_CD_EX(CLASS); \
-    GW__CHECK(returns, result)
+    GW__EX_CHECK(returns, result)
 
 #define GW_D_CHECKED(CLASS, returns, result) \
     GW_D(CLASS); \
@@ -243,7 +246,7 @@ namespace Git
 
 #define GW_D_EX_CHECKED(CLASS, returns, result) \
     GW_D_EX(CLASS); \
-    GW__CHECK(returns, result)
+    GW__EX_CHECK(returns, result)
 
 #define GW_CD_CHECKED(CLASS, returns, result) \
     GW_CD(CLASS); \
