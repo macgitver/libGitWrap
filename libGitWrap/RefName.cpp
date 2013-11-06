@@ -356,7 +356,7 @@ namespace Git
                     scopeTest(match.mid(10));
                 }
                 else {
-                    isPecuiliar = true;
+                    isPecuiliar = customMatches.count() == 0;
                 }
             }
 
