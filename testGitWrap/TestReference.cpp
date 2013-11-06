@@ -86,9 +86,7 @@ TEST_F(ReferenceFixture, CanDestroyRef)
     ASSERT_TRUE(r);
     ASSERT_TRUE(ref.wasDestroyed());
 
-    ref.objectId(r);
-    ASSERT_FALSE(r);
-    r.clear();
+    ASSERT_TRUE(ref.objectId().isNull());
 
     // counter check
     Git::Repository repo2 = repo.reopen(r);
