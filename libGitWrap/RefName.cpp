@@ -314,11 +314,13 @@ namespace Git
                 isBranch = true;
                 isHead = true;
             }
-            else if (!analyzeCustom()) {
+            else {
                 const QRegExp& reNS = RefNameMatches::self().reNamespaces;
                 const QRegExp& reRem = RefNameMatches::self().reRemote;
 
                 QString match = fqrn;
+
+                analyzeCustom();
 
                 while (reNS.indexIn(match) != -1) {
                     namespaces.append(reNS.cap(1));
