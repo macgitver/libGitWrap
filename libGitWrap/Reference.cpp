@@ -29,18 +29,6 @@
 #include "libGitWrap/Private/ObjectPrivate.hpp"
 #include "libGitWrap/Private/ReferencePrivate.hpp"
 
-#define CHECK_DELETED(returns, result) \
-    if(d->wasDeleted) { \
-        result.setError("Tried to access a destroyed reference.", GIT_ERROR); \
-        return returns; \
-    }
-
-#define CHECK_DELETED_VOID(result) \
-    if(d->wasDeleted) { \
-        result.setError("Tried to access a destroyed reference.", GIT_ERROR); \
-        return; \
-    }
-
 namespace Git
 {
     /**
@@ -88,6 +76,15 @@ namespace Git
         {
             // This is used in RefName to determine if we can safely cast back to a Reference.
             return true;
+        }
+
+        bool ReferencePrivate::isValidObject(Result &r) const
+        {
+            if (wasDeleted) {
+                r.setError("Tried to access a destroyed reference.", GIT_ERROR);
+                return false;
+            }
+            return r;
         }
 
     }
@@ -260,7 +257,6 @@ namespace Git
     Reference::Type Reference::type( Result& result ) const
     {
         GW_CD_CHECKED(Reference, Invalid, result);
-        CHECK_DELETED(Invalid, result);
 
         switch (git_reference_type(d->reference)) {
         default:
@@ -273,7 +269,6 @@ namespace Git
     ObjectId Reference::objectId( Result& result ) const
     {
         GW_CD_CHECKED(Reference, ObjectId(), result);
-        CHECK_DELETED(ObjectId(), result);
 
         if (type(result) != Direct)
         {
@@ -286,7 +281,6 @@ namespace Git
     QString Reference::target( Result& result ) const
     {
         GW_CD_CHECKED(Reference, QString(), result);
-        CHECK_DELETED(QString(), result);
 
         if (!type(result) == Symbolic) {
             return QString();
@@ -298,7 +292,6 @@ namespace Git
     Reference Reference::resolved( Result& result ) const
     {
         GW_CD_CHECKED(Reference, Reference(), result);
-        CHECK_DELETED(Reference(), result);
 
         git_reference* ref;
         result = git_reference_resolve(&ref, d->reference);
@@ -358,7 +351,6 @@ namespace Git
     Object Reference::peeled(Result& result, ObjectType ot) const
     {
         GW_CD_CHECKED(Reference, Object(), result);
-        CHECK_DELETED(Object(), result);
 
         git_object* o = NULL;
         result = git_reference_peel(&o, d->reference, Internal::objectType2gitotype(ot));
@@ -391,7 +383,6 @@ namespace Git
     {
     #if 0
         GW_CD_CHECKED_VOID(Reference, result);
-        CHECK_DELETED_VOID(result);
 
         QString refToUpdate = name();
 
@@ -446,7 +437,6 @@ namespace Git
     void Reference::destroy(Result& result)
     {
         GW_D_CHECKED_VOID(Reference, result);
-        CHECK_DELETED_VOID(result);
 
         result = git_reference_delete(d->reference);
 
@@ -464,7 +454,6 @@ namespace Git
     void Reference::move(Result &result, const Commit &target)
     {
         GW_D_CHECKED_VOID(Reference, result);
-        CHECK_DELETED_VOID(result);
 
         ObjectId targetId = target.id();
         if (targetId.isNull()) {
@@ -485,7 +474,6 @@ namespace Git
     void Reference::rename(Result &result, const QString &newName, bool force)
     {
         GW_D_CHECKED_VOID(Reference, result);
-        CHECK_DELETED_VOID(result);
 
         git_reference* newRef = NULL;
         result = git_reference_rename(&newRef, d->reference, newName.toUtf8().constData(), force);
@@ -512,7 +500,6 @@ namespace Git
     void Reference::setAsHEAD(Result& result) const
     {
         GW_CD_CHECKED_VOID(Reference, result);
-        CHECK_DELETED_VOID(result);
 
         if (isBranch()) {
             if (isLocal()) {
@@ -530,7 +517,6 @@ namespace Git
     void Reference::updateHEAD(Result &result) const
     {
         GW_CD_CHECKED_VOID(Reference, result);
-        CHECK_DELETED_VOID(result);
 
         if (git_reference_is_branch(d->reference)) {
             // reference is a local branch

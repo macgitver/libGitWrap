@@ -47,6 +47,9 @@ namespace Git
             bool isRealReference() const;
 
         public:
+            bool isValidObject(Result &r) const;
+
+        public:
             bool            wasDeleted;
             git_reference*  reference;
         };
