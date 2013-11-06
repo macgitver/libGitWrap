@@ -48,6 +48,7 @@ namespace Git
 
         bool isTag();
         bool isBranch();
+        bool isNote();
 
         bool isStage();
         bool isHead();
@@ -73,6 +74,7 @@ namespace Git
         QString scopePrefix();
 
         QString tagName();
+        QString noteName();
         QString branchName();
 
         QString shorthand();

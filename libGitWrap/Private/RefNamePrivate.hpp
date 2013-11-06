@@ -86,6 +86,7 @@ namespace Git
             bool isStage        : 1;
             bool isBranch       : 1;
             bool isTag          : 1;
+            bool isNote         : 1;
             bool isHead         : 1;
             bool isMergeHead    : 1;
             bool isCommitNote   : 1;

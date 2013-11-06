@@ -276,14 +276,12 @@ namespace Git
         {
             remote = name = QString();
             scopes = namespaces = QStringList();
-            isStage = isBranch = isTag = isHead = isMergeHead = isCommitNote = isPecuiliar = false;
+            isNote = isStage = isBranch = isTag = isHead =
+            isMergeHead = isCommitNote = isPecuiliar = false;
             customMatches.clear();
 
             if (fqrn == QLatin1String("refs/stage")) {
                 isStage = true;
-            }
-            else if (fqrn == QLatin1String("refs/notes/commit")) {
-                isCommitNote = true;
             }
             else if (fqrn == QLatin1String("MERGE_HEAD")) {
                 isMergeHead = true;
@@ -312,6 +310,11 @@ namespace Git
                     isBranch = true;
 
                     scopeTest(match);
+                }
+                else if (match.startsWith(QLatin1String("refs/notes/"))) {
+                    isNote = true;
+                    isCommitNote = (match == QLatin1String("refs/notes/commit"));
+                    scopeTest(match.mid(11));
                 }
                 else if (match.startsWith(QLatin1String("refs/heads/"))) {
                     isBranch = true;
@@ -363,6 +366,18 @@ namespace Git
     {
         GW_D(RefName);
         return d ? d->ensureAnalyzed(), d->isTag : false;
+    }
+
+    /**
+     * @brief       Is this a note?
+     *
+     * @return      `true`, if this is a note
+     *
+     */
+    bool RefName::isNote()
+    {
+        GW_D(RefName);
+        return d ? d->ensureAnalyzed(), d->isNote : false;
     }
 
     /**
@@ -469,13 +484,13 @@ namespace Git
     /**
      * @brief       Get the local name of the reference
      *
-     * @return      If the reference is either a tag, a branch or HEAD, the scopeName() and name()
-     *              are joined via a `/` and the result is returned.
+     * @return      If the reference is either a tag, a note, a branch or HEAD, the scopeName() and
+     *              name() are joined via a `/` and the result is returned.
      *
      */
     QString RefName::localName()
     {
-        if (isBranch() || isTag()) {
+        if (isBranch() || isTag() || isNote()) {
             return isScoped() ? scopeName() % QChar(L'/') % name() : name();
         }
         return QString();
@@ -523,6 +538,17 @@ namespace Git
     QString RefName::tagName()
     {
         return isTag() ? localName() : QString();
+    }
+
+    /**
+     * @brief       Get the name of the note if this reference is a note.
+     *
+     * @return      If isNote() returns `true` then return localName() else an empty string.
+     *
+     */
+    QString RefName::noteName()
+    {
+        return isNote() ? localName() : QString();
     }
 
     /**
@@ -641,6 +667,8 @@ namespace Git
      * short hand name for the remote `farfarawawy`'s default branch is just `farfaraway` (the FQRN
      * would be `refs/remotes/farfaraway/HEAD`).
      *
+     * Note that this deliberately doesn't work with `refs/notes/` references.
+     *
      * @return      The short hand name for the reference. The short hand name contains the segments
      *              consisting of remote() if present, all the scopes() and finally name().
      *
@@ -680,6 +708,12 @@ namespace Git
         return segments.join(QChar(L'/'));
     }
 
+    /**
+     * @brief       Get the Reference this RefName was created from
+     *
+     * @return      If this RefName object was created from a Reference, return that reference
+     *              otherwise an invalid Reference object.
+     */
     Reference RefName::reference() const
     {
         GW_CD_EX(Reference);
