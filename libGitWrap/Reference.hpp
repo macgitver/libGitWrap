@@ -74,6 +74,13 @@ namespace Git
 
         ReferenceKinds kind() const;
 
+        BranchRef asBranch() const;
+        TagRef asTag() const;
+        NoteRef asNote() const;
+
+        template<class T>
+        T as() const;
+
         bool isCurrentBranch() const;
         bool isBranch() const;
         bool isLocal() const;

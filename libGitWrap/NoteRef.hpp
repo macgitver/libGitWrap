@@ -40,6 +40,11 @@ namespace Git
     public:
     };
 
+    template<>
+    inline NoteRef Reference::as() const {
+        return asNote();
+    }
+
 }
 
 Q_DECLARE_METATYPE(Git::NoteRef)

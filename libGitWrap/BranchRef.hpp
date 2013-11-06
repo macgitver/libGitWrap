@@ -41,6 +41,11 @@ namespace Git
     public:
     };
 
+    template<>
+    inline BranchRef Reference::as() const {
+        return asBranch();
+    }
+
 }
 
 Q_DECLARE_METATYPE(Git::BranchRef)

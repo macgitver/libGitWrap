@@ -22,12 +22,18 @@
 #include "libGitWrap/Repository.hpp"
 #include "libGitWrap/Reference.hpp"
 #include "libGitWrap/RefName.hpp"
+#include "libGitWrap/BranchRef.hpp"
+#include "libGitWrap/TagRef.hpp"
+#include "libGitWrap/NoteRef.hpp"
 
 #include "libGitWrap/Operations/CheckoutOperation.hpp"
 
 #include "libGitWrap/Private/GitWrapPrivate.hpp"
 #include "libGitWrap/Private/ObjectPrivate.hpp"
 #include "libGitWrap/Private/ReferencePrivate.hpp"
+#include "libGitWrap/Private/BranchRefPrivate.hpp"
+#include "libGitWrap/Private/TagRefPrivate.hpp"
+#include "libGitWrap/Private/NoteRefPrivate.hpp"
 
 namespace Git
 {
@@ -555,4 +561,32 @@ namespace Git
 
         return UnknownReference;
     }
+
+    BranchRef Reference::asBranch() const
+    {
+        if (kind() == BranchReference) {
+            GW_CD_EX(BranchRef);
+            return BranchRef(d);
+        }
+        return BranchRef();
+    }
+
+    TagRef Reference::asTag() const
+    {
+        if (kind() == TagReference) {
+            GW_CD_EX(TagRef);
+            return TagRef(d);
+        }
+        return TagRef();
+    }
+
+    NoteRef Reference::asNote() const
+    {
+        if (kind() == NoteReference) {
+            GW_CD_EX(NoteRef);
+            return NoteRef(d);
+        }
+        return NoteRef();
+    }
+
 }

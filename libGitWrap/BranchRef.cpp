@@ -50,4 +50,6 @@ namespace Git
 
     }
 
+    GW_PRIVATE_IMPL(BranchRef, Reference)
+
 }

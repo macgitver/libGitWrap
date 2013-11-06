@@ -40,6 +40,11 @@ namespace Git
     public:
     };
 
+    template<>
+    inline TagRef Reference::as() const {
+        return asTag();
+    }
+
 }
 
 Q_DECLARE_METATYPE(Git::TagRef)
