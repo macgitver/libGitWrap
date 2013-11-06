@@ -34,7 +34,7 @@ namespace Git
             #ifdef QT_DEBUG
             // We want this constructor to analyze only for the assert...
             ensureAnalyzed();
-            Q_ASSERT(isBranch);
+            Q_ASSERT(isNote);
             #endif
         }
 
