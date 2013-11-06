@@ -62,9 +62,13 @@ namespace Git
 
         RefName nameAnalyzer() const;
 
-        Type type( Result& result ) const;
-        ObjectId objectId( Result& result ) const;
-        QString target( Result& result ) const;
+        GW_DEPRECATED Type type( Result& result ) const             { return type(); }
+        GW_DEPRECATED ObjectId objectId( Result& result ) const     { return objectId(); }
+        GW_DEPRECATED QString target( Result& result ) const        { return target(); }
+
+        Type type() const;
+        ObjectId objectId() const;
+        QString target() const;
 
         Reference resolved( Result& result ) const;
         ObjectId resolveToObjectId( Result& result ) const;

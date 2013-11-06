@@ -254,9 +254,12 @@ namespace Git
         return QString::fromUtf8(git_reference_shorthand(d->reference));
     }
 
-    Reference::Type Reference::type( Result& result ) const
+    Reference::Type Reference::type() const
     {
-        GW_CD_CHECKED(Reference, Invalid, result);
+        GW_CD(Reference);
+        if (!d || d->wasDeleted) {
+            return Invalid;
+        }
 
         switch (git_reference_type(d->reference)) {
         default:
@@ -266,23 +269,28 @@ namespace Git
         }
     }
 
-    ObjectId Reference::objectId( Result& result ) const
+    ObjectId Reference::objectId() const
     {
-        GW_CD_CHECKED(Reference, ObjectId(), result);
-
-        if (type(result) != Direct)
-        {
+        GW_CD(Reference);
+        if (!d || d->wasDeleted) {
             return ObjectId();
         }
 
-        return ObjectId::fromRaw(git_reference_target(d->reference)->id);
+        if (type() != Direct) {
+            return ObjectId();
+        }
+
+        return Private::oid2sha(git_reference_target(d->reference));
     }
 
-    QString Reference::target( Result& result ) const
+    QString Reference::target() const
     {
-        GW_CD_CHECKED(Reference, QString(), result);
+        GW_CD(Reference);
+        if (!d || d->wasDeleted) {
+            return QString();
+        }
 
-        if (!type(result) == Symbolic) {
+        if (type() != Symbolic) {
             return QString();
         }
 
@@ -309,7 +317,7 @@ namespace Git
             return ObjectId();
         }
 
-        return resolvedRef.objectId( result );
+        return resolvedRef.objectId();
     }
 
     bool Reference::isCurrentBranch() const
