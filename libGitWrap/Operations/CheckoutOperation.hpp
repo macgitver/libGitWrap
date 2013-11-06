@@ -38,6 +38,9 @@ namespace Git
     class GITWRAP_API CheckoutBaseOperation : public BaseOperation
     {
         Q_OBJECT
+        #if QT_VERSION < 0x050000
+        friend class Internal::CheckoutBaseOperationPrivate;
+        #endif
     public:
         typedef Internal::CheckoutBaseOperationPrivate Private;
 
