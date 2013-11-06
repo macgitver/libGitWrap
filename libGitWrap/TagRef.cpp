@@ -19,10 +19,30 @@
  */
 
 #include "libGitWrap/TagRef.hpp"
+#include "libGitWrap/Private/TagRefPrivate.hpp"
 
 namespace Git
 {
 
+    namespace Internal
+    {
 
+        TagRefPrivate::TagRefPrivate(const RepositoryPrivate::Ptr& repo,
+                                     git_reference* reference)
+            : ReferencePrivate(repo, reference)
+        {
+            #ifdef QT_DEBUG
+            // We want this constructor to analyze only for the assert...
+            ensureAnalyzed();
+            Q_ASSERT(isTag);
+            #endif
+        }
+
+        TagRefPrivate::TagRefPrivate(git_reference* reference, const RefNamePrivate* refName)
+            : ReferencePrivate(reference, refName)
+        {
+        }
+
+    }
 
 }
