@@ -41,7 +41,7 @@ namespace Git
         bool operator==(const RepoObject& other) const;
 
     public:
-        GW_DEPRECATED Repository repository(Result &result) const;
+        Repository repository(Result &result) const;
         Repository repository() const;
 
     protected:
