@@ -650,27 +650,27 @@ namespace Git
 
     Object Repository::lookup( Result& result, const QString& refName, ObjectType ot )
     {
-        return lookup( result, lookupRef( result, refName ).resolveToObjectId( result ), ot );
+        return lookup(result, reference(result, refName).resolveToObjectId(result), ot);
     }
 
     Commit Repository::lookupCommit(Result& result, const QString& refName)
     {
-        return lookupCommit( result, lookupRef( result, refName ).resolveToObjectId( result ) );
+        return lookupCommit(result, reference(result, refName).resolveToObjectId(result));
     }
 
     Tree Repository::lookupTree(Result& result, const QString& refName)
     {
-        return lookupTree( result, lookupRef( result, refName ).resolveToObjectId( result ) );
+        return lookupTree(result, reference(result, refName).resolveToObjectId(result));
     }
 
     Blob Repository::lookupBlob(Result& result, const QString& refName)
     {
-        return lookupBlob( result, lookupRef( result, refName ).resolveToObjectId( result ) );
+        return lookupBlob(result, reference(result, refName).resolveToObjectId(result));
     }
 
     Tag Repository::lookupTag(Result& result, const QString& refName)
     {
-        return lookupTag( result, lookupRef( result, refName ).resolveToObjectId( result ) );
+        return lookupTag(result, reference(result, refName).resolveToObjectId(result));
     }
 
     RevisionWalker Repository::newWalker( Result& result )
@@ -914,28 +914,7 @@ namespace Git
 
     Reference Repository::lookupRef(Result& result, const QString& refName, bool dwim)
     {
-        GW_D_EX_CHECKED(Repository, Reference(), result);
-        QString name = refName;
-
-        git_reference* ref = NULL;
-        if (dwim) {
-            result = git_reference_dwim(&ref, d->mRepo, refName.toUtf8().constData());
-
-            if (!result) {
-                return Reference();
-            }
-
-            name = QString::fromUtf8(git_reference_name(ref));
-        }
-        else {
-            result = git_reference_lookup( &ref, d->mRepo, refName.toUtf8().constData() );
-
-            if (!result) {
-                return Reference();
-            }
-        }
-
-        return Reference::Private::createRefObject(d, name, ref);
+        return reference(result, refName, dwim);
     }
 
     /**
@@ -1032,6 +1011,34 @@ namespace Git
         }
 
         return d->openedFrom;
+    }
+
+    Reference Repository::reference(Result& result, const QString& refName, bool dwim)
+    {
+        GW_D_CHECKED(Repository, Reference(), result);
+
+        //GW_D_EX_CHECKED(Repository, Reference(), result);
+        QString name = refName;
+
+        git_reference* ref = NULL;
+        if (dwim) {
+            result = git_reference_dwim(&ref, d->mRepo, refName.toUtf8().constData());
+
+            if (!result) {
+                return Reference();
+            }
+
+            name = QString::fromUtf8(git_reference_name(ref));
+        }
+        else {
+            result = git_reference_lookup( &ref, d->mRepo, refName.toUtf8().constData() );
+
+            if (!result) {
+                return Reference();
+            }
+        }
+
+        return Reference::Private::createRefObject(d, name, ref);
     }
 
 }

@@ -90,8 +90,11 @@ namespace Git
         Git::StatusHash status(Result &result) const;
 
         Reference HEAD( Result& result ) const;
-        Reference lookupRef(Result& result, const QString& refName , bool dwim = false);
-        ObjectId resolveRef( Result& result, const QString& refName );
+
+        GW_DEPRECATED Reference lookupRef(Result& result, const QString& refName , bool dwim = false);
+        ObjectId resolveRef(Result& result, const QString& refName);
+
+        Reference reference(Result& result, const QString& refName, bool dwim = false);
 
         Commit lookupCommit( Result& result, const ObjectId& id );
         Commit lookupCommit( Result& result, const QString& refName );
