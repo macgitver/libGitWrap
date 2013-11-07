@@ -323,6 +323,9 @@ namespace Git
         bool operator!=(const CLASS& other) const \
             { return BASE::operator!=(other); } \
         \
+        bool operator!() const \
+            { return !isValid(); } \
+        \
     public: \
         ~CLASS() \
             {}
