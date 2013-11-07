@@ -47,6 +47,7 @@ namespace Git
         virtual ~Base();
         Base& operator=(const Base& other);
         bool operator==(const Base& other) const;
+        bool operator!=(const Base& other) const;
 
     public:
         bool isValid() const;

@@ -129,6 +129,11 @@ namespace Git
         return mData == other.mData;
     }
 
+    bool Base::operator!=(const Base& other) const
+    {
+        return mData != other.mData;
+    }
+
     bool Base::isValid() const
     {
         return mData;
