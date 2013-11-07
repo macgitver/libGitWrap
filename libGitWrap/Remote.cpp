@@ -26,7 +26,7 @@ namespace Git
     namespace Internal
     {
 
-        RemotePrivate::RemotePrivate(const RepositoryPrivate::Ptr& repo, git_remote* remote)
+        RemotePrivate::RemotePrivate(Repository::Private* repo, git_remote* remote)
             : RepoObjectPrivate(repo)
             , mRemote(remote)
         {
@@ -41,6 +41,39 @@ namespace Git
     }
 
     GW_PRIVATE_IMPL(Remote, RepoObject)
+
+    Remote Remote::create(Result& result, const Repository& repository, const QString& name,
+                          const QString& url, const QString& fetchSpec)
+    {
+        if (!result) {
+            return Remote();
+        }
+
+        if (!repository.isValid()) {
+            result.setInvalidObject();
+            return Remote();
+        }
+
+        Repository::Private* rp = Private::dataOf<Repository>(repository);
+
+        git_remote* remote = NULL;
+        result = git_remote_create(&remote, rp->mRepo, name.toUtf8().constData(),
+                                   url.toUtf8().constData() );
+        if (!result) {
+            return Remote();
+        }
+
+        Remote remo = new Remote::Private(rp, remote);
+
+        if (!fetchSpec.isEmpty()) {
+            remo.addFetchSpec(result, fetchSpec);
+            if (!result) {
+                return Remote();
+            }
+        }
+
+        return remo;
+    }
 
     bool Remote::save( Result& result )
     {

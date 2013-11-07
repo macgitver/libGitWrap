@@ -43,6 +43,10 @@ namespace Git
         typedef RemoteList List;
 
     public:
+        static Remote create(Result& result, const Repository& repository, const QString& name,
+                             const QString& url, const QString& fetchSpec);
+
+    public:
         bool save( Result& result );
 
         QString name() const;

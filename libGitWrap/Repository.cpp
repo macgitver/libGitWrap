@@ -732,7 +732,7 @@ namespace Git
             if (!result) {
                 return Remote::List();
             }
-            Remote rm = Remote::PrivatePtr(new Remote::Private(d, remote));
+            Remote rm = new Remote::Private(d.data(), remote);
             remotes.append(rm);
         }
 
@@ -784,35 +784,13 @@ namespace Git
             return Remote();
         }
 
-        return Remote::PrivatePtr(new Remote::Private(d, remote));
+        return new Remote::Private(d.data(), remote);
     }
 
-    // ### Move To REMOTE
     Remote Repository::createRemote(Result& result, const QString& remoteName, const QString& url,
                                     const QString& fetchSpec)
     {
-        GW_D_EX_CHECKED(Repository, Remote(), result);
-
-        git_remote* remote = NULL;
-        result = git_remote_create( &remote, d->mRepo, remoteName.toUtf8().constData(),
-                                    url.toUtf8().constData() );
-        if( !result )
-        {
-            return Remote();
-        }
-
-        Remote remo = Remote::PrivatePtr(new Remote::Private(d, remote));
-
-        if( !fetchSpec.isEmpty() )
-        {
-            remo.addFetchSpec( result, fetchSpec );
-            if( !result )
-            {
-                return Remote();
-            }
-        }
-
-        return remo;
+        return Remote::create(result, *this, remoteName, url, fetchSpec);
     }
 
     DiffList Repository::diffCommitToCommit( Result& result, Commit oldCommit,

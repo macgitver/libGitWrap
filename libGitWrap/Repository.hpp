@@ -135,8 +135,10 @@ namespace Git
         QStringList allRemoteNames( Result& result ) const;
         Remote::List allRemotes(Result& result) const;
         Remote remote( Result& result, const QString& remoteName ) const;
-        Remote createRemote( Result& result, const QString& remoteName, const QString& url,
-                             const QString& fetchSpec );
+
+        GW_DEPRECATED
+        Remote createRemote(Result& result, const QString& remoteName, const QString& url,
+                            const QString& fetchSpec);
 
         DiffList diffCommitToCommit(Result& result, Commit oldCommit, Commit newCommit);
 
