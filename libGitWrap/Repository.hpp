@@ -78,6 +78,7 @@ namespace Git
 
         ResolvedRefs allResolvedRefs( Result& result );
 
+        // ### move to BranchRef
         bool renameBranch( const QString& oldName, const QString& newName, bool force /* = false */,
                            Result& result );
 
@@ -95,7 +96,12 @@ namespace Git
         ObjectId resolveRef(Result& result, const QString& refName);
 
         Reference reference(Result& result, const QString& refName, bool dwim = false);
+        BranchRef branchRef(Result& result, const QString& branchName);
+        TagRef tagRef(Result& result, const QString& tagName);
+        NoteRef noteRef(Result& result, const QString& noteName);
 
+        // ### Deprecate and name these: commit, tree, blob and tag.
+        // ### Figure out what the QString-overload should be useful for!
         Commit lookupCommit( Result& result, const ObjectId& id );
         Commit lookupCommit( Result& result, const QString& refName );
 
@@ -114,11 +120,13 @@ namespace Git
         template< class T >
         T lookup(Result& result, const ObjectId& id);
 
+        // ### Figure out, what this overload could be useful for!
         template< class T >
         T lookup(Result& result, const QString& refName);
 
         bool shouldIgnore( Result& result, const QString& filePath ) const;
 
+        // ### move to RevisionWalker::create(Repository)
         RevisionWalker newWalker( Result& result );
 
         QStringList allRemoteNames( Result& result ) const;

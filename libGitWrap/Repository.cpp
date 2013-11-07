@@ -14,6 +14,8 @@
  *
  */
 
+#include <QStringBuilder>
+
 #include "libGitWrap/Result.hpp"
 #include "libGitWrap/Index.hpp"
 #include "libGitWrap/Remote.hpp"
@@ -27,6 +29,9 @@
 #include "libGitWrap/Commit.hpp"
 #include "libGitWrap/RevisionWalker.hpp"
 #include "libGitWrap/Submodule.hpp"
+#include "libGitWrap/BranchRef.hpp"
+#include "libGitWrap/TagRef.hpp"
+#include "libGitWrap/NoteRef.hpp"
 
 #include "libGitWrap/Private/GitWrapPrivate.hpp"
 #include "libGitWrap/Private/IndexPrivate.hpp"
@@ -1039,6 +1044,37 @@ namespace Git
         }
 
         return Reference::Private::createRefObject(d, name, ref);
+    }
+
+    BranchRef Repository::branchRef(Result& result, const QString& branchName)
+    {
+        Reference ref = reference(result, branchName, true);
+        if (!result) {
+            return BranchRef();
+        }
+
+        return ref.asBranch();
+    }
+
+    TagRef Repository::tagRef(Result& result, const QString& tagName)
+    {
+        Reference ref = reference(result, tagName, true);
+        if (!result) {
+            return TagRef();
+        }
+
+        return ref.asTag();
+    }
+
+    NoteRef Repository::noteRef(Result& result, const QString& noteName)
+    {
+        // dwin doesn't work for notes
+        Reference ref = reference(result, QLatin1Literal("refs/notes/") % noteName);
+        if (!result) {
+            return NoteRef();
+        }
+
+        return ref.asNote();
     }
 
 }
