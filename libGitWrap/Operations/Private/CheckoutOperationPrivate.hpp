@@ -18,6 +18,7 @@
 #include "libGitWrap/Tree.hpp"
 #include "libGitWrap/Repository.hpp"
 #include "libGitWrap/Index.hpp"
+#include "libGitWrap/BranchRef.hpp"
 
 #include "libGitWrap/Private/GitWrapPrivate.hpp"
 
@@ -82,6 +83,18 @@ namespace Git
 
         public:
             Tree                mTree;
+        };
+
+        class CheckoutBranchOperationPrivate : public CheckoutBaseOperationPrivate
+        {
+        public:
+            CheckoutBranchOperationPrivate(CheckoutBranchOperation* owner);
+
+        public:
+            void run();
+
+        public:
+            BranchRef           branch;
         };
 
     }

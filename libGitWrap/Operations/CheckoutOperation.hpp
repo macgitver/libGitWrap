@@ -32,6 +32,7 @@ namespace Git
         class CheckoutBaseOperationPrivate;
         class CheckoutIndexOperationPrivate;
         class CheckoutTreeOperationPrivate;
+        class CheckoutBranchOperationPrivate;
 
     }
 
@@ -132,6 +133,24 @@ namespace Git
     public:
         void setTree(const Tree& tree);
         Tree tree() const;
+    };
+
+    class CheckoutBranchOperation : public CheckoutBaseOperation
+    {
+    public:
+        typedef Internal::CheckoutBranchOperationPrivate Private;
+
+    public:
+        CheckoutBranchOperation(QObject* parent = 0);
+        CheckoutBranchOperation(const BranchRef& branch, QObject* parent = 0);
+        CheckoutBranchOperation(const Repository& repo, QObject* parent = 0);
+        CheckoutBranchOperation(const Repository& repo, const QString& branchName,
+                                QObject* parent = 0);
+
+    public:
+        bool setBranch(const QString& branchName);
+        bool setBranch(const BranchRef& branch);
+        BranchRef branch() const;
     };
 
 }

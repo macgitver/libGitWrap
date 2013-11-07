@@ -239,6 +239,43 @@ namespace Git
             unprepare();
         }
 
+        // -- CheckoutBranchOperationPrivate ---------------------------------------------------- >8
+
+        CheckoutBranchOperationPrivate::CheckoutBranchOperationPrivate(
+                CheckoutBranchOperation *owner)
+            : CheckoutBaseOperationPrivate(owner)
+        {
+        }
+
+        void CheckoutBranchOperationPrivate::run()
+        {
+            git_repository* grepo = NULL;
+            const git_object* gtree = NULL;
+
+            prepare();
+
+            if (mRepository.isValid()) {
+                Repository::Private* rp = BasePrivate::dataOf<Repository>(mRepository);
+                grepo = rp->mRepo;
+            }
+
+            /*
+            if (mTree.isValid()) {
+                Tree::Private* tp = BasePrivate::dataOf<Tree>(mTree);
+                gtree = tp->mObj;
+            }
+
+            if (gtree) {
+                mResult = git_checkout_tree(grepo, gtree, &mOpts);
+            }
+            else {
+                mResult = git_checkout_head(grepo, &mOpts);
+            }
+            */
+
+            unprepare();
+        }
+
     }
 
     // -- CheckoutBaseOperation ----------------------------------------------------------------- >8
@@ -395,6 +432,76 @@ namespace Git
     {
         GW_CD(CheckoutTreeOperation);
         return d->mTree;
+    }
+
+    // -- CheckoutBranchOperation --------------------------------------------------------------- >8
+
+    CheckoutBranchOperation::CheckoutBranchOperation(QObject* parent)
+        : CheckoutBaseOperation(*new Private(this), parent)
+    {
+    }
+
+    CheckoutBranchOperation::CheckoutBranchOperation(const BranchRef& branch, QObject* parent)
+        : CheckoutBaseOperation(*new Private(this), parent)
+    {
+        setRepository(branch.repository());
+        setBranch(branch);
+    }
+
+    CheckoutBranchOperation::CheckoutBranchOperation(const Repository& repo, QObject* parent)
+        : CheckoutBaseOperation(*new Private(this), parent)
+    {
+        setRepository(repo);
+    }
+
+    CheckoutBranchOperation::CheckoutBranchOperation(const Repository& repo,
+                                                     const QString& branchName,
+                                                     QObject* parent)
+        : CheckoutBaseOperation(*new Private(this), parent)
+    {
+        setRepository(repo);
+        setBranch(branchName);
+    }
+
+    bool CheckoutBranchOperation::setBranch(const QString& branchName)
+    {
+        Q_ASSERT(!isRunning());
+
+        if (!repository().isValid()) {
+            return false;
+        }
+
+        GW_D(CheckoutBranchOperation);
+        if (!d) {
+            return false;
+        }
+
+        Result res;
+        d->branch = repository().branchRef(res, branchName);
+        return res && d->branch.isValid();
+    }
+
+    bool CheckoutBranchOperation::setBranch(const BranchRef& branch)
+    {
+        Q_ASSERT(!isRunning());
+        GW_D(CheckoutBranchOperation);
+
+        if (!d) {
+            return false;
+        }
+
+        if (branch.repository() != repository()) {
+            return false;
+        }
+
+        d->branch = branch;
+        return true;
+    }
+
+    BranchRef CheckoutBranchOperation::branch() const
+    {
+        GW_CD(CheckoutBranchOperation);
+        return d ? d->branch : BranchRef();
     }
 
 }
