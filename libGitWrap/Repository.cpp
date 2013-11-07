@@ -100,7 +100,8 @@ namespace Git
             cb_append_reference_data *data = (cb_append_reference_data *)payload;
 
             Repository::PrivatePtr repo(data->ptr);
-            Reference::PrivatePtr ref(new ReferencePrivate(repo, reference));
+            QString name = QString::fromUtf8(git_reference_name(reference));
+            Reference::Private* ref = Reference::Private::createRefObject(repo, name, reference);
 
             data->refs.append(ref);
 
@@ -914,19 +915,27 @@ namespace Git
     Reference Repository::lookupRef(Result& result, const QString& refName, bool dwim)
     {
         GW_D_EX_CHECKED(Repository, Reference(), result);
+        QString name = refName;
 
         git_reference* ref = NULL;
-        if ( dwim )
-            result = git_reference_dwim( &ref, d->mRepo, refName.toUtf8().constData() );
-        else
+        if (dwim) {
+            result = git_reference_dwim(&ref, d->mRepo, refName.toUtf8().constData());
+
+            if (!result) {
+                return Reference();
+            }
+
+            name = QString::fromUtf8(git_reference_name(ref));
+        }
+        else {
             result = git_reference_lookup( &ref, d->mRepo, refName.toUtf8().constData() );
 
-        if( !result )
-        {
-            return Reference();
+            if (!result) {
+                return Reference();
+            }
         }
 
-        return Reference::PrivatePtr(new Reference::Private(d, ref));
+        return Reference::Private::createRefObject(d, name, ref);
     }
 
     /**

@@ -180,7 +180,7 @@ namespace Git
             return Reference();
         }
 
-        return PrivatePtr(new Private(repop, name, ref));
+        return Private::createRefObject(repop, name, ref);
     }
 
 
