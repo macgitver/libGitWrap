@@ -41,6 +41,8 @@ TEST_F(ReferenceFixture, CanLookup)
     ASSERT_TRUE(ref.isValid());
     ASSERT_FALSE(ref.wasDestroyed());
 
+    EXPECT_EQ(Git::ReferenceDirect, ref.type());
+    EXPECT_EQ(Git::BranchReference, ref.kind());
     EXPECT_TRUE(ref.isCurrentBranch());
     EXPECT_TRUE(ref.isLocal());
     EXPECT_FALSE(ref.isRemote());
@@ -65,6 +67,8 @@ TEST_F(ReferenceFixture, CanLookupShorthand)
     ASSERT_TRUE(ref.isValid());
     ASSERT_FALSE(ref.wasDestroyed());
 
+    EXPECT_EQ(Git::ReferenceDirect, ref.type());
+    EXPECT_EQ(Git::BranchReference, ref.kind());
     EXPECT_TRUE(ref.isCurrentBranch());
     EXPECT_TRUE(ref.isLocal());
     EXPECT_FALSE(ref.isRemote());
