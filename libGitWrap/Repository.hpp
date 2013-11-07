@@ -129,8 +129,8 @@ namespace Git
 
         bool shouldIgnore( Result& result, const QString& filePath ) const;
 
-        // ### move to RevisionWalker::create(Repository)
-        RevisionWalker newWalker( Result& result );
+        GW_DEPRECATED
+        RevisionWalker newWalker(Result& result);
 
         QStringList allRemoteNames( Result& result ) const;
         Remote::List allRemotes(Result& result) const;

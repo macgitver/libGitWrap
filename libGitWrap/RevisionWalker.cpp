@@ -26,7 +26,7 @@ namespace Git
     namespace Internal
     {
 
-        RevisionWalkerPrivate::RevisionWalkerPrivate(const RepositoryPrivate::Ptr& repo, git_revwalk* walker )
+        RevisionWalkerPrivate::RevisionWalkerPrivate(RepositoryPrivate* repo, git_revwalk* walker )
             : RepoObjectPrivate(repo)
             , mWalker(walker)
         {
@@ -41,6 +41,28 @@ namespace Git
     }
 
     GW_PRIVATE_IMPL(RevisionWalker, RepoObject)
+
+    RevisionWalker RevisionWalker::create(Result& result, const Repository& repository)
+    {
+        if (!result) {
+            return RevisionWalker();
+        }
+
+        if (!repository) {
+            return RevisionWalker();
+        }
+
+        Repository::Private* rp = Private::dataOf<Repository>(repository);
+        git_revwalk* walker = NULL;
+
+        result = git_revwalk_new(&walker, rp->mRepo);
+
+        if (!result) {
+            return RevisionWalker();
+        }
+
+        return new RevisionWalker::Private(rp, walker);
+    }
 
     void RevisionWalker::reset( Result& result )
     {

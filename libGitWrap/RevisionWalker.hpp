@@ -37,6 +37,9 @@ namespace Git
         GW_PRIVATE_DECL(RevisionWalker, RepoObject, public)
 
     public:
+        static RevisionWalker create(Result& result, const Repository& repository);
+
+    public:
         void reset( Result& result );
 
         void push( Result& result, const ObjectId& id  );

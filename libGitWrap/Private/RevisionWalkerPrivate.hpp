@@ -35,7 +35,7 @@ namespace Git
         class RevisionWalkerPrivate : public RepoObjectPrivate
         {
         public:
-            RevisionWalkerPrivate(const RepositoryPrivate::Ptr& repo, git_revwalk* walker);
+            RevisionWalkerPrivate(RepositoryPrivate* repo, git_revwalk* walker);
             ~RevisionWalkerPrivate();
 
         public:

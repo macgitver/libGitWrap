@@ -680,16 +680,7 @@ namespace Git
 
     RevisionWalker Repository::newWalker( Result& result )
     {
-        GW_D_EX_CHECKED(Repository, RevisionWalker(), result);
-        git_revwalk* walker = NULL;
-
-        result = git_revwalk_new( &walker, d->mRepo );
-        if( !result )
-        {
-            return RevisionWalker();
-        }
-
-        return RevisionWalker::PrivatePtr(new RevisionWalker::Private(d, walker));
+        return RevisionWalker::create(result, *this);
     }
 
     bool Repository::shouldIgnore(Result& result, const QString& filePath) const
