@@ -78,8 +78,8 @@ namespace Git
         protected:
             RefNamePrivate(const RefNamePrivate* refName);
         public:
-            RefNamePrivate(const RepositoryPrivate::Ptr& repo);
-            RefNamePrivate(const RepositoryPrivate::Ptr& repo, const QString& name);
+            RefNamePrivate(RepositoryPrivate* repo);
+            RefNamePrivate(RepositoryPrivate* repo, const QString& name);
 
         public:
             RefNamePrivate();
@@ -105,7 +105,7 @@ namespace Git
             QVector<int> customMatches;
 
         public:
-            static ReferencePrivate* createRefObject(const RepositoryPrivate::Ptr& repo,
+            static ReferencePrivate* createRefObject(Repository::Private *repo,
                                                      const QString& name, git_reference* lgo);
 
         public:

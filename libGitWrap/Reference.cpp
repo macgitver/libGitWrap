@@ -48,7 +48,7 @@ namespace Git
     {
 
         ReferencePrivate::ReferencePrivate(const RepositoryPrivate::Ptr& repo, git_reference* ref)
-            : RefNamePrivate(repo)
+            : RefNamePrivate(repo.data())
             , wasDeleted(false)
             , reference(ref)
         {
@@ -58,7 +58,7 @@ namespace Git
 
         ReferencePrivate::ReferencePrivate(const RepositoryPrivate::Ptr& repo, const QString& name,
                                            git_reference* ref)
-            : RefNamePrivate(repo, name)
+            : RefNamePrivate(repo.data(), name)
             , wasDeleted(false)
             , reference(ref)
         {
@@ -164,7 +164,7 @@ namespace Git
             return Reference();
         }
 
-        Repository::PrivatePtr repop(Private::dataOf<Repository>(repo));
+        Repository::Private* repop = Private::dataOf<Repository>(repo);
 
         git_reference* ref = NULL;
         QByteArray utf8Name = name.toUtf8();

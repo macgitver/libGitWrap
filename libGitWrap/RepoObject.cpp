@@ -37,6 +37,12 @@ namespace Git
         {
         }
 
+        RepoObjectPrivate::RepoObjectPrivate(RepositoryPrivate* repo)
+            : BasePrivate()
+            , mRepo(repo)
+        {
+        }
+
         Repository::PrivatePtr RepoObjectPrivate::repo() const
         {
             return mRepo;

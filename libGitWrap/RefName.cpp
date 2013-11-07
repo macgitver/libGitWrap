@@ -251,13 +251,13 @@ namespace Git
         {
         }
 
-        RefNamePrivate::RefNamePrivate(const RepositoryPrivate::Ptr& repo)
+        RefNamePrivate::RefNamePrivate(RepositoryPrivate* repo)
             : RepoObjectPrivate(repo)
             , isAnalyzed(false)
         {
         }
 
-        RefNamePrivate::RefNamePrivate(const RepositoryPrivate::Ptr& repo, const QString& name)
+        RefNamePrivate::RefNamePrivate(RepositoryPrivate* repo, const QString& name)
             : RepoObjectPrivate(repo)
             , isAnalyzed(false)
             , fqrn(name)
@@ -409,7 +409,7 @@ namespace Git
          * express that state in the private object.
          *
          */
-        ReferencePrivate* RefNamePrivate::createRefObject(const RepositoryPrivate::Ptr& repo,
+        ReferencePrivate* RefNamePrivate::createRefObject(Repository::Private* repo,
                                                           const QString& name, git_reference* lgo)
         {
             if (!lgo) {
@@ -449,7 +449,7 @@ namespace Git
      *
      */
     RefName::RefName(const Repository& repo, const QString& refName)
-        : RepoObject(new Private(Repository::PrivatePtr(Private::dataOf<Repository>(repo)),refName))
+        : RepoObject(new Private(Private::dataOf<Repository>(repo),refName))
     {
     }
 

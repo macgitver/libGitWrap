@@ -99,9 +99,9 @@ namespace Git
         {
             cb_append_reference_data *data = (cb_append_reference_data *)payload;
 
-            Repository::PrivatePtr repo(data->ptr);
             QString name = QString::fromUtf8(git_reference_name(reference));
-            Reference::Private* ref = Reference::Private::createRefObject(repo, name, reference);
+            Reference::Private* ref = Reference::Private::createRefObject(
+                        data->ptr, name, reference);
 
             data->refs.append(ref);
 
