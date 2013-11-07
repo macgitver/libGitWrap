@@ -948,13 +948,10 @@ namespace Git
      *
      * @param[in,out]   result      A Result object; see @ref GitWrapErrorHandling
      *
-     * @param[in]       branchName  The full qualified reference name of the branch to follow. The
-     *                              branch doesn't need to exist. If it doesn't exist, the HEAD will
-     *                              become orphaned but point to the branch once it is created.
-     *
-     * If the branchName is not a branch (doesn't start with `refs/heads`), but still is a valid
-     * reference and can be peeled into a commit object, the HEAD will be detached and point to the
-     * peeled commit.
+     * @param[in]       branchName  The (possibly full qualified) reference name of the branch to
+     *                              follow. The branch doesn't need to exist. If it doesn't exist,
+     *                              the HEAD will become orphaned but point to the branch once it is
+     *                              created.
      *
      */
     void Repository::setHEAD(Result& result, const QString& branchName)
@@ -965,6 +962,28 @@ namespace Git
     }
 
     /**
+     * @brief           Set the HEAD to follow a branch
+     *
+     * @param[in,out]   result      A Result object; see @ref GitWrapErrorHandling
+     *
+     * @param[in]       branch      The branch to follow.
+     *
+     */
+    void Repository::setHEAD(Result& result, const BranchRef& branch)
+    {
+        if (!result) {
+            return;
+        }
+
+        if (!branch.isValid()) {
+            result.setInvalidObject();
+            return;
+        }
+
+        setHEAD(result, branch.name());
+    }
+
+    /**
      * @brief           Set the HEAD detached to a commit
      *
      * @param[in,out]   result  A Result object; see @ref GitWrapErrorHandling
@@ -972,7 +991,7 @@ namespace Git
      * @param[in]       commit  The commit to point to.
      *
      */
-    void Repository::setHEAD(Result& result, const Commit& commit)
+    void Repository::setDetachedHEAD(Result& result, const Commit& commit)
     {
         GW_D_CHECKED_VOID(Repository, result);
 
@@ -981,7 +1000,21 @@ namespace Git
             return;
         }
 
-        result = git_repository_set_head_detached(d->mRepo, Private::sha(commit.id()));
+        setDetachedHEAD(result, commit.id());
+    }
+
+    /**
+     * @brief           Set the HEAD detached to a commit
+     *
+     * @param[in,out]   result  A Result object; see @ref GitWrapErrorHandling
+     *
+     * @param[in]       sha     The has of the commit to point to.
+     *
+     */
+    void Repository::setDetachedHEAD(Result& result, const ObjectId& sha)
+    {
+        GW_D_CHECKED_VOID(Repository, result);
+        result = git_repository_set_head_detached(d->mRepo, Private::sha(sha));
     }
 
     /**

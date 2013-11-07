@@ -275,7 +275,7 @@ namespace Git
         tree(result).checkout(result, force, paths);
 
         if (result && updateHEAD) {
-            setAsHEAD(result);
+            setAsDetachedHEAD(result);
         }
     }
 
@@ -320,24 +320,10 @@ namespace Git
         return dl;
     }
 
-    void Commit::setAsHEAD(Result& result) const
+    void Commit::setAsDetachedHEAD(Result& result) const
     {
         GW_CD_CHECKED_VOID(Commit, result);
-        repository().setHEAD(result, *this);
-    }
-
-    /**
-     * @brief           Set the HEAD ref to point (detached) to this commit.
-     *
-     * @param[in,out]   result  A Result object; see @ref GitWrapErrorHandling
-     *
-     */
-    void Commit::updateHEAD(Result &result) const
-    {
-        GW_CD_CHECKED_VOID(Commit, result)
-
-        result = git_repository_set_head_detached( d->repo()->mRepo
-                                                   , git_object_id( d->mObj ) );
+        repository().setDetachedHEAD(result, *this);
     }
 
 }

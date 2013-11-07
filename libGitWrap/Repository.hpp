@@ -59,8 +59,11 @@ namespace Git
         bool isHeadDetached() const;
 
         bool detachHead(Result& result);
+        void setDetachedHEAD(Result& result, const ObjectId& sha);
+        void setDetachedHEAD(Result& result, const Commit& commit);
+
+        void setHEAD(Result& result, const BranchRef& branch);
         void setHEAD(Result& result, const QString& branchName);
-        void setHEAD(Result& result, const Commit& commit);
 
         QString basePath() const;
         QString gitPath() const;

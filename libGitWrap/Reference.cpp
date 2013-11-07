@@ -529,7 +529,7 @@ namespace Git
             }
         }
         else {
-            peeled<Commit>(result).setAsHEAD(result);
+            peeled<Commit>(result).setAsDetachedHEAD(result);
         }
     }
 
