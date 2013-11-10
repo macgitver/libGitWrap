@@ -17,9 +17,9 @@
  *
  */
 
-#include "Config.hpp"
+#include "libGitWrap/Config.hpp"
 
-#include "Private/ConfigPrivate.hpp"
+#include "libGitWrap/Private/ConfigPrivate.hpp"
 
 namespace Git
 {
@@ -39,14 +39,7 @@ namespace Git
 
     }
 
-    Config::Config()
-    {
-    }
-
-    Config::Config(Internal::ConfigPrivate& _d)
-        : Base(_d)
-    {
-    }
+    GW_PRIVATE_IMPL(Config, Base)
 
     QString Config::globalFilePath()
     {
@@ -93,7 +86,7 @@ namespace Git
             return Config();
         }
 
-        return *new Internal::ConfigPrivate(cfg);
+        return PrivatePtr(new Private(cfg));
     }
 
     Config Config::user()
@@ -113,7 +106,7 @@ namespace Git
             return Config();
         }
 
-        return *new Internal::ConfigPrivate(cfg);
+        return PrivatePtr(new Private(cfg));
     }
 
     Config Config::file( const QString& fileName )
@@ -127,7 +120,7 @@ namespace Git
             return Config();
         }
 
-        return *new Internal::ConfigPrivate(cfg);
+        return PrivatePtr(new Private(cfg));
     }
 
     Config Config::create()
@@ -140,7 +133,7 @@ namespace Git
             return Config();
         }
 
-        return *new Internal::ConfigPrivate(cfg);
+        return PrivatePtr(new Private(cfg));
     }
 
     bool Config::addFile(const QString& fileName, int priority)
@@ -169,9 +162,9 @@ namespace Git
         return 0;
     }
 
-    ConfigValues Config::values()
+    ConfigValues Config::values() const
     {
-        GW_D(Config);
+        GW_CD(Config);
         ConfigValues values;
         git_config_foreach( d->mCfg, &read_config_cb, (void*) &values );
         return values;

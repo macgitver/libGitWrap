@@ -18,6 +18,7 @@
 #define GIT_REFERENCE_H
 
 #include "libGitWrap/RepoObject.hpp"
+#include "libGitWrap/Object.hpp"
 
 namespace Git
 {
@@ -27,32 +28,13 @@ namespace Git
         class ReferencePrivate;
     }
 
-    /**
-     * @ingroup     GitWrap
-     * @brief       Represents a git reference
-     *
-     */
+    class CheckoutBaseOperation;
+
     class GITWRAP_API Reference : public RepoObject
     {
+        GW_PRIVATE_DECL(Reference, RepoObject, public)
     public:
-        typedef Internal::ReferencePrivate Private;
-
-        enum Type
-        {
-            Direct, Symbolic, Invalid = -1
-        };
-
-    public:
-        Reference();
-        Reference(Internal::ReferencePrivate& _d);
-        Reference( const Reference& other );
-        ~Reference();
-        Reference& operator=( const Reference& other );
-
-        bool operator==( const Reference& other ) const;
-        bool operator!=( const Reference& other ) const;
-
-        int compare( const Reference& other ) const;
+        int compare(const Reference& other) const;
 
     public:
         static Reference create(
@@ -65,7 +47,7 @@ namespace Git
                 Result& result,
                 Repository repo,
                 const QString& name,
-                const ObjectCommit& commit);
+                const Commit& commit);
 
     public:
         QString name() const;
@@ -74,32 +56,61 @@ namespace Git
 
         RefName nameAnalyzer() const;
 
-        Type type( Result& result ) const;
-        ObjectId objectId( Result& result ) const;
-        QString target( Result& result ) const;
+        GW_DEPRECATED ReferenceTypes type(Result& result) const   { return type(); }
+        GW_DEPRECATED ObjectId objectId(Result& result) const     { return objectId(); }
+        GW_DEPRECATED QString target(Result& result) const        { return target(); }
+
+        ReferenceTypes type() const;
+        ObjectId objectId() const;
+        QString target() const;
 
         Reference resolved( Result& result ) const;
         ObjectId resolveToObjectId( Result& result ) const;
 
+        Object peeled(Result& result, ObjectType ot) const;
+
+        template< class T >
+        T peeled(Result& result) const;
+
+        ReferenceKinds kind() const;
+
+        BranchRef asBranch() const;
+        TagRef asTag() const;
+        NoteRef asNote() const;
+
+        template<class T>
+        T as() const;
+
         bool isCurrentBranch() const;
+        bool isBranch() const;
         bool isLocal() const;
         bool isRemote() const;
+        bool wasDestroyed() const;
 
+        CheckoutBaseOperation* checkoutOperation(Result& result) const;
         void checkout( Result& result,
-                       bool force = false,
-                       bool updateHEAD = true,
+                       CheckoutOptions opts = CheckoutNone,
+                       CheckoutMode mode = CheckoutSafeCreate,
                        const QStringList &paths = QStringList() ) const;
 
         void destroy( Result& result );
 
-        void move( Result &result, const ObjectCommit &target );
+        void setAsDetachedHEAD(Result& result) const;
+
+        void move( Result &result, const Commit &target );
         void rename(Result &result, const QString &newName , bool force = false );
 
         void updateHEAD(Result &result) const;
     };
 
+    template< class T >
+    inline T Reference::peeled(Result& result) const
+    {
+        return peeled(result, ObjectType(T::ObjectTypeId)).as<T>();
+    }
+
 }
 
-Q_DECLARE_METATYPE( Git::Reference )
+Q_DECLARE_METATYPE(Git::Reference)
 
 #endif

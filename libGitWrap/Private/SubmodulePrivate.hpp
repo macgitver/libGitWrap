@@ -1,6 +1,9 @@
 /*
  * MacGitver
- * Copyright (C) 2012-2013 Sascha Cunz <sascha@babbelbox.org>
+ * Copyright (C) 2012-2013 The MacGitver-Developers <dev@macgitver.org>
+ *
+ * (C) Sascha Cunz <sascha@macgitver.org>
+ * (C) Cunz RaD Ltd.
  *
  * This program is free software; you can redistribute it and/or modify it under the terms of the
  * GNU General Public License (Version 2) as published by the Free Software Foundation.
@@ -14,7 +17,11 @@
  *
  */
 
-#include "WorkerThread.hpp"
+#ifndef GITWRAP_SUBMODULE_PRIVATE_HPP
+#define GITWRAP_SUBMODULE_PRIVATE_HPP
+#pragma once
+
+#include "libGitWrap/Private/RepoObjectPrivate.hpp"
 
 namespace Git
 {
@@ -22,22 +29,22 @@ namespace Git
     namespace Internal
     {
 
-        Worker::~Worker()
+        class SubmodulePrivate : public RepoObjectPrivate
         {
-        }
+        public:
+            SubmodulePrivate(const Repository::PrivatePtr& repo, const QString& name);
 
-        WorkerThread::WorkerThread( QObject* parent, Worker* worker )
-            : QThread( parent )
-            , mWorker( worker )
-        {
-        }
+        public:
+            git_submodule* getSM( Result& rc ) const;
+            bool open(Result& result);
 
-        void WorkerThread::run()
-        {
-            Q_ASSERT( mWorker );
-            mWorker->run();
-        }
+        public:
+            QString             mName;
+            RepositoryPrivate*  mSubRepo;
+        };
 
     }
 
 }
+
+#endif

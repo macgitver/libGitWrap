@@ -19,11 +19,12 @@
 
 #ifndef GIT_REF_NAME_HPP
 #define GIT_REF_NAME_HPP
+#pragma once
 
 #include <QStringList>
 #include <QRegExp>
 
-#include "libGitWrap/Base.hpp"
+#include "libGitWrap/RepoObject.hpp"
 
 namespace Git
 {
@@ -35,20 +36,20 @@ namespace Git
 
     }
 
-    class GITWRAP_API RefName : public Base
+    class GITWRAP_API RefName : public RepoObject
     {
+        GW_PRIVATE_DECL(RefName, RepoObject, public)
+
     public:
-        RefName();
-        RefName(const RefName& other);
+        explicit RefName(const Repository& repo, const QString& refName);
         explicit RefName(const QString& refName);
-        ~RefName();
-        RefName& operator=(const RefName& other);
 
     public:
         bool isRemote();
 
         bool isTag();
         bool isBranch();
+        bool isNote();
 
         bool isStage();
         bool isHead();
@@ -74,11 +75,14 @@ namespace Git
         QString scopePrefix();
 
         QString tagName();
+        QString noteName();
         QString branchName();
 
         QString shorthand();
 
         bool matchesCustomRule(int id);
+
+        Reference reference() const;
 
     public:
         static int registerExpression(void* data, const QRegExp& regExp);

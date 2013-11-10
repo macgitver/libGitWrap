@@ -348,10 +348,10 @@ TEST(RefName, Specials_CommitNotes) {
     EXPECT_FALSE(rn.isStage());
     EXPECT_FALSE(rn.isCustom());
 
-    EXPECT_STREQ("", qPrintable(rn.name()));
+    EXPECT_STREQ("commit", qPrintable(rn.name()));
     EXPECT_STREQ("", qPrintable(rn.branchName()));
     EXPECT_STREQ("", qPrintable(rn.tagName()));
-    EXPECT_STREQ("", qPrintable(rn.localName()));
+    EXPECT_STREQ("commit", qPrintable(rn.localName()));
     EXPECT_STREQ("", qPrintable(rn.scopeName()));
     EXPECT_STREQ("", qPrintable(rn.namespaceName()));
     EXPECT_STREQ("", qPrintable(rn.remote()));

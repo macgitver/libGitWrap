@@ -16,10 +16,10 @@
  *
  */
 
-#include "IndexEntry.hpp"
-#include "ObjectId.hpp"
+#include "libGitWrap/IndexEntry.hpp"
+#include "libGitWrap/ObjectId.hpp"
 
-#include "Private/IndexEntryPrivate.hpp"
+#include "libGitWrap/Private/IndexEntryPrivate.hpp"
 
 namespace Git
 {
@@ -48,29 +48,7 @@ namespace Git
      * An IndexEntry object is a very short lived data container for an index' entry.
      */
 
-    IndexEntry::IndexEntry()
-    {
-    }
-
-    IndexEntry::IndexEntry(const IndexEntry& other)
-        : Base(other)
-    {
-    }
-
-    IndexEntry::IndexEntry(Internal::IndexEntryPrivate& _d)
-        : Base(_d)
-    {
-    }
-
-    IndexEntry::~IndexEntry()
-    {
-    }
-
-    IndexEntry &IndexEntry::operator =(const IndexEntry &other)
-    {
-        Base::operator=(other);
-        return *this;
-    }
+    GW_PRIVATE_IMPL(IndexEntry, Base)
 
     QString IndexEntry::path() const
     {

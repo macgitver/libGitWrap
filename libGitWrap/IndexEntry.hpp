@@ -31,16 +31,7 @@ namespace Git
 
     class GITWRAP_API IndexEntry : public Base
     {
-    public:
-        typedef Internal::IndexEntryPrivate Private;
-
-    public:
-        IndexEntry();
-        IndexEntry(const IndexEntry &other);
-        IndexEntry(Internal::IndexEntryPrivate& _d);
-        ~IndexEntry();
-
-        IndexEntry& operator=( const IndexEntry& other );
+        GW_PRIVATE_DECL(IndexEntry, Base, public)
 
     public:
         QString path() const;

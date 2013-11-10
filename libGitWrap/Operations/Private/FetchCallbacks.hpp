@@ -17,7 +17,7 @@
 #ifndef GITWRAP_FETCH_CALLBACKS_HPP
 #define GITWRAP_FETCH_CALLBACKS_HPP
 
-#include "GitWrapPrivate.hpp"
+#include "libGitWrap/Private/GitWrapPrivate.hpp"
 
 namespace Git
 {

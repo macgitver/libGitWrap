@@ -16,18 +16,19 @@
  *
  */
 
-#include "Index.hpp"
-#include "IndexEntry.hpp"
-#include "IndexConflict.hpp"
-#include "IndexConflicts.hpp"
-#include "Repository.hpp"
-#include "ObjectTree.hpp"
+#include "libGitWrap/Index.hpp"
+#include "libGitWrap/IndexEntry.hpp"
+#include "libGitWrap/IndexConflict.hpp"
+#include "libGitWrap/IndexConflicts.hpp"
+#include "libGitWrap/Repository.hpp"
+#include "libGitWrap/Tree.hpp"
 
-#include "Private/IndexPrivate.hpp"
-#include "Private/IndexEntryPrivate.hpp"
-#include "Private/IndexConflictPrivate.hpp"
-#include "Private/RepositoryPrivate.hpp"
-#include "Private/ObjectPrivate.hpp"
+#include "libGitWrap/Private/IndexPrivate.hpp"
+#include "libGitWrap/Private/IndexEntryPrivate.hpp"
+#include "libGitWrap/Private/IndexConflictPrivate.hpp"
+#include "libGitWrap/Private/RepositoryPrivate.hpp"
+#include "libGitWrap/Private/ObjectPrivate.hpp"
+#include "libGitWrap/Private/TreePrivate.hpp"
 
 namespace Git
 {
@@ -35,7 +36,7 @@ namespace Git
     namespace Internal
     {
 
-        IndexPrivate::IndexPrivate(RepositoryPrivate *repo, git_index* index)
+        IndexPrivate::IndexPrivate(const RepositoryPrivate::Ptr& repo, git_index* index)
             : RepoObjectPrivate(repo)
             , index(index)
             , conflictsLoaded(false)
@@ -108,108 +109,59 @@ namespace Git
      * Index i;
      * i.readTree(result, rootTree);
      * // modify i...
-     * ObjectTree newRoot = i.writeTreeTo(result, repository);
+     * Tree newRoot = i.writeTreeTo(result, repository);
      * @endcode
      *
      */
 
+    GW_PRIVATE_IMPL(Index, RepoObject)
 
     /**
-     * @brief       Constructor
+     * @brief       Create an in-memory index
      *
-     * @param[in]   create      If `true`, an _in-memory_ Index will be created. An in-memory index
-     *                          can be used to perform index operations, but cannot be written to
-     *                          disc.
-     *                          If `false` (the default), an invalid Index object will be
-     *                          constructed, which is equal to a default constructed object.
+     * @return      The created _in-memory_ Index.
+     *
+     * An in-memory index can be used to perform index operations, but cannot be written to disc.
      *
      */
-    Index::Index( bool create )
+    Index Index::createInMemory()
     {
-        if( create )
-        {
-            git_index* index = NULL;
+        git_index* index = NULL;
 
-            // We can't do anything with a potential error; anyway: it can only error out in
-            // Out-Of-Memory case.
-            git_index_new(&index);
+        // We can't do anything with a potential error; anyway: it can only error out in
+        // Out-Of-Memory case.
+        git_index_new(&index);
 
-            mData = new Internal::IndexPrivate(NULL, index);
-        }
+        return PrivatePtr(new Private(Repository::PrivatePtr(), index));
     }
 
     /**
-     * @brief           Constructor
+     * @brief           Open an existing on disc index
+     *
+     * @param[in,out]   result  A Result object; see @ref GitWrapErrorHandling
      *
      * @param[in]       path    Path to read an index from.
      *
-     * @param[in,out]   result  A Result object; see @ref GitWrapErrorHandling
+     * @return          The loaded index or an invalid Index object if anything went wrong.
      *
      * Creates a so called _bare_ index. A bare index is loaded from disc (from the @a path file)
      * and can be stored back there. It is _not_ associated with any repository.
      *
      */
-    Index::Index(Result& result, const QString& path)
+    Index Index::openPath(Result& result, const QString& path)
     {
-        if(!result) {
-            // Simply keep ourselves invalid, as we cannot report
-            return;
+        if (!result) {
+            return Index();
         }
 
         git_index* index = NULL;
-
         result = git_index_open( &index, path.toUtf8().constData() );
+
         if (!result) {
-            // Simply keep ourselves invalid, as we cannot report
-            return;
+            return Index();
         }
 
-        mData = new Internal::IndexPrivate( NULL, index );
-    }
-
-    /**
-     * @internal
-     * @brief       Constructor
-     *
-     * @param[in]   _d  Internal data pointer to use for construction.
-     *
-     */
-    Index::Index(Internal::IndexPrivate& _d)
-        : RepoObject( _d )
-    {
-    }
-
-    /**
-     * @brief       Constructor (Copy)
-     *
-     * @param[in]   o   The Index object to create a copy of.
-     *
-     */
-    Index::Index(const Index& o)
-        : RepoObject(o)
-    {
-    }
-
-    /**
-     * @brief       Destructor
-     *
-     * Does nothing.
-     */
-    Index::~Index()
-    {
-    }
-
-    /**
-     * @brief       Assignment operator
-     *
-     * @param[in]   other   The Index object to assign to @c this
-     *
-     * @return      A reference to @c this.
-     */
-    Index& Index::operator=( const Index& other )
-    {
-        RepoObject::operator=(other);
-        return *this;
+        return PrivatePtr(new Private(Repository::PrivatePtr(), index));
     }
 
     /**
@@ -221,7 +173,7 @@ namespace Git
     bool Index::isBare() const
     {
         GW_CD(Index);
-        return d->repo() == NULL;
+        return d->repo().data() == NULL;
     }
 
     /**
@@ -265,7 +217,7 @@ namespace Git
             result.setError(GIT_ENOTFOUND);
         }
 
-        return IndexEntry(*new Internal::IndexEntryPrivate(entry));
+        return IndexEntry::PrivatePtr(new IndexEntry::Private(entry));
     }
 
     /**
@@ -296,7 +248,7 @@ namespace Git
             result.setError(GIT_ENOTFOUND);
         }
 
-        return IndexEntry(*new Internal::IndexEntryPrivate(entry));
+        return IndexEntry::PrivatePtr(new IndexEntry::Private(entry));
     }
 
     /**
@@ -463,18 +415,11 @@ namespace Git
     void Index::checkoutFiles(Result &result, const QStringList &paths)
     {
         GW_D_CHECKED_VOID(Index, result)
-
         git_checkout_opts options = GIT_CHECKOUT_OPTS_INIT;
         options.checkout_strategy = GIT_CHECKOUT_FORCE;
+        Internal::StrArray(options.paths, paths);
 
-        // TODO don't copy, just map paths here
-        result = git_strarray_copy( &options.paths, Internal::StrArrayWrapper( paths ) );
-        if ( !result )
-            return;
-
-        result = git_checkout_index( d->repo()->mRepo, d->index, &options );
-
-        git_strarray_free(&options.paths);
+        result = git_checkout_index(d->repo()->mRepo, d->index, &options);
     }
 
     /**
@@ -533,7 +478,7 @@ namespace Git
      *
      * The index is cleared and recursively populated with all tree entries contained in @a tree.
      */
-    void Index::readTree(Result& result, ObjectTree& tree)
+    void Index::readTree(Result& result, Tree& tree)
     {
         GW_D_CHECKED_VOID(Index, result);
 
@@ -542,10 +487,8 @@ namespace Git
             return;
         }
 
-        Internal::ObjectPrivate* op = Internal::BasePrivate::dataOf<Object>(tree);
-        const git_tree* treeobj = (const git_tree*) op->mObj;
-
-        result = git_index_read_tree(d->index, treeobj);
+        Tree::Private* tp = Private::dataOf<Tree>(tree);
+        result = git_index_read_tree(d->index, tp->o());
 
         if (result) {
             d->clearKnownConflicts();
@@ -557,8 +500,7 @@ namespace Git
      *
      * @param[in,out]   result  A Result object; see @ref GitWrapErrorHandling
      *
-     * @return      The root tree as ObjectTree on success; an invalid ObjectTree in case of any
-     *              failure.
+     * @return      The root tree as Tree on success; an invalid Tree in case of any failure.
      *
      * The Index object must not be bare (isBare() must return @c false) and be associated to a
      * repository. It must also not contain any conflict entries (hasConflicts() must return
@@ -571,14 +513,14 @@ namespace Git
      * tree objects.
      *
      */
-    ObjectTree Index::writeTree(Result& result)
+    Tree Index::writeTree(Result& result)
     {
-        GW_D_CHECKED(Index, ObjectTree(), result)
+        GW_D_CHECKED(Index, Tree(), result)
 
         git_oid treeGitOid;
         result = git_index_write_tree(&treeGitOid, d->index);
         if (!result) {
-            return ObjectTree();
+            return Tree();
         }
 
         return repository().lookupTree(result, ObjectId::fromRaw(treeGitOid.id));
@@ -591,8 +533,7 @@ namespace Git
      *
      * @param[in]       repo    The repository to store objects into
      *
-     * @return      The root tree as ObjectTree on success; an invalid ObjectTree in case of any
-     *              failure.
+     * @return      The root tree as Tree on success; an invalid Tree in case of any failure.
      *
      * The Index must not contain any conflict entries (hasConflicts() must return @c false).
      *
@@ -600,20 +541,20 @@ namespace Git
      * as tree objects.
      *
      */
-    ObjectTree Index::writeTreeTo(Result& result, Repository& repo)
+    Tree Index::writeTreeTo(Result& result, Repository& repo)
     {
-        GW_D_CHECKED(Index, ObjectTree(), result)
+        GW_D_CHECKED(Index, Tree(), result)
 
         if (!repo.isValid()) {
             result.setInvalidObject();
-            return ObjectTree();
+            return Tree();
         }
 
         git_oid treeGitOid;
         Repository::Private* rp = Private::dataOf<Repository>(repo);
         result = git_index_write_tree_to(&treeGitOid, d->index, rp->mRepo);
         if (!result) {
-            return ObjectTree();
+            return Tree();
         }
 
         return repo.lookupTree(result, ObjectId::fromRaw(treeGitOid.id));
@@ -627,8 +568,8 @@ namespace Git
      */
     IndexConflicts Index::conflicts() const
     {
-        GW_D(Index);
-        return IndexConflicts(*d);
+        GW_CD_EX(Index);
+        return d;
     }
 
     /**
@@ -640,7 +581,7 @@ namespace Git
      */
     bool Index::hasConflicts() const
     {
-        GW_D(Index);
+        GW_CD(Index);
         return d && git_index_has_conflicts(d->index);
     }
 

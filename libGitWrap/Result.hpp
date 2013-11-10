@@ -17,7 +17,7 @@
 #ifndef GIT_ERROR_H
 #define GIT_ERROR_H
 
-#include "GitWrap.hpp"
+#include "libGitWrap/GitWrap.hpp"
 
 namespace Git
 {
@@ -53,7 +53,8 @@ namespace Git
         void clear();
 
     public:
-        void setError( int resultCode );
+        void setError(const char* szErrorText, int code);
+        void setError(int resultCode);
         void setInvalidObject();
 
     private:

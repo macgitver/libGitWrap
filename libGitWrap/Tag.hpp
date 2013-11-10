@@ -14,31 +14,41 @@
  *
  */
 
-#include "ObjectTag.hpp"
+#ifndef GIT_OBJECT_TAG_H
+#define GIT_OBJECT_TAG_H
 
-#include "Private/ObjectPrivate.hpp"
-#include "Private/GitWrapPrivate.hpp"
+#include "libGitWrap/GitWrap.hpp"
+#include "libGitWrap/ObjectId.hpp"
+#include "libGitWrap/Object.hpp"
 
 namespace Git
 {
 
-    ObjectTag::ObjectTag()
+    namespace Internal
     {
+        class TagPrivate;
     }
 
-    ObjectTag::ObjectTag( Internal::ObjectPrivate& _d )
-        : Object(_d)
+    /**
+     * @ingroup     GitWrap
+     * @brief       Represents a git tag object.
+     *
+     */
+    class GITWRAP_API Tag : public Object
     {
-        Result r;
-        if( ( type( r ) != otTag ) || !r )
-        {
-            mData = NULL;
-        }
-    }
+        GW_PRIVATE_DECL(Tag, Object, public)
+    public:
+        enum { ObjectTypeId = otTag };
+    };
 
-    ObjectTag::ObjectTag( const ObjectTag& o )
-        : Object( o )
+    template<>
+    inline Tag Object::as() const
     {
+        return asTag();
     }
 
 }
+
+Q_DECLARE_METATYPE(Git::Tag)
+
+#endif

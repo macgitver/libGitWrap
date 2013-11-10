@@ -31,8 +31,7 @@ namespace Git
 
     class GITWRAP_API Index : public RepoObject
     {
-    public:
-        explicit Index(Internal::IndexPrivate& _d);
+        GW_PRIVATE_DECL(Index, RepoObject, public);
 
     public:
         enum Stages {
@@ -43,13 +42,8 @@ namespace Git
         };
 
     public:
-        Index( bool create = false );
-        Index( Result& result, const QString& path );
-        Index( const Index& other );
-        ~Index();
-
-    public:
-        Index& operator=( const Index& other );
+        static Index createInMemory();
+        static Index openPath(Result& result, const QString& path);
 
     public:
         bool isBare() const;
@@ -57,9 +51,9 @@ namespace Git
         void read(Result& result);
         void write(Result& result);
         void clear();
-        void readTree(Result& result, ObjectTree& tree);
-        ObjectTree writeTree(Result& result);
-        ObjectTree writeTreeTo(Result& result, Repository& repo);
+        void readTree(Result& result, Tree& tree);
+        Tree writeTree(Result& result);
+        Tree writeTreeTo(Result& result, Repository& repo);
 
         // Methods to access and change entries
         int count( Result& result ) const;

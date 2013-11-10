@@ -35,11 +35,13 @@ namespace Git
          */
         class RepoObjectPrivate : public BasePrivate
         {
-        public:
+        protected:
+            RepoObjectPrivate();
+            RepoObjectPrivate(const RepositoryPrivate::Ptr& repo);
             RepoObjectPrivate(RepositoryPrivate* repo);
 
         public:
-            RepositoryPrivate* repo() const;
+            RepositoryPrivate::Ptr repo() const;
 
         protected:
             RepositoryPrivate::Ptr mRepo;

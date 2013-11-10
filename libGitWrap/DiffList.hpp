@@ -34,19 +34,7 @@ namespace Git
      */
     class GITWRAP_API DiffList : public RepoObject
     {
-    public:
-        typedef Internal::DiffListPrivate Private;
-
-    public:
-        explicit DiffList(Internal::DiffListPrivate& _d);
-
-    public:
-        DiffList(const DiffList& other);
-        DiffList();
-        ~DiffList();
-
-    public:
-        DiffList& operator=( const DiffList& other );
+        GW_PRIVATE_DECL(DiffList, RepoObject, public);
 
     public:
         bool mergeOnto( Result& result, DiffList other ) const;
@@ -62,6 +50,6 @@ namespace Git
 
 }
 
-Q_DECLARE_METATYPE( Git::DiffList )
+Q_DECLARE_METATYPE(Git::DiffList)
 
 #endif

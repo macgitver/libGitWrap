@@ -14,11 +14,11 @@
  *
  */
 
-#include "Remote.hpp"
-#include "Reference.hpp"
-#include "RefSpec.hpp"
+#include "libGitWrap/Remote.hpp"
+#include "libGitWrap/Reference.hpp"
+#include "libGitWrap/RefSpec.hpp"
 
-#include "Private/RemotePrivate.hpp"
+#include "libGitWrap/Private/RemotePrivate.hpp"
 
 namespace Git
 {
@@ -26,7 +26,7 @@ namespace Git
     namespace Internal
     {
 
-        RemotePrivate::RemotePrivate(RepositoryPrivate* repo, git_remote* remote)
+        RemotePrivate::RemotePrivate(Repository::Private* repo, git_remote* remote)
             : RepoObjectPrivate(repo)
             , mRemote(remote)
         {
@@ -40,28 +40,39 @@ namespace Git
 
     }
 
-    Remote::Remote()
-    {
-    }
+    GW_PRIVATE_IMPL(Remote, RepoObject)
 
-    Remote::Remote(Internal::RemotePrivate& _d)
-        : RepoObject(_d)
+    Remote Remote::create(Result& result, const Repository& repository, const QString& name,
+                          const QString& url, const QString& fetchSpec)
     {
-    }
+        if (!result) {
+            return Remote();
+        }
 
-    Remote::Remote(const Remote& other)
-        : RepoObject(other)
-    {
-    }
+        if (!repository.isValid()) {
+            result.setInvalidObject();
+            return Remote();
+        }
 
-    Remote::~Remote()
-    {
-    }
+        Repository::Private* rp = Private::dataOf<Repository>(repository);
 
-    Remote& Remote::operator=(const Remote& other)
-    {
-        RepoObject::operator =(other);
-        return * this;
+        git_remote* remote = NULL;
+        result = git_remote_create(&remote, rp->mRepo, name.toUtf8().constData(),
+                                   url.toUtf8().constData() );
+        if (!result) {
+            return Remote();
+        }
+
+        Remote remo = new Remote::Private(rp, remote);
+
+        if (!fetchSpec.isEmpty()) {
+            remo.addFetchSpec(result, fetchSpec);
+            if (!result) {
+                return Remote();
+            }
+        }
+
+        return remo;
     }
 
     bool Remote::save( Result& result )

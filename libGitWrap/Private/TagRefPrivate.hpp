@@ -1,6 +1,10 @@
 /*
  * MacGitver
- * Copyright (C) 2012-2013 Sascha Cunz <sascha@babbelbox.org>
+ * Copyright (C) 2012-2013 The MacGitver-Developers <dev@macgitver.org>
+ *
+ * (C) Sascha Cunz <sascha@macgitver.org>
+ * (C) Nils Fenner <nilsfenner@web.de>
+ * (C) Cunz RaD Ltd.
  *
  * This program is free software; you can redistribute it and/or modify it under the terms of the
  * GNU General Public License (Version 2) as published by the Free Software Foundation.
@@ -14,10 +18,11 @@
  *
  */
 
-#ifndef GITWRAP_WORKER_THREAD_HPP
-#define GITWRAP_WORKER_THREAD_HPP
+#ifndef GITWRAP_TAG_REF_PRIVATE_HPP
+#define GITWRAP_TAG_REF_PRIVATE_HPP
+#pragma once
 
-#include <QThread>
+#include "libGitWrap/Private/ReferencePrivate.hpp"
 
 namespace Git
 {
@@ -25,26 +30,14 @@ namespace Git
     namespace Internal
     {
 
-        class Worker
+        class TagRefPrivate : public ReferencePrivate
         {
         public:
-            virtual ~Worker();
+            TagRefPrivate(const RepositoryPrivate::Ptr& repo, git_reference* reference);
+            TagRefPrivate(git_reference* reference, const RefNamePrivate* refName);
 
         public:
-            virtual void run() = 0;
-        };
-
-        class WorkerThread : public QThread
-        {
-            Q_OBJECT
-        public:
-            WorkerThread( QObject* parent, Worker* worker );
-
-        public:
-            void run();
-
-        private:
-            Worker* mWorker;
+            ReferenceKinds kind() const;
         };
 
     }

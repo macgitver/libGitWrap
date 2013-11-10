@@ -40,23 +40,28 @@ namespace Git
 
     }
 
-    RevisionWalker::RevisionWalker()
-    {
-    }
+    GW_PRIVATE_IMPL(RevisionWalker, RepoObject)
 
-    RevisionWalker::RevisionWalker(Internal::RevisionWalkerPrivate& _d)
-        : RepoObject(_d)
+    RevisionWalker RevisionWalker::create(Result& result, const Repository& repository)
     {
-    }
+        if (!result) {
+            return RevisionWalker();
+        }
 
-    RevisionWalker::~RevisionWalker()
-    {
-    }
+        if (!repository) {
+            return RevisionWalker();
+        }
 
-    RevisionWalker& RevisionWalker::operator=(const RevisionWalker& other)
-    {
-        RepoObject::operator=(other);
-        return * this;
+        Repository::Private* rp = Private::dataOf<Repository>(repository);
+        git_revwalk* walker = NULL;
+
+        result = git_revwalk_new(&walker, rp->mRepo);
+
+        if (!result) {
+            return RevisionWalker();
+        }
+
+        return new RevisionWalker::Private(rp, walker);
     }
 
     void RevisionWalker::reset( Result& result )

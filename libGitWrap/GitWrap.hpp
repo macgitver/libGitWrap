@@ -34,28 +34,14 @@
 #	define GITWRAP_API Q_DECL_IMPORT
 #endif
 
+#ifndef GW_NO_DEPRECATION
+#   define GW_DEPRECATED Q_DECL_DEPRECATED
+#else
+#   define GW_DEPRECATED
+#endif
+
 namespace Git
 {
-
-    enum ObjectType
-    {
-        otTree,
-        otCommit,
-        otBlob,
-        otTag,
-
-        otAny = -1
-    };
-
-    enum TreeEntryAttributes
-    {
-        UnkownAttr          = 0,
-        TreeAttr            = 0040000,
-        FileAttr            = 0100644,
-        FileExecutableAttr  = 0100755,
-        GitLinkAttr         = 0120000,
-        SubmoduleAttr       = 0160000
-    };
 
     class ChangeListConsumer;
     class DiffList;
@@ -64,11 +50,14 @@ namespace Git
     class IndexConflicts;
     class IndexEntry;
     class Object;
-    class ObjectBlob;
-    class ObjectCommit;
     class ObjectId;
-    class ObjectTag;
-    class ObjectTree;
+    class Blob;
+    class BranchRef;
+    class Commit;
+    class NoteRef;
+    class Tag;
+    class TagRef;
+    class Tree;
     class PatchConsumer;
     class RefName;
     class RefSpec;
@@ -86,7 +75,9 @@ namespace Git
     typedef QVector< Reference >        ReferenceList;
     typedef QVector< Remote >           RemoteList;
     typedef QVector< Submodule >        SubmoduleList;
-    typedef QVector< ObjectCommit >     ObjectCommitList;
+    typedef QVector< Commit >           CommitList;
+
+    typedef GW_DEPRECATED CommitList ObjectCommitList;
 
     /**
      * @enum        Status
@@ -220,7 +211,74 @@ namespace Git
     };
     Q_DECLARE_FLAGS ( StatusFlags, Status )
 
-    typedef QHash< QString, StatusFlags > StatusHash;
+    enum ObjectType
+    {
+        otTree,
+        otCommit,
+        otBlob,
+        otTag,
+
+        otAny = -1
+    };
+
+    enum FileModes
+    {
+        UnkownAttr          = 0,
+        TreeAttr            = 0040000,
+        FileAttr            = 0100644,
+        FileExecutableAttr  = 0100755,
+        GitLinkAttr         = 0120000,
+        SubmoduleAttr       = 0160000
+    };
+
+    enum ReferenceTypes
+    {
+        ReferenceDirect,
+        ReferenceSymbolic,
+
+        ReferenceInvalid = -1
+    };
+
+    enum ReferenceKinds
+    {
+        BranchReference,
+        TagReference,
+        NoteReference,
+
+        UnknownReference
+    };
+
+    enum CheckoutMode
+    {
+        CheckoutDryRun,
+        CheckoutSafe,
+        CheckoutSafeCreate,
+        CheckoutForce
+    };
+
+    enum CheckoutOption
+    {
+        CheckoutUpdateHEAD              = (1UL <<  0),
+        CheckoutAllowDetachHEAD         = (1UL <<  1),
+        CheckoutForceDetachHEAD         = (1UL <<  2),
+        CheckoutCreateLocalBranch       = (1UL <<  3),
+
+        /* these are LG2 flags: */
+        CheckoutAllowConflicts          = (1UL <<  8),
+        CheckoutRemoveUntracked         = (1UL <<  9),
+        CheckoutRemoveIgnored           = (1UL << 10),
+        CheckoutNoRefresh               = (1UL << 11),
+        CheckoutUpdateOnly              = (1UL << 12),
+        CheckoutDontUpdateIndex         = (1UL << 13),
+        CheckoutDisablePathSpecMatch    = (1UL << 14),
+        CheckoutSkipLockedDirectories   = (1UL << 15),
+
+        CheckoutNone                    = 0
+    };
+
+    typedef QFlags<CheckoutOption> CheckoutOptions;
+
+    typedef QHash<QString, StatusFlags> StatusHash;
 
     class Result;
 
@@ -235,5 +293,53 @@ namespace Git
     };
 
 }
+
+// Note, that macros like these are also a good way to hide the nasty administrative stuff from
+// Doxygen, later...
+
+#define GW_PRIVATE_DECL_EX(SHARE, CLASS, BASE, SCOPE) \
+    public: \
+        typedef Internal::SHARE##Private Private; \
+        typedef QExplicitlySharedDataPointer<Private> PrivatePtr; \
+    \
+    SCOPE: \
+        CLASS() \
+            : BASE() \
+            {} \
+        \
+        CLASS(Private* _d); \
+        CLASS(const PrivatePtr& _d); \
+        \
+        CLASS(const CLASS& other) \
+            : BASE(other) \
+            {} \
+        \
+        CLASS& operator=(const CLASS& other) \
+            { return static_cast<CLASS&>(BASE::operator=(other)); } \
+        \
+        bool operator==(const CLASS& other) const \
+            { return BASE::operator==(other); } \
+        \
+        bool operator!=(const CLASS& other) const \
+            { return BASE::operator!=(other); } \
+        \
+        bool operator!() const \
+            { return !isValid(); } \
+        \
+    public: \
+        ~CLASS() \
+            {}
+
+#define GW_PRIVATE_IMPL(CLASS, BASE) \
+    CLASS::CLASS(Private* _d) \
+        : BASE(PrivatePtr(_d)) \
+        {} \
+    \
+    CLASS::CLASS(const PrivatePtr& _d) \
+        : BASE(_d) \
+        {}
+
+#define GW_PRIVATE_DECL(CLASS, BASE, SCOPE) \
+    GW_PRIVATE_DECL_EX(CLASS, CLASS, BASE, SCOPE)
 
 #endif

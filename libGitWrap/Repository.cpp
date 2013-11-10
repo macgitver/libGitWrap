@@ -14,27 +14,34 @@
  *
  */
 
-#include "Result.hpp"
-#include "Index.hpp"
-#include "Remote.hpp"
-#include "Repository.hpp"
-#include "Reference.hpp"
-#include "DiffList.hpp"
-#include "Object.hpp"
-#include "ObjectTag.hpp"
-#include "ObjectTree.hpp"
-#include "ObjectBlob.hpp"
-#include "ObjectCommit.hpp"
-#include "RevisionWalker.hpp"
+#include <QStringBuilder>
 
-#include "Private/GitWrapPrivate.hpp"
-#include "Private/IndexPrivate.hpp"
-#include "Private/RemotePrivate.hpp"
-#include "Private/RepositoryPrivate.hpp"
-#include "Private/ReferencePrivate.hpp"
-#include "Private/DiffListPrivate.hpp"
-#include "Private/ObjectPrivate.hpp"
-#include "Private/RevisionWalkerPrivate.hpp"
+#include "libGitWrap/Result.hpp"
+#include "libGitWrap/Index.hpp"
+#include "libGitWrap/Remote.hpp"
+#include "libGitWrap/Repository.hpp"
+#include "libGitWrap/Reference.hpp"
+#include "libGitWrap/DiffList.hpp"
+#include "libGitWrap/Object.hpp"
+#include "libGitWrap/Tag.hpp"
+#include "libGitWrap/Tree.hpp"
+#include "libGitWrap/Blob.hpp"
+#include "libGitWrap/Commit.hpp"
+#include "libGitWrap/RevisionWalker.hpp"
+#include "libGitWrap/Submodule.hpp"
+#include "libGitWrap/BranchRef.hpp"
+#include "libGitWrap/TagRef.hpp"
+#include "libGitWrap/NoteRef.hpp"
+
+#include "libGitWrap/Private/GitWrapPrivate.hpp"
+#include "libGitWrap/Private/IndexPrivate.hpp"
+#include "libGitWrap/Private/RemotePrivate.hpp"
+#include "libGitWrap/Private/RepositoryPrivate.hpp"
+#include "libGitWrap/Private/ReferencePrivate.hpp"
+#include "libGitWrap/Private/DiffListPrivate.hpp"
+#include "libGitWrap/Private/ObjectPrivate.hpp"
+#include "libGitWrap/Private/SubmodulePrivate.hpp"
+#include "libGitWrap/Private/RevisionWalkerPrivate.hpp"
 
 #include <QDir>
 
@@ -53,6 +60,12 @@ namespace Git
         RepositoryPrivate::~RepositoryPrivate()
         {
             Q_ASSERT( mRepo );
+
+            if (openedFrom.isValid()) {
+                Submodule::Private* smp = dataOf<Submodule>(openedFrom);
+                Q_ASSERT(smp);
+                smp->mSubRepo = NULL;
+            }
 
             // This assert may not look right in the first place, but it IS:
             // mIndex is of type IndexPrivate* and will get a value as soon as Repository::index()
@@ -91,63 +104,18 @@ namespace Git
         {
             cb_append_reference_data *data = (cb_append_reference_data *)payload;
 
-            data->refs.append(*new ReferencePrivate(data->ptr, reference));
+            QString name = QString::fromUtf8(git_reference_name(reference));
+            Reference::Private* ref = Reference::Private::createRefObject(
+                        data->ptr, name, reference);
+
+            data->refs.append(ref);
 
             return 0;
         }
 
     }
 
-    /**
-     * @internal
-     * @brief       Create a Repository object
-     * @param[in]   _d  Pointer to private data.
-     */
-    Repository::Repository(Internal::RepositoryPrivate& _d )
-        : Base(_d)
-    {
-    }
-
-    /**
-     * @brief       Copy Constructor
-     *
-     * Creates a Repository object that represents the same repository as @a o. If @a o is an
-     * invalid Repository object, this will become an invalid one too.
-     *
-     * @param[in]   o   An existing Repository object
-     *
-     */
-    Repository::Repository(const Repository& other)
-        : Base(other)
-    {
-    }
-
-    /**
-     * @brief       Create an invalid Repository object
-     */
-    Repository::Repository()
-    {
-    }
-
-    /**
-     * @brief       Destructor
-     */
-    Repository::~Repository()
-    {
-    }
-
-    /**
-     * @brief       Assignment operator
-     *
-     * @param[in]   o   An existing Repository object
-     *
-     * @return      A reference to this repository object.
-     */
-    Repository& Repository::operator=(const Repository& other)
-    {
-        Base::operator=(other);
-        return * this;
-    }
+    GW_PRIVATE_IMPL(Repository, Base)
 
     /**
      * @brief       Create a new repository
@@ -186,7 +154,7 @@ namespace Git
             return Repository();
         }
 
-        return Repository(*new Internal::RepositoryPrivate(repo));
+        return PrivatePtr(new Private(repo));
     }
 
     /**
@@ -244,6 +212,7 @@ namespace Git
      * @a path.
      *
      * @param[in]       path    The path of the repository to open.
+     *
      * @param[in,out]   result  A result object; see @ref GitWrapErrorHandling
      *
      * @return  If successful, a `Repository` object for the opened repostiory will be returned.
@@ -268,7 +237,23 @@ namespace Git
             return Repository();
         }
 
-        return Repository(*new Internal::RepositoryPrivate(repo));
+        return PrivatePtr(new Private(repo));
+    }
+
+    /**
+     * @brief           Open a independant instance of this repository
+     *
+     * @param[in,out]   result  A result object; see @ref GitWrapErrorHandling
+     *
+     * @return          A Repository object that refers to the same repository, but actually is
+     *                  absolutely independant of this repository object.
+     *
+     * The repository is opened using the working directory path, not the .git path.
+     *
+     */
+    Repository Repository::reopen(Result& result) const
+    {
+        return open(basePath(), result);
     }
 
     /**
@@ -334,10 +319,10 @@ namespace Git
                 return Index();
             }
 
-            d->mIndex = new Internal::IndexPrivate(d, index);
+            d->mIndex = new Index::Private(PrivatePtr(d), index);
         }
 
-        return Index(*d->mIndex);
+        return Index::PrivatePtr(d->mIndex);
     }
 
     /**
@@ -620,7 +605,7 @@ namespace Git
 
     Reference Repository::HEAD( Result& result ) const
     {
-        GW_D_CHECKED(Repository, Reference(), result);
+        GW_CD_EX_CHECKED(Repository, Reference(), result);
 
         git_reference* refHead = NULL;
 
@@ -630,92 +615,72 @@ namespace Git
             return Reference();
         }
 
-        return *new Internal::ReferencePrivate(d, refHead);
+        return Reference::PrivatePtr(new Reference::Private(PrivatePtr(d), refHead));
     }
 
     Object Repository::lookup( Result& result, const ObjectId& id, ObjectType ot )
     {
-        GW_D_CHECKED(Repository, Object(), result);
+        GW_D_EX_CHECKED(Repository, Object(), result);
 
         git_object* obj = NULL;
-        git_otype gitObjType;
+        git_otype gitObjType = Internal::objectType2gitotype(ot);
 
-        switch( ot )
-        {
-        case otAny:     gitObjType = GIT_OBJ_ANY;       break;
-        case otCommit:  gitObjType = GIT_OBJ_COMMIT;    break;
-        case otTree:    gitObjType = GIT_OBJ_TREE;      break;
-        case otTag:     gitObjType = GIT_OBJ_TAG;       break;
-        case otBlob:    gitObjType = GIT_OBJ_BLOB;      break;
-        default:        Q_ASSERT( false ); return Object();
-        }
-
-        result = git_object_lookup( &obj, d->mRepo, (git_oid*) id.raw(), gitObjType );
-        if( !result )
-        {
+        result = git_object_lookup(&obj, d->mRepo, Private::sha(id), gitObjType);
+        if (!result) {
             return Object();
         }
 
-        return *new Internal::ObjectPrivate(d, obj);
+        return Object::Private::create(d, obj);
     }
 
-    ObjectCommit Repository::lookupCommit(Result& result, const ObjectId& id)
+    Commit Repository::lookupCommit(Result& result, const ObjectId& id)
     {
-        return lookup( result, id, otCommit ).asCommit( result );
+        return lookup( result, id, otCommit ).asCommit();
     }
 
-    ObjectTree Repository::lookupTree(Result& result, const ObjectId& id)
+    Tree Repository::lookupTree(Result& result, const ObjectId& id)
     {
-        return lookup( result, id, otTree ).asTree( result );
+        return lookup( result, id, otTree ).asTree();
     }
 
-    ObjectBlob Repository::lookupBlob(Result& result, const ObjectId& id)
+    Blob Repository::lookupBlob(Result& result, const ObjectId& id)
     {
-        return lookup( result, id, otBlob ).asBlob( result );
+        return lookup( result, id, otBlob ).asBlob();
     }
 
-    ObjectTag Repository::lookupTag(Result& result, const ObjectId& id)
+    Tag Repository::lookupTag(Result& result, const ObjectId& id)
     {
-        return lookup( result, id, otTag ).asTag( result );
+        return lookup( result, id, otTag ).asTag();
     }
 
     Object Repository::lookup( Result& result, const QString& refName, ObjectType ot )
     {
-        return lookup( result, lookupRef( result, refName ).resolveToObjectId( result ), ot );
+        return lookup(result, reference(result, refName).resolveToObjectId(result), ot);
     }
 
-    ObjectCommit Repository::lookupCommit(Result& result, const QString& refName)
+    Commit Repository::lookupCommit(Result& result, const QString& refName)
     {
-        return lookupCommit( result, lookupRef( result, refName ).resolveToObjectId( result ) );
+        return lookupCommit(result, reference(result, refName).resolveToObjectId(result));
     }
 
-    ObjectTree Repository::lookupTree(Result& result, const QString& refName)
+    Tree Repository::lookupTree(Result& result, const QString& refName)
     {
-        return lookupTree( result, lookupRef( result, refName ).resolveToObjectId( result ) );
+        return lookupTree(result, reference(result, refName).resolveToObjectId(result));
     }
 
-    ObjectBlob Repository::lookupBlob(Result& result, const QString& refName)
+    Blob Repository::lookupBlob(Result& result, const QString& refName)
     {
-        return lookupBlob( result, lookupRef( result, refName ).resolveToObjectId( result ) );
+        return lookupBlob(result, reference(result, refName).resolveToObjectId(result));
     }
 
-    ObjectTag Repository::lookupTag(Result& result, const QString& refName)
+    Tag Repository::lookupTag(Result& result, const QString& refName)
     {
-        return lookupTag( result, lookupRef( result, refName ).resolveToObjectId( result ) );
+        return lookupTag(result, reference(result, refName).resolveToObjectId(result));
     }
 
     RevisionWalker Repository::newWalker( Result& result )
     {
-        GW_D_CHECKED(Repository, RevisionWalker(), result);
-        git_revwalk* walker = NULL;
-
-        result = git_revwalk_new( &walker, d->mRepo );
-        if( !result )
-        {
-            return RevisionWalker();
-        }
-
-        return *new Internal::RevisionWalkerPrivate(d, walker);
+        return RevisionWalker::create(result, *this);
     }
 
     bool Repository::shouldIgnore(Result& result, const QString& filePath) const
@@ -743,7 +708,7 @@ namespace Git
      */
     Remote::List Repository::allRemotes(Result& result) const
     {
-        GW_CD_CHECKED(Repository, Remote::List(), result);
+        GW_CD_EX_CHECKED(Repository, Remote::List(), result);
 
         git_strarray arr;
         result = git_remote_list( &arr, d->mRepo );
@@ -758,8 +723,7 @@ namespace Git
             if (!result) {
                 return Remote::List();
             }
-            Remote rm = *new Internal::RemotePrivate(const_cast< Internal::RepositoryPrivate* >(d),
-                                                     remote);
+            Remote rm = new Remote::Private(d.data(), remote);
             remotes.append(rm);
         }
 
@@ -801,7 +765,7 @@ namespace Git
      */
     Remote Repository::remote(Result& result, const QString& remoteName) const
     {
-        GW_CD_CHECKED(Repository, Remote(), result);
+        GW_CD_EX_CHECKED(Repository, Remote(), result);
 
         git_remote* remote = NULL;
         result = git_remote_load( &remote, d->mRepo, remoteName.toUtf8().constData() );
@@ -811,60 +775,39 @@ namespace Git
             return Remote();
         }
 
-        return *new Internal::RemotePrivate(const_cast<Internal::RepositoryPrivate*>(d), remote);
+        return new Remote::Private(d.data(), remote);
     }
 
     Remote Repository::createRemote(Result& result, const QString& remoteName, const QString& url,
                                     const QString& fetchSpec)
     {
-        GW_D_CHECKED(Repository, Remote(), result);
-
-        git_remote* remote = NULL;
-        result = git_remote_create( &remote, d->mRepo, remoteName.toUtf8().constData(),
-                                    url.toUtf8().constData() );
-        if( !result )
-        {
-            return Remote();
-        }
-
-        Remote remo = *new Internal::RemotePrivate(d, remote);
-
-        if( !fetchSpec.isEmpty() )
-        {
-            remo.addFetchSpec( result, fetchSpec );
-            if( !result )
-            {
-                return Remote();
-            }
-        }
-
-        return remo;
+        return Remote::create(result, *this, remoteName, url, fetchSpec);
     }
 
-    DiffList Repository::diffCommitToCommit( Result& result, ObjectCommit oldCommit,
-                                             ObjectCommit newCommit )
+    DiffList Repository::diffCommitToCommit( Result& result, Commit oldCommit,
+                                             Commit newCommit )
     {
         return diffTreeToTree( result, oldCommit.tree( result ), newCommit.tree( result ) );
     }
 
-    DiffList Repository::diffTreeToTree(Result& result, ObjectTree oldTree, ObjectTree newTree)
+    DiffList Repository::diffTreeToTree(Result& result, Tree oldTree, Tree newTree)
     {
         return oldTree.diffToTree( result, newTree );
     }
 
-    DiffList Repository::diffIndexToTree(Result& result, ObjectTree oldTree)
+    DiffList Repository::diffIndexToTree(Result& result, Tree oldTree)
     {
         return oldTree.diffToIndex( result );
     }
 
-    DiffList Repository::diffTreeToWorkingDir(Result& result, ObjectTree oldTree)
+    DiffList Repository::diffTreeToWorkingDir(Result& result, Tree oldTree)
     {
         return oldTree.diffToWorkingDir( result );
     }
 
     DiffList Repository::diffIndexToWorkingDir( Result& result )
     {
-        GW_D_CHECKED(Repository, DiffList(), result);
+        GW_D_EX_CHECKED(Repository, DiffList(), result);
 
         git_diff_list* diffList = NULL;
         result = git_diff_index_to_workdir( &diffList, d->mRepo, NULL, NULL );
@@ -873,7 +816,7 @@ namespace Git
             return DiffList();
         }
 
-        return DiffList(*new Internal::DiffListPrivate(d, diffList));
+        return DiffList::PrivatePtr(new DiffList::Private(d, diffList));
     }
 
     namespace Internal
@@ -885,12 +828,21 @@ namespace Git
             Submodule::List     subs;
         };
 
-        static int cb_enum_submodules( git_submodule* sm, const char* name, void* payload )
+        static int cb_enum_submodules(git_submodule* sm, const char* name, void* payload)
         {
-            cb_enum_submodules_t* d = static_cast< cb_enum_submodules_t* >( payload );
-            Q_ASSERT( d && name );
+            cb_enum_submodules_t* d = static_cast<cb_enum_submodules_t*>(payload);
+            Q_ASSERT(d && name);
 
-            d->subs.append( Submodule( d->repo, QString::fromUtf8( name ) ) );
+            Repository::PrivatePtr repo(d->repo);
+            d->subs.append(new SubmodulePrivate(repo, QString::fromUtf8(name)));
+            return 0;
+        }
+
+        static int cb_enum_submodule_names(git_submodule* sm, const char* name, void* payload)
+        {
+            QStringList* sl = static_cast<QStringList*>(payload);
+            Q_ASSERT(sl && name);
+            sl->append(QString::fromUtf8(name));
             return 0;
         }
 
@@ -910,28 +862,33 @@ namespace Git
         return data.subs;
     }
 
-    Submodule Repository::submodule(Result& result, const QString& name)
+    QStringList Repository::submoduleNames(Result& result) const
     {
-        GW_D_CHECKED(Repository, Submodule(), result);
-        return Submodule(d, name);
+        GW_CD_CHECKED(Repository, QStringList(), result);
+        QStringList names;
+
+        result = git_submodule_foreach(d->mRepo, &Internal::cb_enum_submodule_names, &names);
+        if (!result) {
+            return QStringList();
+        }
+
+        return names;
+    }
+
+    Submodule Repository::submodule(Result& result, const QString& name) const
+    {
+        GW_CD_EX_CHECKED(Repository, Submodule(), result);
+
+        if (submoduleNames(result).contains(name)) {
+            return new Submodule::Private(d, name);
+        }
+
+        return Submodule();
     }
 
     Reference Repository::lookupRef(Result& result, const QString& refName, bool dwim)
     {
-        GW_D_CHECKED(Repository, Reference(), result);
-
-        git_reference* ref = NULL;
-        if ( dwim )
-            result = git_reference_dwim( &ref, d->mRepo, refName.toUtf8().constData() );
-        else
-            result = git_reference_lookup( &ref, d->mRepo, refName.toUtf8().constData() );
-
-        if( !result )
-        {
-            return Reference();
-        }
-
-        return *new Internal::ReferencePrivate( d, ref );
+        return reference(result, refName, dwim);
     }
 
     /**
@@ -953,6 +910,173 @@ namespace Git
 
         result = git_repository_detach_head(d->mRepo);
         return result;
+    }
+
+    /**
+     * @brief           Set the HEAD to follow a branch
+     *
+     * @param[in,out]   result      A Result object; see @ref GitWrapErrorHandling
+     *
+     * @param[in]       branchName  The (possibly full qualified) reference name of the branch to
+     *                              follow. The branch doesn't need to exist. If it doesn't exist,
+     *                              the HEAD will become orphaned but point to the branch once it is
+     *                              created.
+     *
+     */
+    void Repository::setHEAD(Result& result, const QString& branchName)
+    {
+        GW_D_CHECKED_VOID(Repository, result);
+
+        result = git_repository_set_head(d->mRepo, branchName.toUtf8().constData());
+    }
+
+    /**
+     * @brief           Set the HEAD to follow a branch
+     *
+     * @param[in,out]   result      A Result object; see @ref GitWrapErrorHandling
+     *
+     * @param[in]       branch      The branch to follow.
+     *
+     */
+    void Repository::setHEAD(Result& result, const BranchRef& branch)
+    {
+        if (!result) {
+            return;
+        }
+
+        if (!branch.isValid()) {
+            result.setInvalidObject();
+            return;
+        }
+
+        setHEAD(result, branch.name());
+    }
+
+    /**
+     * @brief           Set the HEAD detached to a commit
+     *
+     * @param[in,out]   result  A Result object; see @ref GitWrapErrorHandling
+     *
+     * @param[in]       commit  The commit to point to.
+     *
+     */
+    void Repository::setDetachedHEAD(Result& result, const Commit& commit)
+    {
+        GW_D_CHECKED_VOID(Repository, result);
+
+        if (!commit.isValid()) {
+            result.setInvalidObject();
+            return;
+        }
+
+        setDetachedHEAD(result, commit.id());
+    }
+
+    /**
+     * @brief           Set the HEAD detached to a commit
+     *
+     * @param[in,out]   result  A Result object; see @ref GitWrapErrorHandling
+     *
+     * @param[in]       sha     The has of the commit to point to.
+     *
+     */
+    void Repository::setDetachedHEAD(Result& result, const ObjectId& sha)
+    {
+        GW_D_CHECKED_VOID(Repository, result);
+        result = git_repository_set_head_detached(d->mRepo, Private::sha(sha));
+    }
+
+    /**
+     * @brief       Access the superproject for this repository
+     *
+     * @return      If this repository was opened via Submodule::subRepository(), the Repository
+     *              that owns the Submodule object from which this repository was opened. Otherwise
+     *              an invalid Repository() object will be returned.
+     *
+     */
+    Repository Repository::superproject() const
+    {
+        return superprojectSubmodule().repository();
+    }
+
+    /**
+     * @brief       Access the superproject's submodule for this repository
+     *
+     * @return      If this repository was opened via Submodule::subRepository(), this will return
+     *              the Submodule object from which it was opened.
+     *
+     */
+    Submodule Repository::superprojectSubmodule() const
+    {
+        GW_CD(Repository);
+        if (!d) {
+            return Submodule();
+        }
+
+        if (!d->openedFrom.isValid()) {
+            return Submodule();
+        }
+
+        return d->openedFrom;
+    }
+
+    Reference Repository::reference(Result& result, const QString& refName, bool dwim)
+    {
+        GW_D_CHECKED(Repository, Reference(), result);
+
+        //GW_D_EX_CHECKED(Repository, Reference(), result);
+        QString name = refName;
+
+        git_reference* ref = NULL;
+        if (dwim) {
+            result = git_reference_dwim(&ref, d->mRepo, refName.toUtf8().constData());
+
+            if (!result) {
+                return Reference();
+            }
+
+            name = QString::fromUtf8(git_reference_name(ref));
+        }
+        else {
+            result = git_reference_lookup( &ref, d->mRepo, refName.toUtf8().constData() );
+
+            if (!result) {
+                return Reference();
+            }
+        }
+
+        return Reference::Private::createRefObject(d, name, ref);
+    }
+
+    BranchRef Repository::branchRef(Result& result, const QString& branchName)
+    {
+        Reference ref = reference(result, branchName, true);
+        if (!result) {
+            return BranchRef();
+        }
+
+        return ref.asBranch();
+    }
+
+    TagRef Repository::tagRef(Result& result, const QString& tagName)
+    {
+        Reference ref = reference(result, tagName, true);
+        if (!result) {
+            return TagRef();
+        }
+
+        return ref.asTag();
+    }
+
+    NoteRef Repository::noteRef(Result& result, const QString& noteName)
+    {
+        // dwin doesn't work for notes
+        Reference ref = reference(result, QLatin1Literal("refs/notes/") % noteName);
+        if (!result) {
+            return NoteRef();
+        }
+
+        return ref.asNote();
     }
 
 }

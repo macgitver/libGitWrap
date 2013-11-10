@@ -14,28 +14,43 @@
  *
  */
 
-#include "ObjectBlob.hpp"
+#ifndef GIT_OBJECT_BLOB_H
+#define GIT_OBJECT_BLOB_H
 
-#include "Private/GitWrapPrivate.hpp"
+#include "libGitWrap/GitWrap.hpp"
+#include "libGitWrap/ObjectId.hpp"
+#include "libGitWrap/Object.hpp"
 
 namespace Git
 {
 
-    ObjectBlob::ObjectBlob()
+    namespace Internal
     {
+
+        class BlobPrivate;
+
     }
 
-    ObjectBlob::ObjectBlob(Internal::ObjectPrivate& _d)
-        : Object(_d)
+    /**
+     * @ingroup     GitWrap
+     * @brief       Provides access to git BLOB (Binary Large Object) objects
+     *
+     */
+    class GITWRAP_API Blob : public Object
     {
-        Result r;
-        Q_UNUSED( r );
-        Q_ASSERT( type(r) == otBlob );
-    }
+    public:
+        GW_PRIVATE_DECL(Blob, Object, public);
+        enum { ObjectTypeId = otBlob };
+    };
 
-    ObjectBlob::ObjectBlob(const ObjectBlob& o)
-        : Object(o)
+    template<>
+    inline Blob Object::as() const
     {
+        return asBlob();
     }
 
 }
+
+Q_DECLARE_METATYPE(Git::Blob)
+
+#endif

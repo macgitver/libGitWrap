@@ -14,10 +14,11 @@
  *
  */
 
-#include "Index.hpp"
-#include "Repository.hpp"
+#include "libGitWrap/Index.hpp"
+#include "libGitWrap/Repository.hpp"
+#include "libGitWrap/FileInfo.hpp"
 
-#include "Private/GitWrapPrivate.hpp"
+#include "libGitWrap/Private/GitWrapPrivate.hpp"
 
 namespace Git
 {
@@ -46,12 +47,22 @@ namespace Git
             return sl;
         }
 
+        //-- StrArrayWrapper -------------------------------------------------------------------- >8
+
         StrArrayWrapper::StrArrayWrapper()
         {
+            Q_ASSERT(false);
         }
 
         StrArrayWrapper::StrArrayWrapper( const StrArrayWrapper & )
         {
+            Q_ASSERT(false);
+        }
+
+        StrArrayWrapper& StrArrayWrapper::operator=(const StrArrayWrapper&)
+        {
+            Q_ASSERT(false);
+            return *this;
         }
 
         StrArrayWrapper::StrArrayWrapper(const QStringList& sl)
@@ -80,6 +91,46 @@ namespace Git
         StrArrayWrapper::operator const git_strarray *() const
         {
             return &a;
+        }
+
+        //-- StrArray --------------------------------------------------------------------------- >8
+
+        StrArray& StrArray::operator=(const StrArray&)
+        {
+            Q_ASSERT(false);
+            return *this;
+        }
+
+        StrArray::StrArray(git_strarray& _a, const QStringList& sl)
+            : a(_a)
+            , internalCopy(sl)
+        {
+            a.count = internalCopy.count();
+            a.strings = new char *[a.count];
+
+            for(int i=0; i < internalCopy.count(); ++i )
+            {
+                a.strings[i] = internalCopy[i].toUtf8().data();
+            }
+        }
+
+        StrArray::~StrArray()
+        {
+            delete[] a.strings;
+        }
+
+        FileInfo mkFileInfo(const git_diff_file* df)
+        {
+            if (!df) {
+                return FileInfo();
+            }
+
+            QString path;
+            if (df->path) {
+                path = QString::fromUtf8(df->path);
+            }
+            return FileInfo(path, ObjectId::fromRaw(df->oid.id), df->size, FileModes(df->mode),
+                            false, (df->flags & GIT_DIFF_FLAG_VALID_OID) != 0);
         }
 
     }

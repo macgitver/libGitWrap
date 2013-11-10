@@ -14,10 +14,11 @@
  *
  */
 
-#ifndef GIT_REFERENCE_PRIVATE_H
-#define GIT_REFERENCE_PRIVATE_H
+#ifndef GIT_REFERENCE_PRIVATE_HPP
+#define GIT_REFERENCE_PRIVATE_HPP
+#pragma once
 
-#include "libGitWrap/Private/RepoObjectPrivate.hpp"
+#include "libGitWrap/Private/RefNamePrivate.hpp"
 
 namespace Git
 {
@@ -31,14 +32,30 @@ namespace Git
          * @brief       The ReferencePrivate class
          *
          */
-        class ReferencePrivate : public RepoObjectPrivate
+        class ReferencePrivate : public RefNamePrivate
         {
         public:
-            ReferencePrivate(RepositoryPrivate* repo, git_reference* ref);
+            ReferencePrivate(git_reference* ref, const RefNamePrivate* refName);
+        public:
+            ReferencePrivate(const RepositoryPrivate::Ptr& repo,
+                             const QString& name,
+                             git_reference* ref);
+            ReferencePrivate(const RepositoryPrivate::Ptr& repo, git_reference* ref);
             ~ReferencePrivate();
 
         public:
-            git_reference*  mRef;
+            bool isRealReference() const;
+
+        public:
+            bool isValidObject(Result &r) const;
+
+        public:
+            virtual ReferenceKinds kind() const;
+            virtual CheckoutBaseOperation* checkoutOperation(Result& result) const;
+
+        public:
+            bool            wasDeleted;
+            git_reference*  reference;
         };
 
     }

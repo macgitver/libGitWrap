@@ -20,7 +20,7 @@
 #ifndef GITWRAP_CONFIG_H
 #define GITWRAP_CONFIG_H
 
-#include "Base.hpp"
+#include "libGitWrap/Base.hpp"
 
 namespace Git
 {
@@ -39,14 +39,12 @@ namespace Git
      */
     class GITWRAP_API Config : public Base
     {
-    public:
-        Config();
-        Config(Internal::ConfigPrivate& _d);
+        GW_PRIVATE_DECL(Config, Base, public)
 
     public:
         bool addFile( const QString& fileName, int priority );
 
-        ConfigValues values();
+        ConfigValues values() const;
 
     public:
         static QString globalFilePath();
@@ -59,6 +57,6 @@ namespace Git
 
 }
 
-Q_DECLARE_METATYPE( Git::Config )
+Q_DECLARE_METATYPE(Git::Config)
 
 #endif

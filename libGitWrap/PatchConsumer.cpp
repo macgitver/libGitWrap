@@ -14,7 +14,7 @@
  *
  */
 
-#include "PatchConsumer.hpp"
+#include "libGitWrap/PatchConsumer.hpp"
 
 namespace Git
 {

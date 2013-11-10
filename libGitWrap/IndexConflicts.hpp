@@ -19,7 +19,7 @@
 #ifndef GIT_INDEX_CONFLICTS_HPP
 #define GIT_INDEX_CONFLICTS_HPP
 
-#include "libGitWrap/Base.hpp"
+#include "libGitWrap/Index.hpp"
 
 namespace Git
 {
@@ -29,17 +29,9 @@ namespace Git
         class IndexPrivate;
     }
 
-    class IndexConflicts : public Base
+    class IndexConflicts : public RepoObject
     {
-    public:
-        typedef Internal::IndexPrivate Private;
-
-    public:
-        explicit IndexConflicts(Internal::IndexPrivate& _d);
-        IndexConflicts(const IndexConflicts& other);
-        ~IndexConflicts();
-
-        IndexConflicts& operator=(const IndexConflicts& other);
+        GW_PRIVATE_DECL_EX(Index, IndexConflicts, RepoObject, public)
 
     public:
         Index index() const;

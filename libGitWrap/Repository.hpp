@@ -18,8 +18,8 @@
 #define GIT_REPOSITORY_H
 
 #include "libGitWrap/Base.hpp"
-#include "libGitWrap/Submodule.hpp"
 #include "libGitWrap/Remote.hpp"
+#include "libGitWrap/Object.hpp"
 
 namespace Git
 {
@@ -38,17 +38,7 @@ namespace Git
      */
     class GITWRAP_API Repository : public Base
     {
-    public:
-        typedef Internal::RepositoryPrivate Private;
-
-    public:
-        explicit Repository(Internal::RepositoryPrivate& _d);
-        Repository();
-        Repository( const Repository& other );
-        Repository& operator=( const Repository& other );
-
-    public:
-        ~Repository();
+        GW_PRIVATE_DECL(Repository, Base, public)
 
     public:
         static Repository create( const QString& path,
@@ -63,10 +53,17 @@ namespace Git
         static Repository open( const QString& path,
                                 Result& result );
 
+        Repository reopen(Result& result) const;
+
         bool isBare() const;
         bool isHeadDetached() const;
 
         bool detachHead(Result& result);
+        void setDetachedHEAD(Result& result, const ObjectId& sha);
+        void setDetachedHEAD(Result& result, const Commit& commit);
+
+        void setHEAD(Result& result, const BranchRef& branch);
+        void setHEAD(Result& result, const QString& branchName);
 
         QString basePath() const;
         QString gitPath() const;
@@ -84,8 +81,12 @@ namespace Git
 
         ResolvedRefs allResolvedRefs( Result& result );
 
+        // ### move to BranchRef
         bool renameBranch( const QString& oldName, const QString& newName, bool force /* = false */,
                            Result& result );
+
+        Repository superproject() const;
+        Submodule superprojectSubmodule() const;
 
         Index index( Result& result );
 
@@ -93,46 +94,90 @@ namespace Git
         Git::StatusHash status(Result &result) const;
 
         Reference HEAD( Result& result ) const;
-        Reference lookupRef(Result& result, const QString& refName , bool dwim = false);
-        ObjectId resolveRef( Result& result, const QString& refName );
 
-        Object lookup(Result& result, const ObjectId& id, ObjectType ot /* = otAny */);
+        GW_DEPRECATED Reference lookupRef(Result& result, const QString& refName , bool dwim = false);
+        ObjectId resolveRef(Result& result, const QString& refName);
 
-        ObjectCommit lookupCommit( Result& result, const ObjectId& id );
-        ObjectTree lookupTree( Result& result, const ObjectId& id );
-        ObjectBlob lookupBlob( Result& result, const ObjectId& id );
-        ObjectTag lookupTag( Result& result, const ObjectId& id );
+        Reference reference(Result& result, const QString& refName, bool dwim = false);
+        BranchRef branchRef(Result& result, const QString& branchName);
+        TagRef tagRef(Result& result, const QString& tagName);
+        NoteRef noteRef(Result& result, const QString& noteName);
 
-        Object lookup(Result& result, const QString& refName, ObjectType ot /* = otAny */);
+        // ### Deprecate and name these: commit, tree, blob and tag.
+        // ### Figure out what the QString-overload should be useful for!
+        Commit lookupCommit( Result& result, const ObjectId& id );
+        Commit lookupCommit( Result& result, const QString& refName );
 
-        ObjectCommit lookupCommit( Result& result, const QString& refName );
-        ObjectTree lookupTree( Result& result, const QString& refName );
-        ObjectBlob lookupBlob( Result& result, const QString& refName );
-        ObjectTag lookupTag( Result& result, const QString& refName );
+        Tree lookupTree( Result& result, const ObjectId& id );
+        Tree lookupTree( Result& result, const QString& refName );
+
+        Blob lookupBlob( Result& result, const ObjectId& id );
+        Blob lookupBlob( Result& result, const QString& refName );
+
+        Tag lookupTag( Result& result, const ObjectId& id );
+        Tag lookupTag( Result& result, const QString& refName );
+
+        Object lookup(Result& result, const ObjectId& id, ObjectType ot);
+        Object lookup(Result& result, const QString& refName, ObjectType ot);
+
+        template< class T >
+        T lookup(Result& result, const ObjectId& id);
+
+        // ### Figure out, what this overload could be useful for!
+        template< class T >
+        T lookup(Result& result, const QString& refName);
 
         bool shouldIgnore( Result& result, const QString& filePath ) const;
 
-        RevisionWalker newWalker( Result& result );
+        GW_DEPRECATED
+        RevisionWalker newWalker(Result& result);
 
         QStringList allRemoteNames( Result& result ) const;
         Remote::List allRemotes(Result& result) const;
         Remote remote( Result& result, const QString& remoteName ) const;
-        Remote createRemote( Result& result, const QString& remoteName, const QString& url,
-                             const QString& fetchSpec );
 
-        DiffList diffCommitToCommit(Result& result, ObjectCommit oldCommit, ObjectCommit newCommit);
+        GW_DEPRECATED
+        Remote createRemote(Result& result, const QString& remoteName, const QString& url,
+                            const QString& fetchSpec);
 
-        DiffList diffTreeToTree( Result& result, ObjectTree oldTree,
-                                 ObjectTree newTree);
+        DiffList diffCommitToCommit(Result& result, Commit oldCommit, Commit newCommit);
 
-        DiffList diffIndexToTree( Result& result, ObjectTree oldTree );
+        DiffList diffTreeToTree( Result& result, Tree oldTree,
+                                 Tree newTree);
 
-        DiffList diffTreeToWorkingDir( Result& result, ObjectTree oldTree );
+        DiffList diffIndexToTree( Result& result, Tree oldTree );
+
+        DiffList diffTreeToWorkingDir( Result& result, Tree oldTree );
         DiffList diffIndexToWorkingDir( Result& result );
 
-        SubmoduleList submodules( Result& result );
-        Submodule submodule( Result& result, const QString& name );
+        SubmoduleList submodules(Result& result);
+        QStringList submoduleNames(Result& result) const;
+        Submodule submodule(Result& result, const QString& name) const;
     };
+
+    template< class T >
+    inline T Repository::lookup(Result& result, const ObjectId& id)
+    {
+        return lookup(result, id, ObjectType(T::ObjectTypeId)).as<T>();
+    }
+
+    template< class T >
+    inline T Repository::lookup(Result& result, const QString& refName)
+    {
+        return lookup(result, refName, ObjectType(T::ObjectTypeId)).as<T>();
+    }
+
+    template<>
+    inline Object Repository::lookup(Result& result, const ObjectId& id)
+    {
+        return lookup(result, id, otAny);
+    }
+
+    template<>
+    inline Object Repository::lookup(Result& result, const QString& refName)
+    {
+        return lookup(result, refName, otAny);
+    }
 
 }
 

@@ -17,8 +17,8 @@
 #ifndef GITWRAP_PATCH_CONSUMER_H
 #define GITWRAP_PATCH_CONSUMER_H
 
-#include "GitWrap.hpp"
-#include "ChangeListConsumer.hpp"
+#include "libGitWrap/GitWrap.hpp"
+#include "libGitWrap/ChangeListConsumer.hpp"
 
 namespace Git
 {

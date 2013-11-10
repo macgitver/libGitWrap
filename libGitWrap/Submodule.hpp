@@ -18,6 +18,7 @@
 #define GIT_SUBMODULE_H
 
 #include "libGitWrap/Base.hpp"
+#include "libGitWrap/Repository.hpp"
 
 namespace Git
 {
@@ -33,11 +34,9 @@ namespace Git
      * @brief       Represents a git submodule
      *
      */
-    class GITWRAP_API Submodule : public Base
+    class GITWRAP_API Submodule : public RepoObject
     {
-    public:
-        typedef Internal::SubmodulePrivate Private;
-
+        GW_PRIVATE_DECL(Submodule, RepoObject, public)
     public:
         enum IgnoreStrategy
         {
@@ -60,19 +59,6 @@ namespace Git
          * @brief       A list of submodules
          */
         typedef SubmoduleList List;
-
-    public:
-        /**
-         * @brief Submodule
-         * @param repo the owner repository
-         * @param name is used to lookup the submodule in the owner repository
-         */
-        Submodule(Internal::RepositoryPrivate* repo, const QString& name);
-        Submodule(const Submodule& other);
-        Submodule();
-        ~Submodule();
-
-        Submodule& operator=( const Submodule& other );
 
     public:
         QString name() const;
@@ -111,27 +97,12 @@ namespace Git
         ObjectId wdOid() const;
 
     public:
-        Git::Repository repository() const;
-
-        /**
-         * @brief Opens a submodule's repository.
-         *
-         * @return true, when repoitory could be opened successfully; false otherwise
-         */
-        bool open(Result &result);
-
-        /**
-         * @brief Closes the submodule's repository.
-         */
-        void close();
-
-        bool isOpened() const;
-
+        Repository subRepository(Result& result);
         StatusFlags status(Result &result) const;
     };
 
 }
 
-Q_DECLARE_METATYPE( Git::Submodule )
+Q_DECLARE_METATYPE(Git::Submodule)
 
 #endif

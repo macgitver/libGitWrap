@@ -14,14 +14,14 @@
  *
  */
 
-#include "ChangeListConsumer.hpp"
-#include "PatchConsumer.hpp"
-#include "DiffList.hpp"
-#include "Repository.hpp"
+#include "libGitWrap/ChangeListConsumer.hpp"
+#include "libGitWrap/PatchConsumer.hpp"
+#include "libGitWrap/DiffList.hpp"
+#include "libGitWrap/Repository.hpp"
 
-#include "Private/GitWrapPrivate.hpp"
-#include "Private/DiffListPrivate.hpp"
-#include "Private/RepositoryPrivate.hpp"
+#include "libGitWrap/Private/GitWrapPrivate.hpp"
+#include "libGitWrap/Private/DiffListPrivate.hpp"
+#include "libGitWrap/Private/RepositoryPrivate.hpp"
 
 namespace Git
 {
@@ -52,7 +52,7 @@ namespace Git
             return mChanges;
         }
 
-        DiffListPrivate::DiffListPrivate(RepositoryPrivate* repo, git_diff_list* difflist)
+        DiffListPrivate::DiffListPrivate(const RepositoryPrivate::Ptr& repo, git_diff_list* difflist)
             : RepoObjectPrivate(repo)
             , mDiffList(difflist)
         {
@@ -179,29 +179,7 @@ namespace Git
 
     }
 
-    DiffList::DiffList()
-    {
-    }
-
-    DiffList::DiffList(Internal::DiffListPrivate& _d)
-        : RepoObject(_d)
-    {
-    }
-
-    DiffList::DiffList(const DiffList& o)
-        : RepoObject(o)
-    {
-    }
-
-    DiffList::~DiffList()
-    {
-    }
-
-    DiffList& DiffList::operator=( const DiffList& other )
-    {
-        RepoObject::operator=(other);
-        return *this;
-    }
+    GW_PRIVATE_IMPL(DiffList, RepoObject)
 
     bool DiffList::mergeOnto(Result& result, DiffList onto) const
     {

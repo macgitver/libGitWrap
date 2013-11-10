@@ -22,13 +22,14 @@
 
 #include "git2.h"
 
-#include "GitWrap.hpp"
-#include "Result.hpp"
-#include "ObjectId.hpp"
+#include "libGitWrap/GitWrap.hpp"
+#include "libGitWrap/Result.hpp"
+#include "libGitWrap/ObjectId.hpp"
 
 namespace Git
 {
 
+    class FileInfo;
     class Signature;
     class RefSpec;
 
@@ -44,6 +45,7 @@ namespace Git
         git_signature* signature2git( Result& result, const Signature& sig );
         RefSpec mkRefSpec( const git_refspec* refspec );
         QStringList slFromStrArray( git_strarray* arry );
+        FileInfo mkFileInfo(const git_diff_file* df);
 
         /**
          * @internal
@@ -52,9 +54,6 @@ namespace Git
          */
         class StrArrayWrapper
         {
-            git_strarray a;
-            QStringList internalCopy;
-
         public:
             StrArrayWrapper(const QStringList& sl);
             ~StrArrayWrapper();
@@ -65,6 +64,26 @@ namespace Git
         private:
             StrArrayWrapper();
             StrArrayWrapper(const StrArrayWrapper&);
+            StrArrayWrapper& operator=(const StrArrayWrapper&);
+
+        private:
+            git_strarray a;
+            QStringList internalCopy;
+        };
+
+        class StrArray
+        {
+        public:
+            StrArray(git_strarray& _a, const QStringList& sl);
+            ~StrArray();
+
+        private:
+            /* Cannot privatize Copy+Default ctor because of the member-by-reference */
+            StrArray& operator=(const StrArray&);
+
+        private:
+            git_strarray& a;
+            QStringList internalCopy;
         };
 
         /**
@@ -74,7 +93,7 @@ namespace Git
          * @param[in]   attr    GitWrap's TreeEntryAttributes
          * @return      LibGit2's git_filemode_t
          */
-        static inline git_filemode_t teattr2filemode( TreeEntryAttributes attr )
+        static inline git_filemode_t teattr2filemode( FileModes attr )
         {
             switch( attr )
             {
@@ -97,16 +116,37 @@ namespace Git
          * @param[in]   otype   LibGit2's object type
          * @return      LibGitWrap's object type
          */
-        static inline ObjectType gitotype2ObjectType( git_otype otype )
+        static inline ObjectType gitotype2ObjectType(git_otype otype)
         {
-            switch( otype )
-            {
+            switch (otype) {
+            default:                Q_ASSERT(false);
+            case GIT_OBJ_ANY:       return otAny;
             case GIT_OBJ_BLOB:      return otBlob;
             case GIT_OBJ_COMMIT:    return otCommit;
             case GIT_OBJ_TREE:      return otTree;
             case GIT_OBJ_TAG:       return otTag;
-            default:                Q_ASSERT( false );
-                                    return otAny;
+            }
+        }
+
+        /**
+         * @internal
+         * @ingroup     GitWrap
+         * @brief       Convert ObjectType to GIT_OBJ_xxx constant
+         *
+         * @param[in]   ot      The ObjectType to convert
+         *
+         * @return      The GIT_OBJ_xxx constant
+         *
+         */
+        static inline git_otype objectType2gitotype(ObjectType ot)
+        {
+            switch (ot) {
+            default:        Q_ASSERT(false);
+            case otAny:     return GIT_OBJ_ANY;
+            case otBlob:    return GIT_OBJ_BLOB;
+            case otCommit:  return GIT_OBJ_COMMIT;
+            case otTree:    return GIT_OBJ_TREE;
+            case otTag:     return GIT_OBJ_TAG;
             }
         }
 
@@ -168,5 +208,57 @@ namespace Git
     }
 
 }
+
+#define GW__CHECK(returns, result) \
+    if (!Private::isValid(result, d)) { return returns; }
+
+#define GW__CHECK_VOID(result) \
+    if (!Private::isValid(result, d)) { return; }
+
+
+#define GW__EX_CHECK(returns, result) \
+    if (!Private::isValid(result, d.constData())) { return returns; }
+
+#define GW__EX_CHECK_VOID(result) \
+    if (!Private::isValid(result, d.constData())) { return; }
+
+#define GW_D(CLASS) \
+    Private* d = static_cast<Private*>(mData.data()); \
+    ensureThisIsNotConst()
+
+#define GW_D_EX(CLASS) \
+    PrivatePtr d(static_cast<Private*>(mData.data())); \
+    ensureThisIsNotConst()
+
+#define GW_CD(CLASS) \
+    const Private* d = static_cast<const Private*>(mData.constData())
+
+#define GW_CD_EX(CLASS) \
+    const PrivatePtr d(static_cast<Private*>(mData.data()))
+
+#define GW_CD_EX_CHECKED(CLASS, returns, result) \
+    GW_CD_EX(CLASS); \
+    GW__EX_CHECK(returns, result)
+
+#define GW_D_CHECKED(CLASS, returns, result) \
+    GW_D(CLASS); \
+    GW__CHECK(returns, result)
+
+#define GW_D_EX_CHECKED(CLASS, returns, result) \
+    GW_D_EX(CLASS); \
+    GW__EX_CHECK(returns, result)
+
+#define GW_CD_CHECKED(CLASS, returns, result) \
+    GW_CD(CLASS); \
+    GW__CHECK(returns, result)
+
+// Wherever we have to use one of those two, we've made bad API design!
+#define GW_D_CHECKED_VOID(CLASS, result) \
+    GW_D(CLASS); \
+    GW__CHECK_VOID(result)
+
+#define GW_CD_CHECKED_VOID(CLASS, result) \
+    GW_CD(CLASS); \
+    GW__CHECK_VOID(result)
 
 #endif

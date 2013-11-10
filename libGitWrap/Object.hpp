@@ -37,18 +37,9 @@ namespace Git
      */
     class GITWRAP_API Object : public RepoObject
     {
-    public:
-        typedef Internal::ObjectPrivate Private;
+        GW_PRIVATE_DECL(Object, RepoObject, public);
 
     public:
-        Object(Internal::ObjectPrivate& _d);
-        Object(const Object& other);
-        Object();
-        ~Object();
-
-    public:
-        Object& operator=( const Object& other );
-        bool operator==( const Object& other ) const;
 
         /**
          * @return the object's type
@@ -58,67 +49,88 @@ namespace Git
         /**
          * @return the object's id (OID)
          */
-        ObjectId id( Result& result ) const;
+        ObjectId id() const;
+
+        GW_DEPRECATED ObjectId id( Result& result ) const;
 
         /**
          * @brief Converts a generic object into a Git tree object.
          *
-         * @return the valid or invalid converted ObjectTree
+         * @return the valid or invalid converted Tree
          *
          * @see isValid()
          */
-        ObjectTree asTree( Result& result );
+        Tree asTree() const;
 
         /**
          * @brief Converts a generic object into a Git commit object.
          *
-         * @return the valid or invalid converted ObjectCommit
+         * @return the valid or invalid converted Commit
          *
          * @see isValid()
          */
-        ObjectCommit asCommit( Result& result );
+        Commit asCommit() const;
 
         /**
          * @brief Converts a generic object into a Git BLOB object.
          *
-         * @return the valid or invalid converted ObjectBlob
+         * @return the valid or invalid converted Blob
          *
          * @see isValid()
          */
-        ObjectBlob asBlob( Result& result );
+        Blob asBlob() const;
 
         /**
          * @brief Converts a generic object into a Git tag object.
          *
-         * @return the valid or invalid converted ObjectTag
+         * @return the valid or invalid converted Tag
          *
          * @see isValid()
          */
-        ObjectTag asTag( Result& result );
+        Tag asTag() const;
+
+        // This method has no general implementation. There are four implementations that are all
+        // located in the reimplementation headers of this class (i.e. Tag.hpp)
+        template< class T >
+        T as() const;
 
         /**
-         * @brief Checks, if this is a ObjectTree object.
+         * @brief Checks, if this is a Tree object.
          * @return true or false
          */
-        bool isTree( Result& result ) const;
+        bool isTree() const;
 
         /**
-         * @brief Checks, if this is a ObjectTree object.
+         * @brief Checks, if this is a Tag object.
          * @return true or false
          */
-        bool isTag( Result& result ) const;
+        bool isTag() const;
 
         /**
-         * @brief Checks, if this is a ObjectTree object.
+         * @brief Checks, if this is a Commit object.
          * @return true or false
          */
-        bool isCommit( Result& result ) const;
+        bool isCommit() const;
 
         /**
-         * @brief Checks, if this is a ObjectTree object.
+         * @brief Checks, if this is a Blob object.
          * @return true or false
          */
-        bool isBlob( Result& result ) const;
+        bool isBlob() const;
+
+        GW_DEPRECATED bool isTree   (Result& result) const { return isTree();   }
+        GW_DEPRECATED bool isTag    (Result& result) const { return isTag();    }
+        GW_DEPRECATED bool isCommit (Result& result) const { return isCommit(); }
+        GW_DEPRECATED bool isBlob   (Result& result) const { return isBlob();   }
+
+        GW_DEPRECATED Tree   asTree  (Result& result) const;
+        GW_DEPRECATED Commit asCommit(Result& result) const;
+        GW_DEPRECATED Blob   asBlob  (Result& result) const;
+        GW_DEPRECATED Tag    asTag   (Result& result) const;
+
+        template< class T >
+        GW_DEPRECATED T as(Result& result) const { return as<T>(); }
+
     };
 
 }

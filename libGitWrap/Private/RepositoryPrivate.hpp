@@ -19,6 +19,7 @@
 
 #include "libGitWrap/Private/GitWrapPrivate.hpp"
 #include "libGitWrap/Private/BasePrivate.hpp"
+#include "libGitWrap/Submodule.hpp"
 
 namespace Git
 {
@@ -45,6 +46,7 @@ namespace Git
         public:
             git_repository* mRepo;
             IndexPrivate*   mIndex;
+            Submodule       openedFrom;
         };
 
     }

@@ -21,8 +21,17 @@
 #include <QStringBuilder>
 
 #include "libGitWrap/RefName.hpp"
+#include "libGitWrap/Reference.hpp"
+#include "libGitWrap/TagRef.hpp"
+#include "libGitWrap/BranchRef.hpp"
+#include "libGitWrap/NoteRef.hpp"
 
 #include "libGitWrap/Private/BasePrivate.hpp"
+#include "libGitWrap/Private/RefNamePrivate.hpp"
+#include "libGitWrap/Private/ReferencePrivate.hpp"
+#include "libGitWrap/Private/TagRefPrivate.hpp"
+#include "libGitWrap/Private/BranchRefPrivate.hpp"
+#include "libGitWrap/Private/NoteRefPrivate.hpp"
 #include "libGitWrap/Private/GitWrapPrivate.hpp"
 
 namespace Git
@@ -196,52 +205,6 @@ namespace Git
     namespace Internal
     {
 
-        struct CustomMatches
-        {
-        public:
-            CustomMatches()
-                : id(-1)
-                , payload(NULL)
-            {
-            }/*
-
-            CustomMatches(const CustomMatches& o)
-                : id(o.id)
-                , regExp(o.regExp)
-                , payload(o.payload)
-            {
-            }*/
-
-            CustomMatches(const QRegExp& _re, int _id, void* _payload)
-                : id(_id)
-                , regExp(_re)
-                , payload(_payload)
-            {
-            }
-
-        public:
-            int                 id;
-            /*const*/ QRegExp   regExp;
-            void*               payload;
-        };
-
-        class RefNameMatches
-        {
-        public:
-            static RefNameMatches& self();
-
-        public:
-            const QRegExp           reNamespaces;
-            const QRegExp           reRemote;
-            const QRegExp           reScopes;
-            QVector<CustomMatches>  customMatches;
-            int                     nextId;
-
-        private:
-            static RefNameMatches* sSelf;
-            RefNameMatches();
-        };
-
         RefNameMatches* RefNameMatches::sSelf = NULL;
 
         RefNameMatches& RefNameMatches::self()
@@ -260,35 +223,51 @@ namespace Git
         {
         }
 
-        class RefNamePrivate : public BasePrivate
+        // -- RefNamePrivate -------------------------------------------------------------------- >8
+
+        RefNamePrivate::RefNamePrivate()
+            : RepoObjectPrivate()
+            , isAnalyzed(false)
         {
-        public:
-            bool isAnalyzed     : 1;
+        }
 
-            bool isStage        : 1;
-            bool isBranch       : 1;
-            bool isTag          : 1;
-            bool isHead         : 1;
-            bool isMergeHead    : 1;
-            bool isCommitNote   : 1;
-            bool isPecuiliar    : 1;
+        RefNamePrivate::RefNamePrivate(const RefNamePrivate* refName)
+            : RepoObjectPrivate(refName->repo())
+            , isAnalyzed(refName->isAnalyzed)
+            , isStage(refName->isStage)
+            , isBranch(refName->isBranch)
+            , isTag(refName->isTag)
+            , isNote(refName->isNote)
+            , isHead(refName->isHead)
+            , isMergeHead(refName->isMergeHead)
+            , isCommitNote(refName->isCommitNote)
+            , isPecuiliar(refName->isPecuiliar)
+            , fqrn(refName->fqrn)
+            , remote(refName->remote)
+            , name(refName->name)
+            , scopes(refName->scopes)
+            , namespaces(refName->namespaces)
+            , customMatches(refName->customMatches)
+        {
+        }
 
-            QString fqrn;
+        RefNamePrivate::RefNamePrivate(RepositoryPrivate* repo)
+            : RepoObjectPrivate(repo)
+            , isAnalyzed(false)
+        {
+        }
 
-            QString remote;
-            QString name;
-            QStringList scopes;
-            QStringList namespaces;
-            QVector<int> customMatches;
+        RefNamePrivate::RefNamePrivate(RepositoryPrivate* repo, const QString& name)
+            : RepoObjectPrivate(repo)
+            , isAnalyzed(false)
+            , fqrn(name)
+        {
+        }
 
-        public:
-            void ensureAnalyzed();
-            void analyze();
-
-        private:
-            void scopeTest(QString sub);
-            bool analyzeCustom();
-        };
+        bool RefNamePrivate::isRealReference() const
+        {
+            return false;
+        }
 
         void RefNamePrivate::ensureAnalyzed()
         {
@@ -326,14 +305,12 @@ namespace Git
         {
             remote = name = QString();
             scopes = namespaces = QStringList();
-            isStage = isBranch = isTag = isHead = isMergeHead = isCommitNote = isPecuiliar = false;
+            isNote = isStage = isBranch = isTag = isHead =
+            isMergeHead = isCommitNote = isPecuiliar = false;
             customMatches.clear();
 
             if (fqrn == QLatin1String("refs/stage")) {
                 isStage = true;
-            }
-            else if (fqrn == QLatin1String("refs/notes/commit")) {
-                isCommitNote = true;
             }
             else if (fqrn == QLatin1String("MERGE_HEAD")) {
                 isMergeHead = true;
@@ -343,11 +320,13 @@ namespace Git
                 isBranch = true;
                 isHead = true;
             }
-            else if (!analyzeCustom()) {
+            else {
                 const QRegExp& reNS = RefNameMatches::self().reNamespaces;
                 const QRegExp& reRem = RefNameMatches::self().reRemote;
 
                 QString match = fqrn;
+
+                analyzeCustom();
 
                 while (reNS.indexIn(match) != -1) {
                     namespaces.append(reNS.cap(1));
@@ -363,6 +342,11 @@ namespace Git
 
                     scopeTest(match);
                 }
+                else if (match.startsWith(QLatin1String("refs/notes/"))) {
+                    isNote = true;
+                    isCommitNote = (match == QLatin1String("refs/notes/commit"));
+                    scopeTest(match.mid(11));
+                }
                 else if (match.startsWith(QLatin1String("refs/heads/"))) {
                     isBranch = true;
                     scopeTest(match.mid(11));
@@ -372,40 +356,101 @@ namespace Git
                     scopeTest(match.mid(10));
                 }
                 else {
-                    isPecuiliar = true;
+                    isPecuiliar = customMatches.count() == 0;
                 }
             }
 
             isAnalyzed = true;
         }
 
+        ReferencePrivate* RefNamePrivate::cloned(git_reference* lgo)
+        {
+            ensureAnalyzed();
+
+            if (isBranch) {
+                return cloneAs<BranchRef>(lgo);
+            }
+
+            if (isTag) {
+                return cloneAs<TagRef>(lgo);
+            }
+
+            if (isNote) {
+                return cloneAs<NoteRef>(lgo);
+            }
+
+            return cloneAs<Reference>(lgo);
+        }
+
+        /**
+         * @internal
+         * @brief       Factory to create the correct ReferencePrivate
+         *
+         * @param[in]   repo    The repository for which to create the reference object.
+         *
+         * @param[in]   name    A fully qualified reference name.
+         *
+         * @param[in]   lgo     The libgit2 git_reference object. This is optional and defaults to
+         *                      `NULL`. If given, the new ReferencePrivate will point to it. If not
+         *                      given, we have to look it up first.
+         *
+         * @return      A new ReferencePrivate object capable of holding a reference type that
+         *              matches @a name.
+         *
+         * This works relatively efficient and reliable: We create a RefNamePrivate (on the stack,
+         * not the heap) and let it clone itself. Before cloning, it has to analyze itself in order
+         * to decide what reference private object to create.
+         *
+         * The cloning mechanism will then move over all the (already) analyzed data from the stack
+         * based RefNamePrivate.
+         *
+         * If no @a lgo is given and it cannot be looked up in @a repo under the @a name, `NULL`
+         * will be returned, as the resulting ReferencePrivate would be invalid and we cannot
+         * express that state in the private object.
+         *
+         */
+        ReferencePrivate* RefNamePrivate::createRefObject(Repository::Private* repo,
+                                                          const QString& name, git_reference* lgo)
+        {
+            if (!lgo) {
+                if (git_reference_lookup(&lgo, repo->mRepo, name.toUtf8().constData()) < 0) {
+                    return NULL;
+                }
+            }
+
+            return RefNamePrivate(repo, name).cloned(lgo);
+        }
+
     }
 
-    RefName::RefName()
-    {
-    }
+    GW_PRIVATE_IMPL(RefName, RepoObject)
 
-    RefName::RefName(const RefName& other)
-        : Base(other)
-    {
-    }
-
+    /**
+     * @brief       Create a RefName (without Repository association)
+     *
+     * @param[in]   refName     Fully qualified reference name to analyze.
+     *
+     * Some kind of analyzations can only be performed when a repository is given.
+     *
+     */
     RefName::RefName(const QString& refName)
-        : Base(*new Internal::RefNamePrivate)
+        : RepoObject(new Private)
     {
         GW_D(RefName);
         d->fqrn = refName;
-        d->isAnalyzed = false;
     }
 
-    RefName::~RefName()
+    /**
+     * @brief       Create a RefName (with Repository association)
+     *
+     * @param[in]   refName     Fully qualified reference name to analyze.
+     *
+     * Some kind of analyzations can only be performed when a repository is given.
+     *
+     */
+    RefName::RefName(const Repository& repo, const QString& refName)
+        : RepoObject(new Private(Private::dataOf<Repository>(repo),refName))
     {
-    }
-
-    RefName& RefName::operator=(const RefName& other)
-    {
-        Base::operator =(other);
-        return *this;
     }
 
     /**
@@ -430,6 +475,18 @@ namespace Git
     {
         GW_D(RefName);
         return d ? d->ensureAnalyzed(), d->isTag : false;
+    }
+
+    /**
+     * @brief       Is this a note?
+     *
+     * @return      `true`, if this is a note
+     *
+     */
+    bool RefName::isNote()
+    {
+        GW_D(RefName);
+        return d ? d->ensureAnalyzed(), d->isNote : false;
     }
 
     /**
@@ -536,13 +593,13 @@ namespace Git
     /**
      * @brief       Get the local name of the reference
      *
-     * @return      If the reference is either a tag, a branch or HEAD, the scopeName() and name()
-     *              are joined via a `/` and the result is returned.
+     * @return      If the reference is either a tag, a note, a branch or HEAD, the scopeName() and
+     *              name() are joined via a `/` and the result is returned.
      *
      */
     QString RefName::localName()
     {
-        if (isBranch() || isTag()) {
+        if (isBranch() || isTag() || isNote()) {
             return isScoped() ? scopeName() % QChar(L'/') % name() : name();
         }
         return QString();
@@ -590,6 +647,17 @@ namespace Git
     QString RefName::tagName()
     {
         return isTag() ? localName() : QString();
+    }
+
+    /**
+     * @brief       Get the name of the note if this reference is a note.
+     *
+     * @return      If isNote() returns `true` then return localName() else an empty string.
+     *
+     */
+    QString RefName::noteName()
+    {
+        return isNote() ? localName() : QString();
     }
 
     /**
@@ -708,6 +776,8 @@ namespace Git
      * short hand name for the remote `farfarawawy`'s default branch is just `farfaraway` (the FQRN
      * would be `refs/remotes/farfaraway/HEAD`).
      *
+     * Note that this deliberately doesn't work with `refs/notes/` references.
+     *
      * @return      The short hand name for the reference. The short hand name contains the segments
      *              consisting of remote() if present, all the scopes() and finally name().
      *
@@ -745,6 +815,23 @@ namespace Git
         }
 
         return segments.join(QChar(L'/'));
+    }
+
+    /**
+     * @brief       Get the Reference this RefName was created from
+     *
+     * @return      If this RefName object was created from a Reference, return that reference
+     *              otherwise an invalid Reference object.
+     */
+    Reference RefName::reference() const
+    {
+        GW_CD_EX(Reference);
+
+        if (d && d->isRealReference()) {
+            return Reference(d);
+        }
+
+        return Reference();
     }
 
 }

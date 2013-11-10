@@ -28,7 +28,7 @@ namespace Git
     namespace Internal
     {
 
-        TreeBuilderPrivate::TreeBuilderPrivate(RepositoryPrivate* repo, git_treebuilder* builder )
+        TreeBuilderPrivate::TreeBuilderPrivate(const RepositoryPrivate::Ptr& repo, git_treebuilder* builder )
             : RepoObjectPrivate( repo )
             , mBuilder( builder )
         {
@@ -42,29 +42,7 @@ namespace Git
 
     }
 
-    TreeBuilder::TreeBuilder()
-    {
-    }
-
-    TreeBuilder::TreeBuilder(const TreeBuilder& other)
-        : RepoObject(other)
-    {
-    }
-
-    TreeBuilder::TreeBuilder(Internal::TreeBuilderPrivate& _d)
-        : RepoObject(_d)
-    {
-    }
-
-    TreeBuilder::~TreeBuilder()
-    {
-    }
-
-    TreeBuilder& TreeBuilder::operator=(const TreeBuilder& other)
-    {
-        RepoObject::operator =(other);
-        return * this;
-    }
+    GW_PRIVATE_IMPL(TreeBuilder, RepoObject)
 
     void TreeBuilder::clear( Result& result )
     {
@@ -80,7 +58,7 @@ namespace Git
         return result;
     }
 
-    bool TreeBuilder::insert( const QString& fileName, TreeEntryAttributes type,
+    bool TreeBuilder::insert( const QString& fileName, FileModes type,
                               const ObjectId& oid, Result& result )
     {
         GW_D_CHECKED(TreeBuilder, false, result);
@@ -121,7 +99,7 @@ namespace Git
             return TreeEntry();
         }
 
-        return *new Internal::TreeEntryPrivate(entry, true);
+        return TreeEntry::PrivatePtr(new TreeEntry::Private(entry, true));
     }
 
 }

@@ -17,7 +17,7 @@
 #ifndef GIT_REFSPEC_H
 #define GIT_REFSPEC_H
 
-#include "GitWrap.hpp"
+#include "libGitWrap/GitWrap.hpp"
 
 namespace Git
 {

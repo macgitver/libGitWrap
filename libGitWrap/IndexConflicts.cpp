@@ -16,41 +16,23 @@
  *
  */
 
-#include "IndexConflict.hpp"
-#include "IndexConflicts.hpp"
-#include "Index.hpp"
+#include "libGitWrap/IndexConflict.hpp"
+#include "libGitWrap/IndexConflicts.hpp"
+#include "libGitWrap/Index.hpp"
 
-#include "Private/IndexPrivate.hpp"
-#include "Private/IndexEntryPrivate.hpp"
-#include "Private/IndexConflictPrivate.hpp"
+#include "libGitWrap/Private/IndexPrivate.hpp"
+#include "libGitWrap/Private/IndexEntryPrivate.hpp"
+#include "libGitWrap/Private/IndexConflictPrivate.hpp"
 
 namespace Git
 {
 
-    IndexConflicts::IndexConflicts(Internal::IndexPrivate& _d)
-        : Base(_d)
-    {
-    }
-
-    IndexConflicts::IndexConflicts(const IndexConflicts& other)
-        : Base(other)
-    {
-    }
-
-    IndexConflicts::~IndexConflicts()
-    {
-    }
-
-    IndexConflicts& IndexConflicts::operator=(const IndexConflicts& other)
-    {
-        Base::operator =(other);
-        return * this;
-    }
+    GW_PRIVATE_IMPL(IndexConflicts, RepoObject)
 
     Index IndexConflicts::index() const
     {
-        GW_D(Index);
-        return Index(*d);
+        GW_CD_EX(Index);
+        return d;
     }
 
     void IndexConflicts::refresh()

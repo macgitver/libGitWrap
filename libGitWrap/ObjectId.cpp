@@ -14,9 +14,9 @@
  *
  */
 
-#include "ObjectId.hpp"
+#include "libGitWrap/ObjectId.hpp"
 
-#include "Private/GitWrapPrivate.hpp"
+#include "libGitWrap/Private/GitWrapPrivate.hpp"
 
 namespace Git
 {
