@@ -509,28 +509,15 @@ namespace Git
     /**
      * @brief       Point the repository's HEAD here
      *
-     * If this reference is a local branch, make HEAD a symbolic reference to the branch. If this
-     * reference is a remote branch, fail. In all other cases, set HEAD detached to where this
-     * reference points to.
+     * Set HEAD detached to where this reference currently points to.
      *
      * @param[in,out]   result  A Result object; see @ref GitWrapErrorHandling
      *
      */
-    void Reference::setAsHEAD(Result& result) const
+    void Reference::setAsDetachedHEAD(Result& result) const
     {
         GW_CD_CHECKED_VOID(Reference, result);
-
-        if (isBranch()) {
-            if (isLocal()) {
-                repository().setHEAD(result, name());
-            }
-            else {
-                result.setError("Cannot set remote branch as HEAD.", GIT_ERROR);
-            }
-        }
-        else {
-            peeled<Commit>(result).setAsDetachedHEAD(result);
-        }
+        peeled<Commit>(result).setAsDetachedHEAD(result);
     }
 
     void Reference::updateHEAD(Result &result) const
