@@ -70,6 +70,14 @@ namespace Git
 
             static git_object* objectOf(const Object& o);
 
+            template<class T>
+            T outer() const {
+                const typename T::Private* ctp = static_cast< const typename T::Private* >(this);
+                typename T::Private* tp = const_cast< typename T::Private* >(ctp);
+                typename T::PrivatePtr tpp(tp);
+                return T(tpp);
+            }
+
         };
 
     }

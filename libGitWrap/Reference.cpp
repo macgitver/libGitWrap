@@ -100,7 +100,7 @@ namespace Git
 
         CheckoutBaseOperation* ReferencePrivate::checkoutOperation(Result& result) const
         {
-            Reference ref(this);
+            Reference ref = outer<Reference>();
             QScopedPointer<CheckoutTreeOperation> op(new CheckoutTreeOperation);
             op->setRepository(repo());
 
