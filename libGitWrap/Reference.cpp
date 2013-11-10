@@ -98,6 +98,21 @@ namespace Git
             return r;
         }
 
+        CheckoutBaseOperation* ReferencePrivate::checkoutOperation(Result& result) const
+        {
+            Reference ref(this);
+            QScopedPointer<CheckoutTreeOperation> op(new CheckoutTreeOperation);
+            op->setRepository(repo());
+
+            op->setTree(ref.peeled<Tree>(result));
+
+            if (!result) {
+                return NULL;
+            }
+
+            return op.take();
+        }
+
     }
 
     GW_PRIVATE_IMPL(Reference, RepoObject)
@@ -384,15 +399,7 @@ namespace Git
     CheckoutBaseOperation* Reference::checkoutOperation(Result& result) const
     {
         GW_CD_CHECKED(Reference, NULL, result);
-
-        QScopedPointer<CheckoutTreeOperation> op(new CheckoutTreeOperation);
-        op->setTree(peeled<Tree>(result));
-
-        if (!result) {
-            return NULL;
-        }
-
-        return op.take();
+        return d->checkoutOperation(result);
     }
 
     void Reference::checkout(Result&            result,
@@ -400,9 +407,7 @@ namespace Git
                              CheckoutMode       mode,
                              const QStringList& paths) const
     {
-    #if 0
         GW_CD_CHECKED_VOID(Reference, result);
-
         QString refToUpdate = name();
 
         QScopedPointer<CheckoutBaseOperation> op(checkoutOperation(result));
@@ -415,17 +420,14 @@ namespace Git
         bool doAllowDetached = opts.testFlag(CheckoutAllowDetachHEAD);
         bool doForceDetached = opts.testFlag(CheckoutForceDetachHEAD);
 
+        /*
         if (doCreateLocal) {
-            refToUpdate = createDownstreamBranch(result);
-            if (!result) {
+            if (!op->supports(CheckoutCreateLocalBranch) ) {
+                result.setError("Operation not supported.");
                 return;
             }
         }
-
-        opts = opts &~ (CheckoutCreateLocalBranch|
-                        CheckoutAllowDetachHEAD|
-                        CheckoutForceDetachHEAD|
-                        CheckoutUpdateHEAD);
+        */
 
         op->setOptions(opts);
         op->setMode(mode);
@@ -440,7 +442,6 @@ namespace Git
         if (doUpdateHEAD) {
 
         }
-    #endif
     }
 
     /**
