@@ -430,12 +430,15 @@ namespace Git
      *
      * @param[in,out]   result  A Result object; see @ref GitWrapErrorHandling
      *
+     * @param[in]       force   If `true` (the default) always reread the index file. Otherwise just
+     *                          read it if it has changed since the last time being read.
+     *
      */
-    void Index::read(Result& result)
+    void Index::read(Result& result, bool force)
     {
         GW_D_CHECKED_VOID(Index, result)
 
-        result = git_index_read(d->index);
+        result = git_index_read(d->index, force ? 1 : 0);
 
         if (result) {
             d->clearKnownConflicts();
