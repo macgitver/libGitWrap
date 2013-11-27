@@ -186,24 +186,10 @@ namespace Git
         git_remote_disconnect(d->mRemote);
     }
 
-    namespace Internal
-    {
-
-        int download_progress( const git_transfer_progress* prg, void* _d )
-        {
-            RemotePrivate* d = (RemotePrivate*) _d;
-            d->mStats = *prg;
-            return 0;
-        }
-
-    }
-
     bool Remote::download( Result& result )
     {
         GW_D_CHECKED(Remote, false, result);
-
-        result = git_remote_download( d->mRemote, &Internal::download_progress,
-                                      (Internal::RemotePrivate*) d );
+        result = git_remote_download(d->mRemote);
         return result;
     }
 
