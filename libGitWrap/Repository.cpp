@@ -809,14 +809,13 @@ namespace Git
     {
         GW_D_EX_CHECKED(Repository, DiffList(), result);
 
-        git_diff_list* diffList = NULL;
-        result = git_diff_index_to_workdir( &diffList, d->mRepo, NULL, NULL );
-        if( !result )
-        {
+        git_diff* diff = NULL;
+        result = git_diff_index_to_workdir(&diff, d->mRepo, NULL, NULL);
+        if (!result) {
             return DiffList();
         }
 
-        return DiffList::PrivatePtr(new DiffList::Private(d, diffList));
+        return DiffList::PrivatePtr(new DiffList::Private(d, diff));
     }
 
     namespace Internal

@@ -86,39 +86,39 @@ namespace Git
 
         Tree::Private* tp = Base::Private::dataOf<Tree>(newTree);
 
-        git_diff_list* diffList = NULL;
-        result = git_diff_tree_to_tree(&diffList, d->repo()->mRepo, d->o(), tp->o(), NULL);
+        git_diff* diff = NULL;
+        result = git_diff_tree_to_tree(&diff, d->repo()->mRepo, d->o(), tp->o(), NULL);
         if (!result) {
             return DiffList();
         }
 
-        return DiffList::PrivatePtr(new DiffList::Private(d->repo(), diffList));
+        return DiffList::PrivatePtr(new DiffList::Private(d->repo(), diff));
     }
 
     DiffList Tree::diffToIndex(Result& result)
     {
         GW_D_CHECKED(Tree, DiffList(), result)
-        git_diff_list* diffList = NULL;
+        git_diff* diff = NULL;
 
-        result = git_diff_tree_to_index(&diffList, d->repo()->mRepo, d->o(), NULL, NULL);
+        result = git_diff_tree_to_index(&diff, d->repo()->mRepo, d->o(), NULL, NULL);
         if (!result) {
             return DiffList();
         }
 
-        return DiffList::PrivatePtr(new DiffList::Private(d->repo(), diffList));
+        return DiffList::PrivatePtr(new DiffList::Private(d->repo(), diff));
     }
 
     DiffList Tree::diffToWorkingDir( Result& result )
     {
         GW_D_CHECKED(Tree, DiffList(), result)
 
-        git_diff_list* diffList = NULL;
-        result = git_diff_tree_to_workdir( &diffList, d->repo()->mRepo, d->o(), NULL );
+        git_diff* diff= NULL;
+        result = git_diff_tree_to_workdir( &diff, d->repo()->mRepo, d->o(), NULL );
         if (!result) {
             return DiffList();
         }
 
-        return DiffList::PrivatePtr(new DiffList::Private(d->repo(), diffList));
+        return DiffList::PrivatePtr(new DiffList::Private(d->repo(), diff));
     }
 
     size_t Tree::entryCount() const
