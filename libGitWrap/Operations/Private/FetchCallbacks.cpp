@@ -111,7 +111,7 @@ namespace Git
             return 0;
         }
 
-        void FetchCallbacks::remoteProgress( const char* str, int len, void* payload )
+        int FetchCallbacks::remoteProgress( const char* str, int len, void* payload )
         {
             IFetchEvents* events = static_cast< IFetchEvents* >( payload );
 
@@ -121,6 +121,8 @@ namespace Git
             {
                 events->remoteMessage( QString::fromUtf8( str, len ) );
             }
+
+            return GITERR_NONE;
         }
 
         int FetchCallbacks::remoteUpdateTips( const char* refname, const git_oid* a,

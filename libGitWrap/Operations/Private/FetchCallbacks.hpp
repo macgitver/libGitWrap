@@ -33,10 +33,10 @@ namespace Git
                                       unsigned int allowed_types,
                                       void* payload );
 
-            static int  fetchProgress( const git_transfer_progress* stats, void* payload );
-            static int  remoteComplete( git_remote_completion_type type, void* payload );
-            static void remoteProgress( const char* str, int len, void* payload );
-            static int  remoteUpdateTips( const char* refname, const git_oid* a, const git_oid* b,
+            static int fetchProgress( const git_transfer_progress* stats, void* payload );
+            static int remoteComplete( git_remote_completion_type type, void* payload );
+            static int remoteProgress( const char* str, int len, void* payload );
+            static int remoteUpdateTips( const char* refname, const git_oid* a, const git_oid* b,
                                           void* payload );
         };
 
