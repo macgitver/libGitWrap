@@ -148,12 +148,13 @@ SET( SRC_FILES
     TreeBuilder.cpp
     TreeEntry.cpp
 
+    Events/IRemoteEvents.cpp
+    Events/Private/RemoteCallbacks.cpp
+
     Operations/BaseOperation.cpp
     Operations/CheckoutOperation.cpp
     Operations/CloneOperation.cpp
-    Operations/IFetchEvents.cpp
 
-    Operations/Private/FetchCallbacks.cpp
     Operations/Private/WorkerThread.cpp
 )
 
@@ -198,7 +199,8 @@ SET( PUB_HDR_FILES
     Operations/BaseOperation.hpp
     Operations/CheckoutOperation.hpp
     Operations/CloneOperation.hpp
-    Operations/IFetchEvents.hpp
+
+    Events/Private/RemoteCallbacks.hpp
 )
 
 SET( PRI_HDR_FILES
@@ -228,10 +230,11 @@ SET( PRI_HDR_FILES
     Private/TreeEntryPrivate.hpp
     Private/TreePrivate.hpp
 
+    Events/Private/RemoteCallbacks.hpp
+
     Operations/Private/BaseOperationPrivate.hpp
     Operations/Private/CheckoutOperationPrivate.hpp
     Operations/Private/CloneOperationPrivate.hpp
-    Operations/Private/FetchCallbacks.hpp
     Operations/Private/WorkerThread.hpp
 )
 

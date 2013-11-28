@@ -14,9 +14,9 @@
  *
  */
 
-#include "libGitWrap/Operations/IFetchEvents.hpp"
+#include "libGitWrap/Events/IRemoteEvents.hpp"
 
-#include "libGitWrap/Operations/Private/FetchCallbacks.hpp"
+#include "libGitWrap/Events/Private/RemoteCallbacks.hpp"
 
 #if 0
 #define debugEvents qDebug
@@ -31,11 +31,11 @@ namespace Git
     namespace Internal
     {
 
-        int FetchCallbacks::credAccquire( git_cred** cred, const char* url,
-                                          const char *username_from_url,
-                                          unsigned int allowed_types, void* payload )
+        int RemoteCallbacks::credAccquire(git_cred** cred, const char* url,
+                                          const char *username_from_url, unsigned int allowed_types,
+                                          void* payload)
         {
-            IFetchEvents* events = static_cast< IFetchEvents* >( payload );
+            IRemoteEvents* events = static_cast< IRemoteEvents* >( payload );
 
             debugEvents( "credAccquire: %s %i", url, allowed_types );
 
@@ -48,36 +48,35 @@ namespace Git
             return 0;
         }
 
-        int FetchCallbacks::fetchProgress( const git_transfer_progress* stats, void* payload )
+        int RemoteCallbacks::fetchProgress(const git_transfer_progress* stats, void* payload)
         {
-            IFetchEvents* events = static_cast< IFetchEvents* >( payload );
+            IRemoteEvents* events = static_cast< IRemoteEvents* >(payload);
 
-            debugEvents( "fetchProgress: %u %u %u %lu",
-                         stats->total_objects,
-                         stats->received_objects,
-                         stats->indexed_objects,
-                         stats->received_bytes );
+            debugEvents("fetchProgress: %u %u %u %lu",
+                        stats->total_objects,
+                        stats->received_objects,
+                        stats->indexed_objects,
+                        stats->received_bytes);
 
-            if( events )
-            {
-                events->transportProgress( stats->total_objects, stats->indexed_objects,
-                                           stats->received_objects, stats->received_bytes );
+            if (events) {
 
-                if( stats->received_objects == stats->total_objects )
-                {
+                events->transportProgress(stats->total_objects, stats->indexed_objects,
+                                          stats->received_objects, stats->received_bytes);
+
+                if (stats->received_objects == stats->total_objects) {
                     events->doneDownloading();
                 }
 
-                if( stats->indexed_objects == stats->total_objects )
-                {
+                if (stats->indexed_objects == stats->total_objects) {
                     events->doneIndexing();
                 }
+
             }
 
             return 0;
         }
 
-        int FetchCallbacks::remoteComplete( git_remote_completion_type type, void* payload )
+        int RemoteCallbacks::remoteComplete(git_remote_completion_type type, void* payload)
         {
             /* THIS event is not triggered by lg anywhere! */
 
@@ -87,7 +86,7 @@ namespace Git
                     "\n\n\n");
             return 0;
 
-            IFetchEvents* events = static_cast< IFetchEvents* >( payload );
+            IRemoteEvents* events = static_cast< IRemoteEvents* >( payload );
 
             debugEvents( "fetchComplete: %i", type );
 
@@ -111,36 +110,34 @@ namespace Git
             return 0;
         }
 
-        int FetchCallbacks::remoteProgress( const char* str, int len, void* payload )
+        int RemoteCallbacks::remoteProgress( const char* str, int len, void* payload )
         {
-            IFetchEvents* events = static_cast< IFetchEvents* >( payload );
+            IRemoteEvents* events = static_cast< IRemoteEvents* >( payload );
 
             debugEvents( "Remote Progress: %s", QByteArray( str, len ).constData() );
 
-            if( events )
-            {
-                events->remoteMessage( QString::fromUtf8( str, len ) );
+            if (events) {
+                events->remoteMessage(QString::fromUtf8(str, len));
             }
 
             return GITERR_NONE;
         }
 
-        int FetchCallbacks::remoteUpdateTips( const char* refname, const git_oid* a,
-                                              const git_oid* b, void* payload )
+        int RemoteCallbacks::remoteUpdateTips(const char* refname, const git_oid* a,
+                                              const git_oid* b, void* payload)
         {
-            IFetchEvents* events = static_cast< IFetchEvents* >( payload );
+            IRemoteEvents* events = static_cast< IRemoteEvents* >(payload);
 
-            Git::ObjectId oidFrom = Git::ObjectId::fromRaw( a->id );
-            Git::ObjectId oidTo   = Git::ObjectId::fromRaw( b->id );
+            Git::ObjectId oidFrom = Git::ObjectId::fromRaw(a->id);
+            Git::ObjectId oidTo   = Git::ObjectId::fromRaw(b->id);
 
-            debugEvents( "Remote Update Tips: %s [%s->%s]",
-                         refname,
-                         oidFrom.toAscii().constData(),
-                         oidTo.toAscii().constData() );
+            debugEvents("Remote Update Tips: %s [%s->%s]",
+                        refname,
+                        oidFrom.toAscii().constData(),
+                        oidTo.toAscii().constData());
 
-            if( events )
-            {
-                events->updateTip( QString::fromUtf8( refname ), oidFrom, oidTo );
+            if (events) {
+                events->updateTip(QString::fromUtf8(refname), oidFrom, oidTo);
             }
 
             return 0;

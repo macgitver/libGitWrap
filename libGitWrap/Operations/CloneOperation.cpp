@@ -17,9 +17,9 @@
 #include <QStringBuilder>
 
 #include "libGitWrap/Operations/CloneOperation.hpp"
-
 #include "libGitWrap/Operations/Private/CloneOperationPrivate.hpp"
-#include "libGitWrap/Operations/Private/FetchCallbacks.hpp"
+
+#include "libGitWrap/Events//Private/RemoteCallbacks.hpp"
 
 namespace Git
 {
@@ -32,11 +32,11 @@ namespace Git
             , mCloneBare(false)
         {
             git_remote_callbacks cbs = GIT_REMOTE_CALLBACKS_INIT;
-            cbs.progress      = &FetchCallbacks::remoteProgress;
-            cbs.completion    = &FetchCallbacks::remoteComplete;
-            cbs.update_tips   = &FetchCallbacks::remoteUpdateTips;
-            cbs.credentials   = &FetchCallbacks::credAccquire;
-            cbs.payload       = static_cast< IFetchEvents* >(owner);
+            cbs.progress      = &RemoteCallbacks::remoteProgress;
+            cbs.completion    = &RemoteCallbacks::remoteComplete;
+            cbs.update_tips   = &RemoteCallbacks::remoteUpdateTips;
+            cbs.credentials   = &RemoteCallbacks::credAccquire;
+            cbs.payload       = static_cast< IRemoteEvents* >(owner);
 
             // We still have to memcpy, because LibGit2-devs hate C++ and disallow us to do a nice
             // assignment (`mRemoteCallBacks = GIT_REMOTE_CALLBACKS_INIT;`) without using C++11 in
