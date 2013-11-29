@@ -18,6 +18,8 @@
 #include "libGitWrap/Reference.hpp"
 #include "libGitWrap/RefSpec.hpp"
 
+#include "libGitWrap/Events/Private/RemoteCallbacks.hpp"
+
 #include "libGitWrap/Private/RemotePrivate.hpp"
 
 namespace Git
@@ -199,6 +201,16 @@ namespace Git
 
         result = git_remote_update_tips( d->mRemote );
         return result;
+    }
+
+    void Remote::setEvents(IRemoteEvents* events)
+    {
+        GW_D(Remote);
+        if (d) {
+            git_remote_callbacks cbs;
+            Internal::RemoteCallbacks::initCallbacks(cbs, events);
+            git_remote_set_callbacks(d->mRemote, &cbs);
+        }
     }
 
 }

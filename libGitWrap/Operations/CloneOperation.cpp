@@ -31,19 +31,6 @@ namespace Git
             : BaseOperationPrivate(owner)
             , mCloneBare(false)
         {
-            git_remote_callbacks cbs = GIT_REMOTE_CALLBACKS_INIT;
-            cbs.progress      = &RemoteCallbacks::remoteProgress;
-            cbs.completion    = &RemoteCallbacks::remoteComplete;
-            cbs.update_tips   = &RemoteCallbacks::remoteUpdateTips;
-            cbs.credentials   = &RemoteCallbacks::credAccquire;
-            cbs.payload       = static_cast< IRemoteEvents* >(owner);
-
-            // We still have to memcpy, because LibGit2-devs hate C++ and disallow us to do a nice
-            // assignment (`mRemoteCallBacks = GIT_REMOTE_CALLBACKS_INIT;`) without using C++11 in
-            // the first place...
-            // So we can as well memcpy the fully initialized variable
-            memcpy(&mRemoteCallbacks, &cbs, sizeof(cbs));
-
             git_checkout_opts coo = GIT_CHECKOUT_OPTS_INIT;
             coo.checkout_strategy = GIT_CHECKOUT_SAFE_CREATE;
             memcpy(&mCheckoutOpts, &coo, sizeof(coo));
@@ -55,6 +42,8 @@ namespace Git
 
         void CloneOperationPrivate::run()
         {
+            GW_OP_OWNER(CloneOperation);
+
             git_repository* repo = NULL;
             git_remote* remo = NULL;
 
@@ -91,7 +80,9 @@ namespace Git
             }
 
             if (mResult) {
-                mResult = git_remote_set_callbacks(remo, &mRemoteCallbacks);
+                git_remote_callbacks cbs;
+                RemoteCallbacks::initCallbacks(cbs, owner);
+                mResult = git_remote_set_callbacks(remo, &cbs);
             }
 
             if (mResult) {

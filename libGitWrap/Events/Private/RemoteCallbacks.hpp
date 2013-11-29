@@ -55,6 +55,9 @@ namespace Git
                     const git_oid*                  b,
                     void*                           payload);
 
+            static void initCallbacks(
+                    git_remote_callbacks&           cb,
+                    IRemoteEvents*                  receiver);
         };
 
     }

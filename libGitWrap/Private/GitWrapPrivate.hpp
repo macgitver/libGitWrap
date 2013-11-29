@@ -32,6 +32,7 @@ namespace Git
     class FileInfo;
     class Signature;
     class RefSpec;
+    class IRemoteEvents;
 
     namespace Internal
     {
