@@ -48,7 +48,7 @@ namespace Git
     public:
         bool isBare() const;
 
-        void read(Result& result);
+        void read(Result& result, bool force = true);
         void write(Result& result);
         void clear();
         void readTree(Result& result, Tree& tree);

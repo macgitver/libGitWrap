@@ -14,8 +14,9 @@
  *
  */
 
-#ifndef GITWRAP_IFETCH_EVENTS_HPP
-#define GITWRAP_IFETCH_EVENTS_HPP
+#ifndef GITWRAP_IREMOTE_EVENTS_HPP
+#define GITWRAP_IREMOTE_EVENTS_HPP
+#pragma once
 
 #include "libGitWrap/GitWrap.hpp"
 #include "libGitWrap/ObjectId.hpp"
@@ -25,10 +26,10 @@ namespace Git
 
     class CredentialRequest;
 
-    class GITWRAP_API IFetchEvents
+    class GITWRAP_API IRemoteEvents
     {
     public:
-        virtual ~IFetchEvents();
+        virtual ~IRemoteEvents();
 
     public:
         virtual void askCredentials( CredentialRequest& request ) = 0;

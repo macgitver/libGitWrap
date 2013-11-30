@@ -14,10 +14,12 @@
  *
  */
 
-#include "libGitWrap/Operations/CloneOperation.hpp"
+#include <QStringBuilder>
 
+#include "libGitWrap/Operations/CloneOperation.hpp"
 #include "libGitWrap/Operations/Private/CloneOperationPrivate.hpp"
-#include "libGitWrap/Operations/Private/FetchCallbacks.hpp"
+
+#include "libGitWrap/Events//Private/RemoteCallbacks.hpp"
 
 namespace Git
 {
@@ -27,24 +29,11 @@ namespace Git
 
         CloneOperationPrivate::CloneOperationPrivate(CloneOperation* owner)
             : BaseOperationPrivate(owner)
+            , mCloneBare(false)
         {
-            git_clone_options opts = GIT_CLONE_OPTIONS_INIT;
-            memcpy(&mGitCloneOptions, &opts, sizeof(opts));
-
-            git_remote_callbacks rcb = GIT_REMOTE_CALLBACKS_INIT;
-            memcpy(&mRemoteCallbacks, &rcb, sizeof(rcb));
-
-            mRemoteCallbacks.completion             = &FetchCallbacks::remoteComplete;
-            mRemoteCallbacks.progress               = &FetchCallbacks::remoteProgress;
-            mRemoteCallbacks.update_tips            = &FetchCallbacks::remoteUpdateTips;
-            mRemoteCallbacks.payload                = static_cast< IFetchEvents* >(owner);
-            mGitCloneOptions.remote_callbacks       = &mRemoteCallbacks;
-
-            mGitCloneOptions.fetch_progress_cb      = &FetchCallbacks::fetchProgress;
-            mGitCloneOptions.fetch_progress_payload = static_cast< IFetchEvents* >(owner);
-
-            mGitCloneOptions.cred_acquire_cb        = &FetchCallbacks::credAccquire;
-            mGitCloneOptions.cred_acquire_payload   = static_cast< IFetchEvents* >(owner);
+            git_checkout_opts coo = GIT_CHECKOUT_OPTS_INIT;
+            coo.checkout_strategy = GIT_CHECKOUT_SAFE_CREATE;
+            memcpy(&mCheckoutOpts, &coo, sizeof(coo));
         }
 
         CloneOperationPrivate::~CloneOperationPrivate()
@@ -53,15 +42,55 @@ namespace Git
 
         void CloneOperationPrivate::run()
         {
-            git_repository* repo = NULL;
-            mResult = git_clone(&repo,
-                                mUrl.toUtf8().constData(),
-                                mPath.toUtf8().constData(),
-                                &mGitCloneOptions );
+            GW_OP_OWNER(CloneOperation);
 
-            if(mResult && repo) {
-                git_repository_free( repo );
+            git_repository* repo = NULL;
+            git_remote* remo = NULL;
+
+            mResult = git_repository_init(&repo, mPath.toUtf8().constData(), mCloneBare);
+            if (!mResult) {
+                return;
             }
+
+            if (mRemoteName.isEmpty()) {
+                mRemoteName = "origin";
+            }
+
+            if (mFetchSpec.isEmpty()) {
+                mFetchSpec = QByteArray("+refs/heads/*:refs/remotes/") %
+                             mRemoteName %
+                             QByteArray("/*");
+            }
+
+            mResult = git_remote_create_with_fetchspec(
+                        &remo, repo, mRemoteName.constData(),
+                        mUrl.toUtf8().constData(),
+                        mFetchSpec.constData());
+
+            if (mResult && !mPushSpec.isEmpty()) {
+                mResult = git_remote_add_push(remo, mPushSpec.constData());
+            }
+
+            if (mResult && !mPushUrl.isEmpty()) {
+                mResult = git_remote_set_pushurl(remo, mPushUrl.constData());
+            }
+
+            if (mResult) {
+                mResult = git_remote_save(remo);
+            }
+
+            if (mResult) {
+                git_remote_callbacks cbs;
+                RemoteCallbacks::initCallbacks(cbs, owner);
+                mResult = git_remote_set_callbacks(remo, &cbs);
+            }
+
+            if (mResult) {
+                mResult = git_clone_into(repo, remo, &mCheckoutOpts, NULL);
+            }
+
+            git_remote_free(remo);
+            git_repository_free(repo);
         }
 
     }
@@ -93,7 +122,7 @@ namespace Git
     {
         GW_D(CloneOperation);
         Q_ASSERT(!isRunning());
-        d->mGitCloneOptions.bare = bare ? 1 : 0;
+        d->mCloneBare = bare;
     }
 
     void CloneOperation::setRemoteName(const QByteArray& remoteName)
@@ -101,7 +130,6 @@ namespace Git
         GW_D(CloneOperation);
         Q_ASSERT(!isRunning());
         d->mRemoteName = remoteName;
-        d->mGitCloneOptions.remote_name = remoteName.isEmpty() ? NULL : remoteName.constData();
     }
 
     void CloneOperation::setRemoteName(const QString& remoteName)
@@ -109,7 +137,6 @@ namespace Git
         GW_D(CloneOperation);
         Q_ASSERT(!isRunning());
         d->mRemoteName = remoteName.toUtf8();
-        d->mGitCloneOptions.remote_name = remoteName.isEmpty() ? NULL : d->mRemoteName.constData();
     }
 
     void CloneOperation::setFetchSpec(const QByteArray& fetchSpec)
@@ -117,7 +144,6 @@ namespace Git
         GW_D(CloneOperation);
         Q_ASSERT(!isRunning());
         d->mFetchSpec = fetchSpec;
-        d->mGitCloneOptions.fetch_spec = fetchSpec.isEmpty() ? NULL : fetchSpec.constData();
     }
 
     void CloneOperation::setPushSpec(const QByteArray& pushSpec)
@@ -125,7 +151,6 @@ namespace Git
         GW_D(CloneOperation);
         Q_ASSERT(!isRunning());
         d->mPushSpec = pushSpec;
-        d->mGitCloneOptions.push_spec = pushSpec.isEmpty() ? NULL : pushSpec.constData();
     }
 
     void CloneOperation::setPushUrl(const QByteArray& pushUrl)
@@ -133,7 +158,6 @@ namespace Git
         GW_D(CloneOperation);
         Q_ASSERT(!isRunning());
         d->mPushUrl = pushUrl;
-        d->mGitCloneOptions.pushurl = pushUrl.isEmpty() ? NULL : pushUrl.constData();
     }
 
     QString CloneOperation::url() const
@@ -151,7 +175,7 @@ namespace Git
     bool CloneOperation::bare() const
     {
         GW_CD(CloneOperation);
-        return d->mGitCloneOptions.bare != 0;
+        return d->mCloneBare;
     }
 
     QByteArray CloneOperation::remoteName() const

@@ -27,6 +27,8 @@ namespace Git
         class RemotePrivate;
     }
 
+    class IRemoteEvents;
+
     /**
      * @ingroup     GitWrap
      * @brief       Represents a git remote.
@@ -47,24 +49,26 @@ namespace Git
                              const QString& url, const QString& fetchSpec);
 
     public:
-        bool save( Result& result );
+        bool save(Result& result);
+
+        void setEvents(IRemoteEvents* events);
 
         QString name() const;
         QString url() const;
 
-        bool addFetchSpec( Result& result, const QString& spec );
-        bool addPushSpec( Result& result, const QString& spec );
+        bool addFetchSpec(Result& result, const QString& spec);
+        bool addPushSpec(Result& result, const QString& spec);
 
         QVector<RefSpec> fetchSpecs() const;
         QVector<RefSpec> pushSpecs() const;
 
-        static bool isValidUrl( const QString& url );
-        static bool isSupportedUrl( const QString& url );
+        static bool isValidUrl(const QString& url);
+        static bool isSupportedUrl(const QString& url);
 
-        bool connect( Result& result, bool forFetch );
-        void disconnect( Result& result );
-        bool download( Result& result );
-        bool updateTips( Result& result );
+        bool connect(Result& result, bool forFetch);
+        void disconnect(Result& result);
+        bool download(Result& result);
+        bool updateTips(Result& result);
     };
 
 }

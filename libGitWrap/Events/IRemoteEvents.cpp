@@ -14,12 +14,12 @@
  *
  */
 
-#include "libGitWrap/Operations/IFetchEvents.hpp"
+#include "libGitWrap/Events/IRemoteEvents.hpp"
 
 namespace Git
 {
 
-    IFetchEvents::~IFetchEvents()
+    IRemoteEvents::~IRemoteEvents()
     {
     }
 

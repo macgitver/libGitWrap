@@ -16,8 +16,10 @@
 
 #ifndef GITWRAP_CLONE_OPERATION_HPP
 #define GITWRAP_CLONE_OPERATION_HPP
+#pragma once
 
-#include "libGitWrap/Operations/IFetchEvents.hpp"
+#include "libGitWrap/Events/IRemoteEvents.hpp"
+
 #include "libGitWrap/Operations/BaseOperation.hpp"
 
 namespace Git
@@ -31,7 +33,7 @@ namespace Git
         class CloneOperationPrivate;
     }
 
-    class GITWRAP_API CloneOperation : public BaseOperation, public IFetchEvents
+    class GITWRAP_API CloneOperation : public BaseOperation, public IRemoteEvents
     {
         Q_OBJECT
     public:

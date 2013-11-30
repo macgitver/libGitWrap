@@ -18,6 +18,8 @@
 #include "libGitWrap/Reference.hpp"
 #include "libGitWrap/RefSpec.hpp"
 
+#include "libGitWrap/Events/Private/RemoteCallbacks.hpp"
+
 #include "libGitWrap/Private/RemotePrivate.hpp"
 
 namespace Git
@@ -186,24 +188,10 @@ namespace Git
         git_remote_disconnect(d->mRemote);
     }
 
-    namespace Internal
-    {
-
-        int download_progress( const git_transfer_progress* prg, void* _d )
-        {
-            RemotePrivate* d = (RemotePrivate*) _d;
-            d->mStats = *prg;
-            return 0;
-        }
-
-    }
-
     bool Remote::download( Result& result )
     {
         GW_D_CHECKED(Remote, false, result);
-
-        result = git_remote_download( d->mRemote, &Internal::download_progress,
-                                      (Internal::RemotePrivate*) d );
+        result = git_remote_download(d->mRemote);
         return result;
     }
 
@@ -213,6 +201,16 @@ namespace Git
 
         result = git_remote_update_tips( d->mRemote );
         return result;
+    }
+
+    void Remote::setEvents(IRemoteEvents* events)
+    {
+        GW_D(Remote);
+        if (d) {
+            git_remote_callbacks cbs;
+            Internal::RemoteCallbacks::initCallbacks(cbs, events);
+            git_remote_set_callbacks(d->mRemote, &cbs);
+        }
     }
 
 }

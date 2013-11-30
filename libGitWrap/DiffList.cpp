@@ -52,20 +52,19 @@ namespace Git
             return mChanges;
         }
 
-        DiffListPrivate::DiffListPrivate(const RepositoryPrivate::Ptr& repo, git_diff_list* difflist)
+        DiffListPrivate::DiffListPrivate(const RepositoryPrivate::Ptr& repo, git_diff* diff)
             : RepoObjectPrivate(repo)
-            , mDiffList(difflist)
+            , mDiff(diff)
         {
-            Q_ASSERT(difflist);
+            Q_ASSERT(diff);
         }
 
         DiffListPrivate::~DiffListPrivate()
         {
-            Q_ASSERT( mRepo );
+            Q_ASSERT(mRepo);
 
-            if( mDiffList )
-            {
-                git_diff_list_free( mDiffList );
+            if(mDiff) {
+                git_diff_free(mDiff);
             }
         }
 
@@ -90,17 +89,19 @@ namespace Git
             return GIT_ERROR;
         }
 
-        static int patchHunkCallBack( const git_diff_delta* delta,
-                                      const git_diff_range* range,
-                                      const char* header, size_t header_len,
-                                      void* cb_data )
+        static int patchHunkCallBack(const git_diff_delta* delta,
+                                     const git_diff_hunk* hunk,
+                                     void* cb_data )
         {
             PatchConsumer* pc = (PatchConsumer*) cb_data;
+            QString header;
 
-            if( pc->startHunkChange( range->new_start, range->new_lines,
-                                     range->old_start, range->old_lines,
-                                     header ? QString::fromUtf8( header, int( header_len ) ) : QString() ) )
-            {
+            if (hunk->header) {
+                header = QString::fromUtf8(hunk->header, int(hunk->header_len));
+            }
+
+            if (pc->startHunkChange(hunk->new_start, hunk->new_lines,
+                                    hunk->old_start, hunk->old_lines, header)) {
                 return GIT_OK;
             }
 
@@ -108,51 +109,47 @@ namespace Git
         }
 
         static int patchDataCallBack( const git_diff_delta* delta,
-                                      const git_diff_range* range,
-                                      char line_origin,
-                                      const char *content,
-                                      size_t content_len,
+                                      const git_diff_hunk* hunk,
+                                      const git_diff_line* line,
                                       void* cb_data )
         {
+            Q_UNUSED(delta);
+            Q_UNUSED(hunk);
             PatchConsumer* pc = (PatchConsumer*) cb_data;
 
             QString ct;
-            if( content && content_len )
-            {
-                if( content[ content_len - 1 ] == '\n' )
-                    --content_len;
+            if(line->content && line->content_len) {
 
-                ct = QString::fromUtf8( content, int( content_len ) );
+                int len = int(line->content_len);
+                if(line->content[len-1] == '\n') {
+                    --len;
+                }
+
+                ct = QString::fromUtf8(line->content, len);
             }
 
-            switch( line_origin )
-            {
+            switch(line->origin) {
             case GIT_DIFF_LINE_CONTEXT:
-                if( !pc->appendContext( ct ) )
-                {
+                if (!pc->appendContext(ct)) {
                     return GIT_ERROR;
                 }
                 break;
 
             case GIT_DIFF_LINE_ADDITION:
-                if( !pc->appendAddition( ct ) )
-                {
+                if (!pc->appendAddition(ct)) {
                     return GIT_ERROR;
                 }
                 break;
 
             case GIT_DIFF_LINE_DELETION:
-                if( !pc->appendDeletion( ct ) )
-                {
+                if (!pc->appendDeletion(ct)) {
                     return GIT_ERROR;
                 }
                 break;
 
             default:
-                qDebug( "Foo: t=%i", int(line_origin) );
-
+                qDebug() << "Foo: t=" << int(line->origin);
             }
-
             return GIT_OK;
         }
 
@@ -192,7 +189,7 @@ namespace Git
         }
 
         DiffList::Private* ontoP = Private::dataOf<DiffList>(onto);
-        result = git_diff_merge( ontoP->mDiffList, d->mDiffList );
+        result = git_diff_merge(ontoP->mDiff, d->mDiff);
         return result;
     }
 
@@ -205,11 +202,11 @@ namespace Git
             return false;
         }
 
-        result = git_diff_foreach( d->mDiffList,
-                                   &Internal::patchFileCallBack,
-                                   &Internal::patchHunkCallBack,
-                                   &Internal::patchDataCallBack,
-                                   consumer );
+        result = git_diff_foreach(d->mDiff,
+                                  &Internal::patchFileCallBack,
+                                  &Internal::patchHunkCallBack,
+                                  &Internal::patchDataCallBack,
+                                  consumer );
 
         return result;
     }
@@ -223,11 +220,11 @@ namespace Git
             return false;
         }
 
-        result = git_diff_foreach( d->mDiffList,
-                                   &Internal::changeListCallBack,
-                                   NULL,
-                                   NULL,
-                                   consumer );
+        result = git_diff_foreach(d->mDiff,
+                                  &Internal::changeListCallBack,
+                                  NULL,
+                                  NULL,
+                                  consumer );
 
         return result;
     }
@@ -252,7 +249,7 @@ namespace Git
         GW_CD_CHECKED(DiffList, false, result)
 
         git_diff_find_options opts = GIT_DIFF_FIND_OPTIONS_INIT;
-        result = git_diff_find_similar( d->mDiffList, &opts );
+        result = git_diff_find_similar(d->mDiff, &opts);
 
         return result;
     }

@@ -474,30 +474,43 @@ namespace Git
         return refHEAD.shorthand();
     }
 
-    namespace Internal
-    {
-
-        static int listBranches( const char* branchName, git_branch_t brachType, void* payload )
-        {
-            QStringList* sl = (QStringList*) payload;
-            sl->append( QString::fromUtf8( branchName ) );
-            return 0;
-        }
-
-    }
-
     QStringList Repository::branchNames(Result& result, bool local, bool remote)
     {
         GW_CD_CHECKED(Repository, QStringList(), result);
 
         QStringList sl;
-        result = git_branch_foreach( d->mRepo,
-                                     ( local ? GIT_BRANCH_LOCAL : 0 ) |
-                                     ( remote ? GIT_BRANCH_REMOTE : 0 ),
-                                     &Internal::listBranches,
-                                     (void*) &sl );
-        if( !result )
-        {
+
+        git_branch_iterator* it = NULL;
+        git_branch_t type;
+        int types = 0;
+
+        if (local) {
+            types |= GIT_BRANCH_LOCAL;
+        }
+
+        if (remote) {
+            types |= GIT_BRANCH_REMOTE;
+        }
+
+        result = git_branch_iterator_new(&it, d->mRepo, static_cast<git_branch_t>(types));
+        if (!result) {
+            return sl;
+        }
+
+        int err;
+        git_reference* ref;
+        while ((err = git_branch_next(&ref, &type, it)) == GITERR_NONE) {
+            Q_ASSERT(ref);
+
+            QString name = QString::fromUtf8(git_reference_shorthand(ref));
+            sl << name;
+
+            git_reference_free(ref);
+            ref = NULL;
+        }
+
+        if (err != GIT_ITEROVER) {
+            result = err;
             return QStringList();
         }
 
@@ -809,14 +822,13 @@ namespace Git
     {
         GW_D_EX_CHECKED(Repository, DiffList(), result);
 
-        git_diff_list* diffList = NULL;
-        result = git_diff_index_to_workdir( &diffList, d->mRepo, NULL, NULL );
-        if( !result )
-        {
+        git_diff* diff = NULL;
+        result = git_diff_index_to_workdir(&diff, d->mRepo, NULL, NULL);
+        if (!result) {
             return DiffList();
         }
 
-        return DiffList::PrivatePtr(new DiffList::Private(d, diffList));
+        return DiffList::PrivatePtr(new DiffList::Private(d, diff));
     }
 
     namespace Internal
