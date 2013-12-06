@@ -734,12 +734,14 @@ namespace Git
             git_remote* remote = NULL;
             result = git_remote_load(&remote, d->mRepo, arr.strings[i]);
             if (!result) {
+                git_strarray_free(&arr);
                 return Remote::List();
             }
             Remote rm = new Remote::Private(d.data(), remote);
             remotes.append(rm);
         }
 
+        git_strarray_free(&arr);
         return remotes;
     }
 
@@ -762,6 +764,7 @@ namespace Git
             return QStringList();
         }
 
+        // slFromStrArray frees the git_strarray for us
         return Internal::slFromStrArray( &arr );
     }
 
