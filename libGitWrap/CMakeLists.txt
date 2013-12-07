@@ -76,7 +76,11 @@ IF( WIN32 )
 
         ADD_GLOBS(
             LIBGIT2_FILES
+            ${LIBGIT2_BASE}/deps/http-parser/*.[ch]
             ${LIBGIT2_BASE}/src/hash/hash_win32.[ch]
+        )
+        INCLUDE_DIRECTORIES(
+            ${LIBGIT2_BASE}/deps/http-parser
         )
         ADD_DEFINITIONS( -DWIN32_SHA1 )
     ELSE()
