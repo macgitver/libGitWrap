@@ -249,14 +249,16 @@ namespace Git
 
         void CheckoutBranchOperationPrivate::run()
         {
+            /*
             git_repository* grepo = NULL;
             const git_object* gtree = NULL;
+            */
 
             prepare();
 
             if (mRepository.isValid()) {
-                Repository::Private* rp = BasePrivate::dataOf<Repository>(mRepository);
-                grepo = rp->mRepo;
+                //Repository::Private* rp = BasePrivate::dataOf<Repository>(mRepository);
+                //grepo = rp->mRepo;
             }
 
             /*

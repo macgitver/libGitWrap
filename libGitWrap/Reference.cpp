@@ -415,10 +415,12 @@ namespace Git
             return;
         }
 
-        bool doCreateLocal   = opts.testFlag(CheckoutCreateLocalBranch);
         bool doUpdateHEAD    = opts.testFlag(CheckoutUpdateHEAD);
+        /*
+        bool doCreateLocal   = opts.testFlag(CheckoutCreateLocalBranch);
         bool doAllowDetached = opts.testFlag(CheckoutAllowDetachHEAD);
         bool doForceDetached = opts.testFlag(CheckoutForceDetachHEAD);
+        */
 
         /*
         if (doCreateLocal) {
