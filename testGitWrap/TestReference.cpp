@@ -36,7 +36,7 @@ TEST_F(ReferenceFixture, CanLookup)
     ASSERT_TRUE(repo.isValid());
 
     Git::Result r;
-    Git::Reference ref = repo.lookupRef(r, QLatin1String("refs/heads/master"));
+    Git::Reference ref = repo.reference(r, QLatin1String("refs/heads/master"));
     ASSERT_TRUE(r);
     ASSERT_TRUE(ref.isValid());
     ASSERT_FALSE(ref.wasDestroyed());
@@ -49,7 +49,7 @@ TEST_F(ReferenceFixture, CanLookup)
 
     EXPECT_STREQ("refs/heads/master", qPrintable(ref.name()));
 
-    ref = repo.lookupRef(r, QLatin1String("master"));
+    ref = repo.reference(r, QLatin1String("master"));
     ASSERT_FALSE(r);
     ASSERT_FALSE(ref.isValid());
     r.clear();
@@ -62,7 +62,7 @@ TEST_F(ReferenceFixture, CanLookupShorthand)
     ASSERT_TRUE(repo.isValid());
 
     Git::Result r;
-    Git::Reference ref = repo.lookupRef(r, QLatin1String("master"), true);
+    Git::Reference ref = repo.reference(r, QLatin1String("master"), true);
     ASSERT_TRUE(r);
     ASSERT_TRUE(ref.isValid());
     ASSERT_FALSE(ref.wasDestroyed());
@@ -83,7 +83,7 @@ TEST_F(ReferenceFixture, CanDestroyRef)
     ASSERT_TRUE(repo.isValid());
 
     Git::Result r;
-    Git::Reference ref = repo.lookupRef(r, QLatin1String("master"), true);
+    Git::Reference ref = repo.reference(r, QLatin1String("master"), true);
     ASSERT_FALSE(ref.wasDestroyed());
 
     ref.destroy(r);
