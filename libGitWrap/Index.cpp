@@ -564,6 +564,34 @@ namespace Git
     }
 
     /**
+     * @brief           Creates a commit out of the index and adds it to the repository.
+     *
+     * @param[in,out]   result  A Result object; see @ref GitWrapErrorHandling
+     *
+     * @param[in]       message the commit message
+     *
+     * @return On success, returns the added commit; an invalid commit object otherwise.
+     */
+    void Index::commitToRepository(Result& result, const QString& message)
+    {
+        GW_D_CHECKED_VOID(Index, result)
+
+        git_signature* signature = NULL;
+        result = git_signature_default(&signature, d->repo()->mRepo);
+        if (!result) return;
+
+        Tree::Private* tp = Private::dataOf<Tree>( writeTree(result) );
+        if (!result) return;
+
+        git_oid commitOid;
+        result = git_commit_create(&commitOid, d->repo()->mRepo,
+                                   repository().currentBranch(result).toUtf8().constData(),
+                                   signature, signature,
+                                   NULL, message.toUtf8().constData(),
+                                   tp->o(), 0, NULL);
+    }
+
+    /**
      * @brief       Get this Index object's conflicts
      *
      * @return      A IndexConflicts object that is associated with this index.
