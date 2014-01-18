@@ -55,6 +55,18 @@ namespace Git
             return otCommit;
         }
 
+        const git_commit** CommitPrivate::commitList2git(Result& result, const CommitList &list)
+        {
+            if (!result) return NULL;
+
+            const git_commit** ret = new const git_commit *[list.count()];
+            for ( int i=0; i < list.count(); ++i )
+            {
+                ret[i] = dataOf<Commit>(list.at(i))->o();
+            }
+
+            return ret;
+        }
     }
 
     GW_PRIVATE_IMPL(Commit, Object)
