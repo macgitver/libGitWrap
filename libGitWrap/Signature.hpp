@@ -74,6 +74,9 @@ namespace Git
         }
 
     public:
+        static Signature defaultSignature(Result &result, const Repository &repo);
+
+    public:
         QString name() const
         {
             return mName;
