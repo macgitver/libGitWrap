@@ -54,8 +54,8 @@ namespace Git
             switch (git_object_type(o)) {
             case GIT_OBJ_TAG:    op = new TagPrivate(   repo, reinterpret_cast<git_tag*   >(o)); break;
             case GIT_OBJ_COMMIT: op = new CommitPrivate(repo, reinterpret_cast<git_commit*>(o)); break;
-            case GIT_OBJ_BLOB:   op = new TreePrivate(  repo, reinterpret_cast<git_tree*  >(o)); break;
-            case GIT_OBJ_TREE:   op = new BlobPrivate(  repo, reinterpret_cast<git_blob*  >(o)); break;
+            case GIT_OBJ_TREE:   op = new TreePrivate(  repo, reinterpret_cast<git_tree*  >(o)); break;
+            case GIT_OBJ_BLOB:   op = new BlobPrivate(  repo, reinterpret_cast<git_blob*  >(o)); break;
             default:             break;
             }
 
