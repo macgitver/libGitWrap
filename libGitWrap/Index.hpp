@@ -55,8 +55,6 @@ namespace Git
         Tree writeTree(Result& result);
         Tree writeTreeTo(Result& result, Repository& repo);
 
-        void commitToRepository(Result& result, const QString& message);
-
         // Methods to access and change entries
         int count( Result& result ) const;
         IndexEntry getEntry(Result &result, int n) const;
