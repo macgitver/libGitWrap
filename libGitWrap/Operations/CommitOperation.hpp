@@ -26,23 +26,62 @@ namespace Git
 
     namespace Internal
     {
-        class CommitOperationPrivate;
+        class CommitBaseOperationPrivate;
     }
+
+
+    class BaseOperationProvider
+    {
+    public:
+        virtual bool prepare() { return true; }
+        virtual bool finalize(const ObjectId& commitId) { return true; }
+    };
+
+
+    class GITWRAP_API CommitTreeProvider : public BaseOperationProvider
+    {
+    public:
+        virtual Tree tree() const = 0;
+    };
+
+
+    class GITWRAP_API CommitParentProvider : public BaseOperationProvider
+    {
+    public:
+        virtual QVector<ObjectId> parents() const = 0;
+    };
+
 
     class GITWRAP_API CommitOperation : public BaseOperation
     {
         Q_OBJECT
         #if QT_VERSION < 0x050000
-        friend class Internal::CommitOperationPrivate;
+        friend class Internal::CommitBaseOperationPrivate;
         #endif
     public:
-        typedef Internal::CommitOperationPrivate Private;
+        typedef Internal::CommitBaseOperationPrivate Private;
     public:
-        CommitOperation( Private& _d, QObject* parent = 0 );
+        CommitOperation( QObject* parent = 0 );
         ~CommitOperation();
 
     signals:
         void progress(CommitOperation *owner, const QString& pathName, quint32 completed, quint32 total);
+
+    public:
+        CommitParentProvider* parentProvider() const;
+        void setParentProvider(CommitParentProvider* p );
+
+        CommitTreeProvider *treeProvider() const;
+        void setTreeProvider(CommitTreeProvider* p );
+
+        QString message() const;
+        void setMessage(const QString &message);
+
+    private:
+        CommitParentProvider *  mParentProvider;
+        CommitTreeProvider *    mTreeProvider;
+
+        QString     mMessage;
     };
 }
 

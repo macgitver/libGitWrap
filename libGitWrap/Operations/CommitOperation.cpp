@@ -29,33 +29,29 @@ namespace Git
     namespace Internal
     {
 
-        class CommitOperationPrivate : public BaseOperationPrivate
+        class CommitBaseOperationPrivate : public BaseOperationPrivate
         {
         public:
-            CommitOperationPrivate(CommitOperation* owner)
+            CommitBaseOperationPrivate(CommitOperation* owner)
                 : BaseOperationPrivate(owner)
             {
             }
 
-            ~CommitOperationPrivate()
+            ~CommitBaseOperationPrivate()
             {
             }
 
         public:
             void prepare()
             {
-
             }
 
-            void unprepare()
+            void finalize()
             {
-
             }
 
             void run()
             {
-                Result r;
-                mRepository.index(r).commitToRepository(r, mCommitMessage);
             }
 
         public:
@@ -77,8 +73,12 @@ namespace Git
 
     }
 
-    CommitOperation::CommitOperation(CommitOperation::Private &_d, QObject *parent)
-        : BaseOperation(_d, parent)
+    // ********* CommitOperation *********
+
+    CommitOperation::CommitOperation(QObject *parent)
+        : BaseOperation(*new Private(this), parent)
+        , mParentProvider(0)
+        , mTreeProvider(0)
     {
 
     }
@@ -87,4 +87,25 @@ namespace Git
     {
 
     }
+
+    CommitParentProvider *CommitOperation::parentProvider() const
+    {
+        return mParentProvider;
+    }
+
+    void CommitOperation::setParentProvider(CommitParentProvider* p)
+    {
+        mParentProvider = p;
+    }
+
+    CommitTreeProvider *CommitOperation::treeProvider() const
+    {
+        return mTreeProvider;
+    }
+
+    void CommitOperation::setTreeProvider(CommitTreeProvider* p)
+    {
+        mTreeProvider = p;
+    }
+
 }
