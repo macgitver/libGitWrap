@@ -30,8 +30,11 @@ namespace Git
     }
 
 
-    class BaseOperationProvider
+    class GITWRAP_API BaseOperationProvider : public QSharedData
     {
+    public:
+        virtual ~BaseOperationProvider() {}
+
     public:
         virtual bool prepare() { return true; }
         virtual bool finalize(const ObjectId& commitId) { return true; }
