@@ -88,22 +88,22 @@ namespace Git
 
     }
 
-    CommitParentProvider *CommitOperation::parentProvider() const
+    CommitParentProvider::Ptr CommitOperation::parentProvider() const
     {
         return mParentProvider;
     }
 
-    void CommitOperation::setParentProvider(CommitParentProvider* p)
+    void CommitOperation::setParentProvider(CommitParentProvider::Ptr p)
     {
         mParentProvider = p;
     }
 
-    CommitTreeProvider *CommitOperation::treeProvider() const
+    CommitTreeProvider::Ptr CommitOperation::treeProvider() const
     {
         return mTreeProvider;
     }
 
-    void CommitOperation::setTreeProvider(CommitTreeProvider* p)
+    void CommitOperation::setTreeProvider(CommitTreeProvider::Ptr p)
     {
         mTreeProvider = p;
     }

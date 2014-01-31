@@ -45,12 +45,18 @@ namespace Git
     class GITWRAP_API CommitTreeProvider : public BaseOperationProvider
     {
     public:
+        typedef QExplicitlySharedDataPointer<CommitTreeProvider> Ptr;
+
+    public:
         virtual Tree tree() const = 0;
     };
 
 
     class GITWRAP_API CommitParentProvider : public BaseOperationProvider
     {
+    public:
+        typedef QExplicitlySharedDataPointer<CommitParentProvider> Ptr;
+
     public:
         virtual QVector<ObjectId> parents() const = 0;
     };
@@ -72,11 +78,11 @@ namespace Git
         void progress(CommitOperation *owner, const QString& pathName, quint32 completed, quint32 total);
 
     public:
-        CommitParentProvider* parentProvider() const;
-        void setParentProvider(CommitParentProvider* p );
+        CommitParentProvider::Ptr parentProvider() const;
+        void setParentProvider(CommitParentProvider::Ptr p );
 
-        CommitTreeProvider *treeProvider() const;
-        void setTreeProvider(CommitTreeProvider* p );
+        CommitTreeProvider::Ptr treeProvider() const;
+        void setTreeProvider(CommitTreeProvider::Ptr p );
 
         QString message() const;
         void setMessage(const QString &message);
@@ -88,8 +94,8 @@ namespace Git
         void setCommitter(const Signature &value);
 
     private:
-        CommitParentProvider *  mParentProvider;
-        CommitTreeProvider *    mTreeProvider;
+        CommitParentProvider::Ptr  mParentProvider;
+        CommitTreeProvider::Ptr    mTreeProvider;
 
         QString     mMessage;
         Signature   mAuthor;
