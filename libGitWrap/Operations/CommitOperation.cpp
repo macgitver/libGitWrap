@@ -108,4 +108,34 @@ namespace Git
         mTreeProvider = p;
     }
 
+    QString CommitOperation::message() const
+    {
+        return mMessage;
+    }
+
+    void CommitOperation::setMessage(const QString &message)
+    {
+        mMessage = message;
+    }
+
+    Signature CommitOperation::committer() const
+    {
+        return mCommitter;
+    }
+
+    void CommitOperation::setCommitter(const Signature &value)
+    {
+        mCommitter = value;
+    }
+
+    Signature CommitOperation::author() const
+    {
+        return mAuthor;
+    }
+
+    void CommitOperation::setAuthor(const Signature &value)
+    {
+        mAuthor = value;
+    }
+
 }

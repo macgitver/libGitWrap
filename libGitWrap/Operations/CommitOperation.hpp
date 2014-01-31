@@ -19,6 +19,7 @@
 #define GITWRAP_COMMIT_OPERATION_HPP
 
 #include "libGitWrap/Operations/BaseOperation.hpp"
+#include "libGitWrap/Signature.hpp"
 
 namespace Git
 {
@@ -80,11 +81,19 @@ namespace Git
         QString message() const;
         void setMessage(const QString &message);
 
+        Signature author() const;
+        void setAuthor(const Signature &value);
+
+        Signature committer() const;
+        void setCommitter(const Signature &value);
+
     private:
         CommitParentProvider *  mParentProvider;
         CommitTreeProvider *    mTreeProvider;
 
         QString     mMessage;
+        Signature   mAuthor;
+        Signature   mCommitter;
     };
 }
 
