@@ -95,6 +95,7 @@ namespace Git
 
     void CommitOperation::setParentProvider(CommitParentProvider::Ptr p)
     {
+        Q_ASSERT(!isRunning());
         mParentProvider = p;
     }
 
@@ -105,6 +106,7 @@ namespace Git
 
     void CommitOperation::setTreeProvider(CommitTreeProvider::Ptr p)
     {
+        Q_ASSERT(!isRunning());
         mTreeProvider = p;
     }
 
@@ -115,6 +117,7 @@ namespace Git
 
     void CommitOperation::setMessage(const QString &message)
     {
+        Q_ASSERT(!isRunning());
         mMessage = message;
     }
 
@@ -125,6 +128,7 @@ namespace Git
 
     void CommitOperation::setCommitter(const Signature &value)
     {
+        Q_ASSERT(!isRunning());
         mCommitter = value;
     }
 
@@ -135,6 +139,7 @@ namespace Git
 
     void CommitOperation::setAuthor(const Signature &value)
     {
+        Q_ASSERT(!isRunning());
         mAuthor = value;
     }
 
