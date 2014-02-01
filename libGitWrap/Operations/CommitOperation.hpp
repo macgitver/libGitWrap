@@ -58,7 +58,7 @@ namespace Git
         typedef QExplicitlySharedDataPointer<CommitParentProvider> Ptr;
 
     public:
-        virtual QVector<ObjectId> parents() const = 0;
+        virtual ObjectIdList parents() const = 0;
     };
 
 
