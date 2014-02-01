@@ -22,6 +22,7 @@
 #include "libGitWrap/Commit.hpp"
 #include "libGitWrap/Index.hpp"
 #include "libGitWrap/Repository.hpp"
+#include "libGitWrap/Signature.hpp"
 #include "libGitWrap/Tree.hpp"
 
 namespace Git
@@ -34,6 +35,8 @@ namespace Git
         public:
             CommitBaseOperationPrivate(CommitOperation* owner)
                 : BaseOperationPrivate(owner)
+                , mParentProvider(0)
+                , mTreeProvider(0)
             {
             }
 
@@ -62,8 +65,12 @@ namespace Git
             }
 
         public:
-            Repository          mRepository;
-            QString             mCommitMessage;
+            CommitParentProvider::Ptr   mParentProvider;
+            CommitTreeProvider::Ptr     mTreeProvider;
+
+            QString             mMessage;
+            Signature           mAuthor;
+            Signature           mCommitter;
             bool                mSignoff;
 
             QStringList         mPaths;
@@ -77,8 +84,6 @@ namespace Git
 
     CommitOperation::CommitOperation(QObject *parent)
         : BaseOperation(*new Private(this), parent)
-        , mParentProvider(0)
-        , mTreeProvider(0)
     {
 
     }
@@ -90,57 +95,67 @@ namespace Git
 
     CommitParentProvider::Ptr CommitOperation::parentProvider() const
     {
-        return mParentProvider;
+        GW_CD(CommitOperation);
+        return d->mParentProvider;
     }
 
     void CommitOperation::setParentProvider(CommitParentProvider::Ptr p)
     {
+        GW_D(CommitOperation);
         Q_ASSERT(!isRunning());
-        mParentProvider = p;
+        d->mParentProvider = p;
     }
 
     CommitTreeProvider::Ptr CommitOperation::treeProvider() const
     {
-        return mTreeProvider;
+        GW_CD(CommitOperation);
+        return d->mTreeProvider;
     }
 
     void CommitOperation::setTreeProvider(CommitTreeProvider::Ptr p)
     {
+        GW_D(CommitOperation);
         Q_ASSERT(!isRunning());
-        mTreeProvider = p;
+        d->mTreeProvider = p;
     }
 
     QString CommitOperation::message() const
     {
-        return mMessage;
+        GW_CD(CommitOperation);
+        return d->mMessage;
     }
 
     void CommitOperation::setMessage(const QString &message)
     {
+        GW_D(CommitOperation);
         Q_ASSERT(!isRunning());
-        mMessage = message;
+        d->mMessage = message;
     }
 
     Signature CommitOperation::committer() const
     {
-        return mCommitter;
+        GW_CD(CommitOperation);
+        return d->mCommitter;
     }
 
     void CommitOperation::setCommitter(const Signature &value)
     {
+        GW_D(CommitOperation);
         Q_ASSERT(!isRunning());
-        mCommitter = value;
+        d->mCommitter = value;
     }
 
     Signature CommitOperation::author() const
     {
-        return mAuthor;
+        GW_CD(CommitOperation);
+        return d->mAuthor;
     }
 
     void CommitOperation::setAuthor(const Signature &value)
     {
+        GW_D(CommitOperation);
         Q_ASSERT(!isRunning());
-        mAuthor = value;
+        d->mAuthor = value;
     }
 
 }

@@ -19,11 +19,11 @@
 #define GITWRAP_COMMIT_OPERATION_HPP
 
 #include "libGitWrap/Operations/BaseOperation.hpp"
-#include "libGitWrap/Signature.hpp"
 
 namespace Git
 {
     class Result;
+    class Signature;
 
     namespace Internal
     {
@@ -92,14 +92,6 @@ namespace Git
 
         Signature committer() const;
         void setCommitter(const Signature &value);
-
-    private:
-        CommitParentProvider::Ptr  mParentProvider;
-        CommitTreeProvider::Ptr    mTreeProvider;
-
-        QString     mMessage;
-        Signature   mAuthor;
-        Signature   mCommitter;
     };
 }
 
