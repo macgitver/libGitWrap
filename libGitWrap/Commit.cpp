@@ -121,6 +121,57 @@ namespace Git
         return repo.lookupCommit( result, ObjectId::fromRaw(commitId.id) );
     }
 
+    /**
+     * @brief           Creates a new commit and adds it to the repository.
+     *
+     *                  The HEAD reference and, if it exist, the current branch
+     *                  are updated and point to the new commit.
+     *
+     * @param[in,out]   result  a result object; see @ref GitWrapErrorHandling
+     *
+     * @param repo      the target Git repository
+     *
+     * @param tree      the root tree object within the commit
+     *
+     * @param message   the commit message
+     *
+     * @param author    the original commit author's signature
+     *
+     * @param committer the committer's signature
+     *
+     * @param parents   the commit's parent commit(s)
+     *
+     * @return          the created commit object on success or an invalid object
+     */
+    Commit Commit::create(Result &result, Repository& repo, const Tree &tree, const QString &message,
+                          const Signature &author, const Signature &committer, const ObjectIdList &parents)
+    {
+        if (!result) return Commit();
+        if (!repo.isValid() || !tree.isValid())
+        {
+            result.setInvalidObject();
+            return Commit();
+        }
+
+        Repository::Private* rp = Private::dataOf<Repository>(repo);
+        git_signature* gitAuthor = Internal::signature2git(result, author);
+        git_signature* gitCommitter = Internal::signature2git(result, committer);
+        QString branchName = repo.HEAD(result).name();
+        const git_oid** constParents = Internal::ObjectIdList2git(result, parents);
+
+        if (!result) return Commit();
+
+        git_oid commitId;
+        result = git_commit_create_from_oids( &commitId, rp->mRepo, branchName.toUtf8().constData(),
+                                              gitAuthor, gitCommitter,
+                                              NULL, message.toUtf8().constData(),
+                                              Internal::ObjectId2git_oid(tree.id()),
+                                              parents.count(), constParents );
+        delete[] constParents;
+
+        return repo.lookupCommit( result, ObjectId::fromRaw(commitId.id) );
+    }
+
     Tree Commit::tree( Result& result ) const
     {
         GW_CD_CHECKED(Commit, Tree(), result);
