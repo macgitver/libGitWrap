@@ -24,6 +24,8 @@
 namespace Git
 {
 
+    class CommitOperation;
+
     namespace Internal
     {
         class IndexPrivate;
@@ -74,6 +76,8 @@ namespace Git
 
         IndexEntry operator[](int index) const;
         IndexEntry operator[](const QString& path) const;
+
+        CommitOperation* commitOperation( Result& result );
     };
 
 }

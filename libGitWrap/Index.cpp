@@ -17,9 +17,11 @@
  */
 
 #include "libGitWrap/Index.hpp"
+
 #include "libGitWrap/IndexEntry.hpp"
 #include "libGitWrap/IndexConflict.hpp"
 #include "libGitWrap/IndexConflicts.hpp"
+#include "libGitWrap/Reference.hpp"
 #include "libGitWrap/Repository.hpp"
 #include "libGitWrap/Tree.hpp"
 
@@ -29,6 +31,8 @@
 #include "libGitWrap/Private/RepositoryPrivate.hpp"
 #include "libGitWrap/Private/ObjectPrivate.hpp"
 #include "libGitWrap/Private/TreePrivate.hpp"
+
+#include "libGitWrap/Operations/CommitOperation.hpp"
 
 namespace Git
 {
@@ -69,6 +73,16 @@ namespace Git
         {
             conflictsLoaded = false;
             conflicts.clear();
+        }
+
+        CommitOperation* IndexPrivate::commitOperation(Result& result)
+        {
+            QScopedPointer<CommitOperation> op(new CommitOperation);
+
+//            op->setOperationProvider( outer<Index>() );
+            if (!result) return NULL;
+
+            return op.take();
         }
 
     }
@@ -295,6 +309,12 @@ namespace Git
     {
         Result r;
         return getEntry(r, path);
+    }
+
+    CommitOperation* Index::commitOperation(Result& result)
+    {
+        GW_D_CHECKED(Reference, NULL, result);
+        return d->commitOperation(result);
     }
 
     /**
