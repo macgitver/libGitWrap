@@ -30,35 +30,15 @@ namespace Git
         class CommitBaseOperationPrivate;
     }
 
-
-    class GITWRAP_API BaseOperationProvider : public QSharedData
+    class GITWRAP_API CommitOperationProvider : public virtual BaseOperationProvider
     {
     public:
-        virtual ~BaseOperationProvider() {}
+        typedef QExplicitlySharedDataPointer<CommitOperationProvider> Ptr;
 
     public:
-        virtual bool prepare() { return true; }
-        virtual bool finalize(const ObjectId& commitId) { return true; }
-    };
-
-
-    class GITWRAP_API CommitTreeProvider : public BaseOperationProvider
-    {
-    public:
-        typedef QExplicitlySharedDataPointer<CommitTreeProvider> Ptr;
-
-    public:
-        virtual Tree tree() const = 0;
-    };
-
-
-    class GITWRAP_API CommitParentProvider : public BaseOperationProvider
-    {
-    public:
-        typedef QExplicitlySharedDataPointer<CommitParentProvider> Ptr;
-
-    public:
-        virtual ObjectIdList parents() const = 0;
+        virtual Tree commitOperationTree(Result &result) = 0;
+        virtual ObjectIdList commitOperationParents(Result &result) const = 0;
+        virtual Repository commitOperationRepository() const = 0;
     };
 
 
@@ -78,11 +58,8 @@ namespace Git
         void progress(CommitOperation *owner, const QString& pathName, quint32 completed, quint32 total);
 
     public:
-        CommitParentProvider::Ptr parentProvider() const;
-        void setParentProvider(CommitParentProvider::Ptr p );
-
-        CommitTreeProvider::Ptr treeProvider() const;
-        void setTreeProvider(CommitTreeProvider::Ptr p );
+        CommitOperationProvider::Ptr operationProvider() const;
+        void setOperationProvider(CommitOperationProvider::Ptr p );
 
         QString message() const;
         void setMessage(const QString &message);

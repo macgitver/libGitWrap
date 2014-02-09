@@ -35,8 +35,7 @@ namespace Git
         public:
             CommitBaseOperationPrivate(CommitOperation* owner)
                 : BaseOperationPrivate(owner)
-                , mParentProvider(0)
-                , mTreeProvider(0)
+                , mCommitProvider(0)
             {
             }
 
@@ -45,12 +44,16 @@ namespace Git
             }
 
         public:
-            void prepare()
+            bool prepare()
             {
+                Q_ASSERT( mCommitProvider );
+                return mCommitProvider->prepare();
             }
 
-            void finalize()
+            bool finalize()
             {
+                Q_ASSERT( mCommitProvider );
+                return mCommitProvider->finalize( ObjectId() );
             }
 
             void run()
@@ -65,8 +68,7 @@ namespace Git
             }
 
         public:
-            CommitParentProvider::Ptr   mParentProvider;
-            CommitTreeProvider::Ptr     mTreeProvider;
+            CommitOperationProvider::Ptr   mCommitProvider;
 
             QString             mMessage;
             Signature           mAuthor;
@@ -93,30 +95,17 @@ namespace Git
 
     }
 
-    CommitParentProvider::Ptr CommitOperation::parentProvider() const
+    CommitOperationProvider::Ptr CommitOperation::operationProvider() const
     {
         GW_CD(CommitOperation);
-        return d->mParentProvider;
+        return d->mCommitProvider;
     }
 
-    void CommitOperation::setParentProvider(CommitParentProvider::Ptr p)
+    void CommitOperation::setOperationProvider(CommitOperationProvider::Ptr p)
     {
         GW_D(CommitOperation);
         Q_ASSERT(!isRunning());
-        d->mParentProvider = p;
-    }
-
-    CommitTreeProvider::Ptr CommitOperation::treeProvider() const
-    {
-        GW_CD(CommitOperation);
-        return d->mTreeProvider;
-    }
-
-    void CommitOperation::setTreeProvider(CommitTreeProvider::Ptr p)
-    {
-        GW_D(CommitOperation);
-        Q_ASSERT(!isRunning());
-        d->mTreeProvider = p;
+        d->mCommitProvider = p;
     }
 
     QString CommitOperation::message() const
