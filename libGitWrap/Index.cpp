@@ -182,7 +182,7 @@ namespace Git
      * @brief       Query whether this is a bare index
      *
      * @return      @c true if this index is bare (meaning it has no repository associated to it) or
-     *              @c false if this indes is non-bare and has a repository associated to it.
+     *              @c false if this index is non-bare and has a repository associated to it.
      */
     bool Index::isBare() const
     {
