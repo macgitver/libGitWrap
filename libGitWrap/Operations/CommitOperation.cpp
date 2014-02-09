@@ -58,6 +58,15 @@ namespace Git
 
             void run()
             {
+                prepare();
+
+                Repository      repo = mCommitProvider->commitOperationRepository();
+                Tree            tree = mCommitProvider->commitOperationTree(mResult);
+                ObjectIdList    parents = mCommitProvider->commitOperationParents(mResult);
+
+                Commit::create( mResult, repo, tree, mMessage, mAuthor, mCommitter, parents );
+
+                finalize();
             }
 
         public:
