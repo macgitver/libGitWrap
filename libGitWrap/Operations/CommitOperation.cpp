@@ -141,6 +141,27 @@ namespace Git
         d->mCommitter = value;
     }
 
+    /**
+     * @brief Sets the Git default signature for author and committer.
+     *
+     * A CommitOperationProvider must be set before calling this method.
+     */
+    void CommitOperation::setDefaultSignatures()
+    {
+        GW_D(CommitOperation);
+        Q_ASSERT(!isRunning());
+
+        if (!d->mProvider)
+        {
+            d->mResult.setInvalidObject();
+            return;
+        }
+
+        d->mAuthor = Signature::defaultSignature( d->mResult,
+                                                  d->mProvider->commitOperationRepository() );
+        d->mCommitter = d->mAuthor;
+    }
+
     Signature CommitOperation::author() const
     {
         GW_CD(CommitOperation);
