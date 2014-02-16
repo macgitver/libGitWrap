@@ -27,29 +27,31 @@ namespace Git
 
     namespace Internal
     {
-        class CommitBaseOperationPrivate;
+        class CommitOperationPrivate;
+
+        class CommitOperationProvider : public BaseOperationProvider
+        {
+        public:
+            typedef QExplicitlySharedDataPointer<CommitOperationProvider> Ptr;
+
+        public:
+            virtual ~CommitOperationProvider() {}
+
+        public:
+            virtual Tree commitOperationTree(Result &result) = 0;
+            virtual ObjectIdList commitOperationParents(Result &result) const = 0;
+            virtual Repository commitOperationRepository() const = 0;
+        };
     }
-
-    class GITWRAP_API CommitOperationProvider : public virtual BaseOperationProvider
-    {
-    public:
-        typedef QExplicitlySharedDataPointer<CommitOperationProvider> Ptr;
-
-    public:
-        virtual Tree commitOperationTree(Result &result) = 0;
-        virtual ObjectIdList commitOperationParents(Result &result) const = 0;
-        virtual Repository commitOperationRepository() const = 0;
-    };
-
 
     class GITWRAP_API CommitOperation : public BaseOperation
     {
         Q_OBJECT
         #if QT_VERSION < 0x050000
-        friend class Internal::CommitBaseOperationPrivate;
+        friend class Internal::CommitOperationPrivate;
         #endif
     public:
-        typedef Internal::CommitBaseOperationPrivate Private;
+        typedef Internal::CommitOperationPrivate Private;
     public:
         CommitOperation( QObject* parent = 0 );
         ~CommitOperation();
@@ -58,8 +60,8 @@ namespace Git
         void progress(CommitOperation *owner, const QString& pathName, quint32 completed, quint32 total);
 
     public:
-        CommitOperationProvider::Ptr operationProvider() const;
-        void setOperationProvider(CommitOperationProvider::Ptr p );
+        Internal::CommitOperationProvider::Ptr operationProvider() const;
+        void setOperationProvider(const Internal::CommitOperationProvider::Ptr& p );
 
         QString message() const;
         void setMessage(const QString &message);

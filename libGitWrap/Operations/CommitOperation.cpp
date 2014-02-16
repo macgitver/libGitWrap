@@ -29,40 +29,38 @@ namespace Git
 {
     namespace Internal
     {
-
-        class CommitBaseOperationPrivate : public BaseOperationPrivate
+        class CommitOperationPrivate : public BaseOperationPrivate
         {
         public:
-            CommitBaseOperationPrivate(CommitOperation* owner)
+            CommitOperationPrivate(CommitOperation* owner)
                 : BaseOperationPrivate(owner)
-                , mCommitProvider(0)
             {
             }
 
-            ~CommitBaseOperationPrivate()
+            virtual ~CommitOperationPrivate()
             {
             }
 
         public:
             bool prepare()
             {
-                Q_ASSERT( mCommitProvider );
-                return mCommitProvider->prepare();
+                Q_ASSERT( mProvider );
+                return mProvider->prepare();
             }
 
             bool finalize()
             {
-                Q_ASSERT( mCommitProvider );
-                return mCommitProvider->finalize( ObjectId() );
+                Q_ASSERT( mProvider );
+                return mProvider->finalize( ObjectId() );
             }
 
             void run()
             {
                 prepare();
 
-                Repository      repo = mCommitProvider->commitOperationRepository();
-                Tree            tree = mCommitProvider->commitOperationTree(mResult);
-                ObjectIdList    parents = mCommitProvider->commitOperationParents(mResult);
+                Repository      repo = mProvider->commitOperationRepository();
+                Tree            tree = mProvider->commitOperationTree(mResult);
+                ObjectIdList    parents = mProvider->commitOperationParents(mResult);
 
                 Commit::create( mResult, repo, tree, mMessage, mAuthor, mCommitter, parents );
 
@@ -77,7 +75,7 @@ namespace Git
             }
 
         public:
-            CommitOperationProvider::Ptr   mCommitProvider;
+            CommitOperationProvider::Ptr   mProvider;
 
             QString             mMessage;
             Signature           mAuthor;
@@ -104,17 +102,17 @@ namespace Git
 
     }
 
-    CommitOperationProvider::Ptr CommitOperation::operationProvider() const
+    Internal::CommitOperationProvider::Ptr CommitOperation::operationProvider() const
     {
         GW_CD(CommitOperation);
-        return d->mCommitProvider;
+        return d->mProvider;
     }
 
-    void CommitOperation::setOperationProvider(CommitOperationProvider::Ptr p)
+    void CommitOperation::setOperationProvider(const Internal::CommitOperationProvider::Ptr &p)
     {
         GW_D(CommitOperation);
         Q_ASSERT(!isRunning());
-        d->mCommitProvider = p;
+        d->mProvider = p;
     }
 
     QString CommitOperation::message() const

@@ -40,6 +40,49 @@ namespace Git
     namespace Internal
     {
 
+        class IndexCommitOperationProvider : public CommitOperationProvider
+        {
+        public:
+
+            // INTERFACE REALIZATION
+
+            Tree commitOperationTree(Result &result)
+            {
+                return mIndex.writeTree(result);
+            }
+
+            ObjectIdList commitOperationParents(Result &result) const
+            {
+                if (mIndex.isBare())
+                {
+                    result.setInvalidObject();
+                    return ObjectIdList();
+                }
+
+                ObjectIdList commitParents;
+                ObjectId headId = mIndex.repository().HEAD(result).resolveToObjectId(result);
+                if (!result) return ObjectIdList();
+
+                commitParents << headId;
+                return commitParents;
+            }
+
+            Repository commitOperationRepository() const
+            {
+                return mIndex.repository();
+            }
+
+        public:
+            void setIndex( const Index &index )
+            {
+                mIndex = index;
+            }
+
+        private:
+            Index   mIndex;
+        };
+
+
         IndexPrivate::IndexPrivate(const RepositoryPrivate::Ptr& repo, git_index* index)
             : RepoObjectPrivate(repo)
             , index(index)
@@ -79,7 +122,9 @@ namespace Git
         {
             QScopedPointer<CommitOperation> op(new CommitOperation);
 
-//            op->setOperationProvider( outer<Index>() );
+            IndexCommitOperationProvider *provider = new IndexCommitOperationProvider;
+            provider->setIndex( outer<Index>() );
+            op->setOperationProvider( IndexCommitOperationProvider::Ptr( provider ) );
             if (!result) return NULL;
 
             return op.take();
