@@ -107,6 +107,11 @@ namespace Git
                     .arg( mWhen.toString( Qt::ISODate ) );
         }
 
+        bool isEmpty() const
+        {
+            return mName.isEmpty() && mEMail.isEmpty() && mWhen.isNull();
+        }
+
     private:
         QString     mName;
         QString     mEMail;
