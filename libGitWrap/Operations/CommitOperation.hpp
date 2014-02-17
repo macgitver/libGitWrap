@@ -71,8 +71,6 @@ namespace Git
 
         Signature committer() const;
         void setCommitter(const Signature &value);
-
-        void setDefaultSignatures();
     };
 }
 
