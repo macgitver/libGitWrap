@@ -20,6 +20,7 @@
 #define GIT_INDEX_H
 
 #include "libGitWrap/RepoObject.hpp"
+#include "libGitWrap/Operations/Providers.hpp"
 
 namespace Git
 {
@@ -78,6 +79,41 @@ namespace Git
         IndexEntry operator[](const QString& path) const;
 
         CommitOperation* commitOperation( Result& result );
+    };
+
+
+    class GITWRAP_API IndexTreeProvider : public TreeProvider
+    {
+    public:
+
+        // INTERFACE REALIZATION
+
+        Tree tree(Result &result);
+
+        Repository repository() const;
+
+    public:
+        void setIndex( const Index &index );
+
+    private:
+        Index   mIndex;
+    };
+
+    class GITWRAP_API IndexParentProvider : public ParentProvider
+    {
+    public:
+
+        // INTERFACE REALIZATION
+
+        ObjectIdList parents(Result &result) const;
+
+        Repository repository() const;
+
+    public:
+        void setIndex( const Index &index );
+
+    private:
+        Index   mIndex;
     };
 
 }

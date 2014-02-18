@@ -28,20 +28,6 @@ namespace Git
     namespace Internal
     {
         class CommitOperationPrivate;
-
-        class CommitOperationProvider : public BaseOperationProvider
-        {
-        public:
-            typedef QExplicitlySharedDataPointer<CommitOperationProvider> Ptr;
-
-        public:
-            virtual ~CommitOperationProvider() {}
-
-        public:
-            virtual Tree commitOperationTree(Result &result) = 0;
-            virtual ObjectIdList commitOperationParents(Result &result) const = 0;
-            virtual Repository commitOperationRepository() const = 0;
-        };
     }
 
     class GITWRAP_API CommitOperation : public BaseOperation
@@ -60,8 +46,11 @@ namespace Git
         void progress(CommitOperation *owner, const QString& pathName, quint32 completed, quint32 total);
 
     public:
-        Internal::CommitOperationProvider::Ptr operationProvider() const;
-        void setOperationProvider(const Internal::CommitOperationProvider::Ptr& p );
+        TreeProviderPtr treeProvider() const;
+        void setTreeProvider(const TreeProviderPtr& p );
+
+        ParentProviderPtr parentProvider() const;
+        void setParentProvider(const ParentProviderPtr& p );
 
         QString message() const;
         void setMessage(const QString &message);

@@ -29,16 +29,6 @@ namespace Git
     namespace Internal
     {
         class BaseOperationPrivate;
-
-        class BaseOperationProvider : public QSharedData
-        {
-        public:
-            virtual ~BaseOperationProvider() {}
-
-        public:
-            virtual bool prepare() { return true; }
-            virtual bool finalize(const ObjectId& commitId) { return true; }
-        };
     }
 
     class GITWRAP_API BaseOperation : public QObject

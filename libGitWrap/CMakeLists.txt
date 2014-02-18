@@ -204,9 +204,10 @@ SET( PUB_HDR_FILES
     Operations/BaseOperation.hpp
     Operations/CheckoutOperation.hpp
     Operations/CloneOperation.hpp
+    Operations/CommitOperation.hpp
+    Operations/Providers.hpp
 
     Events/Private/RemoteCallbacks.hpp
-    Operations/CommitOperation.hpp
 )
 
 SET( PRI_HDR_FILES

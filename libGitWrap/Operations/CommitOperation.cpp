@@ -44,27 +44,29 @@ namespace Git
         public:
             bool prepare()
             {
-                Q_ASSERT( mProvider );
+                Q_ASSERT( mTreeProvider );
+                Q_ASSERT( mParentProvider );
 
                 if (mAuthor.isEmpty() && mCommitter.isEmpty())
                     setDefaultSignatures();
 
-                return mProvider->prepare();
+                return mTreeProvider->prepare() && mParentProvider->prepare();
             }
 
             bool finalize()
             {
-                Q_ASSERT( mProvider );
-                return mProvider->finalize( ObjectId() );
+                Q_ASSERT( mTreeProvider );
+                Q_ASSERT( mParentProvider );
+                return mTreeProvider->finalize( ObjectId() ) && mParentProvider->finalize( ObjectId() );
             }
 
             void run()
             {
                 prepare();
 
-                Repository      repo = mProvider->commitOperationRepository();
-                Tree            tree = mProvider->commitOperationTree(mResult);
-                ObjectIdList    parents = mProvider->commitOperationParents(mResult);
+                Repository      repo = mTreeProvider->repository();
+                Tree            tree = mTreeProvider->tree(mResult);
+                ObjectIdList    parents = mParentProvider->parents(mResult);
 
                 Commit::create( mResult, repo, tree, mMessage, mAuthor, mCommitter, parents );
 
@@ -79,14 +81,15 @@ namespace Git
             }
 
         private:
-            void setDefaultSignatures()
+            inline void setDefaultSignatures()
             {
-                mAuthor = Signature::defaultSignature( mResult, mProvider->commitOperationRepository() );
+                mAuthor = Signature::defaultSignature( mResult, mTreeProvider->repository() );
                 mCommitter = mAuthor;
             }
 
         public:
-            CommitOperationProvider::Ptr   mProvider;
+            TreeProviderPtr     mTreeProvider;
+            ParentProviderPtr   mParentProvider;
 
             QString             mMessage;
             Signature           mAuthor;
@@ -113,17 +116,30 @@ namespace Git
 
     }
 
-    Internal::CommitOperationProvider::Ptr CommitOperation::operationProvider() const
+    TreeProviderPtr CommitOperation::treeProvider() const
     {
         GW_CD(CommitOperation);
-        return d->mProvider;
+        return d->mTreeProvider;
     }
 
-    void CommitOperation::setOperationProvider(const Internal::CommitOperationProvider::Ptr &p)
+    void CommitOperation::setTreeProvider(const TreeProviderPtr& p)
     {
         GW_D(CommitOperation);
         Q_ASSERT(!isRunning());
-        d->mProvider = p;
+        d->mTreeProvider = p;
+    }
+
+    ParentProviderPtr CommitOperation::parentProvider() const
+    {
+        GW_CD(CommitOperation);
+        return d->mParentProvider;
+    }
+
+    void CommitOperation::setParentProvider(const ParentProviderPtr& p)
+    {
+        GW_D(CommitOperation);
+        Q_ASSERT(!isRunning());
+        d->mParentProvider = p;
     }
 
     QString CommitOperation::message() const
