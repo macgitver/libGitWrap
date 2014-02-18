@@ -19,6 +19,7 @@
 #define GITWRAP_COMMIT_OPERATION_HPP
 
 #include "libGitWrap/Operations/BaseOperation.hpp"
+#include "libGitWrap/Operations/Providers.hpp"
 
 namespace Git
 {
@@ -40,6 +41,7 @@ namespace Git
         typedef Internal::CommitOperationPrivate Private;
     public:
         CommitOperation( QObject* parent = 0 );
+        CommitOperation( TreeProviderPtr tp, ParentProviderPtr pp, QObject* parent = 0 );
         ~CommitOperation();
 
     signals:

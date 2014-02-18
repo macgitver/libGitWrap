@@ -34,6 +34,7 @@
 
 #include "libGitWrap/Operations/CommitOperation.hpp"
 
+
 namespace Git
 {
 
@@ -181,6 +182,16 @@ namespace Git
         }
 
         return PrivatePtr(new Private(Repository::PrivatePtr(), index));
+    }
+
+    Index::operator TreeProviderPtr() const
+    {
+        return TreeProviderPtr( new IndexTreeProvider );
+    }
+
+    Index::operator ParentProviderPtr() const
+    {
+        return ParentProviderPtr( new IndexParentProvider );
     }
 
     /**

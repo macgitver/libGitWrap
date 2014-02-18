@@ -49,6 +49,10 @@ namespace Git
         static Index openPath(Result& result, const QString& path);
 
     public:
+        operator TreeProviderPtr() const;
+        operator ParentProviderPtr() const;
+
+    public:
         bool isBare() const;
 
         void read(Result& result, bool force = true);
