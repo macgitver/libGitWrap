@@ -195,8 +195,6 @@ namespace Git
         // INTERFACE REALIZATION
 
         ObjectIdList parents(Result& result) const;
-        ObjectId headParent(Result& result) const;
-
         Repository repository() const;
 
     private:

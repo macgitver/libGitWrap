@@ -1111,12 +1111,9 @@ namespace Git
     {
         // TODO: this is WIP
         // Needs to return the tips of branches to be merged into a new commit
-        return ObjectIdList();
-    }
+        if (!result) return ObjectIdList();
 
-    ObjectId RepositoryParentProvider::headParent(Result& result) const
-    {
-        return mRepo.HEAD(result).resolveToObjectId(result);
+        return ( ObjectIdList() << mRepo.HEAD(result).resolveToObjectId(result) );
     }
 
     Repository RepositoryParentProvider::repository() const
