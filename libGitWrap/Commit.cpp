@@ -107,7 +107,7 @@ namespace Git
         git_signature* gitAuthor = Internal::signature2git(result, author);
         git_signature* gitCommitter = Internal::signature2git(result, committer);
         QString branchName = repo.HEAD(result).name();
-        const git_commit** constParents = Internal::CommitPrivate::commitList2git(result, parents);
+        QScopedArrayPointer<const git_commit*> constParents( Internal::CommitPrivate::commitList2git(result, parents) );
 
         if (!result) return Commit();
 
@@ -115,8 +115,7 @@ namespace Git
         result = git_commit_create( &commitId, rp->mRepo, branchName.toUtf8().constData(),
                                     gitAuthor, gitCommitter,
                                     NULL, message.toUtf8().constData(), Private::dataOf<Tree>(tree)->o(),
-                                    parents.count(), constParents );
-        delete[] constParents;
+                                    parents.count(), constParents.data() );
 
         return repo.lookupCommit( result, ObjectId::fromRaw(commitId.id) );
     }
@@ -157,7 +156,7 @@ namespace Git
         git_signature* gitAuthor = Internal::signature2git(result, author);
         git_signature* gitCommitter = Internal::signature2git(result, committer);
         QString branchName = repo.HEAD(result).name();
-        const git_oid** constParents = Internal::ObjectIdList2git(result, parents);
+        QScopedArrayPointer<const git_oid*> constParents( Internal::ObjectIdList2git(result, parents) );
 
         if (!result) return Commit();
 
@@ -166,8 +165,7 @@ namespace Git
                                               gitAuthor, gitCommitter,
                                               NULL, message.toUtf8().constData(),
                                               Internal::ObjectId2git_oid(tree.id()),
-                                              parents.count(), constParents );
-        delete[] constParents;
+                                              parents.count(), constParents.data() );
 
         return repo.lookupCommit( result, ObjectId::fromRaw(commitId.id) );
     }
