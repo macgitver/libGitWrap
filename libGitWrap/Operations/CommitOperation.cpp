@@ -64,7 +64,7 @@ namespace Git
             {
                 prepare();
 
-                Repository      repo = mTreeProvider->repository();
+                Repository      repo = mParentProvider->repository();
                 Tree            tree = mTreeProvider->tree(mResult);
                 ObjectIdList    parents = mParentProvider->parents(mResult);
 
