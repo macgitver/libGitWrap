@@ -21,6 +21,8 @@
 #include "libGitWrap/Remote.hpp"
 #include "libGitWrap/Object.hpp"
 
+#include "libGitWrap/Operations/Providers.hpp"
+
 namespace Git
 {
 
@@ -153,6 +155,9 @@ namespace Git
         SubmoduleList submodules(Result& result);
         QStringList submoduleNames(Result& result) const;
         Submodule submodule(Result& result, const QString& name) const;
+
+    public:
+        operator ParentProviderPtr() const;
     };
 
     template< class T >
@@ -178,6 +183,25 @@ namespace Git
     {
         return lookup(result, refName, otAny);
     }
+
+
+    class GITWRAP_API RepositoryParentProvider : public ParentProvider
+    {
+    public:
+        RepositoryParentProvider( const Repository& repo );
+
+    public:
+
+        // INTERFACE REALIZATION
+
+        ObjectIdList parents(Result& result) const;
+        ObjectId headParent(Result& result) const;
+
+        Repository repository() const;
+
+    private:
+        Repository  mRepo;
+    };
 
 }
 

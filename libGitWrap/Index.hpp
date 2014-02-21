@@ -50,7 +50,6 @@ namespace Git
 
     public:
         operator TreeProviderPtr() const;
-        operator ParentProviderPtr() const;
 
     public:
         bool isBare() const;
@@ -94,23 +93,6 @@ namespace Git
         // INTERFACE REALIZATION
 
         Tree tree(Result &result);
-
-        Repository repository() const;
-
-    private:
-        Index   mIndex;
-    };
-
-    class GITWRAP_API IndexParentProvider : public ParentProvider
-    {
-    public:
-        IndexParentProvider( const Index& index );
-
-    public:
-
-        // INTERFACE REALIZATION
-
-        ObjectIdList parents(Result &result) const;
 
         Repository repository() const;
 

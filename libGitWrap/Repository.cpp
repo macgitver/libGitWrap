@@ -901,6 +901,11 @@ namespace Git
         return Submodule();
     }
 
+    Repository::operator ParentProviderPtr() const
+    {
+        return ParentProviderPtr( new RepositoryParentProvider( *this ) );
+    }
+
     Reference Repository::lookupRef(Result& result, const QString& refName, bool dwim)
     {
         return reference(result, refName, dwim);
@@ -1092,6 +1097,31 @@ namespace Git
         }
 
         return ref.asNote();
+    }
+
+
+    // *** RepositoryParentProvider ***
+
+    RepositoryParentProvider::RepositoryParentProvider(const Repository& repo)
+        : mRepo( repo )
+    {
+    }
+
+    ObjectIdList RepositoryParentProvider::parents(Result& result) const
+    {
+        // TODO: this is WIP
+        // Needs to return the tips of branches to be merged into a new commit
+        return ObjectIdList();
+    }
+
+    ObjectId RepositoryParentProvider::headParent(Result& result) const
+    {
+        return mRepo.HEAD(result).resolveToObjectId(result);
+    }
+
+    Repository RepositoryParentProvider::repository() const
+    {
+        return mRepo;
     }
 
 }

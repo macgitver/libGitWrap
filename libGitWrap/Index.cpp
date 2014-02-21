@@ -174,11 +174,6 @@ namespace Git
         return TreeProviderPtr( new IndexTreeProvider( *this ) );
     }
 
-    Index::operator ParentProviderPtr() const
-    {
-        return ParentProviderPtr( new IndexParentProvider( *this ) );
-    }
-
     /**
      * @brief       Query whether this is a bare index
      *
@@ -618,30 +613,6 @@ namespace Git
     }
 
     Repository IndexTreeProvider::repository() const
-    {
-        return mIndex.repository();
-    }
-
-
-    // *** IndexParentProvider ***
-
-
-    IndexParentProvider::IndexParentProvider(const Index& index)
-        : mIndex( index )
-    {
-    }
-
-    ObjectIdList IndexParentProvider::parents(Result& result) const
-    {
-        ObjectIdList commitParents;
-        ObjectId headId = mIndex.repository().HEAD(result).resolveToObjectId(result);
-        if (!result) return ObjectIdList();
-
-        commitParents << headId;
-        return commitParents;
-    }
-
-    Repository IndexParentProvider::repository() const
     {
         return mIndex.repository();
     }
