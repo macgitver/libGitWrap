@@ -34,7 +34,7 @@ namespace Git
 
     class GITWRAP_API Index : public RepoObject
     {
-        GW_PRIVATE_DECL(Index, RepoObject, public);
+        GW_PRIVATE_DECL(Index, RepoObject, public)
 
     public:
         enum Stages {
@@ -81,13 +81,14 @@ namespace Git
 
         IndexEntry operator[](int index) const;
         IndexEntry operator[](const QString& path) const;
-
-        CommitOperation* commitOperation( Result& result );
     };
 
 
     class GITWRAP_API IndexTreeProvider : public TreeProvider
     {
+    public:
+        IndexTreeProvider( const Index& index );
+
     public:
 
         // INTERFACE REALIZATION
@@ -96,9 +97,6 @@ namespace Git
 
         Repository repository() const;
 
-    public:
-        void setIndex( const Index &index );
-
     private:
         Index   mIndex;
     };
@@ -106,15 +104,15 @@ namespace Git
     class GITWRAP_API IndexParentProvider : public ParentProvider
     {
     public:
+        IndexParentProvider( const Index& index );
+
+    public:
 
         // INTERFACE REALIZATION
 
         ObjectIdList parents(Result &result) const;
 
         Repository repository() const;
-
-    public:
-        void setIndex( const Index &index );
 
     private:
         Index   mIndex;

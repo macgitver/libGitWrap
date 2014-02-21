@@ -76,21 +76,6 @@ namespace Git
             conflicts.clear();
         }
 
-        CommitOperation* IndexPrivate::commitOperation(Result& result)
-        {
-            QScopedPointer<CommitOperation> op( new CommitOperation );
-
-            IndexTreeProvider *tp = new IndexTreeProvider;
-            IndexParentProvider *pp = new IndexParentProvider;
-            tp->setIndex( outer<Index>() );
-            pp->setIndex( outer<Index>() );
-            op->setTreeProvider( TreeProviderPtr( tp ) );
-            op->setParentProvider( ParentProviderPtr( pp ) );
-            if (!result) return NULL;
-
-            return op.take();
-        }
-
     }
 
     /**
@@ -186,12 +171,12 @@ namespace Git
 
     Index::operator TreeProviderPtr() const
     {
-        return TreeProviderPtr( new IndexTreeProvider );
+        return TreeProviderPtr( new IndexTreeProvider( *this ) );
     }
 
     Index::operator ParentProviderPtr() const
     {
-        return ParentProviderPtr( new IndexParentProvider );
+        return ParentProviderPtr( new IndexParentProvider( *this ) );
     }
 
     /**
@@ -325,12 +310,6 @@ namespace Git
     {
         Result r;
         return getEntry(r, path);
-    }
-
-    CommitOperation* Index::commitOperation(Result& result)
-    {
-        GW_D_CHECKED(Reference, NULL, result);
-        return d->commitOperation(result);
     }
 
     /**
@@ -628,6 +607,11 @@ namespace Git
     // *** IndexTreeProvider ***
 
 
+    IndexTreeProvider::IndexTreeProvider(const Index& index)
+        : mIndex( index )
+    {
+    }
+
     Tree IndexTreeProvider::tree(Result& result)
     {
         return mIndex.writeTree(result);
@@ -638,23 +622,17 @@ namespace Git
         return mIndex.repository();
     }
 
-    void IndexTreeProvider::setIndex(const Index& index)
-    {
-        mIndex = index;
-    }
-
 
     // *** IndexParentProvider ***
 
 
+    IndexParentProvider::IndexParentProvider(const Index& index)
+        : mIndex( index )
+    {
+    }
+
     ObjectIdList IndexParentProvider::parents(Result& result) const
     {
-        if (mIndex.isBare())
-        {
-            result.setInvalidObject();
-            return ObjectIdList();
-        }
-
         ObjectIdList commitParents;
         ObjectId headId = mIndex.repository().HEAD(result).resolveToObjectId(result);
         if (!result) return ObjectIdList();
@@ -666,11 +644,6 @@ namespace Git
     Repository IndexParentProvider::repository() const
     {
         return mIndex.repository();
-    }
-
-    void IndexParentProvider::setIndex(const Index& index)
-    {
-        mIndex = index;
     }
 
 }
