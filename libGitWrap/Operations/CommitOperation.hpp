@@ -41,7 +41,7 @@ namespace Git
         typedef Internal::CommitOperationPrivate Private;
     public:
         CommitOperation( QObject* parent = 0 );
-        CommitOperation( TreeProviderPtr tp, ParentProviderPtr pp, QObject* parent = 0 );
+        CommitOperation( TreeProviderPtr tp, ParentProviderPtr pp, const QString& msg, QObject* parent = 0 );
         ~CommitOperation();
 
     signals:

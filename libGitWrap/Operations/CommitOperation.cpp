@@ -111,12 +111,13 @@ namespace Git
 
     }
 
-    CommitOperation::CommitOperation(TreeProviderPtr tp, ParentProviderPtr pp, QObject* parent)
+    CommitOperation::CommitOperation(TreeProviderPtr tp, ParentProviderPtr pp, const QString& msg, QObject* parent)
         : BaseOperation(*new Private(this), parent)
     {
         GW_D(CommitOperation);
         d->mTreeProvider = tp;
         d->mParentProvider = pp;
+        d->mMessage = msg;
     }
 
     CommitOperation::~CommitOperation()
