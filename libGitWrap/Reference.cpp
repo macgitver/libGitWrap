@@ -541,6 +541,11 @@ namespace Git
         }
     }
 
+    Reference::operator ParentProviderPtr() const
+    {
+        return ParentProviderPtr( new ReferenceParentProvider( *this ) );
+    }
+
     ReferenceKinds Reference::kind() const
     {
         GW_CD(Reference);
@@ -577,6 +582,26 @@ namespace Git
             return NoteRef(d);
         }
         return NoteRef();
+    }
+
+    // *** ReferenceParentProvider ***
+
+    ReferenceParentProvider::ReferenceParentProvider(const Reference& ref)
+        : mRef( ref )
+    {
+    }
+
+    ObjectIdList ReferenceParentProvider::parents(Result& result) const
+    {
+        ObjectId oid = mRef.resolveToObjectId(result);
+        if (!result) return ObjectIdList();
+
+        return ObjectIdList() << oid;
+    }
+
+    Repository ReferenceParentProvider::repository() const
+    {
+        return mRef.repository();
     }
 
 }

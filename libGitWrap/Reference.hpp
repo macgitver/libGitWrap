@@ -20,6 +20,8 @@
 #include "libGitWrap/RepoObject.hpp"
 #include "libGitWrap/Object.hpp"
 
+#include "libGitWrap/Operations/Providers.hpp"
+
 namespace Git
 {
 
@@ -101,6 +103,8 @@ namespace Git
         void rename(Result &result, const QString &newName , bool force = false );
 
         void updateHEAD(Result &result) const;
+    public:
+        operator ParentProviderPtr() const;
     };
 
     template< class T >
@@ -108,6 +112,22 @@ namespace Git
     {
         return peeled(result, ObjectType(T::ObjectTypeId)).as<T>();
     }
+
+
+    class GITWRAP_API ReferenceParentProvider : public ParentProvider
+    {
+    public:
+        ReferenceParentProvider( const Reference& ref );
+
+    public:
+
+        // INTERFACE REALIZATION
+        ObjectIdList parents(Result& result) const;
+        Repository repository() const;
+
+    private:
+        Reference   mRef;
+    };
 
 }
 
