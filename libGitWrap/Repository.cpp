@@ -33,6 +33,8 @@
 #include "libGitWrap/TagRef.hpp"
 #include "libGitWrap/NoteRef.hpp"
 
+#include "libGitWrap/Operations/CommitOperation.hpp"
+
 #include "libGitWrap/Private/GitWrapPrivate.hpp"
 #include "libGitWrap/Private/IndexPrivate.hpp"
 #include "libGitWrap/Private/RemotePrivate.hpp"
@@ -915,9 +917,9 @@ namespace Git
         return Submodule();
     }
 
-    Repository::operator ParentProviderPtr() const
+    CommitOperation* Repository::commitOperation(Result& result, const QString& msg)
     {
-        return ParentProviderPtr( new RepositoryParentProvider( *this ) );
+        return headBranch(result).commitOperation( index(result), msg );
     }
 
     Reference Repository::lookupRef(Result& result, const QString& refName, bool dwim)
@@ -1111,28 +1113,6 @@ namespace Git
         }
 
         return ref.asNote();
-    }
-
-
-    // *** RepositoryParentProvider ***
-
-    RepositoryParentProvider::RepositoryParentProvider(const Repository& repo)
-        : mRepo( repo )
-    {
-    }
-
-    ObjectIdList RepositoryParentProvider::parents(Result& result) const
-    {
-        // TODO: this is WIP
-        // Needs to return the tips of branches to be merged into a new commit
-        if (!result) return ObjectIdList();
-
-        return ( ObjectIdList() << mRepo.HEAD(result).resolveToObjectId(result) );
-    }
-
-    Repository RepositoryParentProvider::repository() const
-    {
-        return mRepo;
     }
 
 }

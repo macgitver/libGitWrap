@@ -21,8 +21,6 @@
 #include "libGitWrap/Remote.hpp"
 #include "libGitWrap/Object.hpp"
 
-#include "libGitWrap/Operations/Providers.hpp"
-
 namespace Git
 {
 
@@ -30,6 +28,8 @@ namespace Git
     {
         class RepositoryPrivate;
     }
+
+    class CommitOperation;
 
     typedef QHash< QString, ObjectId > ResolvedRefs;
 
@@ -158,7 +158,7 @@ namespace Git
         Submodule submodule(Result& result, const QString& name) const;
 
     public:
-        operator ParentProviderPtr() const;
+        CommitOperation* commitOperation(Result& result, const QString& msg);
     };
 
     template< class T >
@@ -184,23 +184,6 @@ namespace Git
     {
         return lookup(result, refName, otAny);
     }
-
-
-    class GITWRAP_API RepositoryParentProvider : public ParentProvider
-    {
-    public:
-        RepositoryParentProvider( const Repository& repo );
-
-    public:
-
-        // INTERFACE REALIZATION
-
-        ObjectIdList parents(Result& result) const;
-        Repository repository() const;
-
-    private:
-        Repository  mRepo;
-    };
 
 }
 
