@@ -631,6 +631,20 @@ namespace Git
         return Reference::PrivatePtr(new Reference::Private(PrivatePtr(d), refHead));
     }
 
+    /**
+     * @brief           Resolves HEAD to the target branch reference (aka "active branch").
+     *
+     *                  Note that the result is invalid for a detached HEAD.
+     *
+     * @param[in,out]   result  A Result object; see @ref GitWrapErrorHandling
+     *
+     * @return          the BranchRef for the active branch or an invalid object in case of failure
+     */
+    BranchRef Repository::headBranch(Result& result) const
+    {
+        return HEAD(result).resolved(result).asBranch();
+    }
+
     Object Repository::lookup( Result& result, const ObjectId& id, ObjectType ot )
     {
         GW_D_EX_CHECKED(Repository, Object(), result);

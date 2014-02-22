@@ -96,6 +96,7 @@ namespace Git
         Git::StatusHash status(Result &result) const;
 
         Reference HEAD( Result& result ) const;
+        BranchRef headBranch( Result& result ) const;
 
         GW_DEPRECATED Reference lookupRef(Result& result, const QString& refName , bool dwim = false);
         ObjectId resolveRef(Result& result, const QString& refName);
