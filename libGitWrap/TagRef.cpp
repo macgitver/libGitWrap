@@ -52,4 +52,12 @@ namespace Git
 
     GW_PRIVATE_IMPL(TagRef, Reference)
 
+    CommitOperation* TagRef::commitOperation(const TreeProviderPtr treeProvider, const QString& msg)
+    {
+        Q_UNUSED( treeProvider )
+        Q_UNUSED( msg )
+
+        return NULL;
+    }
+
 }
