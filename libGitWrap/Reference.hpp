@@ -31,6 +31,7 @@ namespace Git
     }
 
     class CheckoutBaseOperation;
+    class CommitOperation;
 
     class GITWRAP_API Reference : public RepoObject
     {
@@ -103,6 +104,10 @@ namespace Git
         void rename(Result &result, const QString &newName , bool force = false );
 
         void updateHEAD(Result &result) const;
+
+    public:
+        virtual CommitOperation* commitOperation(const TreeProviderPtr treeProvider, const QString& msg);
+
     public:
         operator ParentProviderPtr() const;
     };

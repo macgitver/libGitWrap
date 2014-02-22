@@ -27,6 +27,7 @@
 #include "libGitWrap/NoteRef.hpp"
 
 #include "libGitWrap/Operations/CheckoutOperation.hpp"
+#include "libGitWrap/Operations/CommitOperation.hpp"
 
 #include "libGitWrap/Private/GitWrapPrivate.hpp"
 #include "libGitWrap/Private/ObjectPrivate.hpp"
@@ -539,6 +540,18 @@ namespace Git
                         d->repo()->mRepo,
                         git_reference_target(d->reference));
         }
+    }
+
+    /**
+     * @brief Creates a suitable commit operation for the reference type.
+     *
+     * This method is overridden by inherited classes.
+     *
+     * @return a CommitOperation object.
+     */
+    CommitOperation* Reference::commitOperation( const TreeProviderPtr treeProvider, const QString& msg )
+    {
+        return new CommitOperation( *this, treeProvider, msg );
     }
 
     Reference::operator ParentProviderPtr() const
