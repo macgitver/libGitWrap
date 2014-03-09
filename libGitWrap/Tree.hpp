@@ -17,13 +17,12 @@
 #ifndef GIT_OBJECT_TREE_H
 #define GIT_OBJECT_TREE_H
 
-#include "libGitWrap/GitWrap.hpp"
-#include "libGitWrap/ObjectId.hpp"
 #include "libGitWrap/Object.hpp"
-#include "libGitWrap/TreeEntry.hpp"
 
 namespace Git
 {
+
+    class TreeEntry;
 
     namespace Internal
     {
@@ -57,15 +56,8 @@ namespace Git
                       const QStringList &paths = QStringList()) const;
 
     public:
-        inline TreeEntry operator[]( size_t index ) const
-        {
-            return entryAt( index );
-        }
-
-        inline TreeEntry operator[]( const QString& fileName ) const
-        {
-            return entry( fileName );
-        }
+        inline TreeEntry operator[]( size_t index ) const;
+        inline TreeEntry operator[]( const QString& fileName ) const;
     };
 
     template<>

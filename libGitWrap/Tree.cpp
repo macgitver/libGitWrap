@@ -16,6 +16,7 @@
 
 #include "libGitWrap/DiffList.hpp"
 #include "libGitWrap/Tree.hpp"
+#include "libGitWrap/TreeEntry.hpp"
 #include "libGitWrap/Repository.hpp"
 
 #include "libGitWrap/Private/GitWrapPrivate.hpp"
@@ -159,6 +160,16 @@ namespace Git
         Internal::StrArray(opts.paths, paths);
 
         result = git_checkout_tree(d->repo()->mRepo, d->mObj, &opts);
+    }
+
+    TreeEntry Tree::operator[](const QString& fileName) const
+    {
+        return entry( fileName );
+    }
+
+    TreeEntry Tree::operator[](size_t index) const
+    {
+        return entryAt( index );
     }
 
 }
