@@ -31,6 +31,8 @@ namespace Git
         virtual ~BaseOperationProvider() {}
 
     public:
+        virtual Repository repository() const = 0;
+
         virtual bool prepare() { return true; }
         virtual bool finalize(const ObjectId& commitId) { return true; }
     };
@@ -42,7 +44,6 @@ namespace Git
 
     public:
         virtual Tree tree(Result &result) = 0;
-        virtual Repository repository() const = 0;
     };
 
     class GITWRAP_API ParentProvider : public BaseOperationProvider
@@ -52,7 +53,6 @@ namespace Git
 
     public:
         virtual ObjectIdList parents(Result &result) const = 0;
-        virtual Repository repository() const = 0;
     };
 
     // typedefs for shared pointers
