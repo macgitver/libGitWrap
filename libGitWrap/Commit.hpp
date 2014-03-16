@@ -39,7 +39,7 @@ namespace Git
      */
     class GITWRAP_API Commit : public Object
     {
-        GW_PRIVATE_DECL(Commit, Object, public);
+        GW_PRIVATE_DECL(Commit, Object, public)
     public:
         enum { ObjectTypeId = otCommit };
 
