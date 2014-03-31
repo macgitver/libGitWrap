@@ -36,7 +36,6 @@ namespace Git
     {
         GW_PRIVATE_DECL(RepoObject, Base, protected)
     public:
-        GW_DEPRECATED Repository repository(Result &result) const;
         Repository repository() const;
     };
 

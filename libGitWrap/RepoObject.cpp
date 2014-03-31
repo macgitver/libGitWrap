@@ -52,11 +52,6 @@ namespace Git
 
     GW_PRIVATE_IMPL(RepoObject, Base)
 
-    Repository RepoObject::repository(Result &result) const
-    {
-        return repository();
-    }
-
     Repository RepoObject::repository() const
     {
         GW_CD(RepoObject);
