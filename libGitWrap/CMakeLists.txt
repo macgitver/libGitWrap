@@ -158,6 +158,7 @@ SET( SRC_FILES
     Operations/BaseOperation.cpp
     Operations/CheckoutOperation.cpp
     Operations/CloneOperation.cpp
+    Operations/CommitOperation.cpp
 
     Operations/Private/WorkerThread.cpp
 )
@@ -203,6 +204,8 @@ SET( PUB_HDR_FILES
     Operations/BaseOperation.hpp
     Operations/CheckoutOperation.hpp
     Operations/CloneOperation.hpp
+    Operations/CommitOperation.hpp
+    Operations/Providers.hpp
 
     Events/Private/RemoteCallbacks.hpp
 )

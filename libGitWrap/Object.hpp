@@ -37,7 +37,7 @@ namespace Git
      */
     class GITWRAP_API Object : public RepoObject
     {
-        GW_PRIVATE_DECL(Object, RepoObject, public);
+        GW_PRIVATE_DECL(Object, RepoObject, public)
 
     public:
 

@@ -33,6 +33,8 @@
 #include "libGitWrap/TagRef.hpp"
 #include "libGitWrap/NoteRef.hpp"
 
+#include "libGitWrap/Operations/CommitOperation.hpp"
+
 #include "libGitWrap/Private/GitWrapPrivate.hpp"
 #include "libGitWrap/Private/IndexPrivate.hpp"
 #include "libGitWrap/Private/RemotePrivate.hpp"
@@ -631,6 +633,20 @@ namespace Git
         return Reference::PrivatePtr(new Reference::Private(PrivatePtr(d), refHead));
     }
 
+    /**
+     * @brief           Resolves HEAD to the target branch reference (aka "active branch").
+     *
+     *                  Note that the result is invalid for a detached HEAD.
+     *
+     * @param[in,out]   result  A Result object; see @ref GitWrapErrorHandling
+     *
+     * @return          the BranchRef for the active branch or an invalid object in case of failure
+     */
+    BranchRef Repository::headBranch(Result& result) const
+    {
+        return HEAD(result).resolved(result).asBranch();
+    }
+
     Object Repository::lookup( Result& result, const ObjectId& id, ObjectType ot )
     {
         GW_D_EX_CHECKED(Repository, Object(), result);
@@ -899,6 +915,11 @@ namespace Git
         }
 
         return Submodule();
+    }
+
+    CommitOperation* Repository::commitOperation(Result& result, const QString& msg)
+    {
+        return headBranch(result).commitOperation( index(result), msg );
     }
 
     Reference Repository::lookupRef(Result& result, const QString& refName, bool dwim)

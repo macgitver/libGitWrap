@@ -20,9 +20,12 @@
 #define GIT_INDEX_H
 
 #include "libGitWrap/RepoObject.hpp"
+#include "libGitWrap/Operations/Providers.hpp"
 
 namespace Git
 {
+
+    class CommitOperation;
 
     namespace Internal
     {
@@ -31,7 +34,7 @@ namespace Git
 
     class GITWRAP_API Index : public RepoObject
     {
-        GW_PRIVATE_DECL(Index, RepoObject, public);
+        GW_PRIVATE_DECL(Index, RepoObject, public)
 
     public:
         enum Stages {
@@ -44,6 +47,9 @@ namespace Git
     public:
         static Index createInMemory();
         static Index openPath(Result& result, const QString& path);
+
+    public:
+        operator TreeProviderPtr() const;
 
     public:
         bool isBare() const;
@@ -74,6 +80,24 @@ namespace Git
 
         IndexEntry operator[](int index) const;
         IndexEntry operator[](const QString& path) const;
+    };
+
+
+    class GITWRAP_API IndexTreeProvider : public TreeProvider
+    {
+    public:
+        IndexTreeProvider( const Index& index );
+
+    public:
+
+        // INTERFACE REALIZATION
+
+        Tree tree(Result &result);
+
+        Repository repository() const;
+
+    private:
+        Index   mIndex;
     };
 
 }

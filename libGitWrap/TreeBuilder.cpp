@@ -14,9 +14,10 @@
  *
  */
 
-#include "libGitWrap/TreeEntry.hpp"
-#include "libGitWrap/TreeBuilder.hpp"
 #include "libGitWrap/ObjectId.hpp"
+#include "libGitWrap/Tree.hpp"
+#include "libGitWrap/TreeBuilder.hpp"
+#include "libGitWrap/TreeEntry.hpp"
 
 #include "libGitWrap/Private/TreeEntryPrivate.hpp"
 #include "libGitWrap/Private/TreeBuilderPrivate.hpp"
@@ -43,6 +44,12 @@ namespace Git
     }
 
     GW_PRIVATE_IMPL(TreeBuilder, RepoObject)
+
+
+    TreeBuilder::operator TreeProviderPtr() const
+    {
+        return TreeProviderPtr( new TreeBuilderTreeProvider( *this ) );
+    }
 
     void TreeBuilder::clear( Result& result )
     {
@@ -100,6 +107,24 @@ namespace Git
         }
 
         return TreeEntry::PrivatePtr(new TreeEntry::Private(entry, true));
+    }
+
+
+    // *** TreeBuilderTreeProvider ***
+
+    TreeBuilderTreeProvider::TreeBuilderTreeProvider(const TreeBuilder& builder)
+        : mTreeBuilder( builder )
+    {
+    }
+
+    Tree TreeBuilderTreeProvider::tree(Result& result)
+    {
+        return repository().lookupTree( result, mTreeBuilder.write(result) );
+    }
+
+    Repository TreeBuilderTreeProvider::repository() const
+    {
+        return mTreeBuilder.repository();
     }
 
 }

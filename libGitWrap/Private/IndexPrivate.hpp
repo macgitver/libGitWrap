@@ -45,6 +45,7 @@ namespace Git
         public:
             void ensureConflictsLoaded();
             void clearKnownConflicts();
+            CommitOperation* commitOperation(Result& result);
 
         public:
             git_index*                  index;

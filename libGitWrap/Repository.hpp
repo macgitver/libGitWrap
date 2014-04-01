@@ -29,6 +29,8 @@ namespace Git
         class RepositoryPrivate;
     }
 
+    class CommitOperation;
+
     typedef QHash< QString, ObjectId > ResolvedRefs;
 
     /**
@@ -94,6 +96,7 @@ namespace Git
         Git::StatusHash status(Result &result) const;
 
         Reference HEAD( Result& result ) const;
+        BranchRef headBranch( Result& result ) const;
 
         GW_DEPRECATED Reference lookupRef(Result& result, const QString& refName , bool dwim = false);
         ObjectId resolveRef(Result& result, const QString& refName);
@@ -153,6 +156,9 @@ namespace Git
         SubmoduleList submodules(Result& result);
         QStringList submoduleNames(Result& result) const;
         Submodule submodule(Result& result, const QString& name) const;
+
+    public:
+        CommitOperation* commitOperation(Result& result, const QString& msg);
     };
 
     template< class T >

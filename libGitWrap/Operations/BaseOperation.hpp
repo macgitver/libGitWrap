@@ -28,7 +28,6 @@ namespace Git
 
     namespace Internal
     {
-
         class BaseOperationPrivate;
     }
 

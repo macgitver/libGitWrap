@@ -17,9 +17,11 @@
  */
 
 #include "libGitWrap/Index.hpp"
+
 #include "libGitWrap/IndexEntry.hpp"
 #include "libGitWrap/IndexConflict.hpp"
 #include "libGitWrap/IndexConflicts.hpp"
+#include "libGitWrap/Reference.hpp"
 #include "libGitWrap/Repository.hpp"
 #include "libGitWrap/Tree.hpp"
 
@@ -29,6 +31,9 @@
 #include "libGitWrap/Private/RepositoryPrivate.hpp"
 #include "libGitWrap/Private/ObjectPrivate.hpp"
 #include "libGitWrap/Private/TreePrivate.hpp"
+
+#include "libGitWrap/Operations/CommitOperation.hpp"
+
 
 namespace Git
 {
@@ -164,11 +169,16 @@ namespace Git
         return PrivatePtr(new Private(Repository::PrivatePtr(), index));
     }
 
+    Index::operator TreeProviderPtr() const
+    {
+        return TreeProviderPtr( new IndexTreeProvider( *this ) );
+    }
+
     /**
      * @brief       Query whether this is a bare index
      *
      * @return      @c true if this index is bare (meaning it has no repository associated to it) or
-     *              @c false if this indes is non-bare and has a repository associated to it.
+     *              @c false if this index is non-bare and has a repository associated to it.
      */
     bool Index::isBare() const
     {
@@ -586,6 +596,25 @@ namespace Git
     {
         GW_CD(Index);
         return d && git_index_has_conflicts(d->index);
+    }
+
+
+    // *** IndexTreeProvider ***
+
+
+    IndexTreeProvider::IndexTreeProvider(const Index& index)
+        : mIndex( index )
+    {
+    }
+
+    Tree IndexTreeProvider::tree(Result& result)
+    {
+        return mIndex.writeTree(result);
+    }
+
+    Repository IndexTreeProvider::repository() const
+    {
+        return mIndex.repository();
     }
 
 }

@@ -39,9 +39,19 @@ namespace Git
      */
     class GITWRAP_API Commit : public Object
     {
-        GW_PRIVATE_DECL(Commit, Object, public);
+        GW_PRIVATE_DECL(Commit, Object, public)
     public:
         enum { ObjectTypeId = otCommit };
+
+    public:
+        static Commit create( Result& result, Repository& repo, const Tree& tree,
+                              const QString& message,
+                              const Signature& author, const Signature& committer,
+                              const CommitList& parents );
+        static Commit create(Result &result, Repository &repo, const Tree &tree,
+                             const QString &message,
+                             const Signature &author, const Signature &committer,
+                             const ObjectIdList &parents);
 
     public:
         Tree tree( Result& result ) const;

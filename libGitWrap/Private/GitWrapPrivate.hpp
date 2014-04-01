@@ -21,6 +21,7 @@
 #include <QDebug>
 
 #include "git2.h"
+#include "git2/sys/commit.h"
 
 #include "libGitWrap/GitWrap.hpp"
 #include "libGitWrap/Result.hpp"
@@ -173,6 +174,19 @@ namespace Git
         inline git_oid* ObjectId2git_oid(ObjectId& id)
         {
             return (git_oid*) id.rawWritable();
+        }
+
+        inline const git_oid** ObjectIdList2git(Result& result, const ObjectIdList &list)
+        {
+            if (!result) return NULL;
+
+            const git_oid** ret = new const git_oid *[list.count()];
+            for ( int i=0; i < list.count(); ++i )
+            {
+                ret[i] = ObjectId2git_oid( list[i] );
+            }
+
+            return ret;
         }
 
         /**

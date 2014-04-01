@@ -41,6 +41,9 @@ namespace Git
 
             git_otype otype() const;
             ObjectType objectType() const;
+
+        public:
+            static const git_commit** commitList2git(Result& result, const CommitList& list);
         };
 
     }

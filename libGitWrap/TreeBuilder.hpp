@@ -18,6 +18,7 @@
 #define GIT_TREE_BUILDER_H
 
 #include "libGitWrap/RepoObject.hpp"
+#include "libGitWrap/Operations/Providers.hpp"
 
 namespace Git
 {
@@ -36,6 +37,9 @@ namespace Git
         GW_PRIVATE_DECL(TreeBuilder, RepoObject, public)
 
     public:
+        operator TreeProviderPtr() const;
+
+    public:
         void clear( Result& result );
 
         TreeEntry get( Result& result, const QString& name );
@@ -43,6 +47,20 @@ namespace Git
                      Result& result );
         bool remove( Result& result, const QString& fileName );
         ObjectId write( Result& result );
+    };
+
+    class GITWRAP_API TreeBuilderTreeProvider : public TreeProvider
+    {
+    public:
+        TreeBuilderTreeProvider( const TreeBuilder& builder );
+
+    public:
+        // TreeProvider interface
+        Tree tree(Result& result);
+        Repository repository() const;
+
+    private:
+        TreeBuilder     mTreeBuilder;
     };
 
 }

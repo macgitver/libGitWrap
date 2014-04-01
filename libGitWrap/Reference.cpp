@@ -27,6 +27,7 @@
 #include "libGitWrap/NoteRef.hpp"
 
 #include "libGitWrap/Operations/CheckoutOperation.hpp"
+#include "libGitWrap/Operations/CommitOperation.hpp"
 
 #include "libGitWrap/Private/GitWrapPrivate.hpp"
 #include "libGitWrap/Private/ObjectPrivate.hpp"
@@ -541,6 +542,23 @@ namespace Git
         }
     }
 
+    /**
+     * @brief Creates a suitable commit operation for the reference type.
+     *
+     * This method is overridden by inherited classes.
+     *
+     * @return a CommitOperation object.
+     */
+    CommitOperation* Reference::commitOperation( const TreeProviderPtr treeProvider, const QString& msg )
+    {
+        return new CommitOperation( *this, treeProvider, msg );
+    }
+
+    Reference::operator ParentProviderPtr() const
+    {
+        return ParentProviderPtr( new ReferenceParentProvider( *this ) );
+    }
+
     ReferenceKinds Reference::kind() const
     {
         GW_CD(Reference);
@@ -577,6 +595,26 @@ namespace Git
             return NoteRef(d);
         }
         return NoteRef();
+    }
+
+    // *** ReferenceParentProvider ***
+
+    ReferenceParentProvider::ReferenceParentProvider(const Reference& ref)
+        : mRef( ref )
+    {
+    }
+
+    ObjectIdList ReferenceParentProvider::parents(Result& result) const
+    {
+        ObjectId oid = mRef.resolveToObjectId(result);
+        if (!result) return ObjectIdList();
+
+        return ObjectIdList() << oid;
+    }
+
+    Repository ReferenceParentProvider::repository() const
+    {
+        return mRef.repository();
     }
 
 }

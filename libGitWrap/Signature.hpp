@@ -74,6 +74,9 @@ namespace Git
         }
 
     public:
+        static Signature defaultSignature(Result &result, const Repository &repo);
+
+    public:
         QString name() const
         {
             return mName;
@@ -102,6 +105,11 @@ namespace Git
                     .arg( mName )
                     .arg( mEMail )
                     .arg( mWhen.toString( Qt::ISODate ) );
+        }
+
+        bool isEmpty() const
+        {
+            return mName.isEmpty() && mEMail.isEmpty() && mWhen.isNull();
         }
 
     private:

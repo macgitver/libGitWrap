@@ -28,9 +28,7 @@ namespace Git
 
     namespace Internal
     {
-
         class TagRefPrivate;
-
     }
 
     class GITWRAP_API TagRef : public Reference
@@ -38,6 +36,8 @@ namespace Git
         GW_PRIVATE_DECL(TagRef, Reference, public)
 
     public:
+        // Reference interface
+        CommitOperation* commitOperation(const TreeProviderPtr treeProvider, const QString& msg);
     };
 
     template<>

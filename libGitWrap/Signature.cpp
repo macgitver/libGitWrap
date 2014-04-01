@@ -17,6 +17,7 @@
 #include "libGitWrap/Signature.hpp"
 
 #include "libGitWrap/Private/GitWrapPrivate.hpp"
+#include "libGitWrap/Private/RepositoryPrivate.hpp"
 
 namespace Git
 {
@@ -53,6 +54,32 @@ namespace Git
             return gitsig;
         }
 
+    }
+
+    /**
+     * @brief           Creates a default signature from the Git configuration.
+     *
+     * @param[in,out]   result  a result object; see @ref GitWrapErrorHandling
+     *
+     * @param[in]       repo    the repository (may be invalid)
+     *
+     * @return          the default signature object on success or an invalid object
+     */
+    Signature Signature::defaultSignature(Result &result, const Repository &repo)
+    {
+        if (!result) return Signature();
+        if (!repo.isValid())
+        {
+            result.setInvalidObject();
+            return Signature();
+        }
+
+        Internal::RepositoryPrivate* rp = Repository::Private::dataOf<Repository>(repo);
+        git_signature* gitsig = 0;
+        result = git_signature_default( &gitsig, rp->mRepo );
+        if (!result) return Signature();
+
+        return Internal::git2Signature( gitsig );
     }
 
 }
