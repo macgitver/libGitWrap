@@ -1,9 +1,15 @@
 
 PROJECT( libGitWrap )
+CMAKE_MINIMUM_REQUIRED(VERSION 2.8.12)
 
-SET( libGitWrap_includes
-    ${CMAKE_CURRENT_LIST_DIR}
-    CACHE INTERNAL "libGitWrap include directories"
+FIND_PACKAGE(RAD-Tools REQUIRED)
+
+RAD_INIT(
+    FEATURES
+        QtMacros
+        Installation
+        DoxygenTarget
+        SplitSources
 )
 
 # Set the Include-Directory here, so we can use "libGitWrap/XXX" includes inside libGitWrap and be
@@ -14,10 +20,12 @@ INCLUDE_DIRECTORIES(
 
 #ADD_DEFINITIONS(-DGW_NO_DEPRECATION)
 
+INCLUDE(cmake/GoogleTest.cmake)
+
 ADD_SUBDIRECTORY(libGitWrap)
 ADD_SUBDIRECTORY(testGitWrap)
 
-ADD_DOXYGEN_TARGET(
+RAD_ADD_DOXYGEN_TARGET(
     libGitWrap
     ${libGitWrap_SOURCE_DIR}/doc
 
