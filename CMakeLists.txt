@@ -25,6 +25,16 @@ INCLUDE(cmake/GoogleTest.cmake)
 ADD_SUBDIRECTORY(libGitWrap)
 ADD_SUBDIRECTORY(testGitWrap)
 
+RAD_CREATE_PACKAGE(
+    GitWrap
+
+    TEMPLATE_DIR
+        cmake
+
+    TARGETS
+	GitWrap
+)
+
 RAD_ADD_DOXYGEN_TARGET(
     libGitWrap
     ${libGitWrap_SOURCE_DIR}/doc
