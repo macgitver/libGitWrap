@@ -185,6 +185,7 @@ SET( PUB_HDR_FILES
     ObjectId.hpp
     ObjectTag.hpp
     ObjectTree.hpp
+    PatchConsumer.hpp
     RefName.hpp
     RefSpec.hpp
     Reference.hpp
@@ -207,7 +208,7 @@ SET( PUB_HDR_FILES
     Operations/CommitOperation.hpp
     Operations/Providers.hpp
 
-    Events/Private/RemoteCallbacks.hpp
+    Events/IRemoteEvents.hpp
 )
 
 SET( PRI_HDR_FILES
