@@ -32,7 +32,7 @@ RAD_CREATE_PACKAGE(
         cmake
 
     TARGETS
-	GitWrap
+        GitWrap
 )
 
 RAD_ADD_DOXYGEN_TARGET(
