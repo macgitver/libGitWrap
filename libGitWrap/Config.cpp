@@ -43,87 +43,96 @@ namespace Git
 
     QString Config::globalFilePath()
     {
-        QString filePath;
-        git_buf path = {0};
+        Result r;
+        return globalFilePath( r );
+    }
 
-        int rc = git_config_find_system( &path );
-        if( rc >= 0 )
+    QString Config::globalFilePath(Result &result)
+    {
+        QString filePath;
+        Internal::Buffer path;
+
+        result = git_config_find_system( path );
+        if( result )
         {
-            filePath = QString::fromLocal8Bit( path.ptr );
+            filePath = QString::fromLocal8Bit( path );
         }
 
-        git_buf_free( &path );
         return filePath;
     }
 
     QString Config::userFilePath()
     {
-        QString filePath;
-        git_buf path = {0};
+        Result r;
+        return userFilePath( r );
+    }
 
-        int rc = git_config_find_global( &path );
-        if( rc >= 0 )
+    QString Config::userFilePath( Result& result)
+    {
+        QString filePath;
+        Internal::Buffer path;
+
+        result = git_config_find_global( path );
+        if( result )
         {
-            filePath = QString::fromLocal8Bit( path.ptr );
+            filePath = QString::fromLocal8Bit( path );
         }
 
-        git_buf_free( &path );
         return filePath;
     }
 
     Config Config::global()
     {
-        git_buf path = {0};
+        Result r;
+        return global( r );
+    }
 
-        int rc = git_config_find_system( &path );
-        if( rc < 0 )
-        {
-            git_buf_free( &path );
-            return Config();
-        }
-
+    Config Config::global(Result &result)
+    {
+        Internal::Buffer path;
         git_config* cfg = NULL;
-        rc = git_config_open_ondisk( &cfg, path.ptr );
-        if( rc < 0 )
+
+        result = git_config_find_system( path );
+        if( result )
         {
-            git_buf_free( &path );
-            return Config();
+            result = git_config_open_ondisk( &cfg, path );
         }
 
-        git_buf_free( &path );
-        return PrivatePtr(new Private(cfg));
+        return result ? PrivatePtr(new Private(cfg)) : Config();
     }
 
     Config Config::user()
     {
-        git_buf path = {0};
+        Result r;
+        return user(r);
+    }
 
-        int rc = git_config_find_global( &path );
-        if( rc < 0 )
-        {
-            git_buf_free( &path );
-            return Config();
-        }
-
+    Config Config::user(Result &result)
+    {
+        Internal::Buffer path;
         git_config* cfg = NULL;
-        rc = git_config_open_ondisk( &cfg, path.ptr );
-        if( rc < 0 )
+
+        result = git_config_find_global( path );
+        if ( result )
         {
-            git_buf_free( &path );
-            return Config();
+            result = git_config_open_ondisk( &cfg, path );
         }
 
-        git_buf_free( &path );
-        return PrivatePtr(new Private(cfg));
+        return result ? PrivatePtr(new Private(cfg)) : Config();
     }
 
     Config Config::file( const QString& fileName )
     {
+        Result r;
+        return file( r, fileName );
+    }
+
+    Config Config::file( Result& result, const QString& fileName )
+    {
         git_config* cfg = NULL;
 
-        int rc = git_config_open_ondisk( &cfg, fileName.toLocal8Bit().constData() );
-
-        if( rc < 0 )
+        result = git_config_open_ondisk( &cfg, fileName.toLocal8Bit().constData() );
+        if( !result )
         {
             return Config();
         }
@@ -133,10 +142,16 @@ namespace Git
 
     Config Config::create()
     {
-        git_config* cfg = NULL;
-        int rc = git_config_new( &cfg );
+        Result r;
+        return create( r );
+    }
 
-        if( rc < 0 )
+    Config Config::create(Result& result)
+    {
+        git_config* cfg = NULL;
+        result = git_config_new( &cfg );
+
+        if( !result )
         {
             return Config();
         }
@@ -146,6 +161,12 @@ namespace Git
 
     bool Config::addFile(const QString& fileName, int priority)
     {
+        Result r;
+        return addFile( r, fileName, priority );
+    }
+
+    bool Config::addFile(Result& result, const QString& fileName, int priority)
+    {
         GW_D(Config);
 
         if( !d || fileName.isEmpty() )
@@ -153,13 +174,9 @@ namespace Git
             return false;
         }
 
-        int rc = git_config_add_file_ondisk( d->mCfg, fileName.toLocal8Bit().constData(), (git_config_level_t)priority, 0 );
-        if( rc < 0 )
-        {
-            return false;
-        }
+        result = git_config_add_file_ondisk( d->mCfg, fileName.toLocal8Bit().constData(), (git_config_level_t)priority, 0 );
 
-        return true;
+        return result;
     }
 
     static int read_config_cb( const git_config_entry* entry, void* data )
@@ -172,11 +189,16 @@ namespace Git
 
     ConfigValues Config::values() const
     {
+        Result r;
+        return values( r );
+    }
+
+    ConfigValues Config::values(Result &result) const
+    {
         GW_CD(Config);
         ConfigValues values;
-        git_config_foreach( d->mCfg, &read_config_cb, (void*) &values );
+        result = git_config_foreach( d->mCfg, &read_config_cb, (void*) &values );
         return values;
     }
 
 }
-

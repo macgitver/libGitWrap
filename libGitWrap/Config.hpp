@@ -42,17 +42,27 @@ namespace Git
         GW_PRIVATE_DECL(Config, Base, public)
 
     public:
-        bool addFile( const QString& fileName, int priority );
+        GW_DEPRECATED bool addFile( const QString& fileName, int priority );
+        bool addFile( Result &result, const QString& fileName, int priority );
 
-        ConfigValues values() const;
+        GW_DEPRECATED ConfigValues values() const;
+        ConfigValues values( Result& result ) const;
 
     public:
-        static QString globalFilePath();
-        static QString userFilePath();
-        static Config global();
-        static Config user();
-        static Config file( const QString& fileName );
-        static Config create();
+        GW_DEPRECATED static QString globalFilePath();
+        static QString globalFilePath( Result& result );
+        GW_DEPRECATED static QString userFilePath();
+        static QString userFilePath( Result& result );
+
+        GW_DEPRECATED static Config global();
+        static Config global( Result &result );
+        GW_DEPRECATED static Config user();
+        static Config user( Result &result );
+        GW_DEPRECATED static Config file( const QString& fileName );
+        static Config file( Result& result, const QString& fileName );
+
+        GW_DEPRECATED static Config create();
+        static Config create( Result &result );
     };
 
 }
