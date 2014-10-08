@@ -51,8 +51,34 @@ namespace Git
 
         /**
          * @internal
-         * @ingroup GitWrap
-         * @brief The StrArrayWrapper class wraps a QStringList as a pointer to git_strarray.
+         * @ingroup     GitWrap
+         * @brief       The Buffer class wraps a git_buf.
+         */
+        class Buffer {
+        private:
+            git_buf buf;
+
+        public:
+            Buffer() { memset(&buf, 0, sizeof(buf)); }
+            ~Buffer() { git_buf_free( &buf ); }
+
+        public:
+            operator git_buf*() { return &buf; }
+            operator const char*() { return buf.ptr; }
+
+        private:
+            Buffer(const Buffer& other) { *this = other; }
+            Buffer operator=(const Buffer& other) {
+                memcpy( buf.ptr, other.buf.ptr, other.buf.size );
+                buf.asize = other.buf.asize;
+                return *this;
+            }
+        };
+
+        /**
+         * @internal
+         * @ingroup     GitWrap
+         * @brief       The StrArrayWrapper class wraps a QStringList as a pointer to git_strarray.
          */
         class StrArrayWrapper
         {
