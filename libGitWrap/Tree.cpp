@@ -155,7 +155,7 @@ namespace Git
     {
         GW_CD_CHECKED_VOID(Tree, result);
 
-        git_checkout_opts opts = GIT_CHECKOUT_OPTS_INIT;
+        git_checkout_options opts = GIT_CHECKOUT_OPTIONS_INIT;
         opts.checkout_strategy = force ? GIT_CHECKOUT_FORCE : GIT_CHECKOUT_SAFE;
         Internal::StrArray(opts.paths, paths);
 

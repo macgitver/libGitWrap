@@ -47,12 +47,12 @@ namespace Git
     TreeEntry TreeEntry::clone() const
     {
         GW_CD(TreeEntry);
-        if (!d) {
-            return TreeEntry();
-        }
+        if (!d) return TreeEntry();
 
-        git_tree_entry* entry = git_tree_entry_dup(d->mEntry);
-        Q_ASSERT(entry);
+        Result result;
+        git_tree_entry* entry = NULL;
+        result = git_tree_entry_dup( &entry, d->mEntry );
+        Q_ASSERT(result && entry);
 
         return PrivatePtr(new Private(entry));
     }

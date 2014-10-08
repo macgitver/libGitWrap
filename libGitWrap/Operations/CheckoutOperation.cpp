@@ -116,7 +116,7 @@ namespace Git
 
         void CheckoutBaseOperationPrivate::prepare()
         {
-            git_checkout_opts o = GIT_CHECKOUT_OPTS_INIT;
+            git_checkout_options o = GIT_CHECKOUT_OPTIONS_INIT;
             memcpy(&mOpts, &o, sizeof(o));
 
             if (mPaths.count()) {

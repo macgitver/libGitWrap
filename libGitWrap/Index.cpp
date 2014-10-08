@@ -425,7 +425,7 @@ namespace Git
     void Index::checkoutFiles(Result &result, const QStringList &paths)
     {
         GW_D_CHECKED_VOID(Index, result)
-        git_checkout_opts options = GIT_CHECKOUT_OPTS_INIT;
+        git_checkout_options options = GIT_CHECKOUT_OPTIONS_INIT;
         options.checkout_strategy = GIT_CHECKOUT_FORCE;
         Internal::StrArray(options.paths, paths);
 

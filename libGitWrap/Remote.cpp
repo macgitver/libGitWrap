@@ -199,7 +199,7 @@ namespace Git
     {
         GW_D_CHECKED(Remote, false, result);
 
-        result = git_remote_update_tips( d->mRemote );
+        result = git_remote_update_tips( d->mRemote, NULL, NULL );
         return result;
     }
 

@@ -35,7 +35,7 @@ namespace Git
 
         IndexEntryPrivate::~IndexEntryPrivate()
         {
-            free( mEntry.path );
+            free( const_cast<char*>(mEntry.path) );
         }
 
     }
@@ -59,7 +59,7 @@ namespace Git
     ObjectId IndexEntry::blobSha() const
     {
         GW_CD(IndexEntry);
-        return ObjectId::fromRaw( d->mEntry.oid.id );
+        return ObjectId::fromRaw( d->mEntry.id.id );
     }
 
     unsigned int IndexEntry::mode() const

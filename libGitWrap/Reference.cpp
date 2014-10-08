@@ -190,7 +190,9 @@ namespace Git
                     repop->mRepo,
                     utf8Name.constData(),
                     Private::sha(sha),
-                    0);
+                    false,
+                    NULL,
+                    NULL);
 
         if (!result) {
             return Reference();
@@ -484,7 +486,7 @@ namespace Git
         }
 
         git_reference* newRef = NULL;
-        result = git_reference_set_target(&newRef, d->reference, Private::sha(targetId));
+        result = git_reference_set_target(&newRef, d->reference, Private::sha(targetId), NULL, NULL);
 
         if (result && (newRef != d->reference)) {
             // even though we have a nre d->reference now, the name did not change. So nothing to
@@ -499,7 +501,7 @@ namespace Git
         GW_D_CHECKED_VOID(Reference, result);
 
         git_reference* newRef = NULL;
-        result = git_reference_rename(&newRef, d->reference, newName.toUtf8().constData(), force);
+        result = git_reference_rename(&newRef, d->reference, newName.toUtf8().constData(), force, NULL, NULL);
 
         if (result && (newRef != d->reference)) {
             git_reference_free(d->reference);
@@ -530,15 +532,13 @@ namespace Git
 
         if (git_reference_is_branch(d->reference)) {
             // reference is a local branch
-            result = git_repository_set_head(
-                        d->repo()->mRepo,
-                        git_reference_name(d->reference));
+            result = git_repository_set_head( d->repo()->mRepo,
+                                              git_reference_name(d->reference), NULL, NULL);
         }
         else {
             // reference is detached
-            result = git_repository_set_head_detached(
-                        d->repo()->mRepo,
-                        git_reference_target(d->reference));
+            result = git_repository_set_head_detached( d->repo()->mRepo,
+                                                       git_reference_target(d->reference), NULL, NULL );
         }
     }
 

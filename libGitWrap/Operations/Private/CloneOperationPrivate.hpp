@@ -54,7 +54,7 @@ namespace Git
             bool                    mCloneBare;
 
             git_remote_callbacks    mRemoteCallbacks;
-            git_checkout_opts       mCheckoutOpts;
+            git_checkout_options    mCheckoutOpts;
         };
 
     }

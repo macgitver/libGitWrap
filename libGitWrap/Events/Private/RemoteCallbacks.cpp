@@ -147,11 +147,11 @@ namespace Git
         {
             git_remote_callbacks cbs = GIT_REMOTE_CALLBACKS_INIT;
 
-            cbs.progress      = &RemoteCallbacks::remoteProgress;
-            cbs.completion    = &RemoteCallbacks::remoteComplete;
-            cbs.update_tips   = &RemoteCallbacks::remoteUpdateTips;
-            cbs.credentials   = &RemoteCallbacks::credAccquire;
-            cbs.payload       = receiver;
+            cbs.sideband_progress   = &RemoteCallbacks::remoteProgress;
+            cbs.completion          = &RemoteCallbacks::remoteComplete;
+            cbs.update_tips         = &RemoteCallbacks::remoteUpdateTips;
+            cbs.credentials         = &RemoteCallbacks::credAccquire;
+            cbs.payload             = receiver;
 
             // We still have to memcpy, because LibGit2-devs hate C++ and disallow us to do a nice
             // assignment (`mRemoteCallBacks = GIT_REMOTE_CALLBACKS_INIT;`) without using C++11 in

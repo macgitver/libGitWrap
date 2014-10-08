@@ -51,14 +51,14 @@ namespace Git
             void emitProgress(const QString& pathName, quint32 completed, quint32 total);
 
         public:
-            Repository          mRepository;
-            CheckoutOptions     mOptions;
-            CheckoutMode        mMode;
-            QStringList         mPaths;
-            QString             mPath;
-            Tree                mBaseline;
-            git_checkout_opts   mOpts;
-            bool                mCancel;
+            Repository              mRepository;
+            CheckoutOptions         mOptions;
+            CheckoutMode            mMode;
+            QStringList             mPaths;
+            QString                 mPath;
+            Tree                    mBaseline;
+            git_checkout_options    mOpts;
+            bool                    mCancel;
         };
 
         class CheckoutIndexOperationPrivate : public CheckoutBaseOperationPrivate

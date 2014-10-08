@@ -195,14 +195,19 @@ namespace Git
             return QString();
         }
 
-        QByteArray repoPath(GIT_PATH_MAX, Qt::Uninitialized);
+        git_buf repoPath = {0};
         QByteArray joinedCeilingDirs = ceilingDirs.join(QChar::fromLatin1(GIT_PATH_LIST_SEPARATOR)).toUtf8();
 
-        result = git_repository_discover( repoPath.data(), repoPath.length(),
-                                          startPath.toUtf8().constData(), acrossFs,
-                                          joinedCeilingDirs.constData() );
+        result = git_repository_discover( &repoPath, startPath.toUtf8().constData(),
+                                          acrossFs, joinedCeilingDirs.constData() );
 
-        return result ? QString::fromUtf8(repoPath.constData()) : QString();
+        QString resultPath;
+        if ( result )
+            resultPath = QString::fromUtf8(repoPath.ptr);
+
+        git_buf_free( &repoPath );
+
+        return resultPath;
     }
 
     /**
@@ -541,7 +546,7 @@ namespace Git
         }
 
         git_reference* refOut = NULL;
-        result = git_branch_move( &refOut, ref, newName.toUtf8().constData(), force );
+        result = git_branch_move( &refOut, ref, newName.toUtf8().constData(), force, NULL, NULL );
 
         if( result )
         {
@@ -944,7 +949,7 @@ namespace Git
     {
         GW_D_CHECKED(Repository, false, result);
 
-        result = git_repository_detach_head(d->mRepo);
+        result = git_repository_detach_head( d->mRepo, NULL, NULL );
         return result;
     }
 
@@ -963,7 +968,7 @@ namespace Git
     {
         GW_D_CHECKED_VOID(Repository, result);
 
-        result = git_repository_set_head(d->mRepo, branchName.toUtf8().constData());
+        result = git_repository_set_head( d->mRepo, branchName.toUtf8().constData(), NULL, NULL );
     }
 
     /**
@@ -1019,7 +1024,7 @@ namespace Git
     void Repository::setDetachedHEAD(Result& result, const ObjectId& sha)
     {
         GW_D_CHECKED_VOID(Repository, result);
-        result = git_repository_set_head_detached(d->mRepo, Private::sha(sha));
+        result = git_repository_set_head_detached( d->mRepo, Private::sha(sha), NULL, NULL);
     }
 
     /**

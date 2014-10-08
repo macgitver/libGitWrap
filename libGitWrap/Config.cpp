@@ -44,68 +44,76 @@ namespace Git
     QString Config::globalFilePath()
     {
         QString filePath;
-        char path[ 2048 ];
+        git_buf path = {0};
 
-        int rc = git_config_find_system( path, 2048 - 1 );
+        int rc = git_config_find_system( &path );
         if( rc >= 0 )
         {
-            filePath = QString::fromLocal8Bit( path );
+            filePath = QString::fromLocal8Bit( path.ptr );
         }
 
+        git_buf_free( &path );
         return filePath;
     }
 
     QString Config::userFilePath()
     {
         QString filePath;
-        char path[ 2048 ];
+        git_buf path = {0};
 
-        int rc = git_config_find_global( path, 2048 - 1 );
+        int rc = git_config_find_global( &path );
         if( rc >= 0 )
         {
-            filePath = QString::fromLocal8Bit( path );
+            filePath = QString::fromLocal8Bit( path.ptr );
         }
 
+        git_buf_free( &path );
         return filePath;
     }
 
     Config Config::global()
     {
-        char path[ 2048 ];
+        git_buf path = {0};
 
-        int rc = git_config_find_system( path, 2048 - 1 );
+        int rc = git_config_find_system( &path );
         if( rc < 0 )
         {
+            git_buf_free( &path );
             return Config();
         }
 
         git_config* cfg = NULL;
-        rc = git_config_open_ondisk( &cfg, path );
+        rc = git_config_open_ondisk( &cfg, path.ptr );
         if( rc < 0 )
         {
+            git_buf_free( &path );
             return Config();
         }
 
+        git_buf_free( &path );
         return PrivatePtr(new Private(cfg));
     }
 
     Config Config::user()
     {
-        char path[ 2048 ];
+        git_buf path = {0};
 
-        int rc = git_config_find_global( path, 2048 - 1 );
+        int rc = git_config_find_global( &path );
         if( rc < 0 )
         {
+            git_buf_free( &path );
             return Config();
         }
 
         git_config* cfg = NULL;
-        rc = git_config_open_ondisk( &cfg, path );
+        rc = git_config_open_ondisk( &cfg, path.ptr );
         if( rc < 0 )
         {
+            git_buf_free( &path );
             return Config();
         }
 
+        git_buf_free( &path );
         return PrivatePtr(new Private(cfg));
     }
 

@@ -161,11 +161,11 @@ namespace Git
         if (!result) return Commit();
 
         git_oid commitId;
-        result = git_commit_create_from_oids( &commitId, rp->mRepo, branchName.toUtf8().constData(),
-                                              gitAuthor, gitCommitter,
-                                              NULL, message.toUtf8().constData(),
-                                              Internal::ObjectId2git_oid(tree.id()),
-                                              parents.count(), constParents.data() );
+        result = git_commit_create_from_ids( &commitId, rp->mRepo, branchName.toUtf8().constData(),
+                                             gitAuthor, gitCommitter,
+                                             NULL, message.toUtf8().constData(),
+                                             Internal::ObjectId2git_oid(tree.id()),
+                                             parents.count(), constParents.data() );
 
         return repo.lookupCommit( result, ObjectId::fromRaw(commitId.id) );
     }
@@ -390,12 +390,23 @@ namespace Git
         }
     }
 
+    /**
+     * @brief           Create a branch on this commit.
+     *
+     * @param[in,out]   result  A result object; see @ref GitWrapErrorHandling
+     *
+     * @param[in]       name    the branches reference name
+     *
+     * @param[in]       force   if true, creation is forced (an existing branch will be moved)
+     *
+     * @return          the created reference
+     */
     Reference Commit::createBranch(Result& result, const QString& name, bool force) const
     {
         GW_CD_CHECKED(Commit, Reference(), result);
 
         git_reference* ref = NULL;
-        result = git_branch_create(&ref, d->repo()->mRepo, name.toUtf8().constData(), d->o(), force);
+        result = git_branch_create( &ref, d->repo()->mRepo, name.toUtf8().constData(), d->o(), force, NULL, NULL );
 
         if (!result) {
             return Reference();

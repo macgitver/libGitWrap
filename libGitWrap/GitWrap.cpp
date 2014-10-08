@@ -129,8 +129,8 @@ namespace Git
             if (df->path) {
                 path = QString::fromUtf8(df->path);
             }
-            return FileInfo(path, ObjectId::fromRaw(df->oid.id), df->size, FileModes(df->mode),
-                            false, (df->flags & GIT_DIFF_FLAG_VALID_OID) != 0);
+            return FileInfo(path, ObjectId::fromRaw(df->id.id), df->size, FileModes(df->mode),
+                            false, (df->flags & GIT_DIFF_FLAG_VALID_ID) != 0);
         }
 
     }

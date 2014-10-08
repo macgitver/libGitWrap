@@ -31,7 +31,7 @@ namespace Git
             : BaseOperationPrivate(owner)
             , mCloneBare(false)
         {
-            git_checkout_opts coo = GIT_CHECKOUT_OPTS_INIT;
+            git_checkout_options coo = GIT_CHECKOUT_OPTIONS_INIT;
             coo.checkout_strategy = GIT_CHECKOUT_SAFE_CREATE;
             memcpy(&mCheckoutOpts, &coo, sizeof(coo));
         }
@@ -86,7 +86,7 @@ namespace Git
             }
 
             if (mResult) {
-                mResult = git_clone_into(repo, remo, &mCheckoutOpts, NULL);
+                mResult = git_clone_into(repo, remo, &mCheckoutOpts, NULL, NULL);
             }
 
             git_remote_free(remo);
