@@ -47,7 +47,9 @@ namespace Git
     TreeEntry TreeEntry::clone() const
     {
         GW_CD(TreeEntry);
-        if (!d) return TreeEntry();
+        if (!d) {
+            return TreeEntry();
+        }
 
         Result result;
         git_tree_entry* entry = NULL;
