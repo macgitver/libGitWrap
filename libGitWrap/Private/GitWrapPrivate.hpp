@@ -17,8 +17,9 @@
 #ifndef GIT_P_H
 #define GIT_P_H
 
-#include <QThreadStorage>
 #include <QDebug>
+#include <QTextCodec>
+#include <QThreadStorage>
 
 #include "git2.h"
 #include "git2/sys/commit.h"
@@ -56,15 +57,29 @@ namespace Git
          */
         class Buffer {
         private:
-            git_buf buf;
+            git_buf         buf;
+            QTextCodec*     mCodec;
 
         public:
-            Buffer() { memset(&buf, 0, sizeof(buf)); }
-            ~Buffer() { git_buf_free( &buf ); }
+            Buffer( QTextCodec* codec = 0 )
+                : mCodec(codec)
+            {
+                memset(&buf, 0, sizeof(buf));
+            }
+            ~Buffer()
+            {
+                git_buf_free( &buf );
+            }
 
         public:
             operator git_buf*() { return &buf; }
             operator const char*() { return buf.ptr; }
+
+        public:
+           QString toString() const {
+               return mCodec ? mCodec->toUnicode( buf.ptr, buf.size )
+                             : QString::fromUtf8( buf.ptr, buf.size );
+           }
 
         private:
             Buffer(const Buffer& other) { *this = other; }
