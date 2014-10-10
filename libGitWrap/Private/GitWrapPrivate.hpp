@@ -76,10 +76,17 @@ namespace Git
             operator const char*() { return buf.ptr; }
 
         public:
-           QString toString() const {
-               return mCodec ? mCodec->toUnicode( buf.ptr, buf.size )
-                             : QString::fromUtf8( buf.ptr, buf.size );
-           }
+            /**
+             * @brief        Converts the contents of the buffer into a QString.
+             *
+             * @return       the buffer in readable text format
+             *
+             * @note         Defaults to QString::fromUtf8() when no text codec is set.
+             */
+            QString toString() const {
+                return mCodec ? mCodec->toUnicode( buf.ptr, buf.size )
+                              : QString::fromUtf8( buf.ptr, buf.size );
+            }
 
         private:
             Buffer(const Buffer& other) { *this = other; }
