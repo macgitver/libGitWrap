@@ -50,12 +50,12 @@ namespace Git
     QString Config::globalFilePath(Result &result)
     {
         QString filePath;
-        Internal::Buffer path;
+        Internal::Buffer path( QTextCodec::codecForLocale() );
 
         result = git_config_find_system( path );
         if( result )
         {
-            filePath = QString::fromLocal8Bit( path );
+            filePath = path.toString();
         }
 
         return filePath;
@@ -70,12 +70,12 @@ namespace Git
     QString Config::userFilePath( Result& result)
     {
         QString filePath;
-        Internal::Buffer path;
+        Internal::Buffer path( QTextCodec::codecForLocale() );
 
         result = git_config_find_global( path );
         if( result )
         {
-            filePath = QString::fromLocal8Bit( path );
+            filePath = path.toString();
         }
 
         return filePath;
@@ -89,7 +89,7 @@ namespace Git
 
     Config Config::global(Result &result)
     {
-        Internal::Buffer path;
+        Internal::Buffer path( QTextCodec::codecForLocale() );
         git_config* cfg = NULL;
 
         result = git_config_find_system( path );
@@ -109,7 +109,7 @@ namespace Git
 
     Config Config::user(Result &result)
     {
-        Internal::Buffer path;
+        Internal::Buffer path( QTextCodec::codecForLocale() );
         git_config* cfg = NULL;
 
         result = git_config_find_global( path );
