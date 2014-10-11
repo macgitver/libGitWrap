@@ -61,40 +61,19 @@ namespace Git
             QTextCodec*     mCodec;
 
         public:
-            Buffer( QTextCodec* codec = 0 )
-                : mCodec(codec)
-            {
-                memset(&buf, 0, sizeof(buf));
-            }
-            ~Buffer()
-            {
-                git_buf_free( &buf );
-            }
+            Buffer( QTextCodec* codec = 0 );
+            ~Buffer();
 
         public:
-            operator git_buf*() { return &buf; }
-            operator const char*() { return buf.ptr; }
+            operator git_buf*();
+            operator const char*();
 
         public:
-            /**
-             * @brief        Converts the contents of the buffer into a QString.
-             *
-             * @return       the buffer in readable text format
-             *
-             * @note         Defaults to QString::fromUtf8() when no text codec is set.
-             */
-            QString toString() const {
-                return mCodec ? mCodec->toUnicode( buf.ptr, buf.size )
-                              : QString::fromUtf8( buf.ptr, buf.size );
-            }
+            QString toString() const;
 
         private:
-            Buffer(const Buffer& other) { *this = other; }
-            Buffer operator=(const Buffer& other) {
-                memcpy( buf.ptr, other.buf.ptr, other.buf.size );
-                buf.asize = other.buf.asize;
-                return *this;
-            }
+            Buffer(const Buffer& other);
+            Buffer& operator =(const Buffer& other);
         };
 
         /**

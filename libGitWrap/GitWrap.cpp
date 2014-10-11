@@ -47,6 +47,56 @@ namespace Git
             return sl;
         }
 
+
+        //-- Buffer ----------------------------------------------------------------------------- >8
+
+        Buffer::Buffer(QTextCodec *codec)
+            : mCodec(codec)
+        {
+            memset(&buf, 0, sizeof(buf));
+        }
+
+        Buffer::~Buffer()
+        {
+            git_buf_free( &buf );
+        }
+
+        Buffer::operator git_buf*()
+        {
+            return &buf;
+        }
+
+        Buffer::operator const char*()
+        {
+            return buf.ptr;
+        }
+
+        /**
+         * @brief        Converts the contents of the buffer into a QString.
+         *
+         * @return       the buffer in readable text format
+         *
+         * @note         Defaults to QString::fromUtf8() when no text codec is set.
+         */
+        QString Buffer::toString() const
+        {
+            return mCodec ? mCodec->toUnicode( buf.ptr, buf.size )
+                          : QString::fromUtf8( buf.ptr, buf.size );
+        }
+
+        Buffer::Buffer(const Buffer& other)
+        {
+            *this = other;
+        }
+
+        Buffer& Buffer::operator =(const Buffer& other)
+        {
+            memcpy( buf.ptr, other.buf.ptr, other.buf.size );
+            buf.asize = other.buf.asize;
+            return *this;
+        }
+
+
         //-- StrArrayWrapper -------------------------------------------------------------------- >8
 
         StrArrayWrapper::StrArrayWrapper()
