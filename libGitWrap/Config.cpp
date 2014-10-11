@@ -50,7 +50,7 @@ namespace Git
     QString Config::globalFilePath(Result &result)
     {
         QString filePath;
-        Internal::Buffer path();
+        Internal::Buffer path;
 
         result = git_config_find_system( path );
         if( result )
@@ -70,7 +70,7 @@ namespace Git
     QString Config::userFilePath( Result& result)
     {
         QString filePath;
-        Internal::Buffer path();
+        Internal::Buffer path;
 
         result = git_config_find_global( path );
         if( result )
@@ -89,7 +89,7 @@ namespace Git
 
     Config Config::global(Result &result)
     {
-        Internal::Buffer path();
+        Internal::Buffer path;
         git_config* cfg = NULL;
 
         result = git_config_find_system( path );
@@ -109,7 +109,7 @@ namespace Git
 
     Config Config::user(Result &result)
     {
-        Internal::Buffer path();
+        Internal::Buffer path;
         git_config* cfg = NULL;
 
         result = git_config_find_global( path );
