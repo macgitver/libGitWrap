@@ -80,8 +80,7 @@ namespace Git
          */
         QString Buffer::toString() const
         {
-            return mCodec ? mCodec->toUnicode( buf.ptr, buf.size )
-                          : QString::fromUtf8( buf.ptr, buf.size );
+            return String( buf.ptr, buf.size );
         }
 
         Buffer::Buffer(const Buffer& other)
@@ -94,6 +93,70 @@ namespace Git
             memcpy( buf.ptr, other.buf.ptr, other.buf.size );
             buf.asize = other.buf.asize;
             return *this;
+        }
+
+
+        //-- String ------------------------------------------------------------------------------>8
+
+        String::String(const QString& str, QTextCodec* codec)
+            : mStr(str)
+            , mCodec(codec)
+        {
+        }
+
+        String::String(const char* str, QTextCodec* codec)
+            : mCodec(codec)
+        {
+            mStr = convert( str, codec );
+        }
+
+        String::String(const char* str, int size, QTextCodec* codec)
+        {
+            mStr = convert( str, size, codec );
+        }
+
+        String::operator QString()
+        {
+            return mStr;
+        }
+
+        String::String(const String& other)
+        {
+            *this = other;
+        }
+
+        String& String::operator =(const String& other)
+        {
+            *this = other;
+            return *this;
+        }
+
+        QString String::convert(const char* str, int size, QTextCodec* codec )
+        {
+            return codec ? codec->toUnicode( str, size )
+                         : QString::fromUtf8( str, size );
+        }
+
+        QString String::convert(const char* str, QTextCodec* codec )
+        {
+            return codec ? codec->toUnicode( str )
+                         : QString::fromUtf8( str );
+        }
+
+        const char* String::convert(const QString& str, QTextCodec* codec )
+        {
+            return codec ? codec->fromUnicode( str ).constData()
+                         : str.toUtf8().constData();
+        }
+
+        String::operator const char*() const
+        {
+            return convert( mStr, mCodec );
+        }
+
+        String::operator char*()
+        {
+            return const_cast<char*>( convert( mStr, mCodec ) );
         }
 
 

@@ -79,6 +79,39 @@ namespace Git
         /**
          * @internal
          * @ingroup     GitWrap
+         * @brief       Wraps a QString for usage in libgit2.
+         *
+         * The QString is encoded to the codec used by libgit2. Defaults to UTF-8.
+         */
+        class String
+        {
+        public:
+            String( const QString& str, QTextCodec* codec = 0 );
+            String( const char* str, QTextCodec* codec = 0 );
+            String( const char* str, int size, QTextCodec* codec = 0 );
+
+        public:
+            operator const char*() const;
+            operator char*();
+            operator QString();
+
+        private:
+            String(const String& other);
+            String& operator =(const String& other);
+
+        private:
+            static QString convert( const char* str, int size, QTextCodec* codec = 0 );
+            static QString convert( const char* str, QTextCodec* codec = 0 );
+            static const char* convert( const QString& str, QTextCodec *codec );
+
+        private:
+            QString         mStr;
+            QTextCodec *    mCodec;
+        };
+
+        /**
+         * @internal
+         * @ingroup     GitWrap
          * @brief       The StrArrayWrapper class wraps a QStringList as a pointer to git_strarray.
          */
         class StrArrayWrapper
