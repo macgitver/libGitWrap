@@ -163,14 +163,13 @@ namespace Git
 
     bool Remote::isValidUrl( const QString& url )
     {
-        return git_remote_valid_url( url.toUtf8().constData() );
+        return isSupportedUrl( url );
     }
 
     bool Remote::isSupportedUrl( const QString& url )
     {
         return git_remote_supported_url( url.toUtf8().constData() );
     }
-
 
     bool Remote::connect(Result& result, bool forFetch)
     {
