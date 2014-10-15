@@ -136,7 +136,7 @@ namespace Git
     {
         GW_D(CloneOperation);
         Q_ASSERT(!isRunning());
-        d->mRemoteName = Internal::String(remoteName).toArray();
+        d->mRemoteName = Internal::StringHelper(remoteName).toArray();
     }
 
     void CloneOperation::setFetchSpec(const QByteArray& fetchSpec)

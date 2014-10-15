@@ -92,7 +92,7 @@ namespace Git
             return QString();
         }
 
-        return Internal::String( git_remote_name( d->mRemote ) );
+        return Internal::StringHelper( git_remote_name( d->mRemote ) );
     }
 
     QString Remote::url() const
@@ -104,7 +104,7 @@ namespace Git
             return QString();
         }
 
-        return Internal::String( git_remote_url( d->mRemote ) );
+        return Internal::StringHelper( git_remote_url( d->mRemote ) );
     }
 
     bool Remote::addFetchSpec(Result& result, const QString& spec)

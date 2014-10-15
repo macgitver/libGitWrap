@@ -40,7 +40,7 @@ namespace Git
 
             for( unsigned int i = 0; i < arry->count; i++ )
             {
-                sl << Internal::String( arry->strings[ i ] );
+                sl << Internal::StringHelper( arry->strings[ i ] );
             }
 
             git_strarray_free( arry );
@@ -80,7 +80,7 @@ namespace Git
          */
         QString Buffer::toString() const
         {
-            return String( buf.ptr, buf.size );
+            return StringHelper( buf.ptr, buf.size );
         }
 
         Buffer::Buffer(const Buffer& other)
@@ -98,32 +98,32 @@ namespace Git
 
         //-- String ------------------------------------------------------------------------------>8
 
-        String::String(QString str)
+        StringHelper::StringHelper(QString str)
             : mStr(str)
         {
         }
 
-        String::String(const char* str)
+        StringHelper::StringHelper(const char* str)
         {
             mStr = convert( str );
         }
 
-        String::String(const char* str, int size)
+        StringHelper::StringHelper(const char* str, int size)
         {
             mStr = convert( str, size );
         }
 
-        QString String::convert(const char* str, int size )
+        QString StringHelper::convert(const char* str, int size )
         {
             return QString::fromUtf8( str, size );
         }
 
-        QString String::convert(const char* str)
+        QString StringHelper::convert(const char* str)
         {
             return QString::fromUtf8( str );
         }
 
-        const char* String::convert() const
+        const char* StringHelper::convert() const
         {
             if ( mConvertedStr.isEmpty() && !mStr.isEmpty())
             {
@@ -133,17 +133,17 @@ namespace Git
             return mConvertedStr.constData();
         }
 
-        String::operator const char*() const
+        StringHelper::operator const char*() const
         {
             return convert();
         }
 
-        String::operator char*() const
+        StringHelper::operator char*() const
         {
             return const_cast<char*>( convert() );
         }
 
-        String::operator QString() const
+        StringHelper::operator QString() const
         {
             return mStr;
         }
@@ -228,7 +228,7 @@ namespace Git
 
             QString path;
             if (df->path) {
-                path = Internal::String::convert(df->path);
+                path = Internal::StringHelper::convert(df->path);
             }
             return FileInfo(path, ObjectId::fromRaw(df->id.id), df->size, FileModes(df->mode),
                             false, (df->flags & GIT_DIFF_FLAG_VALID_ID) != 0);

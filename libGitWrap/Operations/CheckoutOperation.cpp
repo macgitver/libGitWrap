@@ -38,7 +38,7 @@ namespace Git
                     reinterpret_cast<CheckoutBaseOperationPrivate*>(payload);
             Q_ASSERT(d);
 
-            QString pathName = Internal::String(path);
+            QString pathName = Internal::StringHelper(path);
 
             d->emitProgress(pathName, completed_steps, total_steps);
         }
@@ -82,7 +82,7 @@ namespace Git
                                                     const git_diff_file *workdir)
         {
             GW_OP_OWNER(CheckoutBaseOperation);
-            QString pathName = Internal::String(path);
+            QString pathName = Internal::StringHelper(path);
 
             FileInfo fiBaseLine = mkFileInfo(baseline);
             FileInfo fiTarget   = mkFileInfo(target);
@@ -123,12 +123,12 @@ namespace Git
                 mOpts.paths.count = mPaths.count();
                 mOpts.paths.strings = new char *[mOpts.paths.count];
                 for (int i=0; i < mPaths.count(); ++i) {
-                    mOpts.paths.strings[i] = Internal::String(mPaths[i]);
+                    mOpts.paths.strings[i] = Internal::StringHelper(mPaths[i]);
                 }
             }
 
             if (!mPath.isEmpty()) {
-                mOpts.target_directory = Internal::String(mPath);
+                mOpts.target_directory = Internal::StringHelper(mPath);
             }
 
             switch (mMode) {

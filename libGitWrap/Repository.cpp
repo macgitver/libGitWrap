@@ -91,7 +91,7 @@ namespace Git
             #endif
 
             Git::StatusHash* sh = (Git::StatusHash*) rawSH;
-            sh->insert( Internal::String( fn ), convertFileStatus( status ) );
+            sh->insert( Internal::StringHelper( fn ), convertFileStatus( status ) );
 
             return GIT_OK;
         }
@@ -106,7 +106,7 @@ namespace Git
         {
             cb_append_reference_data *data = (cb_append_reference_data *)payload;
 
-            QString name = Internal::String::convert(git_reference_name(reference));
+            QString name = Internal::StringHelper::convert(git_reference_name(reference));
             Reference::Private* ref = Reference::Private::createRefObject(
                         data->ptr, name, reference);
 
@@ -203,7 +203,7 @@ namespace Git
 
         QString resultPath;
         if ( result )
-            resultPath = Internal::String::convert(repoPath.ptr);
+            resultPath = Internal::StringHelper::convert(repoPath.ptr);
 
         git_buf_free( &repoPath );
 
@@ -438,7 +438,7 @@ namespace Git
                 return -1;
             }
 
-            d->refs.insert( Internal::String( refName ), ObjectId::fromRaw( oid.id ) );
+            d->refs.insert( Internal::StringHelper( refName ), ObjectId::fromRaw( oid.id ) );
 
             return 0;
         }
@@ -509,7 +509,7 @@ namespace Git
         while ((err = git_branch_next(&ref, &type, it)) == GITERR_NONE) {
             Q_ASSERT(ref);
 
-            QString name = Internal::String::convert(git_reference_shorthand(ref));
+            QString name = Internal::StringHelper::convert(git_reference_shorthand(ref));
             sl << name;
 
             git_reference_free(ref);
@@ -582,7 +582,7 @@ namespace Git
             return QString();
         }
 
-        return Internal::String( git_repository_workdir( d->mRepo ) );
+        return Internal::StringHelper( git_repository_workdir( d->mRepo ) );
     }
 
     QString Repository::gitPath() const
@@ -594,7 +594,7 @@ namespace Git
             return QString();
         }
 
-        return Internal::String( git_repository_path( d->mRepo ) );
+        return Internal::StringHelper( git_repository_path( d->mRepo ) );
     }
 
     /**
@@ -870,7 +870,7 @@ namespace Git
             Q_ASSERT(d && name);
 
             Repository::PrivatePtr repo(d->repo);
-            d->subs.append(new SubmodulePrivate(repo, Internal::String(name)));
+            d->subs.append(new SubmodulePrivate(repo, Internal::StringHelper(name)));
             return 0;
         }
 
@@ -878,7 +878,7 @@ namespace Git
         {
             QStringList* sl = static_cast<QStringList*>(payload);
             Q_ASSERT(sl && name);
-            sl->append(Internal::String(name));
+            sl->append(Internal::StringHelper(name));
             return 0;
         }
 
@@ -1076,7 +1076,7 @@ namespace Git
                 return Reference();
             }
 
-            name = Internal::String::convert(git_reference_name(ref));
+            name = Internal::StringHelper::convert(git_reference_name(ref));
         }
         else {
             result = git_reference_lookup( &ref, d->mRepo, refName.toUtf8().constData() );

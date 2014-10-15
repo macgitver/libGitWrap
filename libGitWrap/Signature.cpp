@@ -31,8 +31,8 @@ namespace Git
             dt.setUtcOffset( gitsig->when.offset * 60 );
 
             return Signature(
-                Internal::String( gitsig->name ),
-                Internal::String( gitsig->email ),
+                Internal::StringHelper( gitsig->name ),
+                Internal::StringHelper( gitsig->email ),
                 dt );
         }
 
