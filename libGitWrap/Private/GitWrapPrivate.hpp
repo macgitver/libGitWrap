@@ -127,7 +127,7 @@ namespace Git
         {
             switch( attr )
             {
-            case UnkownAttr:            return GIT_FILEMODE_NEW;
+            case UnkownAttr:            return GIT_FILEMODE_UNREADABLE;
             case TreeAttr:              return GIT_FILEMODE_TREE;
             case FileAttr:              return GIT_FILEMODE_BLOB;
             case FileExecutableAttr:    return GIT_FILEMODE_BLOB_EXECUTABLE;
@@ -136,7 +136,7 @@ namespace Git
             }
             Q_ASSERT( false );
             // Why is there no "Q_ASSUME( false );"???
-            return GIT_FILEMODE_NEW;
+            return GIT_FILEMODE_UNREADABLE;
         }
 
         /**

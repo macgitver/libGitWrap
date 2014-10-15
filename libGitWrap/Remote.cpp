@@ -187,10 +187,10 @@ namespace Git
         git_remote_disconnect(d->mRemote);
     }
 
-    bool Remote::download( Result& result )
+    bool Remote::download( Result& result, const QStringList &refspecs )
     {
         GW_D_CHECKED(Remote, false, result);
-        result = git_remote_download(d->mRemote);
+        result = git_remote_download(d->mRemote, Internal::StrArrayWrapper(refspecs));
         return result;
     }
 

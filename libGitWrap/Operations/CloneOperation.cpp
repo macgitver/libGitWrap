@@ -31,9 +31,13 @@ namespace Git
             : BaseOperationPrivate(owner)
             , mCloneBare(false)
         {
-            git_checkout_options coo = GIT_CHECKOUT_OPTIONS_INIT;
-            coo.checkout_strategy = GIT_CHECKOUT_SAFE_CREATE;
-            memcpy(&mCheckoutOpts, &coo, sizeof(coo));
+            git_clone_options cloneOpts = GIT_CLONE_OPTIONS_INIT;
+            memcpy( &mCloneOpts, &cloneOpts, sizeof(cloneOpts) );
+
+            git_checkout_options checkoutOpts = GIT_CHECKOUT_OPTIONS_INIT;
+            checkoutOpts.checkout_strategy = GIT_CHECKOUT_SAFE_CREATE;
+            // TODO: setup checkout callbacks for notification about the checkout progress
+            memcpy( &mCloneOpts.checkout_opts, &checkoutOpts, sizeof(checkoutOpts) );
         }
 
         CloneOperationPrivate::~CloneOperationPrivate()
@@ -45,51 +49,13 @@ namespace Git
             GW_OP_OWNER(CloneOperation);
 
             git_repository* repo = NULL;
-            git_remote* remo = NULL;
 
-            mResult = git_repository_init(&repo, mPath.toUtf8().constData(), mCloneBare);
-            if (!mResult) {
-                return;
-            }
-
-            if (mRemoteName.isEmpty()) {
-                mRemoteName = "origin";
-            }
-
-            if (mFetchSpec.isEmpty()) {
-                mFetchSpec = QByteArray("+refs/heads/*:refs/remotes/") %
-                             mRemoteName %
-                             QByteArray("/*");
-            }
-
-            mResult = git_remote_create_with_fetchspec(
-                        &remo, repo, mRemoteName.constData(),
-                        mUrl.toUtf8().constData(),
-                        mFetchSpec.constData());
-
-            if (mResult && !mPushSpec.isEmpty()) {
-                mResult = git_remote_add_push(remo, mPushSpec.constData());
-            }
-
-            if (mResult && !mPushUrl.isEmpty()) {
-                mResult = git_remote_set_pushurl(remo, mPushUrl.constData());
-            }
+            // TODO: setup the callbacks for notifications about the clone progress
 
             if (mResult) {
-                mResult = git_remote_save(remo);
+                mResult = git_clone(&repo, Internal::String(mUrl), Internal::String(mPath), &mCloneOpts);
             }
 
-            if (mResult) {
-                git_remote_callbacks cbs;
-                RemoteCallbacks::initCallbacks(cbs, owner);
-                mResult = git_remote_set_callbacks(remo, &cbs);
-            }
-
-            if (mResult) {
-                mResult = git_clone_into(repo, remo, &mCheckoutOpts, NULL, NULL);
-            }
-
-            git_remote_free(remo);
             git_repository_free(repo);
         }
 

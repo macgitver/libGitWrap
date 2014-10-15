@@ -67,7 +67,7 @@ namespace Git
 
         bool connect(Result& result, bool forFetch);
         void disconnect(Result& result);
-        bool download(Result& result);
+        bool download(Result& result, const QStringList &refspecs = QStringList());
         bool updateTips(Result& result);
     };
 
