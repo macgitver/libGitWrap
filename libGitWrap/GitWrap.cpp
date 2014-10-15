@@ -98,56 +98,36 @@ namespace Git
 
         //-- String ------------------------------------------------------------------------------>8
 
-        String::String(QString str, QTextCodec* codec)
+        String::String(QString str)
             : mStr(str)
-            , mCodec(codec)
         {
         }
 
-        String::String(const char* str, QTextCodec* codec)
-            : mCodec(codec)
+        String::String(const char* str)
         {
-            mStr = convert( str, codec );
+            mStr = convert( str );
         }
 
-        String::String(const char* str, int size, QTextCodec* codec)
+        String::String(const char* str, int size)
         {
-            mStr = convert( str, size, codec );
+            mStr = convert( str, size );
         }
 
-        QString String::convert(const char* str, int size, QTextCodec* codec )
+        QString String::convert(const char* str, int size )
         {
-            return codec ? codec->toUnicode( str, size )
-                         : QString::fromUtf8( str, size );
+            return QString::fromUtf8( str, size );
         }
 
-        QString String::convert(const char* str, QTextCodec* codec )
+        QString String::convert(const char* str)
         {
-            return codec ? codec->toUnicode( str )
-                         : QString::fromUtf8( str );
+            return QString::fromUtf8( str );
         }
 
         const char* String::convert()
         {
             mConvertedStr = toArray();
             return mConvertedStr.constData();
-        }
 
-        QByteArray String::toArray() const
-        {
-            return mCodec ? mCodec->fromUnicode( mStr )
-                          : mStr.toUtf8();
-        }
-
-        String::String(const String& other)
-        {
-            *this = other;
-        }
-
-        String& String::operator =(const String& other)
-        {
-            *this = other;
-            return *this;
         }
 
         String::operator const char*()

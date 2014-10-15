@@ -86,9 +86,9 @@ namespace Git
         class String
         {
         public:
-            String( QString str, QTextCodec* codec = 0);
-            String( const char* str, QTextCodec* codec = 0 );
-            String( const char* str, int size, QTextCodec* codec = 0 );
+            String( QString str );
+            String( const char* str );
+            String( const char* str, int size );
 
         public:
             operator const char*();
@@ -96,8 +96,8 @@ namespace Git
             operator QString();
 
         public:
-            static QString convert( const char* str, int size, QTextCodec* codec = 0 );
-            static QString convert( const char* str, QTextCodec* codec = 0 );
+            static QString convert( const char* str, int size );
+            static QString convert( const char* str );
 
         public:
             QByteArray toArray() const;
@@ -112,7 +112,6 @@ namespace Git
         private:
             QString         mStr;
             QByteArray      mConvertedStr;  //!< the string is converted, using QString's conversion methods
-            QTextCodec *    mCodec;
         };
 
         /**
