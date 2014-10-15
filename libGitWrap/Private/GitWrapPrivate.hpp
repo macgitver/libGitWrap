@@ -91,9 +91,9 @@ namespace Git
             String( const char* str, int size );
 
         public:
-            operator const char*();
-            operator char*();
-            operator QString();
+            operator const char*() const;
+            operator char*() const;
+            operator QString() const;
 
         public:
             static QString convert( const char* str, int size );
@@ -106,15 +106,15 @@ namespace Git
             }
 
         private:
-            const char* convert();
+            const char* convert() const;
 
         private:
             String(const String& other);
             String& operator =(const String& other);
 
         private:
-            QString         mStr;
-            QByteArray      mConvertedStr;  //!< the string is converted, using QString's conversion methods
+            QString                 mStr;
+            mutable QByteArray      mConvertedStr;  //!< the string is converted, using QString's conversion methods
         };
 
         /**

@@ -123,24 +123,27 @@ namespace Git
             return QString::fromUtf8( str );
         }
 
-        const char* String::convert()
+        const char* String::convert() const
         {
-            mConvertedStr = toArray();
-            return mConvertedStr.constData();
+            if ( mConvertedStr.isEmpty() && !mStr.isEmpty())
+            {
+                mConvertedStr = toArray();
+            }
 
+            return mConvertedStr.constData();
         }
 
-        String::operator const char*()
+        String::operator const char*() const
         {
             return convert();
         }
 
-        String::operator char*()
+        String::operator char*() const
         {
             return const_cast<char*>( convert() );
         }
 
-        String::operator QString()
+        String::operator QString() const
         {
             return mStr;
         }
