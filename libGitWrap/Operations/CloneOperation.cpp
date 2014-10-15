@@ -53,7 +53,7 @@ namespace Git
             // TODO: setup the callbacks for notifications about the clone progress
 
             if (mResult) {
-                mResult = git_clone(&repo, Internal::String(mUrl), Internal::String(mPath), &mCloneOpts);
+                mResult = git_clone(&repo, mUrl.toUtf8().constData(), mPath.toUtf8().constData(), &mCloneOpts);
             }
 
             git_repository_free(repo);
