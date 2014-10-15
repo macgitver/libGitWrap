@@ -100,7 +100,10 @@ namespace Git
             static QString convert( const char* str );
 
         public:
-            QByteArray toArray() const;
+            inline QByteArray toArray() const
+            {
+                return mStr.toUtf8();
+            }
 
         private:
             const char* convert();
