@@ -35,7 +35,7 @@ namespace Git
 
     ObjectId ObjectId::fromString( const QString& oid, int max, bool* success )
     {
-        return fromAscii( oid.toUtf8(), max, success );
+        return fromAscii( Internal::String(oid).toArray(), max, success );
     }
 
     ObjectId ObjectId::fromAscii( const QByteArray& oid, int max, bool* success )
@@ -69,7 +69,7 @@ namespace Git
 
     QString ObjectId::toString(int max) const
     {
-        return QString::fromUtf8(toAscii(max).constData()); // UTF-8 is Ascii, actually :-)
+        return Internal::String(toAscii(max).constData()); // UTF-8 is Ascii, actually :-)
     }
 
     QByteArray ObjectId::toAscii(int max) const

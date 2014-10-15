@@ -40,7 +40,7 @@ namespace Git
 
             for( unsigned int i = 0; i < arry->count; i++ )
             {
-                sl << QString::fromUtf8( arry->strings[ i ] );
+                sl << Internal::String( arry->strings[ i ] );
             }
 
             git_strarray_free( arry );
@@ -245,7 +245,7 @@ namespace Git
 
             QString path;
             if (df->path) {
-                path = QString::fromUtf8(df->path);
+                path = Internal::String::convert(df->path);
             }
             return FileInfo(path, ObjectId::fromRaw(df->id.id), df->size, FileModes(df->mode),
                             false, (df->flags & GIT_DIFF_FLAG_VALID_ID) != 0);

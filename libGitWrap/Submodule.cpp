@@ -125,7 +125,7 @@ namespace Git
         }
 
         const char* data = git_submodule_path( sm );
-        return data ? QString::fromUtf8( data ) : QString();
+        return data ? Internal::String::convert( data ) : QString();
     }
 
     QString Submodule::url( Result& r ) const
@@ -139,7 +139,7 @@ namespace Git
         }
 
         const char* data = git_submodule_url( sm );
-        return data ? QString::fromUtf8( data ) : QString();
+        return data ? Internal::String::convert( data ) : QString();
     }
 
     bool Submodule::fetchRecursive() const

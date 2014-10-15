@@ -117,7 +117,7 @@ namespace Git
             debugEvents( "Remote Progress: %s", QByteArray( str, len ).constData() );
 
             if (events) {
-                events->remoteMessage(QString::fromUtf8(str, len));
+                events->remoteMessage(Internal::String(str, len));
             }
 
             return GITERR_NONE;
@@ -137,7 +137,7 @@ namespace Git
                         oidTo.toAscii().constData());
 
             if (events) {
-                events->updateTip(QString::fromUtf8(refname), oidFrom, oidTo);
+                events->updateTip(Internal::String(refname), oidFrom, oidTo);
             }
 
             return 0;

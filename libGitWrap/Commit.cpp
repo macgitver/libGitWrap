@@ -112,9 +112,9 @@ namespace Git
         if (!result) return Commit();
 
         git_oid commitId;
-        result = git_commit_create( &commitId, rp->mRepo, branchName.toUtf8().constData(),
+        result = git_commit_create( &commitId, rp->mRepo, Internal::String(branchName),
                                     gitAuthor, gitCommitter,
-                                    NULL, message.toUtf8().constData(), Private::dataOf<Tree>(tree)->o(),
+                                    NULL, Internal::String(message), Private::dataOf<Tree>(tree)->o(),
                                     parents.count(), constParents.data() );
 
         return repo.lookupCommit( result, ObjectId::fromRaw(commitId.id) );
@@ -161,9 +161,9 @@ namespace Git
         if (!result) return Commit();
 
         git_oid commitId;
-        result = git_commit_create_from_ids( &commitId, rp->mRepo, branchName.toUtf8().constData(),
+        result = git_commit_create_from_ids( &commitId, rp->mRepo, Internal::String(branchName),
                                              gitAuthor, gitCommitter,
-                                             NULL, message.toUtf8().constData(),
+                                             NULL, Internal::String(message),
                                              Internal::ObjectId2git_oid(tree.id()),
                                              parents.count(), constParents.data() );
 
@@ -342,7 +342,7 @@ namespace Git
             len--;
         }
 
-        return QString::fromUtf8(msg, len);
+        return Internal::String(msg, len);
     }
 
     QString Commit::shortMessage() const
@@ -359,7 +359,7 @@ namespace Git
             len++;
         }
 
-        return QString::fromUtf8(msg, len);
+        return Internal::String(msg, len);
     }
 
     /**
@@ -406,7 +406,7 @@ namespace Git
         GW_CD_CHECKED(Commit, Reference(), result);
 
         git_reference* ref = NULL;
-        result = git_branch_create( &ref, d->repo()->mRepo, name.toUtf8().constData(), d->o(), force, NULL, NULL );
+        result = git_branch_create( &ref, d->repo()->mRepo, Internal::String(name), d->o(), force, NULL, NULL );
 
         if (!result) {
             return Reference();

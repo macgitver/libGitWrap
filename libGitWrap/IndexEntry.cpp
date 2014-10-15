@@ -53,7 +53,7 @@ namespace Git
     QString IndexEntry::path() const
     {
         GW_CD(IndexEntry);
-        return QString::fromUtf8( d->mEntry.path );
+        return Internal::String( d->mEntry.path );
     }
 
     ObjectId IndexEntry::blobSha() const
