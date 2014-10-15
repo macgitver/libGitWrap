@@ -98,7 +98,7 @@ namespace Git
 
         //-- String ------------------------------------------------------------------------------>8
 
-        String::String(const QString& str, QTextCodec* codec)
+        String::String(QString str, QTextCodec* codec)
             : mStr(str)
             , mCodec(codec)
         {
@@ -115,9 +115,28 @@ namespace Git
             mStr = convert( str, size, codec );
         }
 
-        String::operator QString()
+        QString String::convert(const char* str, int size, QTextCodec* codec )
         {
-            return mStr;
+            return codec ? codec->toUnicode( str, size )
+                         : QString::fromUtf8( str, size );
+        }
+
+        QString String::convert(const char* str, QTextCodec* codec )
+        {
+            return codec ? codec->toUnicode( str )
+                         : QString::fromUtf8( str );
+        }
+
+        const char* String::convert()
+        {
+            mConvertedStr = toArray();
+            return mConvertedStr.constData();
+        }
+
+        QByteArray String::toArray() const
+        {
+            return mCodec ? mCodec->fromUnicode( mStr )
+                          : mStr.toUtf8();
         }
 
         String::String(const String& other)
@@ -131,34 +150,20 @@ namespace Git
             return *this;
         }
 
-        QString String::convert(const char* str, int size, QTextCodec* codec )
+        String::operator const char*()
         {
-            return codec ? codec->toUnicode( str, size )
-                         : QString::fromUtf8( str, size );
-        }
-
-        QString String::convert(const char* str, QTextCodec* codec )
-        {
-            return codec ? codec->toUnicode( str )
-                         : QString::fromUtf8( str );
-        }
-
-        const char* String::convert(const QString& str, QTextCodec* codec )
-        {
-            return codec ? codec->fromUnicode( str ).constData()
-                         : str.toUtf8().constData();
-        }
-
-        String::operator const char*() const
-        {
-            return convert( mStr, mCodec );
+            return convert();
         }
 
         String::operator char*()
         {
-            return const_cast<char*>( convert( mStr, mCodec ) );
+            return const_cast<char*>( convert() );
         }
 
+        String::operator QString()
+        {
+            return mStr;
+        }
 
         //-- StrArrayWrapper -------------------------------------------------------------------- >8
 

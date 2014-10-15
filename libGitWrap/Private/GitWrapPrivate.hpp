@@ -86,26 +86,32 @@ namespace Git
         class String
         {
         public:
-            String( const QString& str, QTextCodec* codec = 0 );
+            String( QString str, QTextCodec* codec = 0);
             String( const char* str, QTextCodec* codec = 0 );
             String( const char* str, int size, QTextCodec* codec = 0 );
 
         public:
-            operator const char*() const;
+            operator const char*();
             operator char*();
             operator QString();
+
+        public:
+            static QString convert( const char* str, int size, QTextCodec* codec = 0 );
+            static QString convert( const char* str, QTextCodec* codec = 0 );
+
+        public:
+            QByteArray toArray() const;
+
+        private:
+            const char* convert();
 
         private:
             String(const String& other);
             String& operator =(const String& other);
 
         private:
-            static QString convert( const char* str, int size, QTextCodec* codec = 0 );
-            static QString convert( const char* str, QTextCodec* codec = 0 );
-            static const char* convert( const QString& str, QTextCodec *codec );
-
-        private:
             QString         mStr;
+            QByteArray      mConvertedStr;  //!< the string is converted, using QString's conversion methods
             QTextCodec *    mCodec;
         };
 
