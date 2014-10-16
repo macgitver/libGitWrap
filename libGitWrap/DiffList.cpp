@@ -96,7 +96,7 @@ namespace Git
             PatchConsumer* pc = (PatchConsumer*) cb_data;
             QString header;
 
-            if (hunk->header) {
+            if (hunk->header_len) {
                 header = QString::fromUtf8(hunk->header, int(hunk->header_len));
             }
 
