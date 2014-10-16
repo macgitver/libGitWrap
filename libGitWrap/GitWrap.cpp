@@ -83,18 +83,6 @@ namespace Git
             return StringHelper( buf.ptr, buf.size );
         }
 
-        Buffer::Buffer(const Buffer& other)
-        {
-            *this = other;
-        }
-
-        Buffer& Buffer::operator =(const Buffer& other)
-        {
-            memcpy( buf.ptr, other.buf.ptr, other.buf.size );
-            buf.asize = other.buf.asize;
-            return *this;
-        }
-
 
         //-- String ------------------------------------------------------------------------------>8
 
