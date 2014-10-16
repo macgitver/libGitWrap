@@ -273,10 +273,10 @@ namespace Git
     ensureThisIsNotConst()
 
 #define GW_CD(CLASS) \
-    const Private* d = static_cast<const Private*>(mData.constData())
+    const CLASS::Private* d = static_cast<const CLASS::Private*>(mData.constData())
 
 #define GW_CD_EX(CLASS) \
-    const PrivatePtr d(static_cast<Private*>(mData.data()))
+    const CLASS::PrivatePtr d(static_cast<CLASS::Private*>(mData.data()))
 
 #define GW_CD_EX_CHECKED(CLASS, returns, result) \
     GW_CD_EX(CLASS); \
