@@ -157,7 +157,7 @@ namespace Git
 
         git_checkout_options opts = GIT_CHECKOUT_OPTIONS_INIT;
         opts.checkout_strategy = force ? GIT_CHECKOUT_FORCE : GIT_CHECKOUT_SAFE;
-        Internal::StrArray(opts.paths, paths);
+        Internal::StrArrayRef(opts.paths, paths);
 
         result = git_checkout_tree(d->repo()->mRepo, d->mObj, &opts);
     }

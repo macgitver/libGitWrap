@@ -141,15 +141,15 @@ namespace Git
             QStringList internalCopy;
         };
 
-        class StrArray
+        class StrArrayRef
         {
         public:
-            StrArray(git_strarray& _a, const QStringList& sl);
-            ~StrArray();
+            StrArrayRef(git_strarray& _a, const QStringList& sl);
+            ~StrArrayRef();
 
         private:
             /* Cannot privatize Copy+Default ctor because of the member-by-reference */
-            StrArray& operator=(const StrArray&);
+            StrArrayRef& operator=(const StrArrayRef&);
 
         private:
             git_strarray& a;

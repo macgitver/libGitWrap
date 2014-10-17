@@ -427,7 +427,7 @@ namespace Git
         GW_D_CHECKED_VOID(Index, result)
         git_checkout_options options = GIT_CHECKOUT_OPTIONS_INIT;
         options.checkout_strategy = GIT_CHECKOUT_FORCE;
-        Internal::StrArray(options.paths, paths);
+        Internal::StrArrayRef(options.paths, paths);
 
         result = git_checkout_index(d->repo()->mRepo, d->index, &options);
     }

@@ -182,15 +182,15 @@ namespace Git
             return &a;
         }
 
-        //-- StrArray --------------------------------------------------------------------------- >8
+        //-- StrArrayRef ------------------------------------------------------------------------ >8
 
-        StrArray& StrArray::operator=(const StrArray&)
+        StrArrayRef& StrArrayRef::operator=(const StrArrayRef&)
         {
             Q_ASSERT(false);
             return *this;
         }
 
-        StrArray::StrArray(git_strarray& _a, const QStringList& sl)
+        StrArrayRef::StrArrayRef(git_strarray& _a, const QStringList& sl)
             : a(_a)
             , internalCopy(sl)
         {
@@ -203,7 +203,7 @@ namespace Git
             }
         }
 
-        StrArray::~StrArray()
+        StrArrayRef::~StrArrayRef()
         {
             delete[] a.strings;
         }
