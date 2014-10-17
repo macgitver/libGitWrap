@@ -403,7 +403,7 @@ namespace Git
         if ( !result )
             return;
 
-        result = git_reset_default( d->repo()->mRepo, o, Internal::StrArrayWrapper( paths ) );
+        result = git_reset_default( d->repo()->mRepo, o, Internal::StrArray( paths ) );
 
         if (result) {
             d->clearKnownConflicts();   // conflicts need to be reloaded as conflicts related to

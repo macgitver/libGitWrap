@@ -120,21 +120,21 @@ namespace Git
         /**
          * @internal
          * @ingroup     GitWrap
-         * @brief       The StrArrayWrapper class wraps a QStringList as a pointer to git_strarray.
+         * @brief       Wraps a QStringList as a pointer to git_strarray.
          */
-        class StrArrayWrapper
+        class StrArray
         {
         public:
-            StrArrayWrapper(const QStringList& sl);
-            ~StrArrayWrapper();
+            StrArray(const QStringList& sl);
+            ~StrArray();
 
             operator git_strarray*();
             operator const git_strarray*() const;
 
         private:
-            StrArrayWrapper();
-            StrArrayWrapper(const StrArrayWrapper&);
-            StrArrayWrapper& operator=(const StrArrayWrapper&);
+            StrArray();
+            StrArray(const StrArray&);
+            StrArray& operator=(const StrArray&);
 
         private:
             git_strarray a;
