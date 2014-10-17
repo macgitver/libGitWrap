@@ -28,6 +28,7 @@
 #include "libGitWrap/Result.hpp"
 #include "libGitWrap/ObjectId.hpp"
 
+
 namespace Git
 {
 
@@ -291,6 +292,27 @@ namespace Git
     }
 
 }
+
+
+// -- internal macro definitions -->8
+
+// string macro definitions -->8
+/**
+  * @internal
+  * @ingroup GitWrap
+  * @def Encode a QString with the UTF-8 codec used by libgit2.
+  */
+#define GW_StringFromQt(x) (x).toUtf8().constData()
+
+/**
+  * @internal
+  * @ingroup GitWrap
+  * @def Macro to create a QString from an UTF-8 encoded libgit2 string.
+  */
+#define GW_StringToQt(x) QString::fromUtf8(x)
+
+
+// -- pimpl helper macro definitions ->8
 
 #define GW__CHECK(returns, result) \
     if (!Private::isValid(result, d)) { return returns; }
