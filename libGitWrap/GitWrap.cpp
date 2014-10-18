@@ -84,65 +84,12 @@ namespace Git
         }
 
 
-        //-- String ------------------------------------------------------------------------------>8
-
-        StringHelper::StringHelper(QString str)
-            : mStr(str)
-        {
-        }
-
-        StringHelper::StringHelper(const char* str)
-        {
-            mStr = convert( str );
-        }
-
-        StringHelper::StringHelper(const char* str, int size)
-        {
-            mStr = convert( str, size );
-        }
-
-        QString StringHelper::convert(const char* str, int size )
-        {
-            return QString::fromUtf8( str, size );
-        }
-
-        QString StringHelper::convert(const char* str)
-        {
-            return QString::fromUtf8( str );
-        }
-
-        const char* StringHelper::convert() const
-        {
-            if ( mConvertedStr.isEmpty() && !mStr.isEmpty())
-            {
-                mConvertedStr = toArray();
-            }
-
-            return mConvertedStr.constData();
-        }
-
-        StringHelper::operator const char*() const
-        {
-            return convert();
-        }
-
-        StringHelper::operator char*() const
-        {
-            return const_cast<char*>( convert() );
-        }
-
-        StringHelper::operator QString() const
-        {
-            return mStr;
-        }
-
         //-- StrArray --------------------------------------------------------------------------- >8
 
         StrArray::StrArray()
         {
             Q_ASSERT(false);
         }
-
 
         StrArray::StrArray(const QStringList& sl)
         {
