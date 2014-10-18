@@ -120,11 +120,8 @@ namespace Git
             memcpy(&mOpts, &o, sizeof(o));
 
             if (mPaths.count()) {
-                mOpts.paths.count = mPaths.count();
-                mOpts.paths.strings = new char *[mOpts.paths.count];
-                for (int i=0; i < mPaths.count(); ++i) {
-                    mOpts.paths.strings[i] = Internal::StringHelper(mPaths[i]);
-                }
+                // TODO: Build a suitable wrapper around git_checkout_options, that has a Internal::StrArray member.
+                git_strarray_copy( &mOpts.paths, StrArray( mPaths ) );
             }
 
             if (!mPath.isEmpty()) {
@@ -173,7 +170,7 @@ namespace Git
 
         void CheckoutBaseOperationPrivate::unprepare()
         {
-            delete[] mOpts.paths.strings;
+            git_strarray_free( &mOpts.paths );
         }
 
         // -- CheckoutIndexOperationPrivate ----------------------------------------------------- >8
