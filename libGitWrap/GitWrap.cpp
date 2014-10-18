@@ -80,7 +80,7 @@ namespace Git
          */
         QString Buffer::toString() const
         {
-            return StringHelper( buf.ptr, buf.size );
+            return GW_StringToQt( buf.ptr, buf.size );
         }
 
 
