@@ -160,7 +160,7 @@ namespace Git
         }
 
         git_index* index = NULL;
-        result = git_index_open( &index, Internal::StringHelper(path) );
+        result = git_index_open( &index, GW_StringFromQt(path) );
 
         if (!result) {
             return Index();
@@ -251,7 +251,7 @@ namespace Git
     IndexEntry Index::getEntry(Result &result, const QString &path, Stages stage) const
     {
         GW_CD_CHECKED(Index, IndexEntry(), result)
-        const git_index_entry *entry = git_index_get_bypath(d->index, Internal::StringHelper(path),
+        const git_index_entry *entry = git_index_get_bypath(d->index, GW_StringFromQt(path),
                                                             int(stage));
         if(entry == NULL)
         {
@@ -347,7 +347,7 @@ namespace Git
     void Index::addFile(Result &result, const QString &path)
     {
         GW_CD_CHECKED_VOID(Index, result)
-        result = git_index_add_bypath( d->index, Internal::StringHelper(path) );
+        result = git_index_add_bypath( d->index, GW_StringFromQt(path) );
     }
 
     /**
@@ -362,7 +362,7 @@ namespace Git
     void Index::removeFile(Result &result, const QString &path)
     {
         GW_D_CHECKED_VOID(Index, result)
-        result = git_index_remove_bypath( d->index, Internal::StringHelper(path) );
+        result = git_index_remove_bypath( d->index, GW_StringFromQt(path) );
     }
 
     /**

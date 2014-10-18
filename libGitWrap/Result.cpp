@@ -55,7 +55,7 @@ namespace Git
             if( err )
             {
                 mClass = err->klass;
-                mText = Internal::StringHelper::convert( err->message );
+                mText = GW_StringToQt( err->message );
             }
             else
             {
@@ -81,7 +81,7 @@ namespace Git
     {
         mClass = -1;
         mCode = code;
-        mText = Internal::StringHelper::convert(szErrorText);
+        mText = GW_StringToQt(szErrorText);
     }
 
     /**

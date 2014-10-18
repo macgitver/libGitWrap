@@ -87,7 +87,7 @@ namespace Git
             return QString();
         }
 
-        return Internal::StringHelper(szName);
+        return GW_StringToQt(szName);
     }
 
     ObjectType TreeEntry::type() const

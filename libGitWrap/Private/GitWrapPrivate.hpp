@@ -300,16 +300,23 @@ namespace Git
 /**
   * @internal
   * @ingroup GitWrap
+  * @def Encode a QString into a QByteArray with the UTF-8 codec used by libgit2.
+  */
+#define GW_EncodeQString(s) (s).toUtf8()
+
+/**
+  * @internal
+  * @ingroup GitWrap
   * @def Encode a QString with the UTF-8 codec used by libgit2.
   */
-#define GW_StringFromQt(x) (x).toUtf8().constData()
+#define GW_StringFromQt(s) GW_EncodeQString(s).constData()
 
 /**
   * @internal
   * @ingroup GitWrap
   * @def Macro to create a QString from an UTF-8 encoded libgit2 string.
   */
-#define GW_StringToQt(x) QString::fromUtf8(x)
+#define GW_StringToQt(s, ...) QString::fromUtf8(s, ##__VA_ARGS__)
 
 
 // -- pimpl helper macro definitions ->8

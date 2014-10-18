@@ -182,8 +182,8 @@ namespace Git
     static int read_config_cb( const git_config_entry* entry, void* data )
     {
         ConfigValues* cv = (ConfigValues*) data;
-        cv->insert( Internal::StringHelper( entry->name ),
-                    Internal::StringHelper( entry->value ) );
+        cv->insert( GW_StringToQt( entry->name ),
+                    GW_StringToQt( entry->value ) );
         return 0;
     }
 

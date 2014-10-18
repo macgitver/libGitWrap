@@ -413,7 +413,7 @@ namespace Git
                                                           const QString& name, git_reference* lgo)
         {
             if (!lgo) {
-                if (git_reference_lookup(&lgo, repo->mRepo, Internal::StringHelper(name)) < 0) {
+                if (git_reference_lookup(&lgo, repo->mRepo, GW_StringFromQt(name)) < 0) {
                     return NULL;
                 }
             }
