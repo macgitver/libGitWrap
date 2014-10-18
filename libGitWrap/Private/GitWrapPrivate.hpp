@@ -139,7 +139,7 @@ namespace Git
 
         private:
             git_strarray a;
-            QStringList internalCopy;
+            QVector<QByteArray>   mEncoded;
         };
 
         class StrArrayRef
@@ -154,7 +154,7 @@ namespace Git
 
         private:
             git_strarray& a;
-            QStringList internalCopy;
+            QVector<QByteArray> mEncoded;
         };
 
         /**

@@ -143,27 +143,16 @@ namespace Git
             Q_ASSERT(false);
         }
 
-        StrArray::StrArray( const StrArray & )
-        {
-            Q_ASSERT(false);
-        }
-
-        StrArray& StrArray::operator=(const StrArray&)
-        {
-            Q_ASSERT(false);
-            return *this;
-        }
 
         StrArray::StrArray(const QStringList& sl)
         {
-            internalCopy = sl;
-
-            a.count = internalCopy.count();
+            a.count = sl.count();
             a.strings = new char *[a.count];
 
-            for(int i=0; i < internalCopy.count(); ++i )
+            for( int i = 0; i < sl.count(); i++ )
             {
-                a.strings[i] = internalCopy[i].toUtf8().data();
+                mEncoded << GW_EncodeQString( sl[i] );
+                a.strings[i] = mEncoded[i].data();
             }
         }
 
@@ -192,14 +181,14 @@ namespace Git
 
         StrArrayRef::StrArrayRef(git_strarray& _a, const QStringList& sl)
             : a(_a)
-            , internalCopy(sl)
         {
-            a.count = internalCopy.count();
+            a.count = sl.count();
             a.strings = new char *[a.count];
 
-            for(int i=0; i < internalCopy.count(); ++i )
+            for(int i=0; i < sl.count(); ++i )
             {
-                a.strings[i] = internalCopy[i].toUtf8().data();
+                mEncoded << GW_EncodeQString( sl[i] );
+                a.strings[i] = mEncoded[i].data();
             }
         }
 
