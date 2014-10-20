@@ -190,7 +190,7 @@ namespace Git
     bool Remote::download( Result& result, const QStringList &refspecs )
     {
         GW_D_CHECKED(Remote, false, result);
-        result = git_remote_download(d->mRemote, Internal::StrArrayWrapper(refspecs));
+        result = git_remote_download(d->mRemote, Internal::StrArray(refspecs));
         return result;
     }
 
