@@ -38,7 +38,7 @@ namespace Git
                     reinterpret_cast<CheckoutBaseOperationPrivate*>(payload);
             Q_ASSERT(d);
 
-            QString pathName = QString::fromUtf8(path);
+            QString pathName = GW_StringToQt(path);
 
             d->emitProgress(pathName, completed_steps, total_steps);
         }
@@ -82,7 +82,7 @@ namespace Git
                                                     const git_diff_file *workdir)
         {
             GW_OP_OWNER(CheckoutBaseOperation);
-            QString pathName = QString::fromUtf8(path);
+            QString pathName = GW_StringToQt(path);
 
             FileInfo fiBaseLine = mkFileInfo(baseline);
             FileInfo fiTarget   = mkFileInfo(target);
@@ -120,15 +120,12 @@ namespace Git
             memcpy(&mOpts, &o, sizeof(o));
 
             if (mPaths.count()) {
-                mOpts.paths.count = mPaths.count();
-                mOpts.paths.strings = new char *[mOpts.paths.count];
-                for (int i=0; i < mPaths.count(); ++i) {
-                    mOpts.paths.strings[i] = mPaths[i].toUtf8().data();
-                }
+                // TODO: Build a suitable wrapper around git_checkout_options, that has a Internal::StrArray member.
+                git_strarray_copy( &mOpts.paths, StrArray( mPaths ) );
             }
 
             if (!mPath.isEmpty()) {
-                mOpts.target_directory = mPath.toUtf8().constData();
+                mOpts.target_directory = GW_StringFromQt(mPath);
             }
 
             switch (mMode) {
@@ -173,7 +170,7 @@ namespace Git
 
         void CheckoutBaseOperationPrivate::unprepare()
         {
-            delete[] mOpts.paths.strings;
+            git_strarray_free( &mOpts.paths );
         }
 
         // -- CheckoutIndexOperationPrivate ----------------------------------------------------- >8

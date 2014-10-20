@@ -74,8 +74,8 @@ namespace Git
 
             ChangeListEntry entry =
             {
-                QString::fromUtf8( delta->old_file.path )
-                , QString::fromUtf8( delta->new_file.path )
+                GW_StringToQt( delta->old_file.path )
+                , GW_StringToQt( delta->new_file.path )
                 , PatchConsumer::Type( delta->status )
                 , delta->similarity
                 , ( delta->flags & GIT_DIFF_FLAG_BINARY ) != 0
@@ -97,7 +97,7 @@ namespace Git
             QString header;
 
             if (hunk->header_len) {
-                header = QString::fromUtf8(hunk->header, int(hunk->header_len));
+                header = GW_StringToQt(hunk->header, int(hunk->header_len));
             }
 
             if (pc->startHunkChange(hunk->new_start, hunk->new_lines,
@@ -125,7 +125,7 @@ namespace Git
                     --len;
                 }
 
-                ct = QString::fromUtf8(line->content, len);
+                ct = GW_StringToQt(line->content);
             }
 
             switch(line->origin) {
@@ -159,8 +159,8 @@ namespace Git
 
             ChangeListEntry change =
             {
-                QString::fromUtf8( delta->old_file.path )
-                , QString::fromUtf8( delta->new_file.path )
+                GW_StringToQt( delta->old_file.path )
+                , GW_StringToQt( delta->new_file.path )
                 , ChangeListConsumer::Type( delta->status )
                 , delta->similarity
                 , ( delta->flags & GIT_DIFF_FLAG_BINARY ) != 0

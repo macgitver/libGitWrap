@@ -54,7 +54,7 @@ namespace Git
             , reference(ref)
         {
             Q_ASSERT(reference);
-            fqrn = QString::fromUtf8(git_reference_name(reference));
+            fqrn = GW_StringToQt(git_reference_name(reference));
         }
 
         ReferencePrivate::ReferencePrivate(const RepositoryPrivate::Ptr& repo, const QString& name,
@@ -183,7 +183,7 @@ namespace Git
         Repository::Private* repop = Private::dataOf<Repository>(repo);
 
         git_reference* ref = NULL;
-        QByteArray utf8Name = name.toUtf8();
+        QByteArray utf8Name = GW_EncodeQString(name);
 
         result = git_reference_create(
                     &ref,
@@ -280,7 +280,7 @@ namespace Git
             return QString();
         }
 
-        return QString::fromUtf8(git_reference_shorthand(d->reference));
+        return GW_StringToQt(git_reference_shorthand(d->reference));
     }
 
     ReferenceTypes Reference::type() const
@@ -323,7 +323,7 @@ namespace Git
             return QString();
         }
 
-        return QString::fromUtf8(git_reference_symbolic_target(d->reference));
+        return GW_StringToQt(git_reference_symbolic_target(d->reference));
     }
 
     Reference Reference::resolved( Result& result ) const

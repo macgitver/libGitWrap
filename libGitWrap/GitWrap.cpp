@@ -40,7 +40,7 @@ namespace Git
 
             for( unsigned int i = 0; i < arry->count; i++ )
             {
-                sl << QString::fromUtf8( arry->strings[ i ] );
+                sl << GW_StringToQt( arry->strings[ i ] );
             }
 
             git_strarray_free( arry );
@@ -80,91 +80,66 @@ namespace Git
          */
         QString Buffer::toString() const
         {
-            return mCodec ? mCodec->toUnicode( buf.ptr, buf.size )
-                          : QString::fromUtf8( buf.ptr, buf.size );
+            return GW_StringToQt( buf.ptr, buf.size );
         }
 
-        Buffer::Buffer(const Buffer& other)
-        {
-            *this = other;
-        }
-
-        Buffer& Buffer::operator =(const Buffer& other)
-        {
-            memcpy( buf.ptr, other.buf.ptr, other.buf.size );
-            buf.asize = other.buf.asize;
-            return *this;
-        }
-
-
-        //-- StrArrayWrapper -------------------------------------------------------------------- >8
-
-        StrArrayWrapper::StrArrayWrapper()
-        {
-            Q_ASSERT(false);
-        }
-
-        StrArrayWrapper::StrArrayWrapper( const StrArrayWrapper & )
-        {
-            Q_ASSERT(false);
-        }
-
-        StrArrayWrapper& StrArrayWrapper::operator=(const StrArrayWrapper&)
-        {
-            Q_ASSERT(false);
-            return *this;
-        }
-
-        StrArrayWrapper::StrArrayWrapper(const QStringList& sl)
-        {
-            internalCopy = sl;
-
-            a.count = internalCopy.count();
-            a.strings = new char *[a.count];
-
-            for(int i=0; i < internalCopy.count(); ++i )
-            {
-                a.strings[i] = internalCopy[i].toUtf8().data();
-            }
-        }
-
-        StrArrayWrapper::~StrArrayWrapper()
-        {
-            delete[] a.strings;
-        }
-
-        StrArrayWrapper::operator git_strarray*()
-        {
-            return &a;
-        }
-
-        StrArrayWrapper::operator const git_strarray *() const
-        {
-            return &a;
-        }
 
         //-- StrArray --------------------------------------------------------------------------- >8
 
-        StrArray& StrArray::operator=(const StrArray&)
+        StrArray::StrArray()
         {
             Q_ASSERT(false);
-            return *this;
         }
 
-        StrArray::StrArray(git_strarray& _a, const QStringList& sl)
-            : a(_a)
-            , internalCopy(sl)
+        StrArray::StrArray(const QStringList& sl)
         {
-            a.count = internalCopy.count();
+            a.count = sl.count();
             a.strings = new char *[a.count];
 
-            for(int i=0; i < internalCopy.count(); ++i )
+            for( int i = 0; i < sl.count(); i++ )
             {
-                a.strings[i] = internalCopy[i].toUtf8().data();
+                mEncoded << GW_EncodeQString( sl[i] );
+                a.strings[i] = mEncoded[i].data();
             }
         }
 
         StrArray::~StrArray()
+        {
+            delete[] a.strings;
+        }
+
+        StrArray::operator git_strarray*()
+        {
+            return &a;
+        }
+
+        StrArray::operator const git_strarray *() const
+        {
+            return &a;
+        }
+
+        //-- StrArrayRef ------------------------------------------------------------------------ >8
+
+        StrArrayRef& StrArrayRef::operator=(const StrArrayRef&)
+        {
+            Q_ASSERT(false);
+            return *this;
+        }
+
+        StrArrayRef::StrArrayRef(git_strarray& _a, const QStringList& sl)
+            : a(_a)
+        {
+            a.count = sl.count();
+            a.strings = new char *[a.count];
+
+            for(int i=0; i < sl.count(); ++i )
+            {
+                mEncoded << GW_EncodeQString( sl[i] );
+                a.strings[i] = mEncoded[i].data();
+            }
+        }
+
+        StrArrayRef::~StrArrayRef()
         {
             delete[] a.strings;
         }
@@ -177,7 +152,7 @@ namespace Git
 
             QString path;
             if (df->path) {
-                path = QString::fromUtf8(df->path);
+                path = GW_StringToQt(df->path);
             }
             return FileInfo(path, ObjectId::fromRaw(df->id.id), df->size, FileModes(df->mode),
                             false, (df->flags & GIT_DIFF_FLAG_VALID_ID) != 0);

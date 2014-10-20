@@ -31,8 +31,8 @@ namespace Git
             dt.setUtcOffset( gitsig->when.offset * 60 );
 
             return Signature(
-                QString::fromUtf8( gitsig->name ),
-                QString::fromUtf8( gitsig->email ),
+                GW_StringToQt( gitsig->name ),
+                GW_StringToQt( gitsig->email ),
                 dt );
         }
 

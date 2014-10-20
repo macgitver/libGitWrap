@@ -31,8 +31,8 @@ namespace Git
                 return RefSpec();
             }
 
-            QString src = QString::fromUtf8( git_refspec_src( refspec ) );
-            QString dst = QString::fromUtf8( git_refspec_dst( refspec ) );
+            QString src = GW_StringToQt( git_refspec_src( refspec ) );
+            QString dst = GW_StringToQt( git_refspec_dst( refspec ) );
             return RefSpec( src, dst );
         }
 

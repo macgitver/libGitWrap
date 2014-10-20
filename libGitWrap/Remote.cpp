@@ -92,7 +92,7 @@ namespace Git
             return QString();
         }
 
-        return QString::fromUtf8( git_remote_name( d->mRemote ) );
+        return GW_StringToQt( git_remote_name( d->mRemote ) );
     }
 
     QString Remote::url() const
@@ -104,7 +104,7 @@ namespace Git
             return QString();
         }
 
-        return QString::fromUtf8( git_remote_url( d->mRemote ) );
+        return GW_StringToQt( git_remote_url( d->mRemote ) );
     }
 
     bool Remote::addFetchSpec(Result& result, const QString& spec)
@@ -163,14 +163,13 @@ namespace Git
 
     bool Remote::isValidUrl( const QString& url )
     {
-        return git_remote_valid_url( url.toUtf8().constData() );
+        return isSupportedUrl( url );
     }
 
     bool Remote::isSupportedUrl( const QString& url )
     {
         return git_remote_supported_url( url.toUtf8().constData() );
     }
-
 
     bool Remote::connect(Result& result, bool forFetch)
     {

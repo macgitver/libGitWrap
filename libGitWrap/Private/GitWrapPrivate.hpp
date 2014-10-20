@@ -28,6 +28,7 @@
 #include "libGitWrap/Result.hpp"
 #include "libGitWrap/ObjectId.hpp"
 
+
 namespace Git
 {
 
@@ -79,40 +80,40 @@ namespace Git
         /**
          * @internal
          * @ingroup     GitWrap
-         * @brief       The StrArrayWrapper class wraps a QStringList as a pointer to git_strarray.
+         * @brief       Wraps a QStringList as a pointer to git_strarray.
          */
-        class StrArrayWrapper
+        class StrArray
         {
         public:
-            StrArrayWrapper(const QStringList& sl);
-            ~StrArrayWrapper();
+            StrArray(const QStringList& sl);
+            ~StrArray();
 
             operator git_strarray*();
             operator const git_strarray*() const;
 
         private:
-            StrArrayWrapper();
-            StrArrayWrapper(const StrArrayWrapper&);
-            StrArrayWrapper& operator=(const StrArrayWrapper&);
-
-        private:
-            git_strarray a;
-            QStringList internalCopy;
-        };
-
-        class StrArray
-        {
-        public:
-            StrArray(git_strarray& _a, const QStringList& sl);
-            ~StrArray();
-
-        private:
-            /* Cannot privatize Copy+Default ctor because of the member-by-reference */
+            StrArray();
+            StrArray(const StrArray&);
             StrArray& operator=(const StrArray&);
 
         private:
+            git_strarray a;
+            QVector<QByteArray>   mEncoded;
+        };
+
+        class StrArrayRef
+        {
+        public:
+            StrArrayRef(git_strarray& _a, const QStringList& sl);
+            ~StrArrayRef();
+
+        private:
+            /* Cannot privatize Copy+Default ctor because of the member-by-reference */
+            StrArrayRef& operator=(const StrArrayRef&);
+
+        private:
             git_strarray& a;
-            QStringList internalCopy;
+            QVector<QByteArray> mEncoded;
         };
 
         /**
@@ -250,6 +251,34 @@ namespace Git
     }
 
 }
+
+
+// -- internal macro definitions -->8
+
+// string macro definitions -->8
+/**
+  * @internal
+  * @ingroup GitWrap
+  * @def Encode a QString into a QByteArray with the UTF-8 codec used by libgit2.
+  */
+#define GW_EncodeQString(s) (s).toUtf8()
+
+/**
+  * @internal
+  * @ingroup GitWrap
+  * @def Encode a QString with the UTF-8 codec used by libgit2.
+  */
+#define GW_StringFromQt(s) GW_EncodeQString(s).constData()
+
+/**
+  * @internal
+  * @ingroup GitWrap
+  * @def Macro to create a QString from an UTF-8 encoded libgit2 string.
+  */
+#define GW_StringToQt(s, ...) QString::fromUtf8(s, ##__VA_ARGS__)
+
+
+// -- pimpl helper macro definitions ->8
 
 #define GW__CHECK(returns, result) \
     if (!Private::isValid(result, d)) { return returns; }

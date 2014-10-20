@@ -160,7 +160,7 @@ namespace Git
         }
 
         git_index* index = NULL;
-        result = git_index_open( &index, path.toUtf8().constData() );
+        result = git_index_open( &index, GW_StringFromQt(path) );
 
         if (!result) {
             return Index();
@@ -251,7 +251,7 @@ namespace Git
     IndexEntry Index::getEntry(Result &result, const QString &path, Stages stage) const
     {
         GW_CD_CHECKED(Index, IndexEntry(), result)
-        const git_index_entry *entry = git_index_get_bypath(d->index, path.toUtf8().constData(),
+        const git_index_entry *entry = git_index_get_bypath(d->index, GW_StringFromQt(path),
                                                             int(stage));
         if(entry == NULL)
         {
@@ -347,7 +347,7 @@ namespace Git
     void Index::addFile(Result &result, const QString &path)
     {
         GW_CD_CHECKED_VOID(Index, result)
-        result = git_index_add_bypath( d->index, path.toUtf8().constData() );
+        result = git_index_add_bypath( d->index, GW_StringFromQt(path) );
     }
 
     /**
@@ -362,7 +362,7 @@ namespace Git
     void Index::removeFile(Result &result, const QString &path)
     {
         GW_D_CHECKED_VOID(Index, result)
-        result = git_index_remove_bypath( d->index, path.toUtf8().constData() );
+        result = git_index_remove_bypath( d->index, GW_StringFromQt(path) );
     }
 
     /**
@@ -403,7 +403,7 @@ namespace Git
         if ( !result )
             return;
 
-        result = git_reset_default( d->repo()->mRepo, o, Internal::StrArrayWrapper( paths ) );
+        result = git_reset_default( d->repo()->mRepo, o, Internal::StrArray( paths ) );
 
         if (result) {
             d->clearKnownConflicts();   // conflicts need to be reloaded as conflicts related to
@@ -427,7 +427,7 @@ namespace Git
         GW_D_CHECKED_VOID(Index, result)
         git_checkout_options options = GIT_CHECKOUT_OPTIONS_INIT;
         options.checkout_strategy = GIT_CHECKOUT_FORCE;
-        Internal::StrArray(options.paths, paths);
+        Internal::StrArrayRef(options.paths, paths);
 
         result = git_checkout_index(d->repo()->mRepo, d->index, &options);
     }

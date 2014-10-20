@@ -136,7 +136,7 @@ namespace Git
     {
         GW_D(CloneOperation);
         Q_ASSERT(!isRunning());
-        d->mRemoteName = remoteName.toUtf8();
+        d->mRemoteName = GW_EncodeQString(remoteName);
     }
 
     void CloneOperation::setFetchSpec(const QByteArray& fetchSpec)
