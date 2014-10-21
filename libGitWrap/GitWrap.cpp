@@ -50,8 +50,7 @@ namespace Git
 
         //-- Buffer ----------------------------------------------------------------------------- >8
 
-        Buffer::Buffer(QTextCodec *codec)
-            : mCodec(codec)
+        Buffer::Buffer()
         {
             memset(&buf, 0, sizeof(buf));
         }
@@ -75,8 +74,6 @@ namespace Git
          * @brief        Converts the contents of the buffer into a QString.
          *
          * @return       the buffer in readable text format
-         *
-         * @note         Defaults to QString::fromUtf8() when no text codec is set.
          */
         QString Buffer::toString() const
         {

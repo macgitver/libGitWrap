@@ -57,12 +57,8 @@ namespace Git
          * @brief       The Buffer class wraps a git_buf.
          */
         class Buffer {
-        private:
-            git_buf         buf;
-            QTextCodec*     mCodec;
-
         public:
-            Buffer( QTextCodec* codec = 0 );
+            Buffer();
             ~Buffer();
 
         public:
@@ -75,6 +71,9 @@ namespace Git
         private:
             Buffer(const Buffer& other);
             Buffer& operator =(const Buffer& other);
+
+        private:
+            git_buf         buf;
         };
 
         /**
