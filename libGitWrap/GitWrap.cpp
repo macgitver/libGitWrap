@@ -60,12 +60,17 @@ namespace Git
             git_buf_free( &buf );
         }
 
+        Buffer::operator QString() const
+        {
+            return toString();
+        }
+
         Buffer::operator git_buf*()
         {
             return &buf;
         }
 
-        Buffer::operator const char*()
+        Buffer::operator const char*() const
         {
             return buf.ptr;
         }

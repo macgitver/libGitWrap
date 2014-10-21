@@ -63,7 +63,8 @@ namespace Git
 
         public:
             operator git_buf*();
-            operator const char*();
+            operator const char*() const;
+            operator QString() const;
 
         public:
             QString toString() const;
