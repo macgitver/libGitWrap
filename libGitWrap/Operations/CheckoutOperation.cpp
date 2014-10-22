@@ -302,7 +302,7 @@ namespace Git
         d->mMode = mode;
     }
 
-    void CheckoutBaseOperation::setOptions(CheckoutOptions opts)
+    void CheckoutBaseOperation::setFlags(CheckoutFlags opts)
     {
         GW_D(CheckoutBaseOperation);
         Q_ASSERT(!isRunning());
@@ -342,7 +342,7 @@ namespace Git
         return d->mMode;
     }
 
-    CheckoutOptions CheckoutBaseOperation::options() const
+    CheckoutFlags CheckoutBaseOperation::flags() const
     {
         GW_CD(CheckoutBaseOperation);
         return d->mOptions;

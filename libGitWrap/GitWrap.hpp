@@ -256,7 +256,7 @@ namespace Git
         CheckoutForce
     };
 
-    enum CheckoutOption
+    enum CheckoutFlag
     {
         CheckoutUpdateHEAD              = (1UL <<  0),
         CheckoutAllowDetachHEAD         = (1UL <<  1),
@@ -276,7 +276,7 @@ namespace Git
         CheckoutNone                    = 0
     };
 
-    typedef QFlags<CheckoutOption> CheckoutOptions;
+    typedef QFlags<CheckoutFlag> CheckoutFlags;
 
     typedef QHash<QString, StatusFlags> StatusHash;
 

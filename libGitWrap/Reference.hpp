@@ -92,7 +92,7 @@ namespace Git
 
         CheckoutBaseOperation* checkoutOperation(Result& result) const;
         void checkout( Result& result,
-                       CheckoutOptions opts = CheckoutNone,
+                       CheckoutFlags flags = CheckoutNone,
                        CheckoutMode mode = CheckoutSafeCreate,
                        const QStringList &paths = QStringList() ) const;
 

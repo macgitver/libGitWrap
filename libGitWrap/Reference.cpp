@@ -406,7 +406,7 @@ namespace Git
     }
 
     void Reference::checkout(Result&            result,
-                             CheckoutOptions    opts,
+                             CheckoutFlags      flags,
                              CheckoutMode       mode,
                              const QStringList& paths) const
     {
@@ -418,7 +418,7 @@ namespace Git
             return;
         }
 
-        bool doUpdateHEAD    = opts.testFlag(CheckoutUpdateHEAD);
+        bool doUpdateHEAD    = flags.testFlag(CheckoutUpdateHEAD);
         /*
         bool doCreateLocal   = opts.testFlag(CheckoutCreateLocalBranch);
         bool doAllowDetached = opts.testFlag(CheckoutAllowDetachHEAD);
@@ -434,7 +434,7 @@ namespace Git
         }
         */
 
-        op->setOptions(opts);
+        op->setFlags(flags);
         op->setMode(mode);
         op->setCheckoutPaths(paths);
         op->setBackgroundMode(false);

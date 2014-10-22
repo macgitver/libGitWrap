@@ -52,7 +52,7 @@ namespace Git
 
         public:
             Repository              mRepository;
-            CheckoutOptions         mOptions;
+            CheckoutFlags           mOptions;
             CheckoutMode            mMode;
             QStringList             mPaths;
             QString                 mPath;
