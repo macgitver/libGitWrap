@@ -54,10 +54,9 @@ namespace Git
             Repository              mRepository;
             CheckoutFlags           mOptions;
             CheckoutMode            mMode;
-            QStringList             mPaths;
             QString                 mPath;
             Tree                    mBaseline;
-            git_checkout_options    mOpts;
+            CheckoutOptions         mOpts;
             bool                    mCancel;
         };
 

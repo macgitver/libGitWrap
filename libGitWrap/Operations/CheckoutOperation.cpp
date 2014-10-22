@@ -116,24 +116,16 @@ namespace Git
 
         void CheckoutBaseOperationPrivate::prepare()
         {
-            git_checkout_options o = GIT_CHECKOUT_OPTIONS_INIT;
-            memcpy(&mOpts, &o, sizeof(o));
-
-            if (mPaths.count()) {
-                // TODO: Build a suitable wrapper around git_checkout_options, that has a Internal::StrArray member.
-                git_strarray_copy( &mOpts.paths, StrArray( mPaths ) );
-            }
-
             if (!mPath.isEmpty()) {
-                mOpts.target_directory = GW_StringFromQt(mPath);
+                (*mOpts).target_directory = GW_StringFromQt(mPath);
             }
 
             switch (mMode) {
             default:
             case CheckoutDryRun:     /* this is the default */                            break;
-            case CheckoutSafe:       mOpts.checkout_strategy |= GIT_CHECKOUT_SAFE;        break;
-            case CheckoutSafeCreate: mOpts.checkout_strategy |= GIT_CHECKOUT_SAFE_CREATE; break;
-            case CheckoutForce:      mOpts.checkout_strategy |= GIT_CHECKOUT_FORCE;       break;
+            case CheckoutSafe:       (*mOpts).checkout_strategy |= GIT_CHECKOUT_SAFE;        break;
+            case CheckoutSafeCreate: (*mOpts).checkout_strategy |= GIT_CHECKOUT_SAFE_CREATE; break;
+            case CheckoutForce:      (*mOpts).checkout_strategy |= GIT_CHECKOUT_FORCE;       break;
             }
 
             static const int flags[] = {
@@ -150,27 +142,26 @@ namespace Git
 
             int i = 0;
             while (flags[i] != CheckoutNone) {
-                if (mOptions.testFlag(CheckoutOption(flags[i++]))) {
-                    mOpts.checkout_strategy |= flags[i];
+                if (mOptions.testFlag(CheckoutFlag(flags[i++]))) {
+                    (*mOpts).checkout_strategy |= flags[i];
                 }
                 i++;
             }
 
             if (mBaseline.isValid()) {
                 TreePrivate* tp = BasePrivate::dataOf<Tree>(mBaseline);
-                mOpts.baseline = tp->o();
+                (*mOpts).baseline = tp->o();
             }
 
-            mOpts.progress_payload  = this;
-            mOpts.progress_cb       = &checkoutProgress;
-            mOpts.notify_payload    = this;
-            mOpts.notify_cb         = &checkoutNotify;
-            mOpts.notify_flags      = GIT_CHECKOUT_NOTIFY_ALL;
+            (*mOpts).progress_payload  = this;
+            (*mOpts).progress_cb       = &checkoutProgress;
+            (*mOpts).notify_payload    = this;
+            (*mOpts).notify_cb         = &checkoutNotify;
+            (*mOpts).notify_flags      = GIT_CHECKOUT_NOTIFY_ALL;
         }
 
         void CheckoutBaseOperationPrivate::unprepare()
         {
-            git_strarray_free( &mOpts.paths );
         }
 
         // -- CheckoutIndexOperationPrivate ----------------------------------------------------- >8
@@ -197,7 +188,7 @@ namespace Git
                 gindex = ip->index;
             }
 
-            mResult = git_checkout_index(grepo, gindex, &mOpts);
+            mResult = git_checkout_index(grepo, gindex, mOpts);
 
             unprepare();
         }
@@ -227,10 +218,10 @@ namespace Git
             }
 
             if (gtree) {
-                mResult = git_checkout_tree(grepo, gtree, &mOpts);
+                mResult = git_checkout_tree(grepo, gtree, mOpts);
             }
             else {
-                mResult = git_checkout_head(grepo, &mOpts);
+                mResult = git_checkout_head(grepo, mOpts);
             }
 
             unprepare();
@@ -320,7 +311,7 @@ namespace Git
     {
         GW_D(CheckoutBaseOperation);
         Q_ASSERT(!isRunning());
-        d->mPaths = paths;
+        d->mOpts.setPaths( paths );
     }
 
     void CheckoutBaseOperation::setBaseline(const Tree& baseline)
@@ -357,7 +348,7 @@ namespace Git
     QStringList CheckoutBaseOperation::checkoutPaths() const
     {
         GW_CD(CheckoutBaseOperation);
-        return d->mPaths;
+        return d->mOpts.paths();
     }
 
     Tree CheckoutBaseOperation::baseline() const
