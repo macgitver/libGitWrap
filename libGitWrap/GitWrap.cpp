@@ -86,10 +86,46 @@ namespace Git
         }
 
 
-        //-- StrArray --------------------------------------------------------------------------- >8
+        //-- CheckoutOptions -------------------------------------------------------------------- >8
 
+        CheckoutOptions::CheckoutOptions()
         {
+            git_checkout_init_options( &mOptions, GIT_CHECKOUT_OPTIONS_VERSION );
+            mOptions.paths = *mPaths;
         }
+
+        CheckoutOptions::operator git_checkout_options*()
+        {
+            return &mOptions;
+        }
+
+        CheckoutOptions::operator const git_checkout_options*() const
+        {
+            return &mOptions;
+        }
+
+        CheckoutOptions::operator git_checkout_options&()
+        {
+            return mOptions;
+        }
+
+        git_checkout_options& CheckoutOptions::operator *()
+        {
+            return mOptions;
+        }
+
+        const QStringList& CheckoutOptions::paths() const
+        {
+            return mPaths;
+        }
+
+        void CheckoutOptions::setPaths( const QStringList& paths )
+        {
+            mPaths = StrArray( paths );
+        }
+
+
+        //-- StrArray --------------------------------------------------------------------------- >8
 
         StrArray::StrArray(const QStringList& sl)
             : mInternalCopy( sl )

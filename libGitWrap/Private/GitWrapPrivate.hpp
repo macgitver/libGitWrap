@@ -39,9 +39,9 @@ namespace Git
     namespace Internal
     {
 
-        class RepositoryPrivate;
         class IndexPrivate;
         class ObjectPrivate;
+        class RepositoryPrivate;
 
         // Some internal helpers
         Signature git2Signature( const git_signature* gitsig );
@@ -75,6 +75,7 @@ namespace Git
         private:
             git_buf         buf;
         };
+
 
         /**
          * @internal
@@ -115,6 +116,38 @@ namespace Git
         private:
             git_strarray&       mEncoded;
             QStringList         mInternalCopy;
+        };
+
+
+        // -- git_..._options wrappers
+
+        /**
+         * @internal
+         * @brief Wraps git_checkout_options.
+         */
+        class CheckoutOptions
+        {
+        public:
+            CheckoutOptions();
+
+        public:
+            operator git_checkout_options*();
+            operator const git_checkout_options*() const;
+            operator git_checkout_options&();
+
+            git_checkout_options& operator *();
+
+        public:
+            const QStringList& paths() const;
+            void setPaths( const QStringList& paths );
+
+        private:
+            CheckoutOptions(const CheckoutOptions& other);
+            CheckoutOptions& operator =(const CheckoutOptions& other);
+
+        private:
+            git_checkout_options        mOptions;
+            StrArray                    mPaths;
         };
 
         /**
