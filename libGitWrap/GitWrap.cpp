@@ -88,36 +88,60 @@ namespace Git
 
         //-- StrArray --------------------------------------------------------------------------- >8
 
-        StrArray::StrArray()
         {
-            Q_ASSERT(false);
         }
 
         StrArray::StrArray(const QStringList& sl)
+            : mInternalCopy( sl )
         {
-            a.count = sl.count();
-            a.strings = new char *[a.count];
+            mEncoded.count = mInternalCopy.count();
+            mEncoded.strings = new char *[mEncoded.count];
 
-            for( int i = 0; i < sl.count(); i++ )
+            for( int i = 0; i < mInternalCopy.count(); i++ )
             {
-                mEncoded << GW_EncodeQString( sl[i] );
-                a.strings[i] = mEncoded[i].data();
+                strcpy( mEncoded.strings[i], GW_EncodeQString( mInternalCopy[i] ).data() );
             }
         }
 
         StrArray::~StrArray()
         {
-            delete[] a.strings;
+            delete[] mEncoded.strings;
+        }
+
+        StrArray::StrArray(const StrArray& other)
+        {
+            *this = other;
+        }
+
+        StrArray& StrArray::operator =( const StrArray& other )
+        {
+            if ( (&other == this) || (other.mEncoded.strings == mEncoded.strings) )
+            {
+                return *this;
+            }
+
+            // TODO: mEncoded should probably become a QSharedPointer
+            delete[] mEncoded.strings;
+
+            mInternalCopy = other.mInternalCopy;
+            mEncoded = other.mEncoded;
+
+            return *this;
         }
 
         StrArray::operator git_strarray*()
         {
-            return &a;
+            return &mEncoded;
         }
 
         StrArray::operator const git_strarray *() const
         {
-            return &a;
+            return &mEncoded;
+        }
+
+        StrArray::operator const QStringList &() const
+        {
+            return mInternalCopy;
         }
 
         //-- StrArrayRef ------------------------------------------------------------------------ >8
@@ -129,21 +153,21 @@ namespace Git
         }
 
         StrArrayRef::StrArrayRef(git_strarray& _a, const QStringList& sl)
-            : a(_a)
+            : mEncoded(_a)
+            , mInternalCopy( sl )
         {
-            a.count = sl.count();
-            a.strings = new char *[a.count];
+            mEncoded.count = mInternalCopy.count();
+            mEncoded.strings = new char *[mEncoded.count];
 
-            for(int i=0; i < sl.count(); ++i )
+            for( int i = 0; i < mInternalCopy.count(); i++ )
             {
-                mEncoded << GW_EncodeQString( sl[i] );
-                a.strings[i] = mEncoded[i].data();
+                strcpy( mEncoded.strings[i], GW_EncodeQString( mInternalCopy[i] ).data() );
             }
         }
 
         StrArrayRef::~StrArrayRef()
         {
-            delete[] a.strings;
+            delete[] mEncoded.strings;
         }
 
         FileInfo mkFileInfo(const git_diff_file* df)

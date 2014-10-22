@@ -84,20 +84,22 @@ namespace Git
         class StrArray
         {
         public:
-            StrArray(const QStringList& sl);
+            StrArray(const QStringList& sl = QStringList());
             ~StrArray();
 
+        public:
+            StrArray( const StrArray& other );
+
+        public:
+            StrArray& operator=(const StrArray& other);
             operator git_strarray*();
             operator const git_strarray*() const;
 
-        private:
-            StrArray();
-            StrArray(const StrArray&);
-            StrArray& operator=(const StrArray&);
+            operator const QStringList&() const;
 
         private:
-            git_strarray a;
-            QVector<QByteArray>   mEncoded;
+            git_strarray          mEncoded;         //!< the encoded string data from the source QStringList
+            QStringList           mInternalCopy;    //!< a light copy of the source QStringList
         };
 
         class StrArrayRef
@@ -111,8 +113,8 @@ namespace Git
             StrArrayRef& operator=(const StrArrayRef&);
 
         private:
-            git_strarray& a;
-            QVector<QByteArray> mEncoded;
+            git_strarray&       mEncoded;
+            QStringList         mInternalCopy;
         };
 
         /**
