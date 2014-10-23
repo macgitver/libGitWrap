@@ -139,7 +139,8 @@ namespace Git
 
         /**
          * @internal
-         * @brief Wraps git_checkout_options.
+         * @ingroup     GitWrap
+         * @brief       Wraps git_checkout_options.
          */
         class CheckoutOptions
         {
@@ -154,7 +155,7 @@ namespace Git
             git_checkout_options& operator *();
 
         public:
-            const QStringList& paths() const;
+            QStringList paths() const;
             void setPaths( const QStringList& paths );
 
         private:

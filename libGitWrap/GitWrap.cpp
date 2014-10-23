@@ -114,7 +114,7 @@ namespace Git
             return mOptions;
         }
 
-        const QStringList& CheckoutOptions::paths() const
+        QStringList CheckoutOptions::paths() const
         {
             return mPaths;
         }
