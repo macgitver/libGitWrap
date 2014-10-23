@@ -35,10 +35,9 @@ TempRepo::~TempRepo()
     QDir(mTempRepoDir).rmpath(QLatin1String("."));
 }
 
-TempRepoOpener::TempRepoOpener(Fixture* fixture, const char* name)
+TempRepoOpener::TempRepoOpener(Fixture* fixture, const char* name, Git::Result& r)
     : mTempRepo(fixture, name)
 {
-    Git::Result r;
     mRepo = Git::Repository::open(mTempRepo, r);
 }
 
