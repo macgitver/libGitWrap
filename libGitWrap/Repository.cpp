@@ -237,8 +237,7 @@ namespace Git
         }
         git_repository* repo = NULL;
 
-
-        result = git_repository_open( &repo, path.toUtf8().constData() );
+        result = git_repository_open( &repo, GW_StringFromQt( path ) );
         if( !result )
         {
             return Repository();
