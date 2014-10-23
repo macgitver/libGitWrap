@@ -89,9 +89,9 @@ namespace Git
         //-- CheckoutOptions -------------------------------------------------------------------- >8
 
         CheckoutOptions::CheckoutOptions()
+            : mPaths( StrArrayRef( mOptions.paths ) )
         {
             git_checkout_init_options( &mOptions, GIT_CHECKOUT_OPTIONS_VERSION );
-            mOptions.paths = *mPaths;
         }
 
         CheckoutOptions::operator git_checkout_options*()
@@ -121,48 +121,26 @@ namespace Git
 
         void CheckoutOptions::setPaths( const QStringList& paths )
         {
-            mPaths = StrArray( paths );
+            mPaths.setStrings( paths );
         }
 
 
         //-- StrArray --------------------------------------------------------------------------- >8
 
-        StrArray::StrArray(const QStringList& sl)
-            : mInternalCopy( sl )
+        StrArray::StrArray()
         {
-            mEncoded.count = mInternalCopy.count();
-            mEncoded.strings = new char *[mEncoded.count];
+            mEncoded.count = 0;
+            mEncoded.strings = 0;
+        }
 
-            for( int i = 0; i < mInternalCopy.count(); i++ )
-            {
-                strcpy( mEncoded.strings[i], GW_EncodeQString( mInternalCopy[i] ).data() );
-            }
+        StrArray::StrArray(const QStringList &strings)
+        {
+            setStrings(strings);
         }
 
         StrArray::~StrArray()
         {
             delete[] mEncoded.strings;
-        }
-
-        StrArray::StrArray(const StrArray& other)
-        {
-            *this = other;
-        }
-
-        StrArray& StrArray::operator =( const StrArray& other )
-        {
-            if ( (&other == this) || (other.mEncoded.strings == mEncoded.strings) )
-            {
-                return *this;
-            }
-
-            // TODO: mEncoded should probably become a QSharedPointer
-            delete[] mEncoded.strings;
-
-            mInternalCopy = other.mInternalCopy;
-            mEncoded = other.mEncoded;
-
-            return *this;
         }
 
         StrArray::operator git_strarray*()
@@ -175,36 +153,83 @@ namespace Git
             return &mEncoded;
         }
 
-        StrArray::operator const QStringList &() const
+        StrArray::operator QStringList() const
         {
-            return mInternalCopy;
+            return strings();
         }
+
+        QStringList StrArray::strings() const
+        {
+            QStringList result;
+            for (int i=0; i < mEncoded.count; i++)
+            {
+                result << GW_StringToQt( mEncoded.strings[i] );
+            }
+
+            return result;
+        }
+
+        void StrArray::setStrings(const QStringList &strings)
+        {
+            delete[] mEncoded.strings;
+
+            mEncoded.count = strings.count();
+            mEncoded.strings = new char *[mEncoded.count];
+
+            for( int i = 0; i < strings.count(); i++ )
+            {
+                strcpy( mEncoded.strings[i], GW_EncodeQString( strings[i] ).data() );
+            }
+        }
+
 
         //-- StrArrayRef ------------------------------------------------------------------------ >8
 
-        StrArrayRef& StrArrayRef::operator=(const StrArrayRef&)
+        StrArrayRef::StrArrayRef(git_strarray& _a)
+            : mEncoded( _a )
         {
-            Q_ASSERT(false);
-            return *this;
         }
 
-        StrArrayRef::StrArrayRef(git_strarray& _a, const QStringList& sl)
+        StrArrayRef::StrArrayRef(git_strarray& _a, const QStringList& strings)
             : mEncoded(_a)
-            , mInternalCopy( sl )
         {
-            mEncoded.count = mInternalCopy.count();
-            mEncoded.strings = new char *[mEncoded.count];
-
-            for( int i = 0; i < mInternalCopy.count(); i++ )
-            {
-                strcpy( mEncoded.strings[i], GW_EncodeQString( mInternalCopy[i] ).data() );
-            }
+            setStrings( strings );
         }
 
         StrArrayRef::~StrArrayRef()
         {
             delete[] mEncoded.strings;
         }
+
+        StrArrayRef::operator QStringList() const
+        {
+            return strings();
+        }
+
+        QStringList StrArrayRef::strings() const
+        {
+            QStringList result;
+            for (int i=0; i < mEncoded.count; i++)
+            {
+                result << GW_StringToQt( mEncoded.strings[i] );
+            }
+
+            return result;
+        }
+
+        void StrArrayRef::setStrings(const QStringList& strings)
+        {
+            delete[] mEncoded.strings;
+
+            mEncoded.count = strings.count();
+            mEncoded.strings = new char *[mEncoded.count];
+
+            for( int i = 0; i < strings.count(); i++ )
+            {
+                strcpy( mEncoded.strings[i], GW_EncodeQString( strings[i] ).data() );
+            }
+        }
+
 
         FileInfo mkFileInfo(const git_diff_file* df)
         {

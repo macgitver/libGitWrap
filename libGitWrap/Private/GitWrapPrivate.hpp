@@ -80,42 +80,58 @@ namespace Git
         /**
          * @internal
          * @ingroup     GitWrap
-         * @brief       Wraps a QStringList as a pointer to git_strarray.
+         * @brief       Wraps a git_strarray for conversion from and to a QStringList.
          */
         class StrArray
         {
         public:
-            StrArray(const QStringList& sl = QStringList());
+            StrArray();
+            StrArray(const QStringList& strings);
             ~StrArray();
 
         public:
-            StrArray( const StrArray& other );
-
-        public:
-            StrArray& operator=(const StrArray& other);
             operator git_strarray*();
             operator const git_strarray*() const;
 
-            operator const QStringList&() const;
+            operator QStringList() const;
+
+        public:
+            QStringList strings() const;
+            void setStrings( const QStringList& strings);
+
+        private:
+            StrArray( const StrArray& other );
+            StrArray& operator=(const StrArray& other);
 
         private:
             git_strarray          mEncoded;         //!< the encoded string data from the source QStringList
-            QStringList           mInternalCopy;    //!< a light copy of the source QStringList
         };
 
+        /**
+         * @internal
+         * @ingroup     GitWrap
+         * @brief       Wraps an existing git_strarray for conversion from and to a QStringList.
+         */
         class StrArrayRef
         {
         public:
+            StrArrayRef(git_strarray& _a);
             StrArrayRef(git_strarray& _a, const QStringList& sl);
             ~StrArrayRef();
+
+        public:
+            operator QStringList() const;
 
         private:
             /* Cannot privatize Copy+Default ctor because of the member-by-reference */
             StrArrayRef& operator=(const StrArrayRef&);
 
+        public:
+            QStringList strings() const;
+            void setStrings( const QStringList& strings );
+
         private:
             git_strarray&       mEncoded;
-            QStringList         mInternalCopy;
         };
 
 
@@ -147,7 +163,7 @@ namespace Git
 
         private:
             git_checkout_options        mOptions;
-            StrArray                    mPaths;
+            StrArrayRef                 mPaths;
         };
 
         /**
