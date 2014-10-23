@@ -125,6 +125,35 @@ namespace Git
         }
 
 
+        //-- CloneOptions ----------------------------------------------------------------------- >8
+
+        CloneOptions::CloneOptions()
+        {
+            git_clone_init_options( &mOptions, GIT_CLONE_OPTIONS_VERSION );
+            mOptions.checkout_opts = mCheckoutOptions;
+        }
+
+        CloneOptions::operator const git_clone_options*() const
+        {
+            return &mOptions;
+        }
+
+        CloneOptions::operator git_clone_options&()
+        {
+            return mOptions;
+        }
+
+        git_clone_options& CloneOptions::operator *()
+        {
+            return mOptions;
+        }
+
+        CheckoutOptions& CloneOptions::checkoutOptions()
+        {
+            return mCheckoutOptions;
+        }
+
+
         //-- StrArray --------------------------------------------------------------------------- >8
 
         StrArray::StrArray()

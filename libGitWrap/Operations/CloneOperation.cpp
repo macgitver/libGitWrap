@@ -31,13 +31,8 @@ namespace Git
             : BaseOperationPrivate(owner)
             , mCloneBare(false)
         {
-            git_clone_options cloneOpts = GIT_CLONE_OPTIONS_INIT;
-            memcpy( &mCloneOpts, &cloneOpts, sizeof(cloneOpts) );
-
-            git_checkout_options checkoutOpts = GIT_CHECKOUT_OPTIONS_INIT;
-            checkoutOpts.checkout_strategy = GIT_CHECKOUT_SAFE_CREATE;
+            (*mCloneOpts.checkoutOptions()).checkout_strategy = GIT_CHECKOUT_SAFE_CREATE;
             // TODO: setup checkout callbacks for notification about the checkout progress
-            memcpy( &mCloneOpts.checkout_opts, &checkoutOpts, sizeof(checkoutOpts) );
         }
 
         CloneOperationPrivate::~CloneOperationPrivate()
@@ -53,7 +48,7 @@ namespace Git
             // TODO: setup the callbacks for notifications about the clone progress
 
             if (mResult) {
-                mResult = git_clone(&repo, mUrl.toUtf8().constData(), mPath.toUtf8().constData(), &mCloneOpts);
+                mResult = git_clone(&repo, mUrl.toUtf8().constData(), mPath.toUtf8().constData(), mCloneOpts);
             }
 
             git_repository_free(repo);

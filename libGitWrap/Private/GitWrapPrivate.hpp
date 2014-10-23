@@ -170,6 +170,30 @@ namespace Git
         /**
          * @internal
          * @ingroup     GitWrap
+         * @brief       Wraps git_clone_options.
+         */
+        class CloneOptions
+        {
+        public:
+            CloneOptions();
+
+        public:
+            operator const git_clone_options*() const;
+            operator git_clone_options&();
+
+            git_clone_options& operator *();
+
+        public:
+            CheckoutOptions& checkoutOptions();
+
+        private:
+            CheckoutOptions     mCheckoutOptions;
+            git_clone_options   mOptions;
+        };
+
+        /**
+         * @internal
+         * @ingroup     GitWrap
          * @brief       convert GitWrap's TreeEntryAttributes convert to LibGit2 file mode
          * @param[in]   attr    GitWrap's TreeEntryAttributes
          * @return      LibGit2's git_filemode_t
