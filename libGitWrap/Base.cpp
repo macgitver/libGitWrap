@@ -110,8 +110,8 @@ namespace Git
     }
 
     Base::Base(const Base& other)
-        : mData(other.mData)
     {
+        *this = other;
     }
 
     Base::~Base()
@@ -121,7 +121,7 @@ namespace Git
     Base& Base::operator=(const Base& other)
     {
         mData = other.mData;
-        return * this;
+        return *this;
     }
 
     bool Base::operator==(const Base& other) const
