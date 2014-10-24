@@ -61,7 +61,7 @@ namespace Git
     {
         GW_D_CHECKED(TreeBuilder, false, result);
 
-        result = git_treebuilder_remove( d->mBuilder, fileName.toUtf8().constData() );
+        result = git_treebuilder_remove( d->mBuilder, GW_StringFromQt(fileName) );
         return result;
     }
 
@@ -73,7 +73,7 @@ namespace Git
         const git_tree_entry* te = NULL;
         git_filemode_t fm = Internal::teattr2filemode( type );
 
-        result = git_treebuilder_insert( &te, d->mBuilder, fileName.toUtf8().constData(),
+        result = git_treebuilder_insert( &te, d->mBuilder, GW_StringFromQt(fileName),
                                          (const git_oid*) oid.raw(), fm );
 
         /* ignoring the returned tree-entry pointer; can be fetched by 'get' */
@@ -100,7 +100,7 @@ namespace Git
     {
         GW_D_CHECKED(TreeBuilder, TreeEntry(), result);
 
-        const git_tree_entry* entry = git_treebuilder_get( d->mBuilder, name.toUtf8().constData() );
+        const git_tree_entry* entry = git_treebuilder_get( d->mBuilder, GW_StringFromQt(name) );
         if( !entry )
         {
             return TreeEntry();

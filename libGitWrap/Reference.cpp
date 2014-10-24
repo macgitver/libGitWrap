@@ -501,7 +501,7 @@ namespace Git
         GW_D_CHECKED_VOID(Reference, result);
 
         git_reference* newRef = NULL;
-        result = git_reference_rename(&newRef, d->reference, newName.toUtf8().constData(), force, NULL, NULL);
+        result = git_reference_rename(&newRef, d->reference, GW_StringFromQt(newName), force, NULL, NULL);
 
         if (result && (newRef != d->reference)) {
             git_reference_free(d->reference);

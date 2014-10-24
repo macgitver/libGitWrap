@@ -59,8 +59,8 @@ namespace Git
         Repository::Private* rp = Private::dataOf<Repository>(repository);
 
         git_remote* remote = NULL;
-        result = git_remote_create(&remote, rp->mRepo, name.toUtf8().constData(),
-                                   url.toUtf8().constData() );
+        result = git_remote_create(&remote, rp->mRepo, GW_StringFromQt(name),
+                                   GW_StringFromQt(url) );
         if (!result) {
             return Remote();
         }
@@ -111,7 +111,7 @@ namespace Git
     {
         GW_D_CHECKED(Remote, false, result);
 
-        result = git_remote_add_fetch( d->mRemote, spec.toUtf8().constData() );
+        result = git_remote_add_fetch( d->mRemote, GW_StringFromQt(spec) );
         return result;
     }
 
@@ -119,7 +119,7 @@ namespace Git
     {
         GW_D_CHECKED(Remote, false, result);
 
-        result = git_remote_add_push( d->mRemote, spec.toUtf8().constData() );
+        result = git_remote_add_push( d->mRemote, GW_StringFromQt(spec) );
         return result;
     }
 
@@ -168,7 +168,7 @@ namespace Git
 
     bool Remote::isSupportedUrl( const QString& url )
     {
-        return git_remote_supported_url( url.toUtf8().constData() );
+        return git_remote_supported_url( GW_StringFromQt(url) );
     }
 
     bool Remote::connect(Result& result, bool forFetch)

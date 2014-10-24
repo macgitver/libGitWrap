@@ -48,7 +48,7 @@ namespace Git
             // TODO: setup the callbacks for notifications about the clone progress
 
             if (mResult) {
-                mResult = git_clone(&repo, mUrl.toUtf8().constData(), mPath.toUtf8().constData(), mCloneOpts);
+                mResult = git_clone(&repo, GW_StringFromQt(mUrl), GW_StringFromQt(mPath), mCloneOpts);
             }
 
             git_repository_free(repo);

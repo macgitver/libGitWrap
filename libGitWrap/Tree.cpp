@@ -62,7 +62,7 @@ namespace Git
     {
         GW_CD_CHECKED(Tree, Tree(), result)
 
-        const git_tree_entry* entry = git_tree_entry_byname(d->o(), pathName.toUtf8().constData());
+        const git_tree_entry* entry = git_tree_entry_byname(d->o(), GW_StringFromQt(pathName));
         if (!entry) {
             return Tree();
         }
@@ -147,7 +147,7 @@ namespace Git
             return TreeEntry();
         }
 
-        const git_tree_entry* entry = git_tree_entry_byname(d->o(), fileName.toUtf8().constData());
+        const git_tree_entry* entry = git_tree_entry_byname(d->o(), GW_StringFromQt(fileName));
         return TreeEntry::PrivatePtr(new TreeEntry::Private(entry));
     }
 

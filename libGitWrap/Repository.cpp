@@ -149,7 +149,7 @@ namespace Git
         }
 
         git_repository* repo = NULL;
-        result = git_repository_init( &repo, path.toUtf8().constData(), bare );
+        result = git_repository_init( &repo, GW_StringFromQt(path), bare );
 
         if( !result )
         {
@@ -196,9 +196,9 @@ namespace Git
         }
 
         git_buf repoPath = {0};
-        QByteArray joinedCeilingDirs = ceilingDirs.join(QChar::fromLatin1(GIT_PATH_LIST_SEPARATOR)).toUtf8();
+        QByteArray joinedCeilingDirs = GW_EncodeQString( ceilingDirs.join(QChar::fromLatin1(GIT_PATH_LIST_SEPARATOR)) );
 
-        result = git_repository_discover( &repoPath, startPath.toUtf8().constData(),
+        result = git_repository_discover( &repoPath, GW_StringFromQt(startPath),
                                           acrossFs, joinedCeilingDirs.constData() );
 
         QString resultPath;
@@ -348,7 +348,7 @@ namespace Git
         unsigned int status = GIT_STATUS_CURRENT;
         GW_CD_CHECKED(Repository, FileInvalidStatus, result);
 
-        result = git_status_file( &status, d->mRepo, fileName.toUtf8().data() );
+        result = git_status_file( &status, d->mRepo, GW_StringFromQt(fileName) );
         if (!result) {
             return FileInvalidStatus;
         }
@@ -530,12 +530,12 @@ namespace Git
 
         git_reference* ref = NULL;
 
-        result = git_branch_lookup( &ref, d->mRepo, oldName.toUtf8().constData(),
+        result = git_branch_lookup( &ref, d->mRepo, GW_StringFromQt(oldName),
                                     GIT_BRANCH_LOCAL );
 
         if( result.errorCode() == GITERR_REFERENCE )
         {
-            result = git_branch_lookup( &ref, d->mRepo, oldName.toUtf8().constData(),
+            result = git_branch_lookup( &ref, d->mRepo, GW_StringFromQt(oldName),
                                         GIT_BRANCH_REMOTE );
         }
 
@@ -545,7 +545,7 @@ namespace Git
         }
 
         git_reference* refOut = NULL;
-        result = git_branch_move( &refOut, ref, newName.toUtf8().constData(), force, NULL, NULL );
+        result = git_branch_move( &refOut, ref, GW_StringFromQt(newName), force, NULL, NULL );
 
         if( result )
         {
@@ -722,7 +722,7 @@ namespace Git
 
         int ignore = 0;
 
-        result = git_status_should_ignore( &ignore, d->mRepo, filePath.toUtf8().constData() );
+        result = git_status_should_ignore( &ignore, d->mRepo, GW_StringFromQt(filePath) );
         if( !result )
         {
             return false;
@@ -804,7 +804,7 @@ namespace Git
         GW_CD_EX_CHECKED(Repository, Remote(), result);
 
         git_remote* remote = NULL;
-        result = git_remote_load( &remote, d->mRepo, remoteName.toUtf8().constData() );
+        result = git_remote_load( &remote, d->mRepo, GW_StringFromQt(remoteName) );
 
         if( !result )
         {
@@ -967,7 +967,7 @@ namespace Git
     {
         GW_D_CHECKED_VOID(Repository, result);
 
-        result = git_repository_set_head( d->mRepo, branchName.toUtf8().constData(), NULL, NULL );
+        result = git_repository_set_head( d->mRepo, GW_StringFromQt(branchName), NULL, NULL );
     }
 
     /**
@@ -1069,7 +1069,7 @@ namespace Git
 
         git_reference* ref = NULL;
         if (dwim) {
-            result = git_reference_dwim(&ref, d->mRepo, refName.toUtf8().constData());
+            result = git_reference_dwim(&ref, d->mRepo, GW_StringFromQt(refName));
 
             if (!result) {
                 return Reference();
@@ -1078,7 +1078,7 @@ namespace Git
             name = GW_StringToQt(git_reference_name(ref));
         }
         else {
-            result = git_reference_lookup( &ref, d->mRepo, refName.toUtf8().constData() );
+            result = git_reference_lookup( &ref, d->mRepo, GW_StringFromQt(refName) );
 
             if (!result) {
                 return Reference();

@@ -46,8 +46,8 @@ namespace Git
             git_signature* gitsig = 0;
 
             result = git_signature_new( &gitsig,
-                                        sig.name().toUtf8().constData(),
-                                        sig.email().toUtf8().constData(),
+                                        GW_StringFromQt(sig.name()),
+                                        GW_StringFromQt(sig.email()),
                                         sig.when().toTime_t(),
                                         sig.when().utcOffset() / 60 );
 
