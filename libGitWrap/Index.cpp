@@ -428,7 +428,7 @@ namespace Git
         Internal::CheckoutOptions options( paths );
         (*options).checkout_strategy = GIT_CHECKOUT_FORCE;
 
-        result = git_checkout_index(d->repo()->mRepo, d->index, &options);
+        result = git_checkout_index(d->repo()->mRepo, d->index, options);
     }
 
     /**
