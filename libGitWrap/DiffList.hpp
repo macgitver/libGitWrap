@@ -34,10 +34,10 @@ namespace Git
      */
     class GITWRAP_API DiffList : public RepoObject
     {
-        GW_PRIVATE_DECL(DiffList, RepoObject, public);
+        GW_PRIVATE_DECL(DiffList, RepoObject, public)
 
     public:
-        bool mergeOnto( Result& result, DiffList other ) const;
+        bool mergeOnto( Result& result, const DiffList& other ) const;
 
         bool consumePatch( Result& result, PatchConsumer* consumer ) const;
         bool consumeChangeList( Result& result,

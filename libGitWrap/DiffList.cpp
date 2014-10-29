@@ -178,7 +178,7 @@ namespace Git
 
     GW_PRIVATE_IMPL(DiffList, RepoObject)
 
-    bool DiffList::mergeOnto(Result& result, DiffList onto) const
+    bool DiffList::mergeOnto(Result& result, const DiffList& onto) const
     {
         GW_CD_CHECKED(DiffList, false, result)
 
