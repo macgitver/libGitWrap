@@ -94,6 +94,11 @@ namespace Git
             git_checkout_init_options( &mOptions, GIT_CHECKOUT_OPTIONS_VERSION );
         }
 
+        CheckoutOptions::CheckoutOptions(const QStringList& paths)
+            : mPaths( StrArrayRef( mOptions.paths, paths ) )
+        {
+        }
+
         CheckoutOptions::operator git_checkout_options*()
         {
             return &mOptions;

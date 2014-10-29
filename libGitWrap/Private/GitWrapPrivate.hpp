@@ -146,6 +146,7 @@ namespace Git
         {
         public:
             CheckoutOptions();
+            CheckoutOptions( const QStringList& paths );
 
         public:
             operator git_checkout_options*();
