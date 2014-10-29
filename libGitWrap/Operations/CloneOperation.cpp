@@ -29,9 +29,9 @@ namespace Git
 
         CloneOperationPrivate::CloneOperationPrivate(CloneOperation* owner)
             : BaseOperationPrivate(owner)
-            , mCloneBare(false)
         {
             (*mCloneOpts.checkoutOptions()).checkout_strategy = GIT_CHECKOUT_SAFE_CREATE;
+
             // TODO: setup checkout callbacks for notification about the checkout progress
         }
 
@@ -83,7 +83,7 @@ namespace Git
     {
         GW_D(CloneOperation);
         Q_ASSERT(!isRunning());
-        d->mCloneBare = bare;
+        (*(d->mCloneOpts)).bare = bare;
     }
 
     void CloneOperation::setRemoteName(const QByteArray& remoteName)
@@ -136,7 +136,7 @@ namespace Git
     bool CloneOperation::bare() const
     {
         GW_CD(CloneOperation);
-        return d->mCloneBare;
+        return (*(d->mCloneOpts)).bare;
     }
 
     QByteArray CloneOperation::remoteName() const
