@@ -45,7 +45,7 @@ namespace Git
 
             git_repository* repo = NULL;
 
-            // TODO: setup the callbacks for notifications about the clone progress
+            RemoteCallbacks::initCallbacks( (*mCloneOpts).remote_callbacks, owner );
 
             if (mResult) {
                 mResult = git_clone(&repo, GW_StringFromQt(mUrl), GW_StringFromQt(mPath), mCloneOpts);

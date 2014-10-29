@@ -51,7 +51,6 @@ namespace Git
             QByteArray              mPushSpec;
             QByteArray              mPushUrl;
 
-            git_remote_callbacks    mRemoteCallbacks;
             CloneOptions            mCloneOpts;
         };
 
