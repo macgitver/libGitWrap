@@ -281,6 +281,13 @@ namespace Git
             delete[] mEncoded.strings;
 
             mEncoded.count = strings.count();
+            if ( strings.isEmpty() )
+            {
+                // The strings pointer must be NULL in this case.
+                mEncoded.strings = NULL;
+                return;
+            }
+
             mEncoded.strings = new char *[mEncoded.count];
 
             for( int i = 0; i < strings.count(); i++ )
