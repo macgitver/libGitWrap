@@ -115,11 +115,15 @@ namespace Git
         class StrArrayRef
         {
         public:
-            StrArrayRef(git_strarray& _a);
+            StrArrayRef(git_strarray& _a, bool init = false);
             StrArrayRef(git_strarray& _a, const QStringList& sl);
             ~StrArrayRef();
 
         public:
+            bool operator ==(const git_strarray& other) const;
+            bool operator !=(const git_strarray& other) const;
+            bool operator ==(const git_strarray* other) const;
+            bool operator !=(const git_strarray* other) const;
             operator QStringList() const;
 
         private:

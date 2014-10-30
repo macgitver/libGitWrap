@@ -219,20 +219,45 @@ namespace Git
 
         //-- StrArrayRef ------------------------------------------------------------------------ >8
 
-        StrArrayRef::StrArrayRef(git_strarray& _a)
+        StrArrayRef::StrArrayRef(git_strarray& _a, bool init)
             : mEncoded( _a )
         {
+            if ( init ) {
+                mEncoded.strings = 0;
+                mEncoded.count = 0;
+            }
         }
 
         StrArrayRef::StrArrayRef(git_strarray& _a, const QStringList& strings)
             : mEncoded(_a)
         {
+            Q_ASSERT( !mEncoded.strings && !mEncoded.count );
             setStrings( strings );
         }
 
         StrArrayRef::~StrArrayRef()
         {
             delete[] mEncoded.strings;
+        }
+
+        bool StrArrayRef::operator ==(const git_strarray& other) const
+        {
+            return &mEncoded == &other;
+        }
+
+        bool StrArrayRef::operator !=(const git_strarray& other) const
+        {
+            return !(*this == other);
+        }
+
+        bool StrArrayRef::operator ==(const git_strarray* other) const
+        {
+            return &mEncoded == other;
+        }
+
+        bool StrArrayRef::operator !=(const git_strarray* other) const
+        {
+            return !(*this == other);
         }
 
         StrArrayRef::operator QStringList() const
