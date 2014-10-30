@@ -30,9 +30,9 @@ namespace Git
         CloneOperationPrivate::CloneOperationPrivate(CloneOperation* owner)
             : BaseOperationPrivate(owner)
         {
-            (*mCloneOpts.checkoutOptions()).checkout_strategy = GIT_CHECKOUT_SAFE_CREATE;
-
-            // TODO: setup checkout callbacks for notification about the checkout progress
+            CheckoutOptions& coo = mCloneOpts.checkoutOptions();
+            (*coo).checkout_strategy = GIT_CHECKOUT_SAFE_CREATE;
+            // TODO: setup checkout callbacks for notification about the checkout progres
         }
 
         CloneOperationPrivate::~CloneOperationPrivate()
