@@ -89,14 +89,24 @@ namespace Git
         //-- CheckoutOptions -------------------------------------------------------------------- >8
 
         CheckoutOptions::CheckoutOptions()
-            : mPaths( StrArrayRef( mOptions.paths ) )
         {
+            const git_checkout_options *assert_coo_ptr = &mOptions;
+            Q_UNUSED( assert_coo_ptr )
+
             git_checkout_init_options( &mOptions, GIT_CHECKOUT_OPTIONS_VERSION );
+            Q_ASSERT( assert_coo_ptr == &mOptions );
+            mPaths = QSharedPointer<StrArrayRef>( new StrArrayRef( mOptions.paths ) );
         }
 
         CheckoutOptions::CheckoutOptions(const QStringList& paths)
-            : mPaths( StrArrayRef( mOptions.paths, paths ) )
         {
+            const git_checkout_options *assert_coo_ptr = &mOptions;
+            Q_UNUSED( assert_coo_ptr )
+
+            git_checkout_init_options( &mOptions, GIT_CHECKOUT_OPTIONS_VERSION );
+            Q_ASSERT( assert_coo_ptr == &mOptions );
+            mPaths = QSharedPointer<StrArrayRef>( new StrArrayRef( mOptions.paths ) );
+            Q_ASSERT( *mPaths == mOptions.paths );
         }
 
         CheckoutOptions::operator git_checkout_options*()
@@ -121,12 +131,12 @@ namespace Git
 
         QStringList CheckoutOptions::paths() const
         {
-            return mPaths;
+            return *mPaths;
         }
 
         void CheckoutOptions::setPaths( const QStringList& paths )
         {
-            mPaths.setStrings( paths );
+            mPaths->setStrings( paths );
         }
 
 

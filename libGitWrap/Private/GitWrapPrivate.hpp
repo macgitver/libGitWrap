@@ -168,8 +168,8 @@ namespace Git
             CheckoutOptions& operator =(const CheckoutOptions& other);
 
         private:
-            git_checkout_options        mOptions;
-            StrArrayRef                 mPaths;
+            git_checkout_options            mOptions;
+            QSharedPointer<StrArrayRef>     mPaths;
         };
 
         /**
