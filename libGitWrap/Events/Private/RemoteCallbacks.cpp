@@ -148,9 +148,11 @@ namespace Git
             git_remote_init_callbacks( &cb, GIT_REMOTE_CALLBACKS_VERSION );
 
             cb.sideband_progress   = &RemoteCallbacks::remoteProgress;
+            cb.transfer_progress   = &RemoteCallbacks::fetchProgress;
             cb.completion          = &RemoteCallbacks::remoteComplete;
             cb.update_tips         = &RemoteCallbacks::remoteUpdateTips;
             cb.credentials         = &RemoteCallbacks::credAccquire;
+
             cb.payload             = receiver;
         }
 
