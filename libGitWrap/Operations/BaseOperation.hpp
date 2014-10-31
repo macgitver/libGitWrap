@@ -53,7 +53,7 @@ namespace Git
         Result result() const;
 
     signals:
-        void finished();
+        void finished(const Git::Result& result);
 
     private slots:
         void workerFinished();

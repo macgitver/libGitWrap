@@ -84,7 +84,7 @@ namespace Git
     {
         delete mData->mThread;
         mData->mThread = NULL;
-        emit finished();
+        emit finished( mData->mResult );
     }
 
     Result BaseOperation::result() const
