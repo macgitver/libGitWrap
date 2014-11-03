@@ -19,6 +19,7 @@
 
 #include "libGitWrap/GitWrap.hpp"
 
+
 namespace Git
 {
 
@@ -153,3 +154,16 @@ namespace Git
 
 #endif
 
+
+//-- macro definitions -->8
+
+/**
+  * @ingroup    GitWrap
+  * @def        Check, if a given @ref Git::Result object is valid.
+  *             The current function will exit with the defined return value,
+  *             when the result is invalid.
+  */
+#define GW_CHECK_RESULT(result, returns) \
+    if (!(result)) { \
+    qDebug("Git returned error code (%d) \"%s\"", (result).errorCode(), qPrintable((result).errorText())); \
+    return (returns); }
