@@ -145,7 +145,10 @@ namespace Git
 
         void RemoteCallbacks::initCallbacks(git_remote_callbacks& cb, IRemoteEvents* receiver)
         {
-            git_remote_init_callbacks( &cb, GIT_REMOTE_CALLBACKS_VERSION );
+            Result r;
+            r = git_remote_init_callbacks( &cb, GIT_REMOTE_CALLBACKS_VERSION );
+            Q_ASSERT_X( r, "git_remote_init_callbacks", qPrintable(r.errorText()) );
+            GW_CHECK_RESULT( r, void() )
 
             cb.sideband_progress   = &RemoteCallbacks::remoteProgress;
             cb.transfer_progress   = &RemoteCallbacks::fetchProgress;
