@@ -86,13 +86,6 @@ namespace Git
         (*(d->mCloneOpts)).bare = bare;
     }
 
-    void CloneOperation::setRemoteName(const QByteArray& remoteName)
-    {
-        GW_D(CloneOperation);
-        Q_ASSERT(!isRunning());
-        d->mRemoteName = remoteName;
-    }
-
     void CloneOperation::setRemoteName(const QString& remoteName)
     {
         GW_D(CloneOperation);

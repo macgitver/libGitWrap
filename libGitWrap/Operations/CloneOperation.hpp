@@ -48,7 +48,6 @@ namespace Git
         void setPath(const QString& path);
         void setBare(bool bare);
         void setRemoteName(const QString& remoteName);
-        void setRemoteName(const QByteArray& remoteName);
         void setFetchSpec(const QByteArray& fetchSpec);
         void setPushSpec(const QByteArray& pushSpec);
         void setPushUrl(const QByteArray& pushUrl);

@@ -39,7 +39,7 @@ namespace Git
      */
     class GITWRAP_API Remote : public RepoObject
     {
-        GW_PRIVATE_DECL(Remote, RepoObject, public);
+        GW_PRIVATE_DECL(Remote, RepoObject, public)
 
     public:
         typedef RemoteList List;
