@@ -86,34 +86,6 @@ namespace Git
         (*(d->mCloneOpts)).bare = bare;
     }
 
-    void CloneOperation::setRemoteName(const QString& remoteName)
-    {
-        GW_D(CloneOperation);
-        Q_ASSERT(!isRunning());
-        d->mRemoteName = GW_EncodeQString(remoteName);
-    }
-
-    void CloneOperation::setFetchSpec(const QByteArray& fetchSpec)
-    {
-        GW_D(CloneOperation);
-        Q_ASSERT(!isRunning());
-        d->mFetchSpec = fetchSpec;
-    }
-
-    void CloneOperation::setPushSpec(const QByteArray& pushSpec)
-    {
-        GW_D(CloneOperation);
-        Q_ASSERT(!isRunning());
-        d->mPushSpec = pushSpec;
-    }
-
-    void CloneOperation::setPushUrl(const QByteArray& pushUrl)
-    {
-        GW_D(CloneOperation);
-        Q_ASSERT(!isRunning());
-        d->mPushUrl = pushUrl;
-    }
-
     QString CloneOperation::url() const
     {
         GW_CD(CloneOperation);
@@ -130,30 +102,6 @@ namespace Git
     {
         GW_CD(CloneOperation);
         return (*(d->mCloneOpts)).bare;
-    }
-
-    QByteArray CloneOperation::remoteName() const
-    {
-        GW_CD(CloneOperation);
-        return d->mRemoteName;
-    }
-
-    QByteArray CloneOperation::fetchSpec() const
-    {
-        GW_CD(CloneOperation);
-        return d->mFetchSpec;
-    }
-
-    QByteArray CloneOperation::pushSpec() const
-    {
-        GW_CD(CloneOperation);
-        return d->mPushSpec;
-    }
-
-    QByteArray CloneOperation::pushUrl() const
-    {
-        GW_CD(CloneOperation);
-        return d->mPushUrl;
     }
 
 }
