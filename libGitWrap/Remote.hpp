@@ -63,7 +63,7 @@ namespace Git
         QVector<RefSpec> pushSpecs() const;
 
         GW_DEPRECATED static bool isValidUrl(const QString& url);
-        static bool isSupportedUrl(const QString& url);
+        GW_DEPRECATED static bool isSupportedUrl(const QString& url);
 
         bool connect(Result& result, bool forFetch);
         void disconnect(Result& result);

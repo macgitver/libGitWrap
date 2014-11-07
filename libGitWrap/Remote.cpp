@@ -168,7 +168,7 @@ namespace Git
 
     bool Remote::isSupportedUrl( const QString& url )
     {
-        return git_remote_supported_url( GW_StringFromQt(url) );
+        return true;
     }
 
     bool Remote::connect(Result& result, bool forFetch)
