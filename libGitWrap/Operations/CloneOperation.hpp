@@ -47,21 +47,11 @@ namespace Git
         void setUrl(const QString& url);
         void setPath(const QString& path);
         void setBare(bool bare);
-        void setRemoteName(const QString& remoteName);
-        void setRemoteName(const QByteArray& remoteName);
-        void setFetchSpec(const QByteArray& fetchSpec);
-        void setPushSpec(const QByteArray& pushSpec);
-        void setPushUrl(const QByteArray& pushUrl);
 
     public:
         QString url() const;
         QString path() const;
         bool bare() const;
-
-        QByteArray remoteName() const;
-        QByteArray fetchSpec() const;
-        QByteArray pushSpec() const;
-        QByteArray pushUrl() const;
 
     signals:
         void askCredentials( CredentialRequest& request );

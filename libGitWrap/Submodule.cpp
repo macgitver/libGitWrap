@@ -73,7 +73,7 @@ namespace Git
             git_submodule* sm = NULL;
 
             if (rc && repo() && !mName.isEmpty()) {
-                rc = git_submodule_lookup(&sm, repo()->mRepo, mName.toUtf8().constData());
+                rc = git_submodule_lookup(&sm, repo()->mRepo, GW_StringFromQt(mName));
                 if (!rc) {
                     return NULL;
                 }

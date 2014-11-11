@@ -97,7 +97,8 @@ QString Fixture::prepareRepo(const char* name)
 
     QDir(TempDirProvider::get()).mkpath(QLatin1String(name));
 
-    copyDir(sourceDir, destDir);
+    if ( !copyDir(sourceDir, destDir) )
+        qCritical( "copyDir() failed: src=%s -> dest=%s", qPrintable(sourceDir), qPrintable(destDir) );
 
     return destDir;
 }

@@ -31,13 +31,14 @@ typedef Fixture ReferenceFixture;
 
 TEST_F(ReferenceFixture, CanLookup)
 {
-    TempRepoOpener tempRepo(this, "SimpleRepo1");
+    Git::Result r;
+    TempRepoOpener tempRepo(this, "SimpleRepo1", r);
+    CHECK_GIT_RESULT(r);
     Git::Repository repo(tempRepo);
     ASSERT_TRUE(repo.isValid());
 
-    Git::Result r;
     Git::Reference ref = repo.reference(r, QLatin1String("refs/heads/master"));
-    ASSERT_TRUE(r);
+    CHECK_GIT_RESULT(r);
     ASSERT_TRUE(ref.isValid());
     ASSERT_FALSE(ref.wasDestroyed());
 
@@ -57,13 +58,14 @@ TEST_F(ReferenceFixture, CanLookup)
 
 TEST_F(ReferenceFixture, CanLookupShorthand)
 {
-    TempRepoOpener tempRepo(this, "SimpleRepo1");
+    Git::Result r;
+    TempRepoOpener tempRepo(this, "SimpleRepo1", r);
+    CHECK_GIT_RESULT(r);
     Git::Repository repo(tempRepo);
     ASSERT_TRUE(repo.isValid());
 
-    Git::Result r;
     Git::Reference ref = repo.reference(r, QLatin1String("master"), true);
-    ASSERT_TRUE(r);
+    CHECK_GIT_RESULT(r);
     ASSERT_TRUE(ref.isValid());
     ASSERT_FALSE(ref.wasDestroyed());
 
@@ -78,25 +80,26 @@ TEST_F(ReferenceFixture, CanLookupShorthand)
 
 TEST_F(ReferenceFixture, CanDestroyRef)
 {
-    TempRepoOpener tempRepo(this, "SimpleRepo1");
+    Git::Result r;
+    TempRepoOpener tempRepo(this, "SimpleRepo1", r);
+    CHECK_GIT_RESULT(r);
     Git::Repository repo(tempRepo);
     ASSERT_TRUE(repo.isValid());
 
-    Git::Result r;
     Git::Reference ref = repo.reference(r, QLatin1String("master"), true);
     ASSERT_FALSE(ref.wasDestroyed());
 
     ref.destroy(r);
-    ASSERT_TRUE(r);
+    CHECK_GIT_RESULT(r);
     ASSERT_TRUE(ref.wasDestroyed());
 
     ASSERT_TRUE(ref.objectId().isNull());
 
     // counter check
     Git::Repository repo2 = repo.reopen(r);
-    ASSERT_TRUE(r);
+    CHECK_GIT_RESULT(r);
 
     QStringList sl = repo2.allBranchNames(r);
-    ASSERT_TRUE(r);
+    CHECK_GIT_RESULT(r);
     ASSERT_EQ(0, sl.count());
 }

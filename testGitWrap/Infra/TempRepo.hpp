@@ -52,7 +52,7 @@ private:
 class TempRepoOpener
 {
 public:
-    TempRepoOpener(Fixture* fixture, const char* name);
+    TempRepoOpener(Fixture* fixture, const char* name, Git::Result &r);
     ~TempRepoOpener();
 
 public:

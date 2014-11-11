@@ -46,15 +46,7 @@ namespace Git
             QString                 mUrl;
             QString                 mPath;
 
-            QByteArray              mRemoteName;
-            QByteArray              mFetchSpec;
-            QByteArray              mPushSpec;
-            QByteArray              mPushUrl;
-
-            bool                    mCloneBare;
-
-            git_remote_callbacks    mRemoteCallbacks;
-            git_checkout_options    mCheckoutOpts;
+            CloneOptions            mCloneOpts;
         };
 
     }

@@ -32,20 +32,20 @@ typedef Fixture CommitFixture;
 
 TEST_F(CommitFixture, CanCreateFirstCommitFromTree)
 {
-    TempRepoOpener tempRepo(this, "SimpleRepo1");
-    Git::Repository repo(tempRepo);
+    Git::Result r;
+    Git::Repository repo( TempRepoOpener(this, "SimpleRepo1", r) );
+    CHECK_GIT_RESULT(r);
     ASSERT_TRUE(repo.isValid());
 
-    Git::Result r;
-
-    Git::Signature sig;
+    Git::Signature sig = Git::Signature::defaultSignature(r, repo);
+    CHECK_GIT_RESULT(r);
     Git::Tree tree;
     Git::Commit commit = Git::Commit::create( r, repo, tree, QString::fromUtf8("Initial Commit"), sig, sig, Git::ObjectIdList() );
-    ASSERT_TRUE(r);
+    CHECK_GIT_RESULT(r);
     ASSERT_TRUE(commit.isValid());
 
     Git::Commit lookedUp = repo.lookupCommit( r, commit.id() );
-    ASSERT_TRUE(r);
+    CHECK_GIT_RESULT(r);
     ASSERT_TRUE(lookedUp.isValid());
     ASSERT_EQ( commit, lookedUp );
     ASSERT_EQ( commit.id(), lookedUp.id() );

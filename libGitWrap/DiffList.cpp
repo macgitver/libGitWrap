@@ -178,28 +178,27 @@ namespace Git
 
     GW_PRIVATE_IMPL(DiffList, RepoObject)
 
-    bool DiffList::mergeOnto(Result& result, DiffList onto) const
+    void DiffList::mergeOnto(Result& result, const DiffList& onto) const
     {
-        GW_CD_CHECKED(DiffList, false, result)
+        GW_CD_CHECKED_VOID(DiffList, result)
 
         if (!onto.isValid())
         {
             result.setInvalidObject();
-            return false;
+            return;
         }
 
         DiffList::Private* ontoP = Private::dataOf<DiffList>(onto);
         result = git_diff_merge(ontoP->mDiff, d->mDiff);
-        return result;
     }
 
-    bool DiffList::consumePatch(Result& result, PatchConsumer* consumer) const
+    void DiffList::consumePatch(Result& result, PatchConsumer* consumer) const
     {
-        GW_CD_CHECKED(DiffList, false, result)
+        GW_CD_CHECKED_VOID(DiffList, result)
 
         if (!consumer) {
             result.setInvalidObject();
-            return false;
+            return;
         }
 
         result = git_diff_foreach(d->mDiff,
@@ -207,17 +206,15 @@ namespace Git
                                   &Internal::patchHunkCallBack,
                                   &Internal::patchDataCallBack,
                                   consumer );
-
-        return result;
     }
 
-    bool DiffList::consumeChangeList(Result& result, ChangeListConsumer* consumer) const
+    void DiffList::consumeChangeList(Result& result, ChangeListConsumer* consumer) const
     {
-        GW_CD_CHECKED(DiffList, false, result)
+        GW_CD_CHECKED_VOID(DiffList, result)
 
         if (!consumer) {
             result.setInvalidObject();
-            return false;
+            return;
         }
 
         result = git_diff_foreach(d->mDiff,
@@ -225,8 +222,6 @@ namespace Git
                                   NULL,
                                   NULL,
                                   consumer );
-
-        return result;
     }
 
     ChangeList DiffList::changeList(Result &result) const

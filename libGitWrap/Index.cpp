@@ -425,11 +425,10 @@ namespace Git
     void Index::checkoutFiles(Result &result, const QStringList &paths)
     {
         GW_D_CHECKED_VOID(Index, result)
-        git_checkout_options options = GIT_CHECKOUT_OPTIONS_INIT;
-        options.checkout_strategy = GIT_CHECKOUT_FORCE;
-        Internal::StrArrayRef(options.paths, paths);
+        Internal::CheckoutOptions options( paths );
+        (*options).checkout_strategy = GIT_CHECKOUT_FORCE;
 
-        result = git_checkout_index(d->repo()->mRepo, d->index, &options);
+        result = git_checkout_index(d->repo()->mRepo, d->index, options);
     }
 
     /**

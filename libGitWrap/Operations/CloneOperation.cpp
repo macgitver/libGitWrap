@@ -29,11 +29,10 @@ namespace Git
 
         CloneOperationPrivate::CloneOperationPrivate(CloneOperation* owner)
             : BaseOperationPrivate(owner)
-            , mCloneBare(false)
         {
-            git_checkout_options coo = GIT_CHECKOUT_OPTIONS_INIT;
-            coo.checkout_strategy = GIT_CHECKOUT_SAFE_CREATE;
-            memcpy(&mCheckoutOpts, &coo, sizeof(coo));
+            CheckoutOptions& coo = mCloneOpts.checkoutOptions();
+            (*coo).checkout_strategy = GIT_CHECKOUT_SAFE_CREATE;
+            // TODO: setup checkout callbacks for notification about the checkout progres
         }
 
         CloneOperationPrivate::~CloneOperationPrivate()
@@ -45,51 +44,13 @@ namespace Git
             GW_OP_OWNER(CloneOperation);
 
             git_repository* repo = NULL;
-            git_remote* remo = NULL;
 
-            mResult = git_repository_init(&repo, mPath.toUtf8().constData(), mCloneBare);
-            if (!mResult) {
-                return;
-            }
-
-            if (mRemoteName.isEmpty()) {
-                mRemoteName = "origin";
-            }
-
-            if (mFetchSpec.isEmpty()) {
-                mFetchSpec = QByteArray("+refs/heads/*:refs/remotes/") %
-                             mRemoteName %
-                             QByteArray("/*");
-            }
-
-            mResult = git_remote_create_with_fetchspec(
-                        &remo, repo, mRemoteName.constData(),
-                        mUrl.toUtf8().constData(),
-                        mFetchSpec.constData());
-
-            if (mResult && !mPushSpec.isEmpty()) {
-                mResult = git_remote_add_push(remo, mPushSpec.constData());
-            }
-
-            if (mResult && !mPushUrl.isEmpty()) {
-                mResult = git_remote_set_pushurl(remo, mPushUrl.constData());
-            }
+            RemoteCallbacks::initCallbacks( (*mCloneOpts).remote_callbacks, owner );
 
             if (mResult) {
-                mResult = git_remote_save(remo);
+                mResult = git_clone(&repo, GW_StringFromQt(mUrl), GW_StringFromQt(mPath), mCloneOpts);
             }
 
-            if (mResult) {
-                git_remote_callbacks cbs;
-                RemoteCallbacks::initCallbacks(cbs, owner);
-                mResult = git_remote_set_callbacks(remo, &cbs);
-            }
-
-            if (mResult) {
-                mResult = git_clone_into(repo, remo, &mCheckoutOpts, NULL, NULL);
-            }
-
-            git_remote_free(remo);
             git_repository_free(repo);
         }
 
@@ -122,42 +83,7 @@ namespace Git
     {
         GW_D(CloneOperation);
         Q_ASSERT(!isRunning());
-        d->mCloneBare = bare;
-    }
-
-    void CloneOperation::setRemoteName(const QByteArray& remoteName)
-    {
-        GW_D(CloneOperation);
-        Q_ASSERT(!isRunning());
-        d->mRemoteName = remoteName;
-    }
-
-    void CloneOperation::setRemoteName(const QString& remoteName)
-    {
-        GW_D(CloneOperation);
-        Q_ASSERT(!isRunning());
-        d->mRemoteName = GW_EncodeQString(remoteName);
-    }
-
-    void CloneOperation::setFetchSpec(const QByteArray& fetchSpec)
-    {
-        GW_D(CloneOperation);
-        Q_ASSERT(!isRunning());
-        d->mFetchSpec = fetchSpec;
-    }
-
-    void CloneOperation::setPushSpec(const QByteArray& pushSpec)
-    {
-        GW_D(CloneOperation);
-        Q_ASSERT(!isRunning());
-        d->mPushSpec = pushSpec;
-    }
-
-    void CloneOperation::setPushUrl(const QByteArray& pushUrl)
-    {
-        GW_D(CloneOperation);
-        Q_ASSERT(!isRunning());
-        d->mPushUrl = pushUrl;
+        (*(d->mCloneOpts)).bare = bare;
     }
 
     QString CloneOperation::url() const
@@ -175,31 +101,7 @@ namespace Git
     bool CloneOperation::bare() const
     {
         GW_CD(CloneOperation);
-        return d->mCloneBare;
-    }
-
-    QByteArray CloneOperation::remoteName() const
-    {
-        GW_CD(CloneOperation);
-        return d->mRemoteName;
-    }
-
-    QByteArray CloneOperation::fetchSpec() const
-    {
-        GW_CD(CloneOperation);
-        return d->mFetchSpec;
-    }
-
-    QByteArray CloneOperation::pushSpec() const
-    {
-        GW_CD(CloneOperation);
-        return d->mPushSpec;
-    }
-
-    QByteArray CloneOperation::pushUrl() const
-    {
-        GW_CD(CloneOperation);
-        return d->mPushUrl;
+        return (*(d->mCloneOpts)).bare;
     }
 
 }

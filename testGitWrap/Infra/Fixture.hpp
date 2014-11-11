@@ -25,6 +25,8 @@
 
 #include "gtest/gtest.h"
 
+#define CHECK_GIT_RESULT(r) ASSERT_TRUE((r)) << "Git::Result failed: " << qPrintable((r).errorText())
+
 class Fixture : public QObject, public ::testing::Test
 {
     Q_OBJECT

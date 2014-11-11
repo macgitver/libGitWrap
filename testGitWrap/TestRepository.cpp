@@ -29,7 +29,9 @@ typedef Fixture RepositoryFixture;
 
 TEST_F(RepositoryFixture, CanOpen)
 {
-    TempRepoOpener tempRepo(this, "SimpleRepo1");
+    Git::Result r;
+    TempRepoOpener tempRepo(this, "SimpleRepo1", r);
+    CHECK_GIT_RESULT(r);
     Git::Repository repo(tempRepo);
     ASSERT_TRUE(repo.isValid());
 
@@ -41,33 +43,35 @@ TEST_F(RepositoryFixture, CanOpen)
 
 TEST_F(RepositoryFixture, CanListBranches)
 {
-    TempRepoOpener tempRepo(this, "SimpleRepo1");
+    Git::Result r;
+    TempRepoOpener tempRepo(this, "SimpleRepo1", r);
+    CHECK_GIT_RESULT(r);
     Git::Repository repo(tempRepo);
     ASSERT_TRUE(repo.isValid());
 
-    Git::Result r;
     QStringList sl = repo.branchNames(r, true, false);
-    ASSERT_TRUE(r);
+    CHECK_GIT_RESULT(r);
     ASSERT_EQ(1, sl.count());
     EXPECT_STREQ("master",
                  qPrintable(sl[0]));
 
     sl = repo.branchNames(r, false, true);
-    ASSERT_TRUE(r);
+    CHECK_GIT_RESULT(r);
     ASSERT_EQ(0, sl.count());
 }
 
 TEST_F(RepositoryFixture, CanDetachHEAD)
 {
-    TempRepoOpener tempRepo(this, "SimpleRepo1");
+    Git::Result r;
+    TempRepoOpener tempRepo(this, "SimpleRepo1", r);
+    CHECK_GIT_RESULT(r);
     Git::Repository repo(tempRepo);
     ASSERT_TRUE(repo.isValid());
 
     ASSERT_FALSE(repo.isHeadDetached());
 
-    Git::Result r;
     ASSERT_TRUE(repo.detachHead(r));
-    ASSERT_TRUE(r);
+    CHECK_GIT_RESULT(r);
 
     ASSERT_TRUE(repo.isHeadDetached());
 }

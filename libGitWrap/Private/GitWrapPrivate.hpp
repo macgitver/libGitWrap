@@ -18,7 +18,6 @@
 #define GIT_P_H
 
 #include <QDebug>
-#include <QTextCodec>
 #include <QThreadStorage>
 
 #include "git2.h"
@@ -40,9 +39,9 @@ namespace Git
     namespace Internal
     {
 
-        class RepositoryPrivate;
         class IndexPrivate;
         class ObjectPrivate;
+        class RepositoryPrivate;
 
         // Some internal helpers
         Signature git2Signature( const git_signature* gitsig );
@@ -57,17 +56,14 @@ namespace Git
          * @brief       The Buffer class wraps a git_buf.
          */
         class Buffer {
-        private:
-            git_buf         buf;
-            QTextCodec*     mCodec;
-
         public:
-            Buffer( QTextCodec* codec = 0 );
+            Buffer();
             ~Buffer();
 
         public:
             operator git_buf*();
-            operator const char*();
+            operator const char*() const;
+            operator QString() const;
 
         public:
             QString toString() const;
@@ -75,45 +71,129 @@ namespace Git
         private:
             Buffer(const Buffer& other);
             Buffer& operator =(const Buffer& other);
+
+        private:
+            git_buf         buf;
+        };
+
+
+        /**
+         * @internal
+         * @ingroup     GitWrap
+         * @brief       Wraps a git_strarray for conversion from and to a QStringList.
+         */
+        class StrArray
+        {
+        public:
+            StrArray();
+            StrArray(const QStringList& strings);
+            ~StrArray();
+
+        public:
+            operator git_strarray*();
+            operator const git_strarray*() const;
+
+            operator QStringList() const;
+
+        public:
+            QStringList strings() const;
+            void setStrings( const QStringList& strings);
+
+        private:
+            StrArray( const StrArray& other );
+            StrArray& operator=(const StrArray& other);
+
+        private:
+            git_strarray          mEncoded;         //!< the encoded string data from the source QStringList
         };
 
         /**
          * @internal
          * @ingroup     GitWrap
-         * @brief       Wraps a QStringList as a pointer to git_strarray.
+         * @brief       Wraps an existing git_strarray for conversion from and to a QStringList.
          */
-        class StrArray
-        {
-        public:
-            StrArray(const QStringList& sl);
-            ~StrArray();
-
-            operator git_strarray*();
-            operator const git_strarray*() const;
-
-        private:
-            StrArray();
-            StrArray(const StrArray&);
-            StrArray& operator=(const StrArray&);
-
-        private:
-            git_strarray a;
-            QVector<QByteArray>   mEncoded;
-        };
-
         class StrArrayRef
         {
         public:
+            StrArrayRef(git_strarray& _a, bool init = false);
             StrArrayRef(git_strarray& _a, const QStringList& sl);
             ~StrArrayRef();
+
+        public:
+            bool operator ==(const git_strarray& other) const;
+            bool operator !=(const git_strarray& other) const;
+            bool operator ==(const git_strarray* other) const;
+            bool operator !=(const git_strarray* other) const;
+            operator QStringList() const;
 
         private:
             /* Cannot privatize Copy+Default ctor because of the member-by-reference */
             StrArrayRef& operator=(const StrArrayRef&);
 
+        public:
+            QStringList strings() const;
+            void setStrings( const QStringList& strings );
+
         private:
-            git_strarray& a;
-            QVector<QByteArray> mEncoded;
+            git_strarray&       mEncoded;
+        };
+
+
+        // -- git_..._options wrappers
+
+        /**
+         * @internal
+         * @ingroup     GitWrap
+         * @brief       Wraps git_checkout_options.
+         */
+        class CheckoutOptions
+        {
+        public:
+            CheckoutOptions();
+            CheckoutOptions( const QStringList& paths );
+
+        public:
+            operator git_checkout_options*();
+            operator const git_checkout_options*() const;
+            operator git_checkout_options&();
+
+            git_checkout_options& operator *();
+
+        public:
+            QStringList paths() const;
+            void setPaths( const QStringList& paths );
+
+        private:
+            CheckoutOptions(const CheckoutOptions& other);
+            CheckoutOptions& operator =(const CheckoutOptions& other);
+
+        private:
+            git_checkout_options            mOptions;
+            QSharedPointer<StrArrayRef>     mPaths;
+        };
+
+        /**
+         * @internal
+         * @ingroup     GitWrap
+         * @brief       Wraps git_clone_options.
+         */
+        class CloneOptions
+        {
+        public:
+            CloneOptions();
+
+        public:
+            operator const git_clone_options*() const;
+            operator git_clone_options&();
+
+            git_clone_options& operator *();
+
+        public:
+            CheckoutOptions& checkoutOptions();
+
+        private:
+            CheckoutOptions     mCheckoutOptions;
+            git_clone_options   mOptions;
         };
 
         /**
@@ -127,7 +207,7 @@ namespace Git
         {
             switch( attr )
             {
-            case UnkownAttr:            return GIT_FILEMODE_NEW;
+            case UnkownAttr:            return GIT_FILEMODE_UNREADABLE;
             case TreeAttr:              return GIT_FILEMODE_TREE;
             case FileAttr:              return GIT_FILEMODE_BLOB;
             case FileExecutableAttr:    return GIT_FILEMODE_BLOB_EXECUTABLE;
@@ -136,7 +216,7 @@ namespace Git
             }
             Q_ASSERT( false );
             // Why is there no "Q_ASSUME( false );"???
-            return GIT_FILEMODE_NEW;
+            return GIT_FILEMODE_UNREADABLE;
         }
 
         /**

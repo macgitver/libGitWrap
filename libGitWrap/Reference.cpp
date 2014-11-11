@@ -406,7 +406,7 @@ namespace Git
     }
 
     void Reference::checkout(Result&            result,
-                             CheckoutOptions    opts,
+                             CheckoutFlags      flags,
                              CheckoutMode       mode,
                              const QStringList& paths) const
     {
@@ -418,7 +418,7 @@ namespace Git
             return;
         }
 
-        bool doUpdateHEAD    = opts.testFlag(CheckoutUpdateHEAD);
+        bool doUpdateHEAD    = flags.testFlag(CheckoutUpdateHEAD);
         /*
         bool doCreateLocal   = opts.testFlag(CheckoutCreateLocalBranch);
         bool doAllowDetached = opts.testFlag(CheckoutAllowDetachHEAD);
@@ -434,7 +434,7 @@ namespace Git
         }
         */
 
-        op->setOptions(opts);
+        op->setFlags(flags);
         op->setMode(mode);
         op->setCheckoutPaths(paths);
         op->setBackgroundMode(false);
@@ -501,7 +501,7 @@ namespace Git
         GW_D_CHECKED_VOID(Reference, result);
 
         git_reference* newRef = NULL;
-        result = git_reference_rename(&newRef, d->reference, newName.toUtf8().constData(), force, NULL, NULL);
+        result = git_reference_rename(&newRef, d->reference, GW_StringFromQt(newName), force, NULL, NULL);
 
         if (result && (newRef != d->reference)) {
             git_reference_free(d->reference);

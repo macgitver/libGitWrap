@@ -62,7 +62,7 @@ namespace Git
     {
         GW_CD_CHECKED(Tree, Tree(), result)
 
-        const git_tree_entry* entry = git_tree_entry_byname(d->o(), pathName.toUtf8().constData());
+        const git_tree_entry* entry = git_tree_entry_byname(d->o(), GW_StringFromQt(pathName));
         if (!entry) {
             return Tree();
         }
@@ -147,7 +147,7 @@ namespace Git
             return TreeEntry();
         }
 
-        const git_tree_entry* entry = git_tree_entry_byname(d->o(), fileName.toUtf8().constData());
+        const git_tree_entry* entry = git_tree_entry_byname(d->o(), GW_StringFromQt(fileName));
         return TreeEntry::PrivatePtr(new TreeEntry::Private(entry));
     }
 
@@ -155,11 +155,10 @@ namespace Git
     {
         GW_CD_CHECKED_VOID(Tree, result);
 
-        git_checkout_options opts = GIT_CHECKOUT_OPTIONS_INIT;
-        opts.checkout_strategy = force ? GIT_CHECKOUT_FORCE : GIT_CHECKOUT_SAFE;
-        Internal::StrArrayRef(opts.paths, paths);
+        Internal::CheckoutOptions opts( paths );
+        (*opts).checkout_strategy = force ? GIT_CHECKOUT_FORCE : GIT_CHECKOUT_SAFE;
 
-        result = git_checkout_tree(d->repo()->mRepo, d->mObj, &opts);
+        result = git_checkout_tree(d->repo()->mRepo, d->mObj, opts);
     }
 
     TreeEntry Tree::operator[](const QString& fileName) const

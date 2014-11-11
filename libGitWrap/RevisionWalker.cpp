@@ -84,7 +84,7 @@ namespace Git
     void RevisionWalker::pushRef(Result& result, const QString& name)
     {
         GW_D_CHECKED_VOID(RevisionWalker, result);
-        result = git_revwalk_push_ref( d->mWalker, name.toUtf8().constData() );
+        result = git_revwalk_push_ref( d->mWalker, GW_StringFromQt(name) );
     }
 
     void RevisionWalker::pushHead( Result& result )
@@ -107,7 +107,7 @@ namespace Git
     void RevisionWalker::hideRef(Result& result, const QString& name)
     {
         GW_D_CHECKED_VOID(RevisionWalker, result);
-        result = git_revwalk_hide_ref( d->mWalker, name.toUtf8().constData() );
+        result = git_revwalk_hide_ref( d->mWalker, GW_StringFromQt(name) );
     }
 
     void RevisionWalker::hideHead( Result& result )

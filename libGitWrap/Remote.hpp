@@ -39,7 +39,7 @@ namespace Git
      */
     class GITWRAP_API Remote : public RepoObject
     {
-        GW_PRIVATE_DECL(Remote, RepoObject, public);
+        GW_PRIVATE_DECL(Remote, RepoObject, public)
 
     public:
         typedef RemoteList List;
@@ -63,11 +63,11 @@ namespace Git
         QVector<RefSpec> pushSpecs() const;
 
         GW_DEPRECATED static bool isValidUrl(const QString& url);
-        static bool isSupportedUrl(const QString& url);
+        GW_DEPRECATED static bool isSupportedUrl(const QString& url);
 
         bool connect(Result& result, bool forFetch);
         void disconnect(Result& result);
-        bool download(Result& result);
+        bool download(Result& result, const QStringList &refspecs = QStringList());
         bool updateTips(Result& result);
     };
 

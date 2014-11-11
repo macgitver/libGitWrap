@@ -50,8 +50,7 @@ namespace Git
 
         //-- Buffer ----------------------------------------------------------------------------- >8
 
-        Buffer::Buffer(QTextCodec *codec)
-            : mCodec(codec)
+        Buffer::Buffer()
         {
             memset(&buf, 0, sizeof(buf));
         }
@@ -61,12 +60,17 @@ namespace Git
             git_buf_free( &buf );
         }
 
+        Buffer::operator QString() const
+        {
+            return toString();
+        }
+
         Buffer::operator git_buf*()
         {
             return &buf;
         }
 
-        Buffer::operator const char*()
+        Buffer::operator const char*() const
         {
             return buf.ptr;
         }
@@ -75,8 +79,6 @@ namespace Git
          * @brief        Converts the contents of the buffer into a QString.
          *
          * @return       the buffer in readable text format
-         *
-         * @note         Defaults to QString::fromUtf8() when no text codec is set.
          */
         QString Buffer::toString() const
         {
@@ -84,65 +86,226 @@ namespace Git
         }
 
 
+        //-- CheckoutOptions -------------------------------------------------------------------- >8
+
+        CheckoutOptions::CheckoutOptions()
+        {
+            const git_checkout_options *assert_coo_ptr = &mOptions;
+            Q_UNUSED( assert_coo_ptr )
+
+            git_checkout_init_options( &mOptions, GIT_CHECKOUT_OPTIONS_VERSION );
+            Q_ASSERT( assert_coo_ptr == &mOptions );
+            mPaths = QSharedPointer<StrArrayRef>( new StrArrayRef( mOptions.paths ) );
+        }
+
+        CheckoutOptions::CheckoutOptions(const QStringList& paths)
+        {
+            const git_checkout_options *assert_coo_ptr = &mOptions;
+            Q_UNUSED( assert_coo_ptr )
+
+            git_checkout_init_options( &mOptions, GIT_CHECKOUT_OPTIONS_VERSION );
+            Q_ASSERT( assert_coo_ptr == &mOptions );
+            mPaths = QSharedPointer<StrArrayRef>( new StrArrayRef( mOptions.paths ) );
+            Q_ASSERT( *mPaths == mOptions.paths );
+        }
+
+        CheckoutOptions::operator git_checkout_options*()
+        {
+            return &mOptions;
+        }
+
+        CheckoutOptions::operator const git_checkout_options*() const
+        {
+            return &mOptions;
+        }
+
+        CheckoutOptions::operator git_checkout_options&()
+        {
+            return mOptions;
+        }
+
+        git_checkout_options& CheckoutOptions::operator *()
+        {
+            return mOptions;
+        }
+
+        QStringList CheckoutOptions::paths() const
+        {
+            return *mPaths;
+        }
+
+        void CheckoutOptions::setPaths( const QStringList& paths )
+        {
+            mPaths->setStrings( paths );
+        }
+
+
+        //-- CloneOptions ----------------------------------------------------------------------- >8
+
+        CloneOptions::CloneOptions()
+        {
+            git_clone_init_options( &mOptions, GIT_CLONE_OPTIONS_VERSION );
+            mOptions.checkout_opts = mCheckoutOptions;
+        }
+
+        CloneOptions::operator const git_clone_options*() const
+        {
+            return &mOptions;
+        }
+
+        CloneOptions::operator git_clone_options&()
+        {
+            return mOptions;
+        }
+
+        git_clone_options& CloneOptions::operator *()
+        {
+            return mOptions;
+        }
+
+        CheckoutOptions& CloneOptions::checkoutOptions()
+        {
+            return mCheckoutOptions;
+        }
+
+
         //-- StrArray --------------------------------------------------------------------------- >8
 
         StrArray::StrArray()
         {
-            Q_ASSERT(false);
+            mEncoded.count = 0;
+            mEncoded.strings = 0;
         }
 
-        StrArray::StrArray(const QStringList& sl)
+        StrArray::StrArray(const QStringList &strings)
         {
-            a.count = sl.count();
-            a.strings = new char *[a.count];
-
-            for( int i = 0; i < sl.count(); i++ )
-            {
-                mEncoded << GW_EncodeQString( sl[i] );
-                a.strings[i] = mEncoded[i].data();
-            }
+            setStrings(strings);
         }
 
         StrArray::~StrArray()
         {
-            delete[] a.strings;
+            delete[] mEncoded.strings;
         }
 
         StrArray::operator git_strarray*()
         {
-            return &a;
+            return &mEncoded;
         }
 
         StrArray::operator const git_strarray *() const
         {
-            return &a;
+            return &mEncoded;
         }
+
+        StrArray::operator QStringList() const
+        {
+            return strings();
+        }
+
+        QStringList StrArray::strings() const
+        {
+            QStringList result;
+            for (int i=0; i < mEncoded.count; i++)
+            {
+                result << GW_StringToQt( mEncoded.strings[i] );
+            }
+
+            return result;
+        }
+
+        void StrArray::setStrings(const QStringList &strings)
+        {
+            delete[] mEncoded.strings;
+
+            mEncoded.count = strings.count();
+            mEncoded.strings = new char *[mEncoded.count];
+
+            for( int i = 0; i < strings.count(); i++ )
+            {
+                strcpy( mEncoded.strings[i], GW_EncodeQString( strings[i] ).data() );
+            }
+        }
+
 
         //-- StrArrayRef ------------------------------------------------------------------------ >8
 
-        StrArrayRef& StrArrayRef::operator=(const StrArrayRef&)
+        StrArrayRef::StrArrayRef(git_strarray& _a, bool init)
+            : mEncoded( _a )
         {
-            Q_ASSERT(false);
-            return *this;
+            if ( init ) {
+                mEncoded.strings = 0;
+                mEncoded.count = 0;
+            }
         }
 
-        StrArrayRef::StrArrayRef(git_strarray& _a, const QStringList& sl)
-            : a(_a)
+        StrArrayRef::StrArrayRef(git_strarray& _a, const QStringList& strings)
+            : mEncoded(_a)
         {
-            a.count = sl.count();
-            a.strings = new char *[a.count];
-
-            for(int i=0; i < sl.count(); ++i )
-            {
-                mEncoded << GW_EncodeQString( sl[i] );
-                a.strings[i] = mEncoded[i].data();
-            }
+            Q_ASSERT( !mEncoded.strings && !mEncoded.count );
+            setStrings( strings );
         }
 
         StrArrayRef::~StrArrayRef()
         {
-            delete[] a.strings;
+            delete[] mEncoded.strings;
         }
+
+        bool StrArrayRef::operator ==(const git_strarray& other) const
+        {
+            return &mEncoded == &other;
+        }
+
+        bool StrArrayRef::operator !=(const git_strarray& other) const
+        {
+            return !(*this == other);
+        }
+
+        bool StrArrayRef::operator ==(const git_strarray* other) const
+        {
+            return &mEncoded == other;
+        }
+
+        bool StrArrayRef::operator !=(const git_strarray* other) const
+        {
+            return !(*this == other);
+        }
+
+        StrArrayRef::operator QStringList() const
+        {
+            return strings();
+        }
+
+        QStringList StrArrayRef::strings() const
+        {
+            QStringList result;
+            for (int i=0; i < mEncoded.count; i++)
+            {
+                result << GW_StringToQt( mEncoded.strings[i] );
+            }
+
+            return result;
+        }
+
+        void StrArrayRef::setStrings(const QStringList& strings)
+        {
+            delete[] mEncoded.strings;
+
+            mEncoded.count = strings.count();
+            if ( strings.isEmpty() )
+            {
+                // The strings pointer must be NULL in this case.
+                mEncoded.strings = NULL;
+                return;
+            }
+
+            mEncoded.strings = new char *[mEncoded.count];
+
+            for( int i = 0; i < strings.count(); i++ )
+            {
+                strcpy( mEncoded.strings[i], GW_EncodeQString( strings[i] ).data() );
+            }
+        }
+
 
         FileInfo mkFileInfo(const git_diff_file* df)
         {
