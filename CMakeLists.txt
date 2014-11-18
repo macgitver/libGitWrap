@@ -100,7 +100,7 @@ SET( CPACK_DEBIAN_PACKAGE_ARCHITECTURE      "${CPACK_SYSTEM_NAME}" )
 SET( CPACK_DEBIAN_PACKAGE_SECTION           "devel" )
 SET( CPACK_DEBIAN_PACKAGE_PRIORITY          "optional" )
 #SET( CPACK_DEBIAN_PACKAGE_DEPENDS          "libgit2 (>=0.21.1)" )
-set( CPACK_DEBIAN_BUILD_DEPENDS             debhelper cmake rad-tools )
+set( CPACK_DEBIAN_BUILD_DEPENDS             debhelper cmake )
 
 # == RPM package config ==
 #SET( CPACK_RPM_PACKAGE_REQUIRES "" )
