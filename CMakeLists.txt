@@ -81,7 +81,7 @@ ELSEIF( LINUX )
     SET( CPACK_GENERATOR                TGZ TBZ2 DEB RPM )
     SET( CPACK_SOURCE_GENERATOR         TGZ TBZ2 )
 ELSEIF( WIN32 )
-    SET( CPACK_BINARY_NSIS              ON )
+    SET( CPACK_BINARY_WIX               ON )
 ENDIF()
 
 # == Basic information ==
