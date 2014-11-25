@@ -22,17 +22,13 @@ BASE=${BASE:-`pwd`}
 REF=${REF:-development}
 TMP=$BASE/tmp
 GIT_SRC=$BASE/git_src
-GW_BARE=$BASE/libGitWrap.git
 
 echo "Gathering code for ${PROJECT_NAME}"
 echo "Base      => $BASE"
 echo "Ref       => $REF"
 echo "Tmp       => $TMP"
 echo "GIT_SRC   => $GIT_SRC"
-echo "GW_BARE   => $GW_BARE"
-
-# first get all the sources
-
+echo ""
 echo " * getting sources from ${GIT_REPO_URL}"
 if ! [ -d $GIT_SRC ] ; then
     mkdir -p $GIT_SRC && cd $GIT_SRC
