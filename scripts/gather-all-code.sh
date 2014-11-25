@@ -21,32 +21,32 @@ GIT_REPO_URL=$BASE_GIT_URL/${PROJECT_NAME}.git
 BASE=${BASE:-`pwd`}
 REF=${REF:-development}
 TMP=$BASE/tmp
-GW=$BASE/gw
+GIT_SRC=$BASE/git_src
 GW_BARE=$BASE/libGitWrap.git
 
 echo "Gathering code for ${PROJECT_NAME}"
 echo "Base      => $BASE"
 echo "Ref       => $REF"
 echo "Tmp       => $TMP"
-echo "GW        => $GW"
+echo "GIT_SRC   => $GIT_SRC"
 echo "GW_BARE   => $GW_BARE"
 
 # first get all the sources
 
 echo " * getting sources from ${GIT_REPO_URL}"
-if ! [ -d $GW ] ; then
-    mkdir -p $GW && cd $GW
+if ! [ -d $GIT_SRC ] ; then
+    mkdir -p $GIT_SRC && cd $GIT_SRC
     git clone ${GIT_REPO_URL} .
     git checkout $REF
 else
-    cd $GW
+    cd $GIT_SRC
     git fetch origin
     git update-ref refs/heads/$REF origin/$REF
     git checkout -f $REF
 fi
 
 echo " * Init and update submodules"
-cd $GW
+cd $GIT_SRC
 git submodule update --init --recursive
 git submodule foreach --recursive 'git reset --hard && git clean -dfx'
 
@@ -69,13 +69,13 @@ extract () {
 
 # reduce the files from libgit2 that we bundle to a bare minimum that is required
 # legally and for the build.
-cp $GW/scripts/libgit2.export.attributes $GW/.git/modules/libGitWrap/libgit2/info/attributes
+cp $GIT_SRC/scripts/libgit2.export.attributes $GIT_SRC/.git/modules/libGitWrap/libgit2/info/attributes
 
 # extract all the necessary source files to the temporary directory
-extract $GW . ${PROJECT_NAME}
+extract $GIT_SRC . ${PROJECT_NAME}
 
 for sm in $(git submodule status --recursive | awk '{ print $2 }') ; do
-    extract $GW $sm ${PROJECT_NAME}
+    extract $GIT_SRC $sm ${PROJECT_NAME}
 done
 
 echo "----------------------------------------------------------------"
