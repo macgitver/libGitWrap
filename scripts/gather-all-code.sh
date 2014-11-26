@@ -25,15 +25,31 @@ REF=${REF:-development}
 BASE=${BASE:-`pwd`}
 TMP=$BASE/tmp
 GIT_SRC=$BASE/git_src
+RAD_TOOLS_EXEC=$TMP
 
 echo "Gathering code for $PROJECT_NAME"
 echo "Base      => $BASE"
 echo "Ref       => $REF"
 echo "Tmp       => $TMP"
 echo "GIT_SRC   => $GIT_SRC"
+echo "RAD_TOOLS => $RAD_TOOLS_EXEC"
 echo ""
 
 
+# prepare the RAD-Tools (always fetch master branch)
+prepare-rad-tools () {
+    echo " * Preparing RAD-Tools ..."
+    GIT_RAD_TOOLS=$BASE/git_rad_tools
+    RAD_TOOLS_BUILD=$GIT_RAD_TOOLS/build
+
+    $SCRIPT_DIR/get-git-repo.sh git@github.com:cunz-rad/RAD-Tools.git $GIT_RAD_TOOLS master
+    rm -rf $RAD_TOOLS_BUILD
+    mkdir -p $RAD_TOOLS_BUILD
+    cd $RAD_TOOLS_BUILD
+    cmake -DCMAKE_INSTALL_PREFIX=$RAD_TOOLS_EXEC ..
+    make -s && make install
+    echo " * RAD-Tools installed to $RAD_TOOLS_EXEC"
+}
 
 # extract files from git repository
 # $1 => path to main repository's work-tree
@@ -55,6 +71,8 @@ $SCRIPT_DIR/get-git-repo.sh $GIT_REPO_URL $GIT_SRC $REF
 echo " * Wipe out temporary directory"
 rm -rf $TMP
 mkdir $TMP
+
+prepare-rad-tools
 
 # reduce the files exported from libgit2 to the minimum required to build the bundle
 cp $SCIPT_DIR/libgit2.export.attributes $GIT_SRC/.git/modules/libGitWrap/libgit2/info/attributes
