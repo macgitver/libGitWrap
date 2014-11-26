@@ -29,22 +29,9 @@ echo "Ref       => $REF"
 echo "Tmp       => $TMP"
 echo "GIT_SRC   => $GIT_SRC"
 echo ""
-echo " * getting sources from ${GIT_REPO_URL}"
-if ! [ -d $GIT_SRC ] ; then
-    mkdir -p $GIT_SRC && cd $GIT_SRC
-    git clone ${GIT_REPO_URL} .
-    git checkout $REF
-else
-    cd $GIT_SRC
-    git fetch origin
-    git update-ref refs/heads/$REF origin/$REF
-    git checkout -f $REF
-fi
 
-echo " * Init and update submodules"
-cd $GIT_SRC
-git submodule update --init --recursive
-git submodule foreach --recursive 'git reset --hard && git clean -dfx'
+# get the project sources
+get-git-repo.sh $GIT_REPO_URL $GIT_SRC $REF
 
 echo " * Wipe out temporary directory"
 rm -rf $TMP
