@@ -56,9 +56,8 @@ echo " * Wipe out temporary directory"
 rm -rf $TMP
 mkdir $TMP
 
-# reduce the files from libgit2 that we bundle to a bare minimum that is required
-# legally and for the build.
-cp $GIT_SRC/scripts/libgit2.export.attributes $GIT_SRC/.git/modules/libGitWrap/libgit2/info/attributes
+# reduce the files exported from libgit2 to the minimum required to build the bundle
+cp $SCIPT_DIR/libgit2.export.attributes $GIT_SRC/.git/modules/libGitWrap/libgit2/info/attributes
 
 # extract all the necessary source files to the temporary directory
 export-git-src $GIT_SRC . $PROJECT_NAME
