@@ -14,7 +14,7 @@
 #  !
 #  +-- tmp           -> work-space. Will be re-created every time the script is run!
 
-SCRIPT_DIR=`dirname $0`
+SCRIPT_DIR=$(dirname `readlink -f -- $0`)
 
 PROJECT_NAME=libGitWrap
 BASE_GIT_URL=git@github.com:/macgitver
