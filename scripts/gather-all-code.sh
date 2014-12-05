@@ -75,7 +75,7 @@ mkdir $TMP
 prepare-rad-tools
 
 # reduce the files exported from libgit2 to the minimum required to build the bundle
-cp $SCIPT_DIR/libgit2.export.attributes $GIT_SRC/.git/modules/libGitWrap/libgit2/info/attributes
+cp $SCRIPT_DIR/libgit2.export.attributes $GIT_SRC/.git/modules/libGitWrap/libgit2/info/attributes
 
 # extract all the necessary source files to the temporary directory
 export-git-src $GIT_SRC . $PROJECT_NAME
