@@ -13,7 +13,7 @@ REF=$3
 echo " * getting sources from ${GIT_REPO_URL}"
 if ! [ -d $GIT_SRC ] ; then
     mkdir -p $GIT_SRC && cd $GIT_SRC
-    git clone ${GIT_REPO_URL} .
+    git clone --branch $REF --single-branch ${GIT_REPO_URL} .
     git checkout $REF
 else
     cd $GIT_SRC
