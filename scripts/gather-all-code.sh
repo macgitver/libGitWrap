@@ -61,7 +61,7 @@ export-git-src () {
     dest=$3/$repo
     cd $wd/$repo
     echo " * adding prefix $dest to archive"
-    git archive --prefix $dest/ --format tar $REF | ( cd $TMP && tar xf - )
+    git archive --prefix $dest/ --format tar HEAD | ( cd $TMP && tar xf - )
 }
 
 
