@@ -13,7 +13,7 @@ REF=$3
 echo " * getting sources from ${GIT_REPO_URL}"
 if ! [ -d $GIT_SRC ] ; then
     mkdir -p $GIT_SRC && cd $GIT_SRC
-    git clone --branch $REF --single-branch ${GIT_REPO_URL} .
+    git clone --branch $REF --depth 2 ${GIT_REPO_URL} .
     git checkout $REF
 else
     cd $GIT_SRC
@@ -24,5 +24,5 @@ fi
 
 echo " * Init and update submodules"
 cd $GIT_SRC
-git submodule update --init --recursive
+git submodule update --init --recursive --depth 2
 git submodule foreach --recursive 'git reset --hard && git clean -dfx'
