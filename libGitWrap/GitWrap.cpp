@@ -179,7 +179,6 @@ namespace Git
         CloneOptions::CloneOptions()
         {
             git_clone_init_options( &mOptions, GIT_CLONE_OPTIONS_VERSION );
-            mOptions.checkout_opts = mCheckoutOptions;
         }
 
         CloneOptions::operator const git_clone_options*() const
@@ -197,9 +196,9 @@ namespace Git
             return mOptions;
         }
 
-        CheckoutOptions& CloneOptions::checkoutOptions()
+        CheckoutOptionsRef CloneOptions::checkoutOptions()
         {
-            return mCheckoutOptions;
+            return mOptions.checkout_opts;
         }
 
 

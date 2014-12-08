@@ -208,11 +208,10 @@ namespace Git
             git_clone_options& operator *();
 
         public:
-            CheckoutOptions& checkoutOptions();
+            CheckoutOptionsRef checkoutOptions();
 
         private:
-            CheckoutOptions     mCheckoutOptions;
-            git_clone_options   mOptions;
+            git_clone_options       mOptions;
         };
 
         /**
