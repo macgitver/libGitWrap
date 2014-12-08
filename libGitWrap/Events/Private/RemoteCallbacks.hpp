@@ -23,12 +23,13 @@
 namespace Git
 {
 
+    class IRemoteEvents;
+
     namespace Internal
     {
 
         struct RemoteCallbacks
         {
-
             static int credAccquire(
                     git_cred**                      cred,
                     const char*                     url,

@@ -19,7 +19,6 @@
 #pragma once
 
 #include "libGitWrap/GitWrap.hpp"
-#include "libGitWrap/ObjectId.hpp"
 
 namespace Git
 {

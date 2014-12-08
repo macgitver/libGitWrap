@@ -25,9 +25,6 @@
 namespace Git
 {
 
-    class Result;
-    class CredentialRequest;
-
     namespace Internal
     {
         class CloneOperationPrivate;

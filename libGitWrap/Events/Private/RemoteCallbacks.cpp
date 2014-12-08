@@ -52,7 +52,7 @@ namespace Git
         {
             IRemoteEvents* events = static_cast< IRemoteEvents* >(payload);
 
-            debugEvents("fetchProgress: %u %u %u %lu",
+            debugEvents("fetch progress: %u %u %u %lu",
                         stats->total_objects,
                         stats->received_objects,
                         stats->indexed_objects,
@@ -114,7 +114,7 @@ namespace Git
         {
             IRemoteEvents* events = static_cast< IRemoteEvents* >( payload );
 
-            debugEvents( "Remote Progress: %s", QByteArray( str, len ).constData() );
+            debugEvents( "remote progress: %s", QByteArray( str, len ).constData() );
 
             if (events) {
                 events->remoteMessage(GW_StringToQt(str, len));
@@ -131,7 +131,7 @@ namespace Git
             Git::ObjectId oidFrom = Git::ObjectId::fromRaw(a->id);
             Git::ObjectId oidTo   = Git::ObjectId::fromRaw(b->id);
 
-            debugEvents("Remote Update Tips: %s [%s->%s]",
+            debugEvents("remote update tips: %s [%s->%s]",
                         refname,
                         oidFrom.toAscii().constData(),
                         oidTo.toAscii().constData());
