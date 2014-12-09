@@ -149,8 +149,8 @@ namespace Git
         class CheckoutOptionsRef
         {
         public:
-            CheckoutOptionsRef(git_checkout_options& ref , bool init = false);
-            CheckoutOptionsRef(git_checkout_options &ref, const QStringList& paths, bool init = false);
+            CheckoutOptionsRef(git_checkout_options& ref, bool init = false);
+            CheckoutOptionsRef(git_checkout_options& ref, const QStringList& paths, bool init = false);
 
         public:
             operator git_checkout_options*();

@@ -106,8 +106,8 @@ namespace Git
             }
 
             mPaths = QSharedPointer<StrArrayRef>( new StrArrayRef( mOptionsRef.paths ) );
-
         }
+
         CheckoutOptionsRef::CheckoutOptionsRef(git_checkout_options& ref, const QStringList& paths, bool init)
             : mOptionsRef(ref)
         {

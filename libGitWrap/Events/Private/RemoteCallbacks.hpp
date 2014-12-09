@@ -64,6 +64,14 @@ namespace Git
 
         struct CheckoutCallbacks
         {
+            static int notify(
+                    git_checkout_notify_t why,
+                    const char *path,
+                    const git_diff_file *baseline,
+                    const git_diff_file *target,
+                    const git_diff_file *workdir,
+                    void *payload);
+
             static void checkoutProgress(
                     const char *path,
                     size_t completed_steps,

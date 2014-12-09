@@ -162,6 +162,20 @@ namespace Git
 
         // -- CheckoutCallbacks ->8
 
+        int CheckoutCallbacks::notify( git_checkout_notify_t why,
+                                       const char* path,
+                                       const git_diff_file* baseline,
+                                       const git_diff_file* target,
+                                       const git_diff_file* workdir,
+                                       void* payload )
+        {
+            ICheckoutEvents* events = static_cast< ICheckoutEvents* >( payload );
+
+            // TODO: implement checkout notify callback
+
+            return GITERR_NONE;
+        }
+
         void CheckoutCallbacks::checkoutProgress(const char* path, size_t completed_steps, size_t total_steps, void* payload)
         {
             ICheckoutEvents* events = static_cast< ICheckoutEvents* >( payload );
@@ -176,6 +190,9 @@ namespace Git
 
         void CheckoutCallbacks::initCallbacks(git_checkout_options& opts, ICheckoutEvents* receiver)
         {
+            opts.notify_cb          = &CheckoutCallbacks::notify;
+            opts.notify_payload     = receiver;
+
             opts.progress_cb        = &CheckoutCallbacks::checkoutProgress;
             opts.progress_payload   = receiver;
         }

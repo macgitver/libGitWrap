@@ -51,6 +51,7 @@ namespace Git
         virtual ~ICheckoutEvents();
 
     public:
+        // TODO: implement -> virtual void checkoutNotify();
         virtual void checkoutProgress( const QString& path, quint32 total, quint32 completed ) = 0;
     };
 }
