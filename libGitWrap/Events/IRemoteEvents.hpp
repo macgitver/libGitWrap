@@ -45,6 +45,14 @@ namespace Git
                                  const Git::ObjectId& to ) = 0;
     };
 
+    class GITWRAP_API ICheckoutEvents
+    {
+    public:
+        virtual ~ICheckoutEvents();
+
+    public:
+        virtual void checkoutProgress( const QString& path, quint32 total, quint32 completed ) = 0;
+    };
 }
 
 #endif

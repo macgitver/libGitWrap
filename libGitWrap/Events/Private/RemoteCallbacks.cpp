@@ -159,6 +159,27 @@ namespace Git
             cb.payload             = receiver;
         }
 
+
+        // -- CheckoutCallbacks ->8
+
+        void CheckoutCallbacks::checkoutProgress(const char* path, size_t completed_steps, size_t total_steps, void* payload)
+        {
+            ICheckoutEvents* events = static_cast< ICheckoutEvents* >( payload );
+
+            qreal progress = 100 / total_steps * completed_steps;
+            debugEvents( "checkout progress: %.2f", progress );
+
+            if (events) {
+                events->checkoutProgress( GW_StringToQt(path), total_steps, completed_steps );
+            }
+        }
+
+        void CheckoutCallbacks::initCallbacks(git_checkout_options& opts, ICheckoutEvents* receiver)
+        {
+            opts.progress_cb        = &CheckoutCallbacks::checkoutProgress;
+            opts.progress_payload   = receiver;
+        }
+
     }
 
 }

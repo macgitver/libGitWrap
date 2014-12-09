@@ -24,6 +24,7 @@ namespace Git
 {
 
     class IRemoteEvents;
+    class ICheckoutEvents;
 
     namespace Internal
     {
@@ -61,6 +62,18 @@ namespace Git
                     IRemoteEvents*                  receiver);
         };
 
+        struct CheckoutCallbacks
+        {
+            static void checkoutProgress(
+                    const char *path,
+                    size_t completed_steps,
+                    size_t total_steps,
+                    void *payload);
+
+            static void initCallbacks(
+                    git_checkout_options&       opts,
+                    ICheckoutEvents*            receiver);
+        };
     }
 
 }
