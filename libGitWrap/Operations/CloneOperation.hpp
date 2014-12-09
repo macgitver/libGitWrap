@@ -30,7 +30,7 @@ namespace Git
         class CloneOperationPrivate;
     }
 
-    class GITWRAP_API CloneOperation : public BaseOperation, public IRemoteEvents
+    class GITWRAP_API CloneOperation : public BaseOperation, public IRemoteEvents, public ICheckoutEvents
     {
         Q_OBJECT
     public:
@@ -51,6 +51,7 @@ namespace Git
         bool bare() const;
 
     signals:
+        // realization of IRemoteEvents
         void askCredentials( CredentialRequest& request );
         void transportProgress( quint32 totalObjects,
                                 quint32 indexedObjects,
@@ -63,6 +64,11 @@ namespace Git
         void updateTip( const QString& branchName,
                         const Git::ObjectId& from,
                         const Git::ObjectId& to );
+
+        // realization of ICheckoutEvents
+        void checkoutProgress( const QString& path,
+                               quint32 total,
+                               quint32 completed );
     };
 
 }

@@ -32,7 +32,8 @@ namespace Git
         {
             CheckoutOptionsRef coo = mCloneOpts.checkoutOptions();
             (*coo).checkout_strategy = GIT_CHECKOUT_SAFE_CREATE;
-            // TODO: setup checkout callbacks for notification about the checkout progres
+
+            CheckoutCallbacks::initCallbacks( coo, owner );
             RemoteCallbacks::initCallbacks( (*mCloneOpts).remote_callbacks, owner );
         }
 
