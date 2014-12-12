@@ -18,6 +18,7 @@
 #define GIT_P_H
 
 #include <QDebug>
+#include <QSharedPointer>
 #include <QThreadStorage>
 
 #include "git2.h"
