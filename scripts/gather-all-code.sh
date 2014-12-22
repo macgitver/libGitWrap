@@ -16,6 +16,9 @@
 
 SCRIPT_DIR=$(dirname `readlink -f -- $0`)
 
+source $SCRIPT_DIR/includes/git-funcs.sh
+source $SCRIPT_DIR/includes/rad-tools.sh
+
 PROJECT_NAME=libGitWrap
 BASE_GIT_URL=git@github.com:/macgitver
 GIT_REPO_URL=$BASE_GIT_URL/$PROJECT_NAME.git
@@ -25,65 +28,34 @@ REF=${REF:-development}
 BASE=${BASE:-`pwd`}
 TMP=$BASE/tmp
 GIT_SRC=$BASE/git_src
-RAD_TOOLS_EXEC=$TMP
 
-echo "Gathering code for $PROJECT_NAME"
-echo "Base      => $BASE"
-echo "Ref       => $REF"
-echo "Tmp       => $TMP"
+echo ""
+echo "BASE      => $BASE"
+echo "REF       => $REF"
+echo "TMP       => $TMP"
 echo "GIT_SRC   => $GIT_SRC"
-echo "RAD_TOOLS => $RAD_TOOLS_EXEC"
+echo ""
+echo "Gathering code for $PROJECT_NAME ..."
 echo ""
 
-
-# prepare the RAD-Tools (always fetch master branch)
-prepare-rad-tools () {
-    echo " * Preparing RAD-Tools ..."
-    GIT_RAD_TOOLS=$BASE/git_rad_tools
-    RAD_TOOLS_BUILD=$GIT_RAD_TOOLS/build
-
-    $SCRIPT_DIR/get-git-repo.sh git@github.com:cunz-rad/RAD-Tools.git $GIT_RAD_TOOLS master
-    rm -rf $RAD_TOOLS_BUILD
-    mkdir -p $RAD_TOOLS_BUILD
-    cd $RAD_TOOLS_BUILD
-    cmake -DCMAKE_INSTALL_PREFIX=$RAD_TOOLS_EXEC ..
-    make -s && make install
-    echo " * RAD-Tools installed to $RAD_TOOLS_EXEC"
-}
-
-# extract files from git repository
-# $1 => path to main repository's work-tree
-# $2 => relative path to submodule (. for main repository)
-# $3 => prefix-directory in the destination folder
-export-git-src () {
-    wd=$1
-    repo=$2
-    dest=$3/$repo
-    cd $wd/$repo
-    echo " * adding prefix $dest to archive"
-    git archive --prefix $dest/ --format tar HEAD | ( cd $TMP && tar xf - )
-}
-
-
-# get the project sources
-$SCRIPT_DIR/get-git-repo.sh $GIT_REPO_URL $GIT_SRC $REF
-
+# first clean $TMP dir
 echo " * Wipe out temporary directory"
 rm -rf $TMP
 mkdir $TMP
 
-prepare-rad-tools
+# install RAD-Tools to $TMP dir
+RadTools_Install $BASE/git_rad_tools $TMP &&
+
+# get project sources
+Git_Get $GIT_SRC $GIT_REPO_URL $REF &&
+Git_SparseCheckout $GIT_SRC .git $REF &&
+Git_ForcedModuleUpdate $GIT_SRC &&
 
 # reduce the files exported from libgit2 to the minimum required to build the bundle
-cp $SCRIPT_DIR/libgit2.export.attributes $GIT_SRC/.git/modules/libGitWrap/libgit2/info/attributes
+cp $SCRIPT_DIR/libgit2.export.attributes $GIT_SRC/.git/modules/libGitWrap/libgit2/info/attributes &&
 
 # extract all the necessary source files to the temporary directory
-export-git-src $GIT_SRC . $PROJECT_NAME
-
-cd $GIT_SRC
-for sm in $(git submodule status --recursive | awk '{ print $2 }') ; do
-    export-git-src $GIT_SRC $sm $PROJECT_NAME
-done
+Git_ExportRepo $GIT_SRC $TMP $PROJECT_NAME &&
 
 echo "----------------------------------------------------------------"
 echo "- DONE!"
