@@ -1,3 +1,6 @@
 [submodule "libGitWrap/libgit2"]
 	path = libGitWrap/libgit2
 	url = https://github.com/macgitver/libgit2.git
+[submodule "scripts/includes"]
+	path = scripts/includes
+	url = https://github.com/macgitver/sh-modules.git
