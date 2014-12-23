@@ -17,8 +17,8 @@
  *
  */
 
-#include "GitWrapPrivate.hpp"
-#include "RefLogPrivate.hpp"
+#include "libGitWrap/Private/GitWrapPrivate.hpp"
+#include "libGitWrap/Private/RefLogPrivate.hpp"
 
 namespace Git
 {
