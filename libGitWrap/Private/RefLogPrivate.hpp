@@ -20,8 +20,7 @@
 #ifndef GIT_REF_LOG_PRIVATE_HPP
 #define GIT_REF_LOG_PRIVATE_HPP
 
-#include "RepoObject.hpp"
-#include "RefLog.hpp"
+#include "libGitWrap/Private/RepoObjectPrivate.hpp"
 
 namespace Git
 {
@@ -29,10 +28,10 @@ namespace Git
     namespace Internal
     {
 
-        class RefLogPrivate : public RepoObject
+        class RefLogPrivate : public RepoObjectPrivate
         {
         public:
-            RefLogPrivate(const GitPtr<RepositoryPrivate>& repo, git_reflog* _reflog);
+            RefLogPrivate(const RepositoryPrivate::Ptr& repo, git_reflog* _reflog);
             ~RefLogPrivate();
 
         public:

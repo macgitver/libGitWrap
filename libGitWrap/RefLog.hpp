@@ -20,10 +20,10 @@
 #ifndef GIT_REFLOG_HPP
 #define GIT_REFLOG_HPP
 
-#include "GitWrap.hpp"
-
-#include "Signature.hpp"
-#include "ObjectId.hpp"
+#include "libGitWrap/Base.hpp"
+#include "libGitWrap/Signature.hpp"
+#include "libGitWrap/ObjectId.hpp"
+#include "libGitWrap/RepoObject.hpp"
 
 namespace Git
 {
@@ -64,22 +64,13 @@ namespace Git
         const Raw& raw() const;
 
     private:
-        Internal::GitPtr< Internal::RefLogPrivate > d;
+        QExplicitlySharedDataPointer< Internal::RefLogPrivate > d;
         int index;
     };
 
-    class GITWRAP_API RefLog
+    class GITWRAP_API RefLog : public RepoObject
     {
-    public:
-        explicit RefLog(Internal::RefLogPrivate* _d);
-
-        RefLog();
-        RefLog(const RefLog& other);
-        ~RefLog();
-
-    public:
-        RefLog& operator=(const RefLog& other);
-        bool isValid() const;
+        GW_PRIVATE_DECL( RefLog, RepoObject, public )
 
     public:
         int numEntries();
@@ -89,9 +80,6 @@ namespace Git
 
         void read();
         bool isRead() const;
-
-    private:
-        Internal::GitPtr< Internal::RefLogPrivate > d;
     };
 
 }

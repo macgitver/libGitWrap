@@ -17,6 +17,8 @@
  *
  */
 
+#include "libGitWrap/RefLog.hpp"
+
 #include "libGitWrap/Private/GitWrapPrivate.hpp"
 #include "libGitWrap/Private/RefLogPrivate.hpp"
 
@@ -26,8 +28,8 @@ namespace Git
     namespace Internal
     {
 
-        RefLogPrivate::RefLogPrivate(const GitPtr<RepositoryPrivate>& repo, git_reflog* _reflog)
-            : RepoObject(repo)
+        RefLogPrivate::RefLogPrivate(const RepositoryPrivate::Ptr& repo, git_reflog* _reflog)
+            : RepoObjectPrivate(repo)
         {
             reflog = _reflog;
         }
@@ -40,6 +42,8 @@ namespace Git
         }
 
     }
+
+    GW_PRIVATE_IMPL(RefLog, RepoObject)
 
     RefLogEntry::RefLogEntry()
     {
@@ -56,52 +60,32 @@ namespace Git
     }
 
 
-    RefLog::RefLog()
-    {
-    }
-
-    RefLog::RefLog(Internal::RefLogPrivate *_d)
-        : d(_d)
-    {
-    }
-
-    RefLog::~RefLog()
-    {
-    }
-
-    RefLog& RefLog::operator=(const RefLog& other)
-    {
-        d = other.d;
-        return *this;
-    }
-
-    bool RefLog::isValid() const
-    {
-        return d;
-    }
-
     int RefLog::numEntries()
     {
+        // TODO: missing implementation
         return 0;
     }
 
     RefLogEntry RefLog::at(int index) const
     {
+        // TODO: missing implementation
         return RefLogEntry();
     }
 
     RefLogEntry::RawList RefLog::rawEntries() const
     {
+        // TODO: missing implementation
         return RefLogEntry::RawList();
     }
 
     void RefLog::read()
     {
-
+        // TODO: missing implementation
     }
 
     bool RefLog::isRead() const
     {
+        // TODO: missing implementation
         return true;
     }
 
