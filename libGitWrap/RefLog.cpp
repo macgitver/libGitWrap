@@ -51,15 +51,13 @@ namespace Git
 
         RefLogPrivate::RefLogPrivate( const RepositoryPrivate::Ptr& repo, git_reflog* _reflog )
             : RepoObjectPrivate(repo)
+            , reflog( _reflog )
         {
-            reflog = _reflog;
         }
 
         RefLogPrivate::~RefLogPrivate()
         {
-            if (reflog) {
-                git_reflog_free(reflog);
-            }
+            git_reflog_free(reflog);
         }
 
     }
