@@ -31,6 +31,7 @@ namespace Git
     namespace Internal
     {
         class RefLogPrivate;
+        class RefLogEntryPrivate;
     }
 
     class GITWRAP_API RefLogEntry

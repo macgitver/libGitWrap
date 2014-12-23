@@ -21,6 +21,7 @@
 
 #include "libGitWrap/Private/GitWrapPrivate.hpp"
 #include "libGitWrap/Private/RefLogPrivate.hpp"
+#include "libGitWrap/Private/RefLogEntryPrivate.hpp"
 
 namespace Git
 {
@@ -28,7 +29,21 @@ namespace Git
     namespace Internal
     {
 
-        RefLogPrivate::RefLogPrivate(const RepositoryPrivate::Ptr& repo, git_reflog* _reflog)
+        //-- RefLogEntryPrivate -->8
+
+        RefLogEntryPrivate::RefLogEntryPrivate(const git_reflog_entry* entry)
+            : mEntry( entry )
+        {
+        }
+
+        RefLogEntryPrivate::~RefLogEntryPrivate()
+        {
+        }
+
+
+        //-- RefLogPrivate -->8
+
+        RefLogPrivate::RefLogPrivate( const RepositoryPrivate::Ptr& repo, git_reflog* _reflog )
             : RepoObjectPrivate(repo)
         {
             reflog = _reflog;
