@@ -43,6 +43,12 @@ namespace Git
 
         //-- RefLogPrivate -->8
 
+        RefLogPrivate::RefLogPrivate( RepositoryPrivate *repo, git_reflog *_reflog )
+            : RepoObjectPrivate( repo )
+            , reflog( _reflog )
+        {
+        }
+
         RefLogPrivate::RefLogPrivate( const RepositoryPrivate::Ptr& repo, git_reflog* _reflog )
             : RepoObjectPrivate(repo)
         {
@@ -58,50 +64,70 @@ namespace Git
 
     }
 
+
+    //-- RefLogEntry -->8
+
+    GW_PRIVATE_IMPL(RefLogEntry, Base)
+
+    Signature RefLogEntry::committer() const
+    {
+        GW_CD(RefLogEntry);
+        const git_signature * sig = git_reflog_entry_committer( d->mEntry );
+        return Internal::git2Signature( sig );
+    }
+
+    QString RefLogEntry::message() const
+    {
+        GW_CD(RefLogEntry);
+        return GW_StringToQt( git_reflog_entry_message( d->mEntry ) );
+    }
+
+    ObjectId RefLogEntry::oidOld() const
+    {
+        GW_CD(RefLogEntry);
+        const git_oid *id = git_reflog_entry_id_old( d->mEntry );
+        return id ? ObjectId::fromRaw( id->id ) : ObjectId();
+    }
+
+    ObjectId RefLogEntry::oidNew() const
+    {
+        GW_CD(RefLogEntry);
+        const git_oid *id = git_reflog_entry_id_new( d->mEntry );
+        return id ? ObjectId::fromRaw( id->id ) : ObjectId();
+    }
+
+
+    //-- RefLog -->8
+
     GW_PRIVATE_IMPL(RefLog, RepoObject)
 
-    RefLogEntry::RefLogEntry()
+    int RefLog::count()
     {
-    }
-
-    RefLogEntry::RefLogEntry(Internal::RefLogPrivate *_d, int _index)
-        : d(_d)
-        , index(_index)
-    {
-    }
-
-    RefLogEntry::~RefLogEntry()
-    {
-    }
-
-
-    int RefLog::numEntries()
-    {
-        // TODO: missing implementation
-        return 0;
+        GW_CD(RefLog);
+        return git_reflog_entrycount( d->reflog );
     }
 
     RefLogEntry RefLog::at(int index) const
     {
-        // TODO: missing implementation
-        return RefLogEntry();
+        GW_CD( RefLog );
+
+        const git_reflog_entry *entry = git_reflog_entry_byindex( d->reflog, index);
+        Q_ASSERT( entry );
+
+        return new RefLogEntry::Private(entry);
     }
 
-    RefLogEntry::RawList RefLog::rawEntries() const
+    RefLog RefLog::read( Result &result, const Repository& repo, const QString& refName )
     {
-        // TODO: missing implementation
-        return RefLogEntry::RawList();
-    }
+        GW_CHECK_RESULT(result, RefLog());
 
-    void RefLog::read()
-    {
-        // TODO: missing implementation
-    }
+        Repository::Private* rp = Private::dataOf<Repository>(repo);
 
-    bool RefLog::isRead() const
-    {
-        // TODO: missing implementation
-        return true;
+        git_reflog *out = NULL;
+        result = git_reflog_read( &out, rp->mRepo, GW_StringFromQt(refName) );
+        GW_CHECK_RESULT( result, RefLog() );
+
+        return new RefLog::Private( rp, out );
     }
 
 }

@@ -34,39 +34,15 @@ namespace Git
         class RefLogEntryPrivate;
     }
 
-    class GITWRAP_API RefLogEntry
+    class GITWRAP_API RefLogEntry : public Base
     {
-    public:
-        struct Raw
-        {
-            QDateTime           timeStamp;
-            Signature           comitter;
-            ObjectId            shaOld;
-            ObjectId            shaNew;
-        };
-
-        typedef QVector< Raw > RawList;
+        GW_PRIVATE_DECL(RefLogEntry, Base, public)
 
     public:
-        explicit RefLogEntry(Internal::RefLogPrivate* _d, int index);
-
-    public:
-        RefLogEntry();
-        RefLogEntry(const RefLogEntry& other);
-        ~RefLogEntry();
-
-    public:
-        RefLogEntry& operator=(const RefLogEntry& other);
-        bool isValid() const;
-
-    public:
-        RefLog log() const;
-
-        const Raw& raw() const;
-
-    private:
-        QExplicitlySharedDataPointer< Internal::RefLogPrivate > d;
-        int index;
+        Signature committer() const;
+        QString message() const;
+        ObjectId oidOld() const;
+        ObjectId oidNew() const;
     };
 
     class GITWRAP_API RefLog : public RepoObject
@@ -74,13 +50,10 @@ namespace Git
         GW_PRIVATE_DECL( RefLog, RepoObject, public )
 
     public:
-        int numEntries();
+        int count();
         RefLogEntry at(int index) const;
 
-        RefLogEntry::RawList rawEntries() const;
-
-        void read();
-        bool isRead() const;
+        static RefLog read(Result& result, const Repository& repo, const QString& refName);
     };
 
 }

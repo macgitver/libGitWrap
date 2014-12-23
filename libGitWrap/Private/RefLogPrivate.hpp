@@ -31,6 +31,7 @@ namespace Git
         class RefLogPrivate : public RepoObjectPrivate
         {
         public:
+            RefLogPrivate( RepositoryPrivate* repo, git_reflog* _reflog );
             RefLogPrivate( const RepositoryPrivate::Ptr& repo, git_reflog* _reflog );
             ~RefLogPrivate();
 
