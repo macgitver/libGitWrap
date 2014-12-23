@@ -157,4 +157,12 @@ namespace Git
         result = git_reflog_delete( rp->mRepo, GW_StringFromQt(refName) );
     }
 
+    void RefLog::rename( Result& result, const Repository& repo, const QString& oldRefName, const QString& newRefName )
+    {
+        GW_CHECK_RESULT( result, void() );
+
+        Repository::Private* rp = Private::dataOf<Repository>( repo );
+        result = git_reflog_rename( rp->mRepo, GW_StringFromQt(oldRefName), GW_StringFromQt(newRefName) );
+    }
+
 }
