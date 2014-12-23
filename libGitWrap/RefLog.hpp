@@ -33,7 +33,7 @@ namespace Git
         class RefLogPrivate;
     }
 
-    class RefLogEntry
+    class GITWRAP_API RefLogEntry
     {
     public:
         struct Raw
@@ -68,7 +68,7 @@ namespace Git
         int index;
     };
 
-    class RefLog
+    class GITWRAP_API RefLog
     {
     public:
         explicit RefLog(Internal::RefLogPrivate* _d);
