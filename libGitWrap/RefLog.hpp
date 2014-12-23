@@ -59,7 +59,8 @@ namespace Git
         void write( Result &result ) const;
 
     public:
-        static RefLog read(Result& result, const Repository& repo, const QString& refName);
+        static RefLog read( Result& result, const Repository& repo, const QString& refName );
+        static void remove( Result& result, const Repository& repo, const QString& refName );
     };
 
 }

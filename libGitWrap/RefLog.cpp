@@ -140,13 +140,21 @@ namespace Git
     {
         GW_CHECK_RESULT(result, RefLog());
 
-        Repository::Private* rp = Private::dataOf<Repository>(repo);
+        Repository::Private* rp = Private::dataOf<Repository>( repo );
 
         git_reflog *out = NULL;
         result = git_reflog_read( &out, rp->mRepo, GW_StringFromQt(refName) );
         GW_CHECK_RESULT( result, RefLog() );
 
         return new RefLog::Private( rp, out );
+    }
+
+    void RefLog::remove(Git::Result& result, const Git::Repository& repo, const QString& refName)
+    {
+        GW_CHECK_RESULT( result, void() );
+
+        Repository::Private* rp = Private::dataOf<Repository>( repo );
+        result = git_reflog_delete( rp->mRepo, GW_StringFromQt(refName) );
     }
 
 }
