@@ -115,6 +115,20 @@ namespace Git
         return new RefLogEntry::Private(entry);
     }
 
+    void RefLog::append(Git::Result& result, const Git::ObjectId& oid, const Git::Signature& committer, const QString& message)
+    {
+        GW_CD_CHECKED( RefLog, void(), result );
+        result = git_reflog_append( d->reflog, Internal::ObjectId2git_oid( oid ),
+                                    Internal::signature2git( result, committer ),
+                                    GW_StringFromQt( message ) );
+    }
+
+    void RefLog::removeAt(Git::Result& result, int index, bool rewritePreviousEntry)
+    {
+        GW_CD_CHECKED( RefLog, void(), result );
+        result = git_reflog_drop( d->reflog, index, rewritePreviousEntry ? 1 : 0 );
+    }
+
     void RefLog::write(Git::Result& result) const
     {
         GW_CD_CHECKED(RefLog, void(), result);
