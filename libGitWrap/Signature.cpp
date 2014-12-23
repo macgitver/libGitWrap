@@ -27,6 +27,8 @@ namespace Git
 
         Signature git2Signature( const git_signature* gitsig )
         {
+            Q_ASSERT( gitsig );
+
             QDateTime dt = QDateTime::fromTime_t( gitsig->when.time );
             dt.setUtcOffset( gitsig->when.offset * 60 );
 

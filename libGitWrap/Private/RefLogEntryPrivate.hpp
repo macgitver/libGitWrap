@@ -1,6 +1,8 @@
 /*
  * MacGitver
- * Copyright (C) 2012-2013 Sascha Cunz <sascha@babbelbox.org>
+ * Copyright (C) 2014 The MacGitver-Developers <dev@macgitver.org>
+ *
+ * (C) Nils Fenner <nils@macgitver.org>
  *
  * This program is free software; you can redistribute it and/or modify it under the terms of the
  * GNU General Public License (Version 2) as published by the Free Software Foundation.
@@ -14,11 +16,10 @@
  *
  */
 
-#ifndef GIT_REPO_OBJECT_H
-#define GIT_REPO_OBJECT_H
+#ifndef GITWRAP_REFLOGENTRY_HPP
+#define GITWRAP_REFLOGENTRY_HPP
 
 #include "libGitWrap/Private/BasePrivate.hpp"
-#include "libGitWrap/Private/RepositoryPrivate.hpp"
 
 namespace Git
 {
@@ -27,27 +28,21 @@ namespace Git
 
         /**
          * @internal
-         * @ingroup GitWrap
-         * @brief The RepoObject class
+         * @ingroup     GitWrap
          *
+         * @brief       Internal wrapper for git_reflog_entry from libgit2.
          */
-        class RepoObjectPrivate : public BasePrivate
+        class RefLogEntryPrivate : public BasePrivate
         {
-        protected:
-            RepoObjectPrivate();
-            RepoObjectPrivate(const RepositoryPrivate::Ptr& repo);
-            RepoObjectPrivate(RepositoryPrivate* repo);
+        public:
+            explicit RefLogEntryPrivate(const git_reflog_entry *entry);
+            ~RefLogEntryPrivate();
 
         public:
-            RepositoryPrivate::Ptr repo() const;
-
-        protected:
-            RepositoryPrivate::Ptr mRepo;
+            const git_reflog_entry *    mEntry;
         };
-
     }
-
 }
 
-#endif
+#endif // REFLOGENTRY_HPP
 

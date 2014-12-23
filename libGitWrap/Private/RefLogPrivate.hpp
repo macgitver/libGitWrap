@@ -1,6 +1,9 @@
 /*
- * MacGitver
- * Copyright (C) 2012-2013 Sascha Cunz <sascha@babbelbox.org>
+ * libGitWrap - A Qt wrapper library for libgit2
+ * Copyright (C) 2012-2013 The MacGitver-Developers <dev@macgitver.org>
+ *
+ * (C) Sascha Cunz <sascha@macgitver.org>
+ * (C) Cunz RaD Ltd.
  *
  * This program is free software; you can redistribute it and/or modify it under the terms of the
  * GNU General Public License (Version 2) as published by the Free Software Foundation.
@@ -14,35 +17,26 @@
  *
  */
 
-#ifndef GIT_REPO_OBJECT_H
-#define GIT_REPO_OBJECT_H
+#ifndef GIT_REF_LOG_PRIVATE_HPP
+#define GIT_REF_LOG_PRIVATE_HPP
 
-#include "libGitWrap/Private/BasePrivate.hpp"
-#include "libGitWrap/Private/RepositoryPrivate.hpp"
+#include "libGitWrap/Private/RepoObjectPrivate.hpp"
 
 namespace Git
 {
+
     namespace Internal
     {
 
-        /**
-         * @internal
-         * @ingroup GitWrap
-         * @brief The RepoObject class
-         *
-         */
-        class RepoObjectPrivate : public BasePrivate
+        class RefLogPrivate : public RepoObjectPrivate
         {
-        protected:
-            RepoObjectPrivate();
-            RepoObjectPrivate(const RepositoryPrivate::Ptr& repo);
-            RepoObjectPrivate(RepositoryPrivate* repo);
+        public:
+            RefLogPrivate( RepositoryPrivate* repo, git_reflog* _reflog );
+            RefLogPrivate( const RepositoryPrivate::Ptr& repo, git_reflog* _reflog );
+            ~RefLogPrivate();
 
         public:
-            RepositoryPrivate::Ptr repo() const;
-
-        protected:
-            RepositoryPrivate::Ptr mRepo;
+            git_reflog*         reflog;
         };
 
     }
@@ -50,4 +44,3 @@ namespace Git
 }
 
 #endif
-
