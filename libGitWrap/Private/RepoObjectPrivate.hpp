@@ -17,8 +17,6 @@
 #ifndef GIT_REPO_OBJECT_H
 #define GIT_REPO_OBJECT_H
 
-#include "libGitWrap/Base.hpp"
-
 #include "libGitWrap/Private/BasePrivate.hpp"
 #include "libGitWrap/Private/RepositoryPrivate.hpp"
 
