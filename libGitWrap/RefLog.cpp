@@ -115,6 +115,13 @@ namespace Git
         return new RefLogEntry::Private(entry);
     }
 
+    void RefLog::write(Git::Result& result) const
+    {
+        GW_CD_CHECKED(RefLog, void(), result);
+
+        result = git_reflog_write( d->reflog );
+    }
+
     RefLog RefLog::read( Result &result, const Repository& repo, const QString& refName )
     {
         GW_CHECK_RESULT(result, RefLog());

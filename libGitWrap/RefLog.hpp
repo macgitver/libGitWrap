@@ -53,6 +53,10 @@ namespace Git
         int count();
         RefLogEntry at(int index) const;
 
+    public:
+        void write(Result &result) const;
+
+    public:
         static RefLog read(Result& result, const Repository& repo, const QString& refName);
     };
 
