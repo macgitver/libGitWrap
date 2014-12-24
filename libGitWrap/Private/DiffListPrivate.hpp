@@ -29,17 +29,34 @@ namespace Git
         /**
          * @internal
          * @ingroup     GitWrap
-         * @brief       The DiffListPrivate class
          *
+         * @brief       The DiffListPrivate class
          */
         class DiffListPrivate : public RepoObjectPrivate
         {
         public:
-            DiffListPrivate(const RepositoryPrivate::Ptr& repo, git_diff* diff);
+            explicit DiffListPrivate(const RepositoryPrivate::Ptr& repo, git_diff* diff);
             ~DiffListPrivate();
 
         public:
             git_diff* mDiff;
+        };
+
+        /**
+          * @internal
+          * @ingroup GritWrap
+          *
+          * @brief Wrapper for git_diff_file.
+          */
+        class DiffFilePrivate : public RepoObjectPrivate
+        {
+        public:
+            explicit DiffFilePrivate( const RepositoryPrivate::Ptr& repo, const git_diff_file* diffFile );
+            explicit DiffFilePrivate( RepositoryPrivate* repo, const git_diff_file* diffFile );
+            ~DiffFilePrivate();
+
+        public:
+            const git_diff_file* mDiffFile;
         };
 
     }

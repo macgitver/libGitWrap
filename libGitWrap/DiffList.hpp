@@ -24,8 +24,21 @@ namespace Git
 
     namespace Internal
     {
+        class DiffFilePrivate;
         class DiffListPrivate;
     }
+
+
+    /**
+     * @ingroup GitWrap
+     *
+     * @brief The DiffFile class
+     */
+    class GITWRAP_API DiffFile : public RepoObject
+    {
+        GW_PRIVATE_DECL( DiffFile, RepoObject, public )
+    };
+
 
     /**
      * @ingroup     GitWrap
