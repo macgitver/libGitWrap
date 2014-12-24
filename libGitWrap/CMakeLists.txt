@@ -154,7 +154,7 @@ SET( SRC_FILES
     TreeEntry.cpp
 
     Events/IGitEvents.cpp
-    Events/Private/RemoteCallbacks.cpp
+    Events/Private/GitEventCallbacks.cpp
 
     Operations/BaseOperation.cpp
     Operations/CheckoutOperation.cpp
@@ -242,7 +242,7 @@ SET( PRI_HDR_FILES
     Private/TreeEntryPrivate.hpp
     Private/TreePrivate.hpp
 
-    Events/Private/RemoteCallbacks.hpp
+    Events/Private/GitEventCallbacks.hpp
 
     Operations/Private/BaseOperationPrivate.hpp
     Operations/Private/CheckoutOperationPrivate.hpp

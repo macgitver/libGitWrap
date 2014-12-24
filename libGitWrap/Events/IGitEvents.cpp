@@ -14,7 +14,7 @@
  *
  */
 
-#include "libGitWrap/Events/IRemoteEvents.hpp"
+#include "libGitWrap/Events/IGitEvents.hpp"
 
 namespace Git
 {

@@ -18,7 +18,7 @@
 #include "libGitWrap/Reference.hpp"
 #include "libGitWrap/RefSpec.hpp"
 
-#include "libGitWrap/Events/Private/RemoteCallbacks.hpp"
+#include "libGitWrap/Events/Private/GitEventCallbacks.hpp"
 
 #include "libGitWrap/Private/RemotePrivate.hpp"
 

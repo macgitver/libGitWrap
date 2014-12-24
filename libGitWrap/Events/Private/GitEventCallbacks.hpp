@@ -1,6 +1,6 @@
 /*
  * MacGitver
- * Copyright (C) 2012-2013 Sascha Cunz <sascha@babbelbox.org>
+ * Copyright (C) 2014 Sascha Cunz <sascha@macgitver.org>
  *
  * This program is free software; you can redistribute it and/or modify it under the terms of the
  * GNU General Public License (Version 2) as published by the Free Software Foundation.
@@ -14,8 +14,8 @@
  *
  */
 
-#ifndef GITWRAP_REMOTE_CALLBACKS_HPP
-#define GITWRAP_REMOTE_CALLBACKS_HPP
+#ifndef GITWRAP_GIT_EVENT_CALLBACKS_HPP
+#define GITWRAP_GIT_EVENT_CALLBACKS_HPP
 #pragma once
 
 #include "libGitWrap/Private/GitWrapPrivate.hpp"
