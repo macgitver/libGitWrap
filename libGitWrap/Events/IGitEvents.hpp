@@ -23,7 +23,9 @@
 namespace Git
 {
 
+    class CheckoutNotify;
     class CredentialRequest;
+    class DiffFile;
 
     class GITWRAP_API IRemoteEvents
     {
@@ -51,8 +53,14 @@ namespace Git
         virtual ~ICheckoutEvents();
 
     public:
-        // TODO: implement -> virtual void checkoutNotify();
-        virtual void checkoutProgress( const QString& path, quint32 total, quint32 completed ) = 0;
+        virtual void checkoutNotify( const CheckoutNotify& why,
+                                     const QString& path,
+                                     const DiffFile& baseline,
+                                     const DiffFile& target,
+                                     const DiffFile& workdir ) = 0;
+        virtual void checkoutProgress( const QString& path,
+                                       quint32 total,
+                                       quint32 completed ) = 0;
     };
 }
 

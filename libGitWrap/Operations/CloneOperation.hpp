@@ -30,6 +30,9 @@ namespace Git
         class CloneOperationPrivate;
     }
 
+    class CheckoutNotify;
+
+
     class GITWRAP_API CloneOperation : public BaseOperation, public IRemoteEvents, public ICheckoutEvents
     {
         Q_OBJECT
@@ -66,6 +69,11 @@ namespace Git
                         const Git::ObjectId& to );
 
         // realization of ICheckoutEvents
+        void checkoutNotify( const CheckoutNotify& why,
+                             const QString& path,
+                             const DiffFile& baseline,
+                             const DiffFile& target,
+                             const DiffFile& workdir );
         void checkoutProgress( const QString& path,
                                quint32 total,
                                quint32 completed );

@@ -16,7 +16,10 @@
 
 #include "libGitWrap/Events/IGitEvents.hpp"
 
+#include "libGitWrap/DiffList.hpp"
+
 #include "libGitWrap/Events/Private/GitEventCallbacks.hpp"
+#include "libGitWrap/Private/DiffListPrivate.hpp"
 
 #if 0
 #define debugEvents qDebug
@@ -195,7 +198,14 @@ namespace Git
         {
             ICheckoutEvents* events = static_cast< ICheckoutEvents* >( payload );
 
-            // TODO: implement checkout notify callback
+            if ( events ) {
+                events->checkoutNotify( CheckoutNotify( why ),
+                                        GW_StringToQt( path ),
+                                        new DiffFilePrivate( RepositoryPrivate::Ptr(), baseline ),
+                                        new DiffFilePrivate( RepositoryPrivate::Ptr(), target ),
+                                        new DiffFilePrivate( RepositoryPrivate::Ptr(), workdir )
+                                        );
+            }
 
             return GITERR_NONE;
         }
