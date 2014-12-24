@@ -28,6 +28,30 @@ namespace Git
 {
     class CredentialRequest{}; // temporary dummy
 
+    class CheckoutNotify
+    {
+    public:
+        enum Notify {
+            NotifyNone        = GIT_CHECKOUT_NOTIFY_NONE      ,
+            NotifyConflict    = GIT_CHECKOUT_NOTIFY_CONFLICT  ,
+            NotifyDirty       = GIT_CHECKOUT_NOTIFY_DIRTY     ,
+            NotifyUpdated     = GIT_CHECKOUT_NOTIFY_UPDATED   ,
+            NotifyUntracked   = GIT_CHECKOUT_NOTIFY_UNTRACKED ,
+            NotifyIgnored     = GIT_CHECKOUT_NOTIFY_IGNORED   ,
+
+            NotifyAll         = GIT_CHECKOUT_NOTIFY_ALL
+        };
+
+    public:
+        explicit CheckoutNotify( git_checkout_notify_t why )
+            : mWhy( static_cast<Notify>( why ) )
+        {
+        }
+
+    private:
+        Notify  mWhy;
+    };
+
     namespace Internal
     {
 
