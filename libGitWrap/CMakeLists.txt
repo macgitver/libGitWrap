@@ -153,7 +153,7 @@ SET( SRC_FILES
     TreeBuilder.cpp
     TreeEntry.cpp
 
-    Events/IRemoteEvents.cpp
+    Events/IGitEvents.cpp
     Events/Private/RemoteCallbacks.cpp
 
     Operations/BaseOperation.cpp
@@ -210,7 +210,7 @@ SET( PUB_HDR_FILES
     Operations/CommitOperation.hpp
     Operations/Providers.hpp
 
-    Events/IRemoteEvents.hpp
+    Events/IGitEvents.hpp
 )
 
 SET( PRI_HDR_FILES
