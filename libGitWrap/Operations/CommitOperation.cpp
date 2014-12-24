@@ -1,8 +1,8 @@
 /*
  * libGitWrap - A Qt wrapper library for libgit2
- * Copyright (C) 2013-2014 The MacGitver-Developers <dev@macgitver.org>
+ * Copyright (C) 2014 The MacGitver-Developers <dev@macgitver.org>
  *
- * (C) Nils Fenner <nilsfenner@web.de>
+ * (C) Nils Fenner <nils@macgitver.org>
  *
  * This program is free software; you can redistribute it and/or modify it under the terms of the
  * GNU General Public License (Version 2) as published by the Free Software Foundation.
