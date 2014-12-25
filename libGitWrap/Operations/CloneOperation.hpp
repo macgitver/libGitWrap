@@ -47,11 +47,15 @@ namespace Git
         void setUrl(const QString& url);
         void setPath(const QString& path);
         void setBare(bool bare);
+        void setDepth(uint depth);
+        void setRemoteAlias(const QString& alias);
 
     public:
         QString url() const;
         QString path() const;
         bool bare() const;
+        uint depth() const;
+        QString remoteAlias() const;
 
     signals:
         // realization of IRemoteEvents

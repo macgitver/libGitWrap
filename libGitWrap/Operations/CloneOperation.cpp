@@ -47,7 +47,6 @@ namespace Git
 
             git_repository* repo = NULL;
 
-
             if (mResult) {
                 mResult = git_clone(&repo, GW_StringFromQt(mUrl), GW_StringFromQt(mPath), mCloneOpts);
             }
@@ -87,6 +86,28 @@ namespace Git
         (*(d->mCloneOpts)).bare = bare;
     }
 
+    void CloneOperation::setDepth(uint depth)
+    {
+        GW_D(CloneOperation);
+        Q_ASSERT( !isRunning() );
+        if ( depth > 0 ) {
+            // TODO: not implemented in libgit2 api
+            d->mResult.setError( "Setting the clone depth is not yet supported.", GIT_EUSER );
+            qWarning( "%s: Missing implementation in libgit2 API.", __FUNCTION__ );
+        }
+    }
+
+    void CloneOperation::setRemoteAlias(const QString& alias)
+    {
+        GW_D( CloneOperation );
+        Q_ASSERT( !isRunning() );
+        if ( !alias.isEmpty() ) {
+            // TODO: not implemented in libgit2 api
+            d->mResult.setError( "Setting the Remote-Alias is not yet supported.", GIT_EUSER );
+            qWarning( "%s: Missing implementation in libgit2 API.", __FUNCTION__ );
+        }
+    }
+
     QString CloneOperation::url() const
     {
         GW_CD(CloneOperation);
@@ -103,6 +124,16 @@ namespace Git
     {
         GW_CD(CloneOperation);
         return (*(d->mCloneOpts)).bare;
+    }
+
+    uint CloneOperation::depth() const
+    {
+        return 0;
+    }
+
+    QString CloneOperation::remoteAlias() const
+    {
+        return QString();
     }
 
 }
