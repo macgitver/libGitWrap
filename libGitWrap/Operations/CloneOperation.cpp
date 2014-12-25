@@ -97,6 +97,13 @@ namespace Git
         }
     }
 
+    void CloneOperation::setReference(const QString& refName)
+    {
+        GW_D( CloneOperation );
+        Q_ASSERT( !isRunning() );
+        (*(d->mCloneOpts)).checkout_branch = refName.isEmpty() ? NULL : GW_StringFromQt( refName );
+    }
+
     void CloneOperation::setRemoteAlias(const QString& alias)
     {
         GW_D( CloneOperation );
@@ -129,6 +136,12 @@ namespace Git
     uint CloneOperation::depth() const
     {
         return 0;
+    }
+
+    QString CloneOperation::reference() const
+    {
+        GW_CD( CloneOperation );
+        return GW_StringToQt( (*(d->mCloneOpts)).checkout_branch );
     }
 
     QString CloneOperation::remoteAlias() const

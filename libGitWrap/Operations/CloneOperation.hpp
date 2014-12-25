@@ -48,6 +48,7 @@ namespace Git
         void setPath(const QString& path);
         void setBare(bool bare);
         void setDepth(uint depth);
+        void setReference(const QString& refName);
         void setRemoteAlias(const QString& alias);
 
     public:
@@ -55,6 +56,7 @@ namespace Git
         QString path() const;
         bool bare() const;
         uint depth() const;
+        QString reference() const;
         QString remoteAlias() const;
 
     signals:
