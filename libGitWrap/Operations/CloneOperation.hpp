@@ -20,7 +20,7 @@
 
 #include "libGitWrap/Events/IGitEvents.hpp"
 
-#include "libGitWrap/Operations/BaseOperation.hpp"
+#include "libGitWrap/Operations/RemoteOperations.hpp"
 
 namespace Git
 {
@@ -33,7 +33,7 @@ namespace Git
     class CheckoutNotify;
 
 
-    class GITWRAP_API CloneOperation : public BaseOperation, public IRemoteEvents, public ICheckoutEvents
+    class GITWRAP_API CloneOperation : public BaseRemoteOperation, public ICheckoutEvents
     {
         Q_OBJECT
     public:
@@ -41,7 +41,6 @@ namespace Git
 
     public:
         CloneOperation( QObject* parent = 0 );
-        ~CloneOperation();
 
     public slots:
         void setUrl(const QString& url);
@@ -60,20 +59,6 @@ namespace Git
         QString remoteAlias() const;
 
     signals:
-        // realization of IRemoteEvents
-        void askCredentials( CredentialRequest& request );
-        void transportProgress( quint32 totalObjects,
-                                quint32 indexedObjects,
-                                quint32 receivedObjects,
-                                quint64 receivedBytes );
-        void doneDownloading();
-        void doneIndexing();
-        void error();
-        void remoteMessage( const QString& message );
-        void updateTip( const QString& branchName,
-                        const Git::ObjectId& from,
-                        const Git::ObjectId& to );
-
         // realization of ICheckoutEvents
         void checkoutNotify( const CheckoutNotify& why,
                              const QString& path,

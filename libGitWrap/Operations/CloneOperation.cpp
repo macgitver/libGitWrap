@@ -28,17 +28,12 @@ namespace Git
     {
 
         CloneOperationPrivate::CloneOperationPrivate(CloneOperation* owner)
-            : BaseOperationPrivate(owner)
+            : BaseRemoteOperationPrivate( (*mCloneOpts).remote_callbacks, owner)
         {
             CheckoutOptionsRef coo = mCloneOpts.checkoutOptions();
             (*coo).checkout_strategy = GIT_CHECKOUT_SAFE_CREATE;
 
             CheckoutCallbacks::initCallbacks( coo, owner );
-            RemoteCallbacks::initCallbacks( (*mCloneOpts).remote_callbacks, owner );
-        }
-
-        CloneOperationPrivate::~CloneOperationPrivate()
-        {
         }
 
         void CloneOperationPrivate::run()
@@ -57,11 +52,7 @@ namespace Git
     }
 
     CloneOperation::CloneOperation(QObject* parent)
-        : BaseOperation(*new Private(this), parent)
-    {
-    }
-
-    CloneOperation::~CloneOperation()
+        : BaseRemoteOperation(*new Private(this), parent)
     {
     }
 

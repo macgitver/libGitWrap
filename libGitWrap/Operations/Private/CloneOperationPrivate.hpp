@@ -18,7 +18,7 @@
 
 #include "libGitWrap/Private/GitWrapPrivate.hpp"
 
-#include "libGitWrap/Operations/Private/BaseOperationPrivate.hpp"
+#include "libGitWrap/Operations/Private/RemoteOperationsPrivate.hpp"
 
 namespace Git
 {
@@ -33,11 +33,10 @@ namespace Git
          * @ingroup     GitWrap
          *
          */
-        class CloneOperationPrivate : public BaseOperationPrivate
+        class CloneOperationPrivate : public BaseRemoteOperationPrivate
         {
         public:
             CloneOperationPrivate(CloneOperation* owner);
-            ~CloneOperationPrivate();
 
         public:
             void run();
