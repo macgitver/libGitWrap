@@ -37,6 +37,12 @@ namespace Git
         public:
             explicit BaseRemoteOperationPrivate(git_remote_callbacks& callbacks, BaseRemoteOperation* owner );
             virtual ~BaseRemoteOperationPrivate();
+
+        public:
+            Remote::PrivatePtr      mRemote;
+            QString                 mRefLogMsg;
+            QStringList             mRefSpecs;
+            Signature               mSignature;
         };
 
 
@@ -50,11 +56,6 @@ namespace Git
 
         public:
             git_remote_callbacks    mRemoteCallbacks;
-
-            Remote::PrivatePtr      mRemote;
-            QString                 mRefLogMsg;
-            QStringList             mRefSpecs;
-            Signature               mSignature;
         };
 
 
@@ -68,6 +69,8 @@ namespace Git
 
         public:
             git_remote_callbacks    mRemoteCallbacks;
+
+            git_push_options        mOpts;
         };
 
     }
