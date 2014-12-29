@@ -1,6 +1,6 @@
 /*
  * MacGitver
- * Copyright (C) 2012-2013 Sascha Cunz <sascha@babbelbox.org>
+ * Copyright (C) 2014 Sascha Cunz <sascha@macgitver.org>
  *
  * This program is free software; you can redistribute it and/or modify it under the terms of the
  * GNU General Public License (Version 2) as published by the Free Software Foundation.
@@ -18,7 +18,7 @@
 
 #include "libGitWrap/Private/GitWrapPrivate.hpp"
 
-#include "libGitWrap/Operations/Private/BaseOperationPrivate.hpp"
+#include "libGitWrap/Operations/Private/RemoteOperationsPrivate.hpp"
 
 namespace Git
 {
@@ -33,11 +33,10 @@ namespace Git
          * @ingroup     GitWrap
          *
          */
-        class CloneOperationPrivate : public BaseOperationPrivate
+        class CloneOperationPrivate : public BaseRemoteOperationPrivate
         {
         public:
             CloneOperationPrivate(CloneOperation* owner);
-            ~CloneOperationPrivate();
 
         public:
             void run();

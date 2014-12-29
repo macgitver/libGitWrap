@@ -1,6 +1,6 @@
 /*
  * MacGitver
- * Copyright (C) 2012-2013 Sascha Cunz <sascha@babbelbox.org>
+ * Copyright (C) 2014 Sascha Cunz <sascha@macgitver.org>
  *
  * This program is free software; you can redistribute it and/or modify it under the terms of the
  * GNU General Public License (Version 2) as published by the Free Software Foundation.
@@ -19,7 +19,7 @@
 #include "libGitWrap/Operations/CloneOperation.hpp"
 #include "libGitWrap/Operations/Private/CloneOperationPrivate.hpp"
 
-#include "libGitWrap/Events//Private/RemoteCallbacks.hpp"
+#include "libGitWrap/Events/Private/GitEventCallbacks.hpp"
 
 namespace Git
 {
@@ -28,15 +28,12 @@ namespace Git
     {
 
         CloneOperationPrivate::CloneOperationPrivate(CloneOperation* owner)
-            : BaseOperationPrivate(owner)
+            : BaseRemoteOperationPrivate( (*mCloneOpts).remote_callbacks, owner)
         {
-            CheckoutOptions& coo = mCloneOpts.checkoutOptions();
+            CheckoutOptionsRef coo = mCloneOpts.checkoutOptions();
             (*coo).checkout_strategy = GIT_CHECKOUT_SAFE_CREATE;
-            // TODO: setup checkout callbacks for notification about the checkout progres
-        }
 
-        CloneOperationPrivate::~CloneOperationPrivate()
-        {
+            CheckoutCallbacks::initCallbacks( coo, owner );
         }
 
         void CloneOperationPrivate::run()
@@ -44,8 +41,6 @@ namespace Git
             GW_OP_OWNER(CloneOperation);
 
             git_repository* repo = NULL;
-
-            RemoteCallbacks::initCallbacks( (*mCloneOpts).remote_callbacks, owner );
 
             if (mResult) {
                 mResult = git_clone(&repo, GW_StringFromQt(mUrl), GW_StringFromQt(mPath), mCloneOpts);
@@ -57,11 +52,7 @@ namespace Git
     }
 
     CloneOperation::CloneOperation(QObject* parent)
-        : BaseOperation(*new Private(this), parent)
-    {
-    }
-
-    CloneOperation::~CloneOperation()
+        : BaseRemoteOperation(*new Private(this), parent)
     {
     }
 
@@ -86,6 +77,35 @@ namespace Git
         (*(d->mCloneOpts)).bare = bare;
     }
 
+    void CloneOperation::setDepth(uint depth)
+    {
+        GW_D(CloneOperation);
+        Q_ASSERT( !isRunning() );
+        if ( depth > 0 ) {
+            // TODO: not implemented in libgit2 api
+            d->mResult.setError( "Setting the clone depth is not yet supported.", GIT_EUSER );
+            qWarning( "%s: Missing implementation in libgit2 API.", __FUNCTION__ );
+        }
+    }
+
+    void CloneOperation::setReference(const QString& refName)
+    {
+        GW_D( CloneOperation );
+        Q_ASSERT( !isRunning() );
+        (*(d->mCloneOpts)).checkout_branch = refName.isEmpty() ? NULL : GW_StringFromQt( refName );
+    }
+
+    void CloneOperation::setRemoteAlias(const QString& alias)
+    {
+        GW_D( CloneOperation );
+        Q_ASSERT( !isRunning() );
+        if ( !alias.isEmpty() ) {
+            // TODO: not implemented in libgit2 api
+            d->mResult.setError( "Setting the Remote-Alias is not yet supported.", GIT_EUSER );
+            qWarning( "%s: Missing implementation in libgit2 API.", __FUNCTION__ );
+        }
+    }
+
     QString CloneOperation::url() const
     {
         GW_CD(CloneOperation);
@@ -102,6 +122,22 @@ namespace Git
     {
         GW_CD(CloneOperation);
         return (*(d->mCloneOpts)).bare;
+    }
+
+    uint CloneOperation::depth() const
+    {
+        return 0;
+    }
+
+    QString CloneOperation::reference() const
+    {
+        GW_CD( CloneOperation );
+        return GW_StringToQt( (*(d->mCloneOpts)).checkout_branch );
+    }
+
+    QString CloneOperation::remoteAlias() const
+    {
+        return QString();
     }
 
 }

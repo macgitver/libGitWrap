@@ -153,13 +153,14 @@ SET( SRC_FILES
     TreeBuilder.cpp
     TreeEntry.cpp
 
-    Events/IRemoteEvents.cpp
-    Events/Private/RemoteCallbacks.cpp
+    Events/IGitEvents.cpp
+    Events/Private/GitEventCallbacks.cpp
 
     Operations/BaseOperation.cpp
     Operations/CheckoutOperation.cpp
     Operations/CloneOperation.cpp
     Operations/CommitOperation.cpp
+    Operations/RemoteOperations.cpp
 
     Operations/Private/WorkerThread.cpp
 )
@@ -209,8 +210,9 @@ SET( PUB_HDR_FILES
     Operations/CloneOperation.hpp
     Operations/CommitOperation.hpp
     Operations/Providers.hpp
+    Operations/RemoteOperations.hpp
 
-    Events/IRemoteEvents.hpp
+    Events/IGitEvents.hpp
 )
 
 SET( PRI_HDR_FILES
@@ -242,11 +244,12 @@ SET( PRI_HDR_FILES
     Private/TreeEntryPrivate.hpp
     Private/TreePrivate.hpp
 
-    Events/Private/RemoteCallbacks.hpp
+    Events/Private/GitEventCallbacks.hpp
 
     Operations/Private/BaseOperationPrivate.hpp
     Operations/Private/CheckoutOperationPrivate.hpp
     Operations/Private/CloneOperationPrivate.hpp
+    Operations/Private/RemoteOperationsPrivate.hpp
     Operations/Private/WorkerThread.hpp
 )
 

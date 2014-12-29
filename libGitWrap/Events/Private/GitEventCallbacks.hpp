@@ -1,6 +1,6 @@
 /*
  * MacGitver
- * Copyright (C) 2012-2013 Sascha Cunz <sascha@babbelbox.org>
+ * Copyright (C) 2014 Sascha Cunz <sascha@macgitver.org>
  *
  * This program is free software; you can redistribute it and/or modify it under the terms of the
  * GNU General Public License (Version 2) as published by the Free Software Foundation.
@@ -14,8 +14,8 @@
  *
  */
 
-#ifndef GITWRAP_REMOTE_CALLBACKS_HPP
-#define GITWRAP_REMOTE_CALLBACKS_HPP
+#ifndef GITWRAP_GIT_EVENT_CALLBACKS_HPP
+#define GITWRAP_GIT_EVENT_CALLBACKS_HPP
 #pragma once
 
 #include "libGitWrap/Private/GitWrapPrivate.hpp"
@@ -23,12 +23,14 @@
 namespace Git
 {
 
+    class IRemoteEvents;
+    class ICheckoutEvents;
+
     namespace Internal
     {
 
         struct RemoteCallbacks
         {
-
             static int credAccquire(
                     git_cred**                      cred,
                     const char*                     url,
@@ -60,6 +62,26 @@ namespace Git
                     IRemoteEvents*                  receiver);
         };
 
+        struct CheckoutCallbacks
+        {
+            static int notify(
+                    git_checkout_notify_t why,
+                    const char *path,
+                    const git_diff_file *baseline,
+                    const git_diff_file *target,
+                    const git_diff_file *workdir,
+                    void *payload);
+
+            static void checkoutProgress(
+                    const char *path,
+                    size_t completed_steps,
+                    size_t total_steps,
+                    void *payload);
+
+            static void initCallbacks(
+                    git_checkout_options&       opts,
+                    ICheckoutEvents*            receiver);
+        };
     }
 
 }

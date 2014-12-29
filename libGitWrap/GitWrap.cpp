@@ -86,57 +86,91 @@ namespace Git
         }
 
 
-        //-- CheckoutOptions -------------------------------------------------------------------- >8
+        //-- CheckoutOptionsRef ----------------------------------------------------------------- >8
 
-        CheckoutOptions::CheckoutOptions()
+        /**
+         * @brief           CheckoutRef
+         *
+         *                  By default, the referenced instance is not initialized.
+         *                  If you need to initialize it, set the init parameter to true.
+         *
+         * @param[in,out]   ref the object reference
+         * @param[in]       init initialize the referenced object
+         */
+        CheckoutOptionsRef::CheckoutOptionsRef( git_checkout_options& ref, bool init )
+            : mOptionsRef(ref)
         {
-            const git_checkout_options *assert_coo_ptr = &mOptions;
+            if ( init )
+            {
+                this->init( );
+            }
+
+            mPaths = QSharedPointer<StrArrayRef>( new StrArrayRef( mOptionsRef.paths ) );
+        }
+
+        CheckoutOptionsRef::CheckoutOptionsRef(git_checkout_options& ref, const QStringList& paths, bool init)
+            : mOptionsRef(ref)
+        {
+            if ( init )
+            {
+                this->init();
+            }
+
+            mPaths = QSharedPointer<StrArrayRef>( new StrArrayRef( mOptionsRef.paths ) );
+            mPaths->setStrings( paths );
+            Q_ASSERT( mPaths == mOptionsRef.paths );
+        }
+
+        void CheckoutOptionsRef::init()
+        {
+            const git_checkout_options *assert_coo_ptr = &mOptionsRef;
             Q_UNUSED( assert_coo_ptr )
 
-            git_checkout_init_options( &mOptions, GIT_CHECKOUT_OPTIONS_VERSION );
-            Q_ASSERT( assert_coo_ptr == &mOptions );
-            mPaths = QSharedPointer<StrArrayRef>( new StrArrayRef( mOptions.paths ) );
+            git_checkout_init_options( &mOptionsRef, GIT_CHECKOUT_OPTIONS_VERSION );
+            Q_ASSERT( assert_coo_ptr == &mOptionsRef );
         }
 
-        CheckoutOptions::CheckoutOptions(const QStringList& paths)
+        CheckoutOptionsRef::operator git_checkout_options*()
         {
-            const git_checkout_options *assert_coo_ptr = &mOptions;
-            Q_UNUSED( assert_coo_ptr )
-
-            git_checkout_init_options( &mOptions, GIT_CHECKOUT_OPTIONS_VERSION );
-            Q_ASSERT( assert_coo_ptr == &mOptions );
-            mPaths = QSharedPointer<StrArrayRef>( new StrArrayRef( mOptions.paths ) );
-            Q_ASSERT( *mPaths == mOptions.paths );
+            return &mOptionsRef;
         }
 
-        CheckoutOptions::operator git_checkout_options*()
+        CheckoutOptionsRef::operator const git_checkout_options*() const
         {
-            return &mOptions;
+            return &mOptionsRef;
         }
 
-        CheckoutOptions::operator const git_checkout_options*() const
+        CheckoutOptionsRef::operator git_checkout_options&()
         {
-            return &mOptions;
+            return mOptionsRef;
         }
 
-        CheckoutOptions::operator git_checkout_options&()
+        git_checkout_options& CheckoutOptionsRef::operator *()
         {
-            return mOptions;
+            return mOptionsRef;
         }
 
-        git_checkout_options& CheckoutOptions::operator *()
-        {
-            return mOptions;
-        }
-
-        QStringList CheckoutOptions::paths() const
+        QStringList CheckoutOptionsRef::paths() const
         {
             return *mPaths;
         }
 
-        void CheckoutOptions::setPaths( const QStringList& paths )
+        void CheckoutOptionsRef::setPaths(const QStringList& paths)
         {
             mPaths->setStrings( paths );
+        }
+
+
+        //-- CheckoutOptions -------------------------------------------------------------------- >8
+
+        CheckoutOptions::CheckoutOptions()
+            : CheckoutOptionsRef( mOptionsRef, true )
+        {
+        }
+
+        CheckoutOptions::CheckoutOptions(const QStringList& paths)
+            : CheckoutOptionsRef( mOptionsRef, paths, true )
+        {
         }
 
 
@@ -145,7 +179,6 @@ namespace Git
         CloneOptions::CloneOptions()
         {
             git_clone_init_options( &mOptions, GIT_CLONE_OPTIONS_VERSION );
-            mOptions.checkout_opts = mCheckoutOptions;
         }
 
         CloneOptions::operator const git_clone_options*() const
@@ -163,9 +196,9 @@ namespace Git
             return mOptions;
         }
 
-        CheckoutOptions& CloneOptions::checkoutOptions()
+        CheckoutOptionsRef CloneOptions::checkoutOptions()
         {
-            return mCheckoutOptions;
+            return mOptions.checkout_opts;
         }
 
 

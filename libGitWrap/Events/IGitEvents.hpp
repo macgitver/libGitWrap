@@ -1,6 +1,6 @@
 /*
  * MacGitver
- * Copyright (C) 2012-2013 Sascha Cunz <sascha@babbelbox.org>
+ * Copyright (C) 2014 Sascha Cunz <sascha@macgitver.org>
  *
  * This program is free software; you can redistribute it and/or modify it under the terms of the
  * GNU General Public License (Version 2) as published by the Free Software Foundation.
@@ -14,17 +14,18 @@
  *
  */
 
-#ifndef GITWRAP_IREMOTE_EVENTS_HPP
-#define GITWRAP_IREMOTE_EVENTS_HPP
+#ifndef GITWRAP_IGIT_EVENTS_HPP
+#define GITWRAP_IGIT_EVENTS_HPP
 #pragma once
 
 #include "libGitWrap/GitWrap.hpp"
-#include "libGitWrap/ObjectId.hpp"
 
 namespace Git
 {
 
+    class CheckoutNotify;
     class CredentialRequest;
+    class DiffFile;
 
     class GITWRAP_API IRemoteEvents
     {
@@ -46,6 +47,21 @@ namespace Git
                                  const Git::ObjectId& to ) = 0;
     };
 
+    class GITWRAP_API ICheckoutEvents
+    {
+    public:
+        virtual ~ICheckoutEvents();
+
+    public:
+        virtual void checkoutNotify( const CheckoutNotify& why,
+                                     const QString& path,
+                                     const DiffFile& baseline,
+                                     const DiffFile& target,
+                                     const DiffFile& workdir ) = 0;
+        virtual void checkoutProgress( const QString& path,
+                                       quint32 total,
+                                       quint32 completed ) = 0;
+    };
 }
 
 #endif

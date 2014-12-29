@@ -1,6 +1,6 @@
 /*
  * MacGitver
- * Copyright (C) 2012-2013 Sascha Cunz <sascha@babbelbox.org>
+ * Copyright (C) 2014 Sascha Cunz <sascha@macgitver.org>
  *
  * This program is free software; you can redistribute it and/or modify it under the terms of the
  * GNU General Public License (Version 2) as published by the Free Software Foundation.
@@ -14,9 +14,12 @@
  *
  */
 
-#include "libGitWrap/Events/IRemoteEvents.hpp"
+#include "libGitWrap/Events/IGitEvents.hpp"
 
-#include "libGitWrap/Events/Private/RemoteCallbacks.hpp"
+#include "libGitWrap/DiffList.hpp"
+
+#include "libGitWrap/Events/Private/GitEventCallbacks.hpp"
+#include "libGitWrap/Private/DiffListPrivate.hpp"
 
 #if 0
 #define debugEvents qDebug
@@ -27,6 +30,30 @@
 namespace Git
 {
     class CredentialRequest{}; // temporary dummy
+
+    class CheckoutNotify
+    {
+    public:
+        enum Notify {
+            NotifyNone        = GIT_CHECKOUT_NOTIFY_NONE      ,
+            NotifyConflict    = GIT_CHECKOUT_NOTIFY_CONFLICT  ,
+            NotifyDirty       = GIT_CHECKOUT_NOTIFY_DIRTY     ,
+            NotifyUpdated     = GIT_CHECKOUT_NOTIFY_UPDATED   ,
+            NotifyUntracked   = GIT_CHECKOUT_NOTIFY_UNTRACKED ,
+            NotifyIgnored     = GIT_CHECKOUT_NOTIFY_IGNORED   ,
+
+            NotifyAll         = GIT_CHECKOUT_NOTIFY_ALL
+        };
+
+    public:
+        explicit CheckoutNotify( git_checkout_notify_t why )
+            : mWhy( static_cast<Notify>( why ) )
+        {
+        }
+
+    private:
+        Notify  mWhy;
+    };
 
     namespace Internal
     {
@@ -52,7 +79,7 @@ namespace Git
         {
             IRemoteEvents* events = static_cast< IRemoteEvents* >(payload);
 
-            debugEvents("fetchProgress: %u %u %u %lu",
+            debugEvents("fetch progress: %u %u %u %lu",
                         stats->total_objects,
                         stats->received_objects,
                         stats->indexed_objects,
@@ -114,7 +141,7 @@ namespace Git
         {
             IRemoteEvents* events = static_cast< IRemoteEvents* >( payload );
 
-            debugEvents( "Remote Progress: %s", QByteArray( str, len ).constData() );
+            debugEvents( "remote progress: %s", QByteArray( str, len ).constData() );
 
             if (events) {
                 events->remoteMessage(GW_StringToQt(str, len));
@@ -131,7 +158,7 @@ namespace Git
             Git::ObjectId oidFrom = Git::ObjectId::fromRaw(a->id);
             Git::ObjectId oidTo   = Git::ObjectId::fromRaw(b->id);
 
-            debugEvents("Remote Update Tips: %s [%s->%s]",
+            debugEvents("remote update tips: %s [%s->%s]",
                         refname,
                         oidFrom.toAscii().constData(),
                         oidTo.toAscii().constData());
@@ -157,6 +184,51 @@ namespace Git
             cb.credentials         = &RemoteCallbacks::credAccquire;
 
             cb.payload             = receiver;
+        }
+
+
+        // -- CheckoutCallbacks ->8
+
+        int CheckoutCallbacks::notify( git_checkout_notify_t why,
+                                       const char* path,
+                                       const git_diff_file* baseline,
+                                       const git_diff_file* target,
+                                       const git_diff_file* workdir,
+                                       void* payload )
+        {
+            ICheckoutEvents* events = static_cast< ICheckoutEvents* >( payload );
+
+            if ( events ) {
+                events->checkoutNotify( CheckoutNotify( why ),
+                                        GW_StringToQt( path ),
+                                        new DiffFilePrivate( RepositoryPrivate::Ptr(), baseline ),
+                                        new DiffFilePrivate( RepositoryPrivate::Ptr(), target ),
+                                        new DiffFilePrivate( RepositoryPrivate::Ptr(), workdir )
+                                        );
+            }
+
+            return GITERR_NONE;
+        }
+
+        void CheckoutCallbacks::checkoutProgress(const char* path, size_t completed_steps, size_t total_steps, void* payload)
+        {
+            ICheckoutEvents* events = static_cast< ICheckoutEvents* >( payload );
+
+            qreal progress = 100 / total_steps * completed_steps;
+            debugEvents( "checkout progress: %.2f", progress );
+
+            if (events) {
+                events->checkoutProgress( GW_StringToQt(path), total_steps, completed_steps );
+            }
+        }
+
+        void CheckoutCallbacks::initCallbacks(git_checkout_options& opts, ICheckoutEvents* receiver)
+        {
+            opts.notify_cb          = &CheckoutCallbacks::notify;
+            opts.notify_payload     = receiver;
+
+            opts.progress_cb        = &CheckoutCallbacks::checkoutProgress;
+            opts.progress_payload   = receiver;
         }
 
     }

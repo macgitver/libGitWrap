@@ -1,6 +1,6 @@
 /*
  * MacGitver
- * Copyright (C) 2012-2013 Sascha Cunz <sascha@babbelbox.org>
+ * Copyright (C) 2014 Sascha Cunz <sascha@macgitver.org>
  *
  * This program is free software; you can redistribute it and/or modify it under the terms of the
  * GNU General Public License (Version 2) as published by the Free Software Foundation.
@@ -18,22 +18,22 @@
 #define GITWRAP_CLONE_OPERATION_HPP
 #pragma once
 
-#include "libGitWrap/Events/IRemoteEvents.hpp"
+#include "libGitWrap/Events/IGitEvents.hpp"
 
-#include "libGitWrap/Operations/BaseOperation.hpp"
+#include "libGitWrap/Operations/RemoteOperations.hpp"
 
 namespace Git
 {
-
-    class Result;
-    class CredentialRequest;
 
     namespace Internal
     {
         class CloneOperationPrivate;
     }
 
-    class GITWRAP_API CloneOperation : public BaseOperation, public IRemoteEvents
+    class CheckoutNotify;
+
+
+    class GITWRAP_API CloneOperation : public BaseRemoteOperation, public ICheckoutEvents
     {
         Q_OBJECT
     public:
@@ -41,31 +41,33 @@ namespace Git
 
     public:
         CloneOperation( QObject* parent = 0 );
-        ~CloneOperation();
 
     public slots:
         void setUrl(const QString& url);
         void setPath(const QString& path);
         void setBare(bool bare);
+        void setDepth(uint depth);
+        void setReference(const QString& refName);
+        void setRemoteAlias(const QString& alias);
 
     public:
         QString url() const;
         QString path() const;
         bool bare() const;
+        uint depth() const;
+        QString reference() const;
+        QString remoteAlias() const;
 
     signals:
-        void askCredentials( CredentialRequest& request );
-        void transportProgress( quint32 totalObjects,
-                                quint32 indexedObjects,
-                                quint32 receivedObjects,
-                                quint64 receivedBytes );
-        void doneDownloading();
-        void doneIndexing();
-        void error();
-        void remoteMessage( const QString& message );
-        void updateTip( const QString& branchName,
-                        const Git::ObjectId& from,
-                        const Git::ObjectId& to );
+        // realization of ICheckoutEvents
+        void checkoutNotify( const CheckoutNotify& why,
+                             const QString& path,
+                             const DiffFile& baseline,
+                             const DiffFile& target,
+                             const DiffFile& workdir );
+        void checkoutProgress( const QString& path,
+                               quint32 total,
+                               quint32 completed );
     };
 
 }

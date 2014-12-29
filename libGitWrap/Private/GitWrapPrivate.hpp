@@ -35,7 +35,6 @@ namespace Git
     class FileInfo;
     class Signature;
     class RefSpec;
-    class IRemoteEvents;
 
     namespace Internal
     {
@@ -145,13 +144,13 @@ namespace Git
         /**
          * @internal
          * @ingroup     GitWrap
-         * @brief       Wraps git_checkout_options.
+         * @brief       Thin Qt wrapper to reference an existing instance of git_checkout_options.
          */
-        class CheckoutOptions
+        class CheckoutOptionsRef
         {
         public:
-            CheckoutOptions();
-            CheckoutOptions( const QStringList& paths );
+            CheckoutOptionsRef(git_checkout_options& ref, bool init = false);
+            CheckoutOptionsRef(git_checkout_options& ref, const QStringList& paths, bool init = false);
 
         public:
             operator git_checkout_options*();
@@ -165,12 +164,30 @@ namespace Git
             void setPaths( const QStringList& paths );
 
         private:
+            void init();
+
+        private:
+            git_checkout_options&           mOptionsRef;
+            QSharedPointer<StrArrayRef>     mPaths;
+        };
+
+        /**
+         * @internal
+         * @ingroup     GitWrap
+         * @brief       Thin Qt wrapper around git_checkout_options.
+         */
+        class CheckoutOptions : public CheckoutOptionsRef
+        {
+        public:
+            CheckoutOptions();
+            CheckoutOptions( const QStringList& paths );
+
+        private:
             CheckoutOptions(const CheckoutOptions& other);
             CheckoutOptions& operator =(const CheckoutOptions& other);
 
         private:
-            git_checkout_options            mOptions;
-            QSharedPointer<StrArrayRef>     mPaths;
+            git_checkout_options            mOptionsRef;
         };
 
         /**
@@ -190,11 +207,10 @@ namespace Git
             git_clone_options& operator *();
 
         public:
-            CheckoutOptions& checkoutOptions();
+            CheckoutOptionsRef checkoutOptions();
 
         private:
-            CheckoutOptions     mCheckoutOptions;
-            git_clone_options   mOptions;
+            git_clone_options       mOptions;
         };
 
         /**

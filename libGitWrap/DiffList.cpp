@@ -1,6 +1,6 @@
 /*
  * MacGitver
- * Copyright (C) 2012-2013 Sascha Cunz <sascha@babbelbox.org>
+ * Copyright (C) 2014 Sascha Cunz <sascha@macgitver.org>
  *
  * This program is free software; you can redistribute it and/or modify it under the terms of the
  * GNU General Public License (Version 2) as published by the Free Software Foundation.
@@ -52,6 +52,9 @@ namespace Git
             return mChanges;
         }
 
+
+        //-- DiffListPrivate -->8
+
         DiffListPrivate::DiffListPrivate(const RepositoryPrivate::Ptr& repo, git_diff* diff)
             : RepoObjectPrivate(repo)
             , mDiff(diff)
@@ -67,6 +70,28 @@ namespace Git
                 git_diff_free(mDiff);
             }
         }
+
+
+        //-- DiffFilePrivate -->8
+
+        DiffFilePrivate::DiffFilePrivate(const RepositoryPrivate::Ptr& repo, const git_diff_file* diffFile)
+            : RepoObjectPrivate(repo)
+            , mDiffFile( diffFile )
+        {
+        }
+
+        DiffFilePrivate::DiffFilePrivate(RepositoryPrivate* repo, const git_diff_file* diffFile)
+            : RepoObjectPrivate( repo )
+            , mDiffFile( diffFile )
+        {
+        }
+
+        DiffFilePrivate::~DiffFilePrivate()
+        {
+        }
+
+
+        //-- internal callbacks -->8
 
         static int patchFileCallBack( const git_diff_delta* delta, float, void* cb_data )
         {
@@ -175,6 +200,14 @@ namespace Git
         }
 
     }
+
+
+    //-- DiffFile -->8
+
+    GW_PRIVATE_IMPL( DiffFile, RepoObject )
+
+
+    //-- DiffList -->8
 
     GW_PRIVATE_IMPL(DiffList, RepoObject)
 
