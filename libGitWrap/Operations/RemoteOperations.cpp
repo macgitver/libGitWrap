@@ -51,7 +51,14 @@ namespace Git
 
         void FetchOperationPrivate::run()
         {
+            git_signature* sig = Internal::signature2git(mResult, mSignature);
 
+            if ( mResult )
+            {
+                mResult = git_remote_fetch( mRemote->mRemote, StrArray(mRefSpecs), sig, GW_StringFromQt( mRefLogMsg ) );
+            }
+
+            git_signature_free( sig );
         }
 
 
@@ -86,6 +93,58 @@ namespace Git
     FetchOperation::FetchOperation( QObject* parent )
         : BaseRemoteOperation( *new Private(this), parent )
     {
+    }
+
+    Remote FetchOperation::remote() const
+    {
+        GW_CD( FetchOperation );
+        return d->mRemote;
+    }
+
+    void FetchOperation::setRemote(const Remote& remote)
+    {
+        GW_D( FetchOperation );
+        Q_ASSERT( !isRunning() );
+        d->mRemote = Remote::Private::dataOf<Remote>( remote );
+    }
+
+    const QStringList& FetchOperation::refSpecs() const
+    {
+        GW_CD( FetchOperation );
+        return d->mRefSpecs;
+    }
+
+    void FetchOperation::setRefSpecs(const QStringList& refSprecs)
+    {
+        GW_D( FetchOperation );
+        Q_ASSERT( !isRunning() );
+        d->mRefSpecs = refSprecs;
+    }
+
+    const Signature& FetchOperation::signature() const
+    {
+        GW_CD( FetchOperation );
+        return d->mSignature;
+    }
+
+    void FetchOperation::setSignature(const Signature& sig)
+    {
+        GW_D( FetchOperation );
+        Q_ASSERT( !isRunning() );
+        d->mSignature = sig;
+    }
+
+    QString FetchOperation::refLogMessage() const
+    {
+        GW_CD( FetchOperation );
+        return d->mRefLogMsg;
+    }
+
+    void FetchOperation::setRefLogMessage(const QString& msg)
+    {
+        GW_D( FetchOperation );
+        Q_ASSERT( !isRunning() );
+        d->mRefLogMsg = msg;
     }
 
 

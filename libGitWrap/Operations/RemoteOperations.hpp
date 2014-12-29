@@ -70,6 +70,19 @@ namespace Git
 
     public:
         explicit FetchOperation(QObject* parent = 0);
+
+    public:
+        Remote remote() const ;
+        void setRemote(const Remote& remote);
+
+        const QStringList& refSpecs() const;
+        void setRefSpecs(const QStringList& refSprecs);
+
+        const Signature& signature() const;
+        void setSignature(const Signature& sig);
+
+        QString refLogMessage() const;
+        void setRefLogMessage(const QString& msg);
     };
 
 

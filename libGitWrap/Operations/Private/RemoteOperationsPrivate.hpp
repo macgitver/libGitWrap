@@ -21,6 +21,9 @@
 
 #include "libGitWrap/Operations/Private/BaseOperationPrivate.hpp"
 
+#include "libGitWrap/Private/RemotePrivate.hpp"
+#include "libGitWrap/Signature.hpp"
+
 namespace Git
 {
 
@@ -47,6 +50,11 @@ namespace Git
 
         public:
             git_remote_callbacks    mRemoteCallbacks;
+
+            Remote::PrivatePtr      mRemote;
+            QString                 mRefLogMsg;
+            QStringList             mRefSpecs;
+            Signature               mSignature;
         };
 
 
