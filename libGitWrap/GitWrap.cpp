@@ -358,7 +358,7 @@ namespace Git
 
     GitWrap::GitWrap()
     {
-        git_threads_init();
+        git_libgit2_init();
 
         Q_ASSERT( Internal::GitWrapPrivate::self == NULL );
         Internal::GitWrapPrivate::self = new Internal::GitWrapPrivate;
@@ -370,7 +370,7 @@ namespace Git
         delete Internal::GitWrapPrivate::self;
         Internal::GitWrapPrivate::self = NULL;
 
-        git_threads_shutdown();
+        git_libgit2_shutdown();
     }
 
     Result& GitWrap::lastResult()

@@ -752,7 +752,7 @@ namespace Git
         Remote::List remotes;
         for (size_t i = 0; i < arr.count; i++) {
             git_remote* remote = NULL;
-            result = git_remote_load(&remote, d->mRepo, arr.strings[i]);
+            result = git_remote_lookup(&remote, d->mRepo, arr.strings[i]);
             if (!result) {
                 git_strarray_free(&arr);
                 return Remote::List();
@@ -804,7 +804,7 @@ namespace Git
         GW_CD_EX_CHECKED(Repository, Remote(), result);
 
         git_remote* remote = NULL;
-        result = git_remote_load( &remote, d->mRepo, GW_StringFromQt(remoteName) );
+        result = git_remote_lookup( &remote, d->mRepo, GW_StringFromQt(remoteName) );
 
         if( !result )
         {

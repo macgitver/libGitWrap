@@ -85,7 +85,7 @@ namespace Git
         GW_D_CHECKED(TreeBuilder, ObjectId(), result);
 
         git_oid oid;
-        result = git_treebuilder_write( &oid, d->repo()->mRepo, d->mBuilder );
+        result = git_treebuilder_write( &oid, d->mBuilder );
 
         if( !result )
         {
