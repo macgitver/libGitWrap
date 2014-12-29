@@ -38,7 +38,8 @@ namespace Git
     }
 
     BaseOperation::BaseOperation(Private& _d, QObject* parent)
-        : mData(&_d)
+        : QObject( parent )
+        , mData( &_d )
     {
     }
 
