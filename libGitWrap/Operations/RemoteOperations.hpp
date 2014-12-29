@@ -58,18 +58,6 @@ namespace Git
         void error();
         void remoteMessage(const QString& message);
         void updateTip(const QString& branchName, const ObjectId& from, const ObjectId& to);
-    };
-
-
-    class GITWRAP_API FetchOperation : public BaseRemoteOperation
-    {
-        Q_OBJECT
-
-    public:
-        typedef Internal::FetchOperationPrivate Private;
-
-    public:
-        explicit FetchOperation(QObject* parent = 0);
 
     public:
         Remote remote() const ;
@@ -83,6 +71,18 @@ namespace Git
 
         QString refLogMessage() const;
         void setRefLogMessage(const QString& msg);
+    };
+
+
+    class GITWRAP_API FetchOperation : public BaseRemoteOperation
+    {
+        Q_OBJECT
+
+    public:
+        typedef Internal::FetchOperationPrivate Private;
+
+    public:
+        explicit FetchOperation(QObject* parent = 0);
     };
 
 

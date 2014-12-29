@@ -89,64 +89,64 @@ namespace Git
     {
     }
 
+    Remote BaseRemoteOperation::remote() const
+    {
+        GW_CD( BaseRemoteOperation );
+        return d->mRemote;
+    }
+
+    void BaseRemoteOperation::setRemote(const Remote& remote)
+    {
+        GW_D( BaseRemoteOperation );
+        Q_ASSERT( !isRunning() );
+        d->mRemote = Remote::Private::dataOf<Remote>( remote );
+    }
+
+    const QStringList& BaseRemoteOperation::refSpecs() const
+    {
+        GW_CD( BaseRemoteOperation );
+        return d->mRefSpecs;
+    }
+
+    void BaseRemoteOperation::setRefSpecs(const QStringList& refSprecs)
+    {
+        GW_D( BaseRemoteOperation );
+        Q_ASSERT( !isRunning() );
+        d->mRefSpecs = refSprecs;
+    }
+
+    const Signature& BaseRemoteOperation::signature() const
+    {
+        GW_CD( BaseRemoteOperation );
+        return d->mSignature;
+    }
+
+    void BaseRemoteOperation::setSignature(const Signature& sig)
+    {
+        GW_D( BaseRemoteOperation );
+        Q_ASSERT( !isRunning() );
+        d->mSignature = sig;
+    }
+
+    QString BaseRemoteOperation::refLogMessage() const
+    {
+        GW_CD( BaseRemoteOperation );
+        return d->mRefLogMsg;
+    }
+
+    void BaseRemoteOperation::setRefLogMessage(const QString& msg)
+    {
+        GW_D( BaseRemoteOperation );
+        Q_ASSERT( !isRunning() );
+        d->mRefLogMsg = msg;
+    }
+
 
     //-- FetchOperation -->8
 
     FetchOperation::FetchOperation( QObject* parent )
         : BaseRemoteOperation( *new Private(this), parent )
     {
-    }
-
-    Remote FetchOperation::remote() const
-    {
-        GW_CD( FetchOperation );
-        return d->mRemote;
-    }
-
-    void FetchOperation::setRemote(const Remote& remote)
-    {
-        GW_D( FetchOperation );
-        Q_ASSERT( !isRunning() );
-        d->mRemote = Remote::Private::dataOf<Remote>( remote );
-    }
-
-    const QStringList& FetchOperation::refSpecs() const
-    {
-        GW_CD( FetchOperation );
-        return d->mRefSpecs;
-    }
-
-    void FetchOperation::setRefSpecs(const QStringList& refSprecs)
-    {
-        GW_D( FetchOperation );
-        Q_ASSERT( !isRunning() );
-        d->mRefSpecs = refSprecs;
-    }
-
-    const Signature& FetchOperation::signature() const
-    {
-        GW_CD( FetchOperation );
-        return d->mSignature;
-    }
-
-    void FetchOperation::setSignature(const Signature& sig)
-    {
-        GW_D( FetchOperation );
-        Q_ASSERT( !isRunning() );
-        d->mSignature = sig;
-    }
-
-    QString FetchOperation::refLogMessage() const
-    {
-        GW_CD( FetchOperation );
-        return d->mRefLogMsg;
-    }
-
-    void FetchOperation::setRefLogMessage(const QString& msg)
-    {
-        GW_D( FetchOperation );
-        Q_ASSERT( !isRunning() );
-        d->mRefLogMsg = msg;
     }
 
 
