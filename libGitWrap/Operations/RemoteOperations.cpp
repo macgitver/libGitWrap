@@ -67,13 +67,19 @@ namespace Git
         PushOperationPrivate::PushOperationPrivate(PushOperation *owner)
             : BaseRemoteOperationPrivate(mRemoteCallbacks, owner)
         {
+            git_push_init_options( &mOpts, GIT_PUSH_OPTIONS_VERSION );
         }
 
         void PushOperationPrivate::run()
         {
-            // TODO: needs libgit2 > v0.21.3
-            mResult.setError( "Push operation is not implemented yet!", GIT_EUSER );
-            //mResult = git_remote_push( mRemote, mRefSpecs, mSignature, mRefLogMessage );
+            git_signature* sig = Internal::signature2git( mResult, mSignature );
+
+            if ( mResult )
+            {
+                mResult = git_remote_push( mRemote->mRemote, StrArray(mRefSpecs), &mOpts, sig, GW_StringFromQt( mRefLogMsg ) );
+            }
+
+            git_signature_free( sig );
         }
     }
 
@@ -155,6 +161,18 @@ namespace Git
     PushOperation::PushOperation(QObject* parent)
         : BaseRemoteOperation( *new Private(this), parent )
     {
+    }
+
+    unsigned int PushOperation::pbParallellism() const
+    {
+        GW_CD( PushOperation );
+        return d->mOpts.pb_parallelism;
+    }
+
+    void PushOperation::setPBParallelism(unsigned int maxThreads)
+    {
+        GW_D( PushOperation );
+        d->mOpts.pb_parallelism = maxThreads;
     }
 
 }

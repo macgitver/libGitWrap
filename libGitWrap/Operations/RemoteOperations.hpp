@@ -95,6 +95,10 @@ namespace Git
 
     public:
         explicit PushOperation(QObject* parent = 0);
+
+    public:
+        unsigned int pbParallellism() const;
+        void setPBParallelism(unsigned int maxThreads);
     };
 }
 
