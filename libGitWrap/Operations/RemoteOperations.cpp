@@ -71,7 +71,9 @@ namespace Git
 
         void PushOperationPrivate::run()
         {
-
+            // TODO: needs libgit2 > v0.21.3
+            mResult.setError( "Push operation is not implemented yet!", GIT_EUSER );
+            //mResult = git_remote_push( mRemote, mRefSpecs, mSignature, mRefLogMessage );
         }
     }
 
