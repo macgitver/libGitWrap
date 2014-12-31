@@ -57,6 +57,7 @@ namespace Git
 
             if ( mRemote )
             {
+                Q_ASSERT( !mRemote->repo() );
 
                 (*mCloneOpts).remote_cb = CB_GetRemote;
                 (*mCloneOpts).remote_cb_payload = mRemote->mRemote;
