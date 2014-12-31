@@ -25,6 +25,20 @@ namespace Git
     namespace Internal
     {
 
+        int CloneOperationPrivate::CB_CreateRepository(git_repository** out, const char* path, int bare, void* payload)
+        {
+            CloneOperationPrivate* p = static_cast< CloneOperationPrivate* >( payload );
+            Q_ASSERT( p );
+
+            GW_CHECK_RESULT( p->mResult, p->mResult.errorCode() );
+
+            p->mResult = git_repository_init( out, path, bare );
+            GW_CHECK_RESULT( p->mResult, p->mResult.errorCode() );
+
+            return p->mResult.errorCode();
+        }
+
+
         CloneOperationPrivate::CloneOperationPrivate(CloneOperation* owner)
             : BaseRemoteOperationPrivate( (*mCloneOpts).remote_callbacks, owner)
         {
@@ -32,19 +46,21 @@ namespace Git
             (*coo).checkout_strategy = GIT_CHECKOUT_SAFE_CREATE;
 
             CheckoutCallbacks::initCallbacks( coo, owner );
+
+            (*mCloneOpts).repository_cb = CB_CreateRepository;
+            (*mCloneOpts).repository_cb_payload = this;
         }
 
         void CloneOperationPrivate::run()
         {
             GW_CHECK_RESULT( mResult, void() );
 
-            git_repository* repo = NULL;
 
-            if (mResult) {
-                mResult = git_clone(&repo, GW_StringFromQt(mUrl), GW_StringFromQt(mPath), mCloneOpts);
-            }
 
-            git_repository_free(repo);
+            git_repository* clone = NULL;
+            mResult = git_clone(&clone, GW_StringFromQt(mUrl), GW_StringFromQt(mPath), mCloneOpts);
+            GW_CHECK_RESULT( mResult, void() );
+            mClonedRepo = new Repository::Private( clone );
         }
 
     }
