@@ -14,8 +14,6 @@
  *
  */
 
-#include <QStringBuilder>
-
 #include "libGitWrap/Operations/CloneOperation.hpp"
 #include "libGitWrap/Operations/Private/CloneOperationPrivate.hpp"
 
@@ -38,7 +36,7 @@ namespace Git
 
         void CloneOperationPrivate::run()
         {
-            GW_OP_OWNER(CloneOperation);
+            GW_CHECK_RESULT( mResult, void() );
 
             git_repository* repo = NULL;
 
@@ -81,7 +79,7 @@ namespace Git
     {
         GW_D(CloneOperation);
         Q_ASSERT( !isRunning() );
-        if ( depth > 0 ) {
+        if ( depth ) {
             // TODO: not implemented in libgit2 api
             d->mResult.setError( "Setting the clone depth is not yet supported.", GIT_EUSER );
             qWarning( "%s: Missing implementation in libgit2 API.", __FUNCTION__ );

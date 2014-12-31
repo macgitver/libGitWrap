@@ -47,9 +47,7 @@ namespace Git
     Remote Remote::create(Result& result, const Repository& repository, const QString& name,
                           const QString& url, const QString& fetchSpec)
     {
-        if (!result) {
-            return Remote();
-        }
+        GW_CHECK_RESULT( result, Remote() );
 
         if (!repository.isValid()) {
             result.setInvalidObject();
