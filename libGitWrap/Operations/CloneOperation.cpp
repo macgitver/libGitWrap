@@ -66,7 +66,7 @@ namespace Git
     }
 
     CloneOperation::CloneOperation(QObject* parent)
-        : BaseRemoteOperation(*new Private(this), parent)
+        : BaseRemoteOperation( *new Private(this), parent )
     {
     }
 
