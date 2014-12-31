@@ -31,6 +31,23 @@ namespace Git
 
         //-- BaseRemoteOperationPrivate -->8
 
+        int BaseRemoteOperationPrivate::CB_GetRemote(git_remote** out, git_repository* repo, const char* name, const char* url, void* payload)
+        {
+            // Do not modify "out" here!
+            // It is already configured correctly.
+
+            Q_UNUSED( repo )
+            Q_UNUSED( name )
+            Q_UNUSED( url )
+
+            RemotePrivate* p = static_cast< RemotePrivate* >( payload );
+            Q_ASSERT( p );
+
+            *out = p->mRemote;
+
+            return 0;
+        }
+
         BaseRemoteOperationPrivate::BaseRemoteOperationPrivate(git_remote_callbacks& callbacks, BaseRemoteOperation *owner)
             : BaseOperationPrivate( owner )
         {

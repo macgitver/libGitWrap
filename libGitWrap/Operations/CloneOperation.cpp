@@ -55,7 +55,12 @@ namespace Git
         {
             GW_CHECK_RESULT( mResult, void() );
 
+            if ( mRemote )
+            {
 
+                (*mCloneOpts).remote_cb = CB_GetRemote;
+                (*mCloneOpts).remote_cb_payload = mRemote->mRemote;
+            }
 
             git_repository* clone = NULL;
             mResult = git_clone(&clone, GW_StringFromQt(mUrl), GW_StringFromQt(mPath), mCloneOpts);
