@@ -17,10 +17,10 @@
  */
 
 #include "RemoteOperations.hpp"
+#include "Private/RemoteOperationsPrivate.hpp"
 
 #include "libGitWrap/Events/Private/GitEventCallbacks.hpp"
 
-#include "Private/RemoteOperationsPrivate.hpp"
 
 
 namespace Git
@@ -68,7 +68,7 @@ namespace Git
 
         void FetchOperationPrivate::run()
         {
-            git_signature* sig = Internal::signature2git(mResult, mSignature);
+            git_signature* sig = signature2git(mResult, mSignature);
 
             if ( mResult )
             {
@@ -89,7 +89,7 @@ namespace Git
 
         void PushOperationPrivate::run()
         {
-            git_signature* sig = Internal::signature2git( mResult, mSignature );
+            git_signature* sig = signature2git( mResult, mSignature );
 
             if ( mResult )
             {

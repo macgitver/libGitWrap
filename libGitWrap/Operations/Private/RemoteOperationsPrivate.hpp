@@ -35,11 +35,11 @@ namespace Git
         class BaseRemoteOperationPrivate : public BaseOperationPrivate
         {
         public:
-            static int CB_GetRemote( git_remote** out,
-                                     git_repository* repo,
-                                     const char* name,
-                                     const char* url,
-                                     void* payload );
+            static int CB_CreateRemote( git_remote** out,
+                                        git_repository* repo,
+                                        const char* name,
+                                        const char* url,
+                                        void* payload );
 
         public:
             explicit BaseRemoteOperationPrivate(git_remote_callbacks& callbacks, BaseRemoteOperation* owner );

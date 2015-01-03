@@ -763,15 +763,11 @@ namespace Git
     {
         GW_CD_CHECKED(Repository, QStringList(), result);
 
-        git_strarray arr;
-        result = git_remote_list( &arr, d->mRepo );
-        if( !result )
-        {
-            return QStringList();
-        }
+        Internal::StrArray arr;
+        result = git_remote_list( arr, d->mRepo );
+        GW_CHECK_RESULT( result, QStringList() );
 
-        // slFromStrArray frees the git_strarray for us
-        return Internal::slFromStrArray( &arr );
+        return arr.strings();
     }
 
     /**

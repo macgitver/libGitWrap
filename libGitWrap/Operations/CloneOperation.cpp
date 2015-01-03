@@ -14,8 +14,8 @@
  *
  */
 
-#include "libGitWrap/Operations/CloneOperation.hpp"
-#include "libGitWrap/Operations/Private/CloneOperationPrivate.hpp"
+#include "CloneOperation.hpp"
+#include "Private/CloneOperationPrivate.hpp"
 
 #include "libGitWrap/Events/Private/GitEventCallbacks.hpp"
 
