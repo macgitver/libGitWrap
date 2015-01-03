@@ -105,7 +105,7 @@ namespace Git
                 this->init( );
             }
 
-            mPaths = QSharedPointer<StrArrayRef>( new StrArrayRef( mOptionsRef.paths ) );
+            mPaths = new StrArrayRef( mOptionsRef.paths );
         }
 
         CheckoutOptionsRef::CheckoutOptionsRef(git_checkout_options& ref, const QStringList& paths, bool init)
@@ -116,9 +116,9 @@ namespace Git
                 this->init();
             }
 
-            mPaths = QSharedPointer<StrArrayRef>( new StrArrayRef( mOptionsRef.paths ) );
+            mPaths = new StrArrayRef( mOptionsRef.paths );
             mPaths->setStrings( paths );
-            Q_ASSERT( mPaths == mOptionsRef.paths );
+            Q_ASSERT( (*mPaths) == mOptionsRef.paths );
         }
 
         void CheckoutOptionsRef::init()

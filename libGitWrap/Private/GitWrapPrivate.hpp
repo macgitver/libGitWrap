@@ -114,7 +114,7 @@ namespace Git
          * @ingroup     GitWrap
          * @brief       Wraps an existing git_strarray for conversion from and to a QStringList.
          */
-        class StrArrayRef
+        class StrArrayRef : public QSharedData
         {
         public:
             StrArrayRef(git_strarray& _a, bool init = false);
@@ -171,8 +171,8 @@ namespace Git
             void init();
 
         private:
-            git_checkout_options&           mOptionsRef;
-            QSharedPointer<StrArrayRef>     mPaths;
+            git_checkout_options&                       mOptionsRef;
+            QExplicitlySharedDataPointer<StrArrayRef>   mPaths;
         };
 
         /**
