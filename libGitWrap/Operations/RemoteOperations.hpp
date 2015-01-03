@@ -60,9 +60,6 @@ namespace Git
         void updateTip(const QString& branchName, const ObjectId& from, const ObjectId& to);
 
     public:
-        Remote remote() const ;
-        void setRemote(const Remote& remote);
-
         const QStringList& refSpecs() const;
         void setRefSpecs(const QStringList& refSprecs);
 

@@ -22,7 +22,6 @@
 #include "libGitWrap/Operations/Private/BaseOperationPrivate.hpp"
 
 #include "libGitWrap/Repository.hpp"
-#include "libGitWrap/Private/RemotePrivate.hpp"
 #include "libGitWrap/Signature.hpp"
 
 namespace Git
@@ -42,6 +41,10 @@ namespace Git
                                         const char* url,
                                         void* payload );
 
+            static Remote::PrivatePtr lookupRemote( Result& result,
+                                                    Repository::Private* repo,
+                                                    QString& remoteName );
+
         public:
             explicit BaseRemoteOperationPrivate(git_remote_callbacks& callbacks, BaseRemoteOperation* owner );
             virtual ~BaseRemoteOperationPrivate();
@@ -50,7 +53,6 @@ namespace Git
             Repository      mRepo;
 
             QString         mRemoteAlias;
-            Remote::PrivatePtr      mRemote;
             QString         mRefLogMsg;
             QStringList     mRefSpecs;
             Signature       mSignature;

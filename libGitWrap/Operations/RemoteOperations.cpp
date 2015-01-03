@@ -21,6 +21,7 @@
 
 #include "libGitWrap/Events/Private/GitEventCallbacks.hpp"
 
+#include "libGitWrap/Private/RemotePrivate.hpp"
 
 
 namespace Git
@@ -44,7 +45,34 @@ namespace Git
             return error;
         }
 
+        Remote::PrivatePtr BaseRemoteOperationPrivate::lookupRemote(Result& result, Repository::Private* repo, QString& remoteName)
+        {
+            repo->isValid( result, repo );
+            GW_CHECK_RESULT( result, Remote::PrivatePtr() );
 
+            if ( remoteName.isEmpty() )
+            {
+                StrArray remoteNames;
+                result = git_remote_list(remoteNames, repo->mRepo);
+                GW_CHECK_RESULT( result, Remote::PrivatePtr() );
+
+                if ( remoteNames.count() == 1 )
+                {
+                    remoteName = remoteNames.strings().first();
+                }
+                else
+                {
+                    result.setError( GIT_ENOTFOUND );
+                }
+            }
+
+            GW_CHECK_RESULT( result, Remote::PrivatePtr() );
+
+            git_remote* remote = NULL;
+            result = git_remote_lookup( &remote, repo->mRepo, GW_StringFromQt(remoteName) );
+            GW_CHECK_RESULT( result, Remote::PrivatePtr() );
+
+            return Remote::PrivatePtr( new RemotePrivate( repo, remote ) );
         }
 
         BaseRemoteOperationPrivate::BaseRemoteOperationPrivate(git_remote_callbacks& callbacks, BaseRemoteOperation *owner)
@@ -69,9 +97,12 @@ namespace Git
         {
             git_signature* sig = signature2git(mResult, mSignature);
 
+            Repository::Private* rp = Repository::Private::dataOf<Repository>( mRepo );
+            Remote::PrivatePtr remote = lookupRemote( mResult, rp, mRemoteAlias );
+
             if ( mResult )
             {
-                mResult = git_remote_fetch( mRemote->mRemote, StrArray(mRefSpecs), sig, GW_StringFromQt( mRefLogMsg ) );
+                mResult = git_remote_fetch( remote->mRemote, StrArray(mRefSpecs), sig, GW_StringFromQt( mRefLogMsg ) );
             }
 
             git_signature_free( sig );
@@ -90,9 +121,12 @@ namespace Git
         {
             git_signature* sig = signature2git( mResult, mSignature );
 
+            Repository::Private* rp = Repository::Private::dataOf<Repository>( mRepo );
+            Remote::PrivatePtr remote = lookupRemote( mResult, rp, mRemoteAlias );
+
             if ( mResult )
             {
-                mResult = git_remote_push( mRemote->mRemote, StrArray(mRefSpecs), &mOpts, sig, GW_StringFromQt( mRefLogMsg ) );
+                mResult = git_remote_push( remote->mRemote, StrArray(mRefSpecs), &mOpts, sig, GW_StringFromQt( mRefLogMsg ) );
             }
 
             git_signature_free( sig );
@@ -109,19 +143,6 @@ namespace Git
 
     BaseRemoteOperation::~BaseRemoteOperation()
     {
-    }
-
-    Remote BaseRemoteOperation::remote() const
-    {
-        GW_CD( BaseRemoteOperation );
-        return d->mRemote;
-    }
-
-    void BaseRemoteOperation::setRemote(const Remote& remote)
-    {
-        GW_D( BaseRemoteOperation );
-        Q_ASSERT( !isRunning() );
-        d->mRemote = Remote::Private::dataOf<Remote>( remote );
     }
 
     const QStringList& BaseRemoteOperation::refSpecs() const
