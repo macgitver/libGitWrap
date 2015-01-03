@@ -220,6 +220,11 @@ namespace Git
             delete[] mEncoded.strings;
         }
 
+        int StrArray::count() const
+        {
+            return mEncoded.count;
+        }
+
         StrArray::operator git_strarray*()
         {
             return &mEncoded;
@@ -301,6 +306,11 @@ namespace Git
         bool StrArrayRef::operator !=(const git_strarray* other) const
         {
             return !(*this == other);
+        }
+
+        int StrArrayRef::count() const
+        {
+            return mEncoded.count;
         }
 
         StrArrayRef::operator QStringList() const

@@ -96,6 +96,8 @@ namespace Git
             operator QStringList() const;
 
         public:
+            int count() const;
+
             QStringList strings() const;
             void setStrings( const QStringList& strings);
 
@@ -131,6 +133,8 @@ namespace Git
             StrArrayRef& operator=(const StrArrayRef&);
 
         public:
+            int count() const;
+
             QStringList strings() const;
             void setStrings( const QStringList& strings );
 
