@@ -45,8 +45,6 @@ namespace Git
             void run();
 
         public:
-            RepositoryPrivate::Ptr  mClonedRepo;
-
             QString                 mUrl;
             QString                 mPath;
 

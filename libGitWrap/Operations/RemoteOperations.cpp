@@ -31,21 +31,20 @@ namespace Git
 
         //-- BaseRemoteOperationPrivate -->8
 
-        int BaseRemoteOperationPrivate::CB_GetRemote(git_remote** out, git_repository* repo, const char* name, const char* url, void* payload)
+        int BaseRemoteOperationPrivate::CB_CreateRemote(git_remote** out, git_repository* repo, const char* name, const char* url, void* payload)
         {
-            // Do not modify "out" here!
-            // It is already configured correctly.
-
-            Q_UNUSED( repo )
-            Q_UNUSED( name )
-            Q_UNUSED( url )
-
-            RemotePrivate* p = static_cast< RemotePrivate* >( payload );
+            BaseRemoteOperationPrivate* p = static_cast< BaseRemoteOperationPrivate* >( payload );
             Q_ASSERT( p );
 
-            *out = p->mRemote;
+            const char* alias = p->mRemoteAlias.isEmpty() ? name : GW_StringFromQt(p->mRemoteAlias);
 
-            return 0;
+            int error = 0;
+            error = git_remote_create(out, repo, alias, url);
+
+            return error;
+        }
+
+
         }
 
         BaseRemoteOperationPrivate::BaseRemoteOperationPrivate(git_remote_callbacks& callbacks, BaseRemoteOperation *owner)

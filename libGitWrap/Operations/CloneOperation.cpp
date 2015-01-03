@@ -19,6 +19,9 @@
 
 #include "libGitWrap/Events/Private/GitEventCallbacks.hpp"
 
+#include "libGitWrap/Private/RepositoryPrivate.hpp"
+
+
 namespace Git
 {
 
@@ -55,18 +58,13 @@ namespace Git
         {
             GW_CHECK_RESULT( mResult, void() );
 
-            if ( mRemote )
-            {
-                Q_ASSERT( !mRemote->repo() );
-
-                (*mCloneOpts).remote_cb = CB_GetRemote;
-                (*mCloneOpts).remote_cb_payload = mRemote->mRemote;
-            }
+            (*mCloneOpts).remote_cb = CB_CreateRemote;
+            (*mCloneOpts).remote_cb_payload = this;
 
             git_repository* clone = NULL;
             mResult = git_clone(&clone, GW_StringFromQt(mUrl), GW_StringFromQt(mPath), mCloneOpts);
             GW_CHECK_RESULT( mResult, void() );
-            mClonedRepo = new Repository::Private( clone );
+            mRepo = new RepositoryPrivate( clone );
         }
 
     }
@@ -119,11 +117,7 @@ namespace Git
     {
         GW_D( CloneOperation );
         Q_ASSERT( !isRunning() );
-        if ( !alias.isEmpty() ) {
-            // TODO: not implemented in libgit2 api
-            d->mResult.setError( "Setting the Remote-Alias is not yet supported.", GIT_EUSER );
-            qWarning( "%s: Missing implementation in libgit2 API.", __FUNCTION__ );
-        }
+        d->mRemoteAlias = alias;
     }
 
     QString CloneOperation::url() const
@@ -157,7 +151,8 @@ namespace Git
 
     QString CloneOperation::remoteAlias() const
     {
-        return QString();
+        GW_CD( CloneOperation );
+        return d->mRemoteAlias;
     }
 
 }

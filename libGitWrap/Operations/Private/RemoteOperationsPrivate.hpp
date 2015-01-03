@@ -21,6 +21,7 @@
 
 #include "libGitWrap/Operations/Private/BaseOperationPrivate.hpp"
 
+#include "libGitWrap/Repository.hpp"
 #include "libGitWrap/Private/RemotePrivate.hpp"
 #include "libGitWrap/Signature.hpp"
 
@@ -46,10 +47,13 @@ namespace Git
             virtual ~BaseRemoteOperationPrivate();
 
         public:
+            Repository      mRepo;
+
+            QString         mRemoteAlias;
             Remote::PrivatePtr      mRemote;
-            QString                 mRefLogMsg;
-            QStringList             mRefSpecs;
-            Signature               mSignature;
+            QString         mRefLogMsg;
+            QStringList     mRefSpecs;
+            Signature       mSignature;
         };
 
 
