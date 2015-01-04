@@ -142,7 +142,7 @@ namespace Git
 
             int i = 0;
             while (flags[i] != CheckoutNone) {
-                if (mOptions.testFlag(CheckoutFlag(flags[i++]))) {
+                if (mStrategy.testFlag(CheckoutFlag(flags[i++]))) {
                     (*mOpts).checkout_strategy |= flags[i];
                 }
                 i++;
@@ -293,11 +293,11 @@ namespace Git
         d->mMode = mode;
     }
 
-    void CheckoutBaseOperation::setFlags(CheckoutFlags opts)
+    void CheckoutBaseOperation::setStrategy(CheckoutFlags strategy)
     {
         GW_D(CheckoutBaseOperation);
         Q_ASSERT(!isRunning());
-        d->mOptions = opts;
+        d->mStrategy = strategy;
     }
 
     void CheckoutBaseOperation::setTargetDirectory(const QString& path)
@@ -333,10 +333,10 @@ namespace Git
         return d->mMode;
     }
 
-    CheckoutFlags CheckoutBaseOperation::flags() const
+    CheckoutFlags CheckoutBaseOperation::strategy() const
     {
         GW_CD(CheckoutBaseOperation);
-        return d->mOptions;
+        return d->mStrategy;
     }
 
     QString CheckoutBaseOperation::targetDirectory() const

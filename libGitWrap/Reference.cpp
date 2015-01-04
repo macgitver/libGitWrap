@@ -434,7 +434,7 @@ namespace Git
         }
         */
 
-        op->setFlags(flags);
+        op->setStrategy(flags);
         op->setMode(mode);
         op->setCheckoutPaths(paths);
         op->setBackgroundMode(false);

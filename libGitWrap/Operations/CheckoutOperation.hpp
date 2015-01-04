@@ -53,7 +53,7 @@ namespace Git
     public:
         void setRepository(const Repository& repo);
         void setMode(CheckoutMode mode);
-        void setFlags(CheckoutFlags opts);
+        void setStrategy(CheckoutFlags strategy);
         void setTargetDirectory(const QString& path);
         void setCheckoutPaths(const QStringList& paths);
         void setBaseline(const Tree& baseline);
@@ -63,7 +63,7 @@ namespace Git
     public:
         Repository repository() const;
         CheckoutMode mode() const;
-        CheckoutFlags flags() const;
+        CheckoutFlags strategy() const;
         QString targetDirectory() const;
         QStringList checkoutPaths() const;
         Tree baseline() const;
