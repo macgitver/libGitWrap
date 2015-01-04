@@ -145,6 +145,12 @@ namespace Git
     {
     }
 
+    const Repository& BaseRemoteOperation::repository() const
+    {
+        GW_CD( BaseRemoteOperation );
+        return d->mRepo;
+    }
+
     const QStringList& BaseRemoteOperation::refSpecs() const
     {
         GW_CD( BaseRemoteOperation );
@@ -184,20 +190,33 @@ namespace Git
         d->mRefLogMsg = msg;
     }
 
+    /**
+     * @brief           Internal initialization of the repository used for the operation.
+     *
+     * @param repo      the git repository used, when the operation is executed
+     */
+    void BaseRemoteOperation::setRepository(const Repository& repo)
+    {
+        GW_D( BaseRemoteOperation );
+        d->mRepo = repo;
+    }
+
 
     //-- FetchOperation -->8
 
-    FetchOperation::FetchOperation( QObject* parent )
+    FetchOperation::FetchOperation(const Repository& repo, QObject* parent )
         : BaseRemoteOperation( *new Private(this), parent )
     {
+        setRepository( repo );
     }
 
 
     //-- PushOperation -->8
 
-    PushOperation::PushOperation(QObject* parent)
+    PushOperation::PushOperation(const Repository& repo, QObject* parent)
         : BaseRemoteOperation( *new Private(this), parent )
     {
+        setRepository( repo );
     }
 
     unsigned int PushOperation::pbParallellism() const
