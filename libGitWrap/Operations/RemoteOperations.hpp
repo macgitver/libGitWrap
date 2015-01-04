@@ -58,6 +58,21 @@ namespace Git
         void error();
         void remoteMessage(const QString& message);
         void updateTip(const QString& branchName, const ObjectId& from, const ObjectId& to);
+
+    public:
+        const Repository& repository() const;
+
+        const QStringList& refSpecs() const;
+        void setRefSpecs(const QStringList& refSprecs);
+
+        const Signature& signature() const;
+        void setSignature(const Signature& sig);
+
+        QString refLogMessage() const;
+        void setRefLogMessage(const QString& msg);
+
+    protected:
+        inline void setRepository(const Repository& repo);
     };
 
 
@@ -69,20 +84,7 @@ namespace Git
         typedef Internal::FetchOperationPrivate Private;
 
     public:
-        explicit FetchOperation(QObject* parent = 0);
-
-    public:
-        Remote remote() const ;
-        void setRemote(const Remote& remote);
-
-        const QStringList& refSpecs() const;
-        void setRefSpecs(const QStringList& refSprecs);
-
-        const Signature& signature() const;
-        void setSignature(const Signature& sig);
-
-        QString refLogMessage() const;
-        void setRefLogMessage(const QString& msg);
+        explicit FetchOperation(const Repository& repo, QObject* parent = 0);
     };
 
 
@@ -94,7 +96,11 @@ namespace Git
         typedef Internal::PushOperationPrivate Private;
 
     public:
-        explicit PushOperation(QObject* parent = 0);
+        explicit PushOperation(const Repository& repo, QObject* parent = 0);
+
+    public:
+        unsigned int pbParallellism() const;
+        void setPBParallelism(unsigned int maxThreads);
     };
 }
 

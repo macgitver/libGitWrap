@@ -143,18 +143,11 @@ namespace Git
                                    bool bare,
                                    Result& result )
     {
-        if( !result )
-        {
-            return Repository();
-        }
+        GW_CHECK_RESULT( result, Repository() );
 
         git_repository* repo = NULL;
         result = git_repository_init( &repo, GW_StringFromQt(path), bare );
-
-        if( !result )
-        {
-            return Repository();
-        }
+        GW_CHECK_RESULT( result, Repository() );
 
         return PrivatePtr(new Private(repo));
     }
@@ -190,10 +183,7 @@ namespace Git
                                   const QStringList& ceilingDirs,
                                   Result& result )
     {
-        if( !result )
-        {
-            return QString();
-        }
+        GW_CHECK_RESULT( result, QString() );
 
         git_buf repoPath = {0};
         QByteArray joinedCeilingDirs = GW_EncodeQString( ceilingDirs.join(QChar::fromLatin1(GIT_PATH_LIST_SEPARATOR)) );
@@ -202,8 +192,9 @@ namespace Git
                                           acrossFs, joinedCeilingDirs.constData() );
 
         QString resultPath;
-        if ( result )
+        if ( result ) {
             resultPath = GW_StringToQt(repoPath.ptr);
+        }
 
         git_buf_free( &repoPath );
 
@@ -231,17 +222,12 @@ namespace Git
     Repository Repository::open( const QString& path,
                                  Result& result )
     {
-        if( !result )
-        {
-            return Repository();
-        }
+        GW_CHECK_RESULT( result, Repository() );
+
         git_repository* repo = NULL;
 
         result = git_repository_open( &repo, GW_StringFromQt( path ) );
-        if( !result )
-        {
-            return Repository();
-        }
+        GW_CHECK_RESULT( result, Repository() );
 
         return PrivatePtr(new Private(repo));
     }
@@ -752,7 +738,7 @@ namespace Git
         Remote::List remotes;
         for (size_t i = 0; i < arr.count; i++) {
             git_remote* remote = NULL;
-            result = git_remote_load(&remote, d->mRepo, arr.strings[i]);
+            result = git_remote_lookup(&remote, d->mRepo, arr.strings[i]);
             if (!result) {
                 git_strarray_free(&arr);
                 return Remote::List();
@@ -777,15 +763,11 @@ namespace Git
     {
         GW_CD_CHECKED(Repository, QStringList(), result);
 
-        git_strarray arr;
-        result = git_remote_list( &arr, d->mRepo );
-        if( !result )
-        {
-            return QStringList();
-        }
+        Internal::StrArray arr;
+        result = git_remote_list( arr, d->mRepo );
+        GW_CHECK_RESULT( result, QStringList() );
 
-        // slFromStrArray frees the git_strarray for us
-        return Internal::slFromStrArray( &arr );
+        return arr.strings();
     }
 
     /**
@@ -804,7 +786,7 @@ namespace Git
         GW_CD_EX_CHECKED(Repository, Remote(), result);
 
         git_remote* remote = NULL;
-        result = git_remote_load( &remote, d->mRepo, GW_StringFromQt(remoteName) );
+        result = git_remote_lookup( &remote, d->mRepo, GW_StringFromQt(remoteName) );
 
         if( !result )
         {

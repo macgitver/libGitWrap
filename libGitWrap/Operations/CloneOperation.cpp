@@ -14,18 +14,33 @@
  *
  */
 
-#include <QStringBuilder>
-
-#include "libGitWrap/Operations/CloneOperation.hpp"
-#include "libGitWrap/Operations/Private/CloneOperationPrivate.hpp"
+#include "CloneOperation.hpp"
+#include "Private/CloneOperationPrivate.hpp"
 
 #include "libGitWrap/Events/Private/GitEventCallbacks.hpp"
+
+#include "libGitWrap/Private/RepositoryPrivate.hpp"
+
 
 namespace Git
 {
 
     namespace Internal
     {
+
+        int CloneOperationPrivate::CB_CreateRepository(git_repository** out, const char* path, int bare, void* payload)
+        {
+            CloneOperationPrivate* p = static_cast< CloneOperationPrivate* >( payload );
+            Q_ASSERT( p );
+
+            GW_CHECK_RESULT( p->mResult, p->mResult.errorCode() );
+
+            p->mResult = git_repository_init( out, path, bare );
+            GW_CHECK_RESULT( p->mResult, p->mResult.errorCode() );
+
+            return p->mResult.errorCode();
+        }
+
 
         CloneOperationPrivate::CloneOperationPrivate(CloneOperation* owner)
             : BaseRemoteOperationPrivate( (*mCloneOpts).remote_callbacks, owner)
@@ -34,25 +49,28 @@ namespace Git
             (*coo).checkout_strategy = GIT_CHECKOUT_SAFE_CREATE;
 
             CheckoutCallbacks::initCallbacks( coo, owner );
+
+            (*mCloneOpts).repository_cb = CB_CreateRepository;
+            (*mCloneOpts).repository_cb_payload = this;
         }
 
         void CloneOperationPrivate::run()
         {
-            GW_OP_OWNER(CloneOperation);
+            GW_CHECK_RESULT( mResult, void() );
 
-            git_repository* repo = NULL;
+            (*mCloneOpts).remote_cb = CB_CreateRemote;
+            (*mCloneOpts).remote_cb_payload = this;
 
-            if (mResult) {
-                mResult = git_clone(&repo, GW_StringFromQt(mUrl), GW_StringFromQt(mPath), mCloneOpts);
-            }
-
-            git_repository_free(repo);
+            git_repository* clone = NULL;
+            mResult = git_clone(&clone, GW_StringFromQt(mUrl), GW_StringFromQt(mPath), mCloneOpts);
+            GW_CHECK_RESULT( mResult, void() );
+            mRepo = new RepositoryPrivate( clone );
         }
 
     }
 
     CloneOperation::CloneOperation(QObject* parent)
-        : BaseRemoteOperation(*new Private(this), parent)
+        : BaseRemoteOperation( *new Private(this), parent )
     {
     }
 
@@ -81,7 +99,7 @@ namespace Git
     {
         GW_D(CloneOperation);
         Q_ASSERT( !isRunning() );
-        if ( depth > 0 ) {
+        if ( depth ) {
             // TODO: not implemented in libgit2 api
             d->mResult.setError( "Setting the clone depth is not yet supported.", GIT_EUSER );
             qWarning( "%s: Missing implementation in libgit2 API.", __FUNCTION__ );
@@ -99,11 +117,7 @@ namespace Git
     {
         GW_D( CloneOperation );
         Q_ASSERT( !isRunning() );
-        if ( !alias.isEmpty() ) {
-            // TODO: not implemented in libgit2 api
-            d->mResult.setError( "Setting the Remote-Alias is not yet supported.", GIT_EUSER );
-            qWarning( "%s: Missing implementation in libgit2 API.", __FUNCTION__ );
-        }
+        d->mRemoteAlias = alias;
     }
 
     QString CloneOperation::url() const
@@ -137,7 +151,8 @@ namespace Git
 
     QString CloneOperation::remoteAlias() const
     {
-        return QString();
+        GW_CD( CloneOperation );
+        return d->mRemoteAlias;
     }
 
 }

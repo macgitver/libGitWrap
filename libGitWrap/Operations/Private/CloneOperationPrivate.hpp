@@ -35,6 +35,9 @@ namespace Git
          */
         class CloneOperationPrivate : public BaseRemoteOperationPrivate
         {
+        private:
+            static int CB_CreateRepository( git_repository** out, const char* path, int bare, void* payload );
+
         public:
             CloneOperationPrivate(CloneOperation* owner);
 

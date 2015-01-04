@@ -17,10 +17,11 @@
  */
 
 #include "RemoteOperations.hpp"
+#include "Private/RemoteOperationsPrivate.hpp"
 
 #include "libGitWrap/Events/Private/GitEventCallbacks.hpp"
 
-#include "Private/RemoteOperationsPrivate.hpp"
+#include "libGitWrap/Private/RemotePrivate.hpp"
 
 
 namespace Git
@@ -30,6 +31,49 @@ namespace Git
     {
 
         //-- BaseRemoteOperationPrivate -->8
+
+        int BaseRemoteOperationPrivate::CB_CreateRemote(git_remote** out, git_repository* repo, const char* name, const char* url, void* payload)
+        {
+            BaseRemoteOperationPrivate* p = static_cast< BaseRemoteOperationPrivate* >( payload );
+            Q_ASSERT( p );
+
+            const char* alias = p->mRemoteAlias.isEmpty() ? name : GW_StringFromQt(p->mRemoteAlias);
+
+            int error = 0;
+            error = git_remote_create(out, repo, alias, url);
+
+            return error;
+        }
+
+        Remote::PrivatePtr BaseRemoteOperationPrivate::lookupRemote(Result& result, Repository::Private* repo, QString& remoteName)
+        {
+            repo->isValid( result, repo );
+            GW_CHECK_RESULT( result, Remote::PrivatePtr() );
+
+            if ( remoteName.isEmpty() )
+            {
+                StrArray remoteNames;
+                result = git_remote_list(remoteNames, repo->mRepo);
+                GW_CHECK_RESULT( result, Remote::PrivatePtr() );
+
+                if ( remoteNames.count() == 1 )
+                {
+                    remoteName = remoteNames.strings().first();
+                }
+                else
+                {
+                    result.setError( GIT_ENOTFOUND );
+                }
+            }
+
+            GW_CHECK_RESULT( result, Remote::PrivatePtr() );
+
+            git_remote* remote = NULL;
+            result = git_remote_lookup( &remote, repo->mRepo, GW_StringFromQt(remoteName) );
+            GW_CHECK_RESULT( result, Remote::PrivatePtr() );
+
+            return Remote::PrivatePtr( new RemotePrivate( repo, remote ) );
+        }
 
         BaseRemoteOperationPrivate::BaseRemoteOperationPrivate(git_remote_callbacks& callbacks, BaseRemoteOperation *owner)
             : BaseOperationPrivate( owner )
@@ -51,11 +95,14 @@ namespace Git
 
         void FetchOperationPrivate::run()
         {
-            git_signature* sig = Internal::signature2git(mResult, mSignature);
+            git_signature* sig = signature2git(mResult, mSignature);
+
+            Repository::Private* rp = Repository::Private::dataOf<Repository>( mRepo );
+            Remote::PrivatePtr remote = lookupRemote( mResult, rp, mRemoteAlias );
 
             if ( mResult )
             {
-                mResult = git_remote_fetch( mRemote->mRemote, StrArray(mRefSpecs), sig, GW_StringFromQt( mRefLogMsg ) );
+                mResult = git_remote_fetch( remote->mRemote, StrArray(mRefSpecs), sig, GW_StringFromQt( mRefLogMsg ) );
             }
 
             git_signature_free( sig );
@@ -67,13 +114,22 @@ namespace Git
         PushOperationPrivate::PushOperationPrivate(PushOperation *owner)
             : BaseRemoteOperationPrivate(mRemoteCallbacks, owner)
         {
+            git_push_init_options( &mOpts, GIT_PUSH_OPTIONS_VERSION );
         }
 
         void PushOperationPrivate::run()
         {
-            // TODO: needs libgit2 > v0.21.3
-            mResult.setError( "Push operation is not implemented yet!", GIT_EUSER );
-            //mResult = git_remote_push( mRemote, mRefSpecs, mSignature, mRefLogMessage );
+            git_signature* sig = signature2git( mResult, mSignature );
+
+            Repository::Private* rp = Repository::Private::dataOf<Repository>( mRepo );
+            Remote::PrivatePtr remote = lookupRemote( mResult, rp, mRemoteAlias );
+
+            if ( mResult )
+            {
+                mResult = git_remote_push( remote->mRemote, StrArray(mRefSpecs), &mOpts, sig, GW_StringFromQt( mRefLogMsg ) );
+            }
+
+            git_signature_free( sig );
         }
     }
 
@@ -89,72 +145,90 @@ namespace Git
     {
     }
 
-
-    //-- FetchOperation -->8
-
-    FetchOperation::FetchOperation( QObject* parent )
-        : BaseRemoteOperation( *new Private(this), parent )
+    const Repository& BaseRemoteOperation::repository() const
     {
+        GW_CD( BaseRemoteOperation );
+        return d->mRepo;
     }
 
-    Remote FetchOperation::remote() const
+    const QStringList& BaseRemoteOperation::refSpecs() const
     {
-        GW_CD( FetchOperation );
-        return d->mRemote;
-    }
-
-    void FetchOperation::setRemote(const Remote& remote)
-    {
-        GW_D( FetchOperation );
-        Q_ASSERT( !isRunning() );
-        d->mRemote = Remote::Private::dataOf<Remote>( remote );
-    }
-
-    const QStringList& FetchOperation::refSpecs() const
-    {
-        GW_CD( FetchOperation );
+        GW_CD( BaseRemoteOperation );
         return d->mRefSpecs;
     }
 
-    void FetchOperation::setRefSpecs(const QStringList& refSprecs)
+    void BaseRemoteOperation::setRefSpecs(const QStringList& refSprecs)
     {
-        GW_D( FetchOperation );
+        GW_D( BaseRemoteOperation );
         Q_ASSERT( !isRunning() );
         d->mRefSpecs = refSprecs;
     }
 
-    const Signature& FetchOperation::signature() const
+    const Signature& BaseRemoteOperation::signature() const
     {
-        GW_CD( FetchOperation );
+        GW_CD( BaseRemoteOperation );
         return d->mSignature;
     }
 
-    void FetchOperation::setSignature(const Signature& sig)
+    void BaseRemoteOperation::setSignature(const Signature& sig)
     {
-        GW_D( FetchOperation );
+        GW_D( BaseRemoteOperation );
         Q_ASSERT( !isRunning() );
         d->mSignature = sig;
     }
 
-    QString FetchOperation::refLogMessage() const
+    QString BaseRemoteOperation::refLogMessage() const
     {
-        GW_CD( FetchOperation );
+        GW_CD( BaseRemoteOperation );
         return d->mRefLogMsg;
     }
 
-    void FetchOperation::setRefLogMessage(const QString& msg)
+    void BaseRemoteOperation::setRefLogMessage(const QString& msg)
     {
-        GW_D( FetchOperation );
+        GW_D( BaseRemoteOperation );
         Q_ASSERT( !isRunning() );
         d->mRefLogMsg = msg;
+    }
+
+    /**
+     * @brief           Internal initialization of the repository used for the operation.
+     *
+     * @param repo      the git repository used, when the operation is executed
+     */
+    void BaseRemoteOperation::setRepository(const Repository& repo)
+    {
+        GW_D( BaseRemoteOperation );
+        d->mRepo = repo;
+    }
+
+
+    //-- FetchOperation -->8
+
+    FetchOperation::FetchOperation(const Repository& repo, QObject* parent )
+        : BaseRemoteOperation( *new Private(this), parent )
+    {
+        setRepository( repo );
     }
 
 
     //-- PushOperation -->8
 
-    PushOperation::PushOperation(QObject* parent)
+    PushOperation::PushOperation(const Repository& repo, QObject* parent)
         : BaseRemoteOperation( *new Private(this), parent )
     {
+        setRepository( repo );
+    }
+
+    unsigned int PushOperation::pbParallellism() const
+    {
+        GW_CD( PushOperation );
+        return d->mOpts.pb_parallelism;
+    }
+
+    void PushOperation::setPBParallelism(unsigned int maxThreads)
+    {
+        GW_D( PushOperation );
+        d->mOpts.pb_parallelism = maxThreads;
     }
 
 }

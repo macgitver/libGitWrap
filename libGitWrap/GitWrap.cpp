@@ -105,7 +105,7 @@ namespace Git
                 this->init( );
             }
 
-            mPaths = QSharedPointer<StrArrayRef>( new StrArrayRef( mOptionsRef.paths ) );
+            mPaths = new StrArrayRef( mOptionsRef.paths );
         }
 
         CheckoutOptionsRef::CheckoutOptionsRef(git_checkout_options& ref, const QStringList& paths, bool init)
@@ -116,9 +116,9 @@ namespace Git
                 this->init();
             }
 
-            mPaths = QSharedPointer<StrArrayRef>( new StrArrayRef( mOptionsRef.paths ) );
+            mPaths = new StrArrayRef( mOptionsRef.paths );
             mPaths->setStrings( paths );
-            Q_ASSERT( mPaths == mOptionsRef.paths );
+            Q_ASSERT( (*mPaths) == mOptionsRef.paths );
         }
 
         void CheckoutOptionsRef::init()
@@ -220,6 +220,11 @@ namespace Git
             delete[] mEncoded.strings;
         }
 
+        int StrArray::count() const
+        {
+            return mEncoded.count;
+        }
+
         StrArray::operator git_strarray*()
         {
             return &mEncoded;
@@ -303,6 +308,11 @@ namespace Git
             return !(*this == other);
         }
 
+        int StrArrayRef::count() const
+        {
+            return mEncoded.count;
+        }
+
         StrArrayRef::operator QStringList() const
         {
             return strings();
@@ -358,7 +368,7 @@ namespace Git
 
     GitWrap::GitWrap()
     {
-        git_threads_init();
+        git_libgit2_init();
 
         Q_ASSERT( Internal::GitWrapPrivate::self == NULL );
         Internal::GitWrapPrivate::self = new Internal::GitWrapPrivate;
@@ -370,7 +380,7 @@ namespace Git
         delete Internal::GitWrapPrivate::self;
         Internal::GitWrapPrivate::self = NULL;
 
-        git_threads_shutdown();
+        git_libgit2_shutdown();
     }
 
     Result& GitWrap::lastResult()
