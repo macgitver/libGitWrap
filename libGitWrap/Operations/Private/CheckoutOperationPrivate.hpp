@@ -45,12 +45,6 @@ namespace Git
             void unprepare();
 
         public:
-            void emitFile(git_checkout_notify_t why, const char *path,
-                          const git_diff_file *baseline, const git_diff_file *target,
-                          const git_diff_file *workdir);
-            void emitProgress(const QString& pathName, quint32 completed, quint32 total);
-
-        public:
             Repository              mRepository;
             CheckoutFlags           mStrategy;
             CheckoutMode            mMode;
