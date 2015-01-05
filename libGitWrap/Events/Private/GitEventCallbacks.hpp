@@ -79,8 +79,10 @@ namespace Git
                     void *payload);
 
             static void initCallbacks(
-                    git_checkout_options&       opts,
-                    ICheckoutEvents*            receiver);
+                    git_checkout_options& opts,
+                    ICheckoutEvents* receiver,
+                    unsigned int notifyFlags = GIT_CHECKOUT_NOTIFY_ALL
+                    );
         };
     }
 

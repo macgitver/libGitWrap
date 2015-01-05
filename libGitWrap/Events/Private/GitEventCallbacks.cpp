@@ -86,7 +86,6 @@ namespace Git
                         stats->received_bytes);
 
             if (events) {
-
                 events->transportProgress(stats->total_objects, stats->indexed_objects,
                                           stats->received_objects, stats->received_bytes);
 
@@ -223,13 +222,16 @@ namespace Git
             }
         }
 
-        void CheckoutCallbacks::initCallbacks(git_checkout_options& opts, ICheckoutEvents* receiver)
+        void CheckoutCallbacks::initCallbacks( git_checkout_options& opts,
+                                               ICheckoutEvents* receiver,
+                                               unsigned int notifyFlags )
         {
             opts.notify_cb          = &CheckoutCallbacks::notify;
             opts.notify_payload     = receiver;
 
             opts.progress_cb        = &CheckoutCallbacks::checkoutProgress;
             opts.progress_payload   = receiver;
+            opts.notify_flags       = notifyFlags;
         }
 
     }
