@@ -42,7 +42,7 @@ namespace Git
         ~BaseOperation();
 
     public:
-        Result execute();
+        void execute();
 
     public slots:
         void setBackgroundMode(bool backgroundMode);

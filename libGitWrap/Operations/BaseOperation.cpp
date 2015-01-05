@@ -57,7 +57,7 @@ namespace Git
         return mData->mBackgroundMode;
     }
 
-    Result BaseOperation::execute()
+    void BaseOperation::execute()
     {
         if (mData->mBackgroundMode) {
             Q_ASSERT(!mData->mThread);
@@ -67,12 +67,10 @@ namespace Git
             connect(mData->mThread, SIGNAL(finished()), this, SLOT(workerFinished()));
 
             mData->mThread->start();
-            return Result();
         }
         else
         {
             mData->run();
-            return mData->mResult;
         }
     }
 
