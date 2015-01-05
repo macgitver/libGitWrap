@@ -28,6 +28,7 @@ namespace Git
 {
 
     class CheckoutBaseOperation;
+    class CheckoutReferenceOperation;
     class CheckoutIndexOperation;
     class CheckoutTreeOperation;
 
@@ -78,16 +79,16 @@ namespace Git
             Tree                mTree;
         };
 
-        class CheckoutBranchOperationPrivate : public CheckoutBaseOperationPrivate
+        class CheckoutReferenceOperationPrivate : public CheckoutBaseOperationPrivate
         {
         public:
-            CheckoutBranchOperationPrivate(CheckoutBranchOperation* owner);
+            CheckoutReferenceOperationPrivate(CheckoutReferenceOperation* owner);
 
         public:
             void run();
 
         public:
-            BranchRef           branch;
+            Reference       mBranch;
         };
 
     }

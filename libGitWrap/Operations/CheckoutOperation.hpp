@@ -33,7 +33,7 @@ namespace Git
         class CheckoutBaseOperationPrivate;
         class CheckoutIndexOperationPrivate;
         class CheckoutTreeOperationPrivate;
-        class CheckoutBranchOperationPrivate;
+        class CheckoutReferenceOperationPrivate;
     }
 
     class GITWRAP_API CheckoutBaseOperation : public BaseOperation, public ICheckoutEvents
@@ -111,22 +111,19 @@ namespace Git
         Tree tree() const;
     };
 
-    class CheckoutBranchOperation : public CheckoutBaseOperation
+    class CheckoutReferenceOperation : public CheckoutBaseOperation
     {
     public:
-        typedef Internal::CheckoutBranchOperationPrivate Private;
+        typedef Internal::CheckoutReferenceOperationPrivate Private;
 
     public:
-        CheckoutBranchOperation(QObject* parent = 0);
-        CheckoutBranchOperation(const BranchRef& branch, QObject* parent = 0);
-        CheckoutBranchOperation(const Repository& repo, QObject* parent = 0);
-        CheckoutBranchOperation(const Repository& repo, const QString& branchName,
-                                QObject* parent = 0);
+        explicit CheckoutReferenceOperation(const Reference& branch, QObject* parent = 0);
 
     public:
-        bool setBranch(const QString& branchName);
-        bool setBranch(const BranchRef& branch);
-        BranchRef branch() const;
+        Reference branch() const;
+
+    private:
+        inline void setBranch(const Reference& ref);
     };
 
 }

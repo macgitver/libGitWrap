@@ -89,7 +89,7 @@ namespace Git
         {
         }
 
-        // -- CheckoutIndexOperationPrivate ----------------------------------------------------- >8
+        // -- CheckoutIndexOperationPrivate -->8
 
         CheckoutIndexOperationPrivate::CheckoutIndexOperationPrivate(CheckoutIndexOperation *owner)
             : CheckoutBaseOperationPrivate(owner)
@@ -147,39 +147,41 @@ namespace Git
 
         // -- CheckoutBranchOperationPrivate ---------------------------------------------------- >8
 
-        CheckoutBranchOperationPrivate::CheckoutBranchOperationPrivate(
-                CheckoutBranchOperation *owner)
+        CheckoutReferenceOperationPrivate::CheckoutReferenceOperationPrivate(CheckoutReferenceOperation *owner)
             : CheckoutBaseOperationPrivate(owner)
         {
         }
 
-        void CheckoutBranchOperationPrivate::run()
+        void CheckoutReferenceOperationPrivate::run()
         {
-            /*
-            git_repository* grepo = NULL;
-            const git_object* gtree = NULL;
-            */
+            if ( !mBranch.isValid() )
+            {
+                mResult.setInvalidObject();
+                return;
+            }
+
+            ReferencePrivate* p = BasePrivate::dataOf<Reference>( mBranch );
+
+            git_object* tree = NULL;
+            mResult = git_reference_peel( &tree, p->reference, GIT_OBJ_TREE );
+            git_object_free( tree );
+            GW_CHECK_RESULT( mResult, void() );
+            Q_ASSERT( tree );
 
             prepare();
 
-            if (mRepository.isValid()) {
-                //Repository::Private* rp = BasePrivate::dataOf<Repository>(mRepository);
-                //grepo = rp->mRepo;
-            }
+            mResult = git_checkout_tree( NULL, tree, mOpts);
 
-            /*
-            if (mTree.isValid()) {
-                Tree::Private* tp = BasePrivate::dataOf<Tree>(mTree);
-                gtree = tp->mObj;
-            }
+            git_object_free( tree );
 
-            if (gtree) {
-                mResult = git_checkout_tree(grepo, gtree, &mOpts);
+            if ( mResult && git_reference_is_branch( p->reference ) )
+            {
+                if ( mResult ) {
+                    mResult = git_repository_set_head( p->repo()->mRepo,
+                                                       git_reference_name( p->reference ),
+                                                       NULL, NULL);
+                }
             }
-            else {
-                mResult = git_checkout_head(grepo, &mOpts);
-            }
-            */
 
             unprepare();
         }
@@ -344,73 +346,22 @@ namespace Git
 
     // -- CheckoutBranchOperation --------------------------------------------------------------- >8
 
-    CheckoutBranchOperation::CheckoutBranchOperation(QObject* parent)
+    CheckoutReferenceOperation::CheckoutReferenceOperation(const Git::Reference& branch, QObject* parent)
         : CheckoutBaseOperation(*new Private(this), parent)
     {
+        setBranch( branch );
     }
 
-    CheckoutBranchOperation::CheckoutBranchOperation(const BranchRef& branch, QObject* parent)
-        : CheckoutBaseOperation(*new Private(this), parent)
+    void CheckoutReferenceOperation::setBranch(const Reference& ref)
     {
-        setRepository(branch.repository());
-        setBranch(branch);
+        GW_D( CheckoutReferenceOperation );
+        d->mBranch = ref;
     }
 
-    CheckoutBranchOperation::CheckoutBranchOperation(const Repository& repo, QObject* parent)
-        : CheckoutBaseOperation(*new Private(this), parent)
+    Reference CheckoutReferenceOperation::branch() const
     {
-        setRepository(repo);
-    }
-
-    CheckoutBranchOperation::CheckoutBranchOperation(const Repository& repo,
-                                                     const QString& branchName,
-                                                     QObject* parent)
-        : CheckoutBaseOperation(*new Private(this), parent)
-    {
-        setRepository(repo);
-        setBranch(branchName);
-    }
-
-    bool CheckoutBranchOperation::setBranch(const QString& branchName)
-    {
-        Q_ASSERT(!isRunning());
-
-        if (!repository().isValid()) {
-            return false;
-        }
-
-        GW_D(CheckoutBranchOperation);
-        if (!d) {
-            return false;
-        }
-
-        Result res;
-        d->branch = repository().branchRef(res, branchName);
-        return res && d->branch.isValid();
-    }
-
-    bool CheckoutBranchOperation::setBranch(const BranchRef& branch)
-    {
-        Q_ASSERT(!isRunning());
-        GW_D(CheckoutBranchOperation);
-
-        if (!d) {
-            return false;
-        }
-
-        if (branch.repository() != repository()) {
-            return false;
-        }
-
-        d->branch = branch;
-        return true;
-    }
-
-    BranchRef CheckoutBranchOperation::branch() const
-    {
-        GW_CD(CheckoutBranchOperation);
-        return d ? d->branch : BranchRef();
+        GW_CD(CheckoutReferenceOperation);
+        return d ? d->mBranch : Reference();
     }
 
 }
-
