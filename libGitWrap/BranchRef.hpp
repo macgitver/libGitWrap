@@ -29,9 +29,7 @@ namespace Git
 
     namespace Internal
     {
-
         class BranchRefPrivate;
-
     }
 
     class GITWRAP_API BranchRef : public Reference
@@ -39,6 +37,7 @@ namespace Git
         GW_PRIVATE_DECL(BranchRef, Reference, public)
 
     public:
+        static BranchRef create(Result& result, const QString& name, const Commit& commit, bool force = false);
     };
 
     template<>

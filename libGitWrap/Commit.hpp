@@ -82,7 +82,6 @@ namespace Git
                        bool force = false,
                        bool updateHEAD = true,
                        const QStringList &paths = QStringList() ) const;
-        Reference createBranch( Result& result, const QString& name, bool force ) const;
 
         DiffList diffFromParent( Result& result, unsigned int index );
         DiffList diffFromAllParents( Result& result );

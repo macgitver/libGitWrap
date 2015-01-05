@@ -391,31 +391,6 @@ namespace Git
         }
     }
 
-    /**
-     * @brief           Create a branch on this commit.
-     *
-     * @param[in,out]   result  A result object; see @ref GitWrapErrorHandling
-     *
-     * @param[in]       name    the branches reference name
-     *
-     * @param[in]       force   if true, creation is forced (an existing branch will be moved)
-     *
-     * @return          the created reference
-     */
-    Reference Commit::createBranch(Result& result, const QString& name, bool force) const
-    {
-        GW_CD_CHECKED(Commit, Reference(), result);
-
-        git_reference* ref = NULL;
-        result = git_branch_create( &ref, d->repo()->mRepo, GW_StringFromQt(name), d->o(), force, NULL, NULL );
-
-        if (!result) {
-            return Reference();
-        }
-
-        return Reference::PrivatePtr(new Reference::Private(d->repo(), ref));
-    }
-
     DiffList Commit::diffFromParent(Result& result, unsigned int index)
     {
         GW_CD_CHECKED(Commit, DiffList(), result)

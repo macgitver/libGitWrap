@@ -21,6 +21,11 @@
 #include "libGitWrap/BranchRef.hpp"
 #include "libGitWrap/Private/BranchRefPrivate.hpp"
 
+#include "Private/CommitPrivate.hpp"
+
+#include "libGitWrap/Commit.hpp"
+
+
 namespace Git
 {
 
@@ -61,5 +66,34 @@ namespace Git
      */
 
     GW_PRIVATE_IMPL(BranchRef, Reference)
+
+    /**
+     * @brief           Create a branch on a commit.
+     *
+     * @param[in,out]   result  A result object; see @ref GitWrapErrorHandling
+     *
+     * @param[in]       name    the branches reference name
+     *
+     * @param[in]       force   if true, creation is forced (an existing branch will be moved)
+     *
+     * @return          the created reference
+     */
+    BranchRef BranchRef::create(Result& result, const QString& name, const Commit& commit, bool force)
+    {
+        GW_CHECK_RESULT( result, BranchRef() );
+
+        if ( !commit.isValid() ) {
+            result.setInvalidObject();
+            return BranchRef();
+        }
+
+        Internal::CommitPrivate* cp = Internal::BasePrivate::dataOf<Commit>( commit );
+
+        git_reference* ref = NULL;
+        result = git_branch_create( &ref, cp->repo()->mRepo, GW_StringFromQt(name), cp->o(), force, NULL, NULL );
+        GW_CHECK_RESULT( result, BranchRef() );
+
+        return new Internal::BranchRefPrivate(cp->repo(), ref);
+    }
 
 }
