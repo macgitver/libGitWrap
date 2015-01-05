@@ -15,15 +15,16 @@
  */
 
 #include "libGitWrap/Commit.hpp"
-#include "libGitWrap/Tree.hpp"
+#include "libGitWrap/Private/CommitPrivate.hpp"
+
 #include "libGitWrap/Reference.hpp"
 #include "libGitWrap/Repository.hpp"
+#include "libGitWrap/Tree.hpp"
 
 #include "libGitWrap/Private/GitWrapPrivate.hpp"
 #include "libGitWrap/Private/ObjectPrivate.hpp"
 #include "libGitWrap/Private/RepositoryPrivate.hpp"
 #include "libGitWrap/Private/ReferencePrivate.hpp"
-#include "libGitWrap/Private/CommitPrivate.hpp"
 #include "libGitWrap/Private/TreePrivate.hpp"
 #include "libGitWrap/Private/DiffListPrivate.hpp"
 

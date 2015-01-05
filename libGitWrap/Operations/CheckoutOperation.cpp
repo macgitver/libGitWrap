@@ -14,16 +14,20 @@
  *
  */
 
+#include "CheckoutOperation.hpp"
+
 #include "libGitWrap/Repository.hpp"
 #include "libGitWrap/Index.hpp"
 
-#include "libGitWrap/Private/TreePrivate.hpp"
-#include "libGitWrap/Private/RepositoryPrivate.hpp"
-#include "libGitWrap/Private/IndexPrivate.hpp"
+#include "libGitWrap/Events/Private/GitEventCallbacks.hpp"
 
-#include "libGitWrap/Operations/CheckoutOperation.hpp"
+#include "libGitWrap/Private/BranchRefPrivate.hpp"
+#include "libGitWrap/Private/IndexPrivate.hpp"
+#include "libGitWrap/Private/RepositoryPrivate.hpp"
+#include "libGitWrap/Private/TreePrivate.hpp"
 
 #include "libGitWrap/Operations/Private/CheckoutOperationPrivate.hpp"
+
 
 namespace Git
 {
@@ -56,12 +60,13 @@ namespace Git
             return d->mCancel ? -1 : 0;
         }
 
-        // -- CheckoutBaseOperationPrivate ------------------------------------------------------ >8
+        // -- CheckoutBaseOperationPrivate -- >8
 
         CheckoutBaseOperationPrivate::CheckoutBaseOperationPrivate(CheckoutBaseOperation* owner)
             : BaseOperationPrivate(owner)
             , mMode(CheckoutDryRun)
         {
+            CheckoutCallbacks::initCallbacks( mOpts, owner );
         }
 
         CheckoutBaseOperationPrivate::~CheckoutBaseOperationPrivate()
@@ -113,16 +118,13 @@ namespace Git
                 break;
             }
         }
-
         void CheckoutBaseOperationPrivate::prepare()
         {
-            if (!mPath.isEmpty()) {
-                (*mOpts).target_directory = GW_StringFromQt(mPath);
-            }
+            (*mOpts).target_directory = mPath.isEmpty() ? NULL : GW_StringFromQt(mPath);
 
             switch (mMode) {
             default:
-            case CheckoutDryRun:     /* this is the default */                            break;
+            case CheckoutDryRun:     /* this is the default */                               break;
             case CheckoutSafe:       (*mOpts).checkout_strategy |= GIT_CHECKOUT_SAFE;        break;
             case CheckoutSafeCreate: (*mOpts).checkout_strategy |= GIT_CHECKOUT_SAFE_CREATE; break;
             case CheckoutForce:      (*mOpts).checkout_strategy |= GIT_CHECKOUT_FORCE;       break;
@@ -149,8 +151,7 @@ namespace Git
             }
 
             if (mBaseline.isValid()) {
-                TreePrivate* tp = BasePrivate::dataOf<Tree>(mBaseline);
-                (*mOpts).baseline = tp->o();
+                (*mOpts).baseline = BasePrivate::dataOf<Tree>( mBaseline )->o();
             }
 
             (*mOpts).progress_payload  = this;

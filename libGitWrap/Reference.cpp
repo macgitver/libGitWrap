@@ -149,8 +149,8 @@ namespace Git
     /**
      * @brief           Create a new reference
      *
-     * Creates a new reference named @a name that is pointing to the SHA1 @a sha in the repository
-     * @a repo.
+     *                  Creates a new reference named @a name that is pointing
+     *                  to the SHA1 @a sha in the repository @a repo.
      *
      * @param[in,out]   result  A Result object; see @ref GitWrapErrorHandling
      *
@@ -161,21 +161,18 @@ namespace Git
      *
      * @param[in]       sha     The SHA1 where the reference shall point to.
      *
-     * @return          The created reference object or an invalid reference object, if the an error
-     *                  occured while creating the reference.
+     * @return          The created reference object or an invalid reference object,
+     *                  if the an error occured while creating the reference.
      *
-     * @note    This method does not test whether the repository really has an object with the id
-     *          @a sha.
-     *
+     * @note            This method does not test whether the repository really has
+     *                  an object with the id @a sha.
      */
-    Reference Reference::create(Result& result, Repository repo,
+    Reference Reference::create(Result& result, const Repository& repo,
                                 const QString& name, const ObjectId& sha)
     {
-        if (!result) {
-            return Reference();
-        }
+        GW_CHECK_RESULT( result, Reference() );
 
-        if (!repo.isValid()) {
+        if ( !repo.isValid() ) {
             result.setInvalidObject();
             return Reference();
         }
@@ -185,28 +182,19 @@ namespace Git
         git_reference* ref = NULL;
         QByteArray utf8Name = GW_EncodeQString(name);
 
-        result = git_reference_create(
-                    &ref,
-                    repop->mRepo,
-                    utf8Name.constData(),
-                    Private::sha(sha),
-                    false,
-                    NULL,
-                    NULL);
+        result = git_reference_create( &ref, repop->mRepo, utf8Name.constData(),
+                                       Private::sha(sha), false, NULL, NULL);
+        GW_CHECK_RESULT( result, Reference() );
 
-        if (!result) {
-            return Reference();
-        }
-
-        return Private::createRefObject(repop, name, ref);
+        return Private::createRefObject( repop, name, ref );
     }
 
 
     /**
      * @brief           Create a new reference
      *
-     * Creates a new reference named @a name that is pointing to the commit @a commit in the
-     * repository @a repo.
+     *                  Creates a new reference named @a name that is pointing
+     *                  to the commit @a commit in the repository @a repo.
      *
      * @param[in,out]   result  A Result object; see @ref GitWrapErrorHandling
      *
@@ -217,17 +205,17 @@ namespace Git
      *
      * @param[in]       commit  The commit object where the new reference shall point to.
      *
-     * @return          The created reference object or an invalid reference object, if the an error
-     *                  occured while creating the reference.
-     *
+     * @return          The created reference object or an invalid reference object,
+     *                  if an error occured while creating the reference.
      */
-    Reference Reference::create(Result& result, Repository repo,
+    Reference Reference::create(Result& result, const Repository &repo,
                                 const QString& name, const Commit& commit)
     {
-        if (!commit.isValid()) {
+        if ( !commit.isValid() ) {
             result.setInvalidObject();
             return Reference();
         }
+
         return create(result, repo, name, commit.id());
     }
 

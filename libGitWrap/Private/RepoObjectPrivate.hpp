@@ -17,7 +17,6 @@
 #ifndef GIT_REPO_OBJECT_H
 #define GIT_REPO_OBJECT_H
 
-#include "libGitWrap/Private/BasePrivate.hpp"
 #include "libGitWrap/Private/RepositoryPrivate.hpp"
 
 namespace Git

@@ -24,7 +24,6 @@
 
 #include "libGitWrap/Events/IGitEvents.hpp"
 
-#include "libGitWrap/FileInfo.hpp"  // Required for moc, only
 
 
 namespace Git

@@ -40,15 +40,14 @@ namespace Git
         int compare(const Reference& other) const;
 
     public:
-        static Reference create(
-                Result& result,
-                Repository repo,
+        static Reference create(Result& result,
+                const Repository& repo,
                 const QString& name,
                 const ObjectId& sha);
 
         static Reference create(
                 Result& result,
-                Repository repo,
+                const Repository& repo,
                 const QString& name,
                 const Commit& commit);
 
@@ -125,7 +124,6 @@ namespace Git
         ReferenceParentProvider( const Reference& ref );
 
     public:
-
         // INTERFACE REALIZATION
         ObjectIdList parents(Result& result) const;
         Repository repository() const;

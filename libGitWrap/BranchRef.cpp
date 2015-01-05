@@ -50,6 +50,16 @@ namespace Git
 
     }
 
+
+    //-- BranchRef -->8
+
+    /**
+     * @class      BranchRef
+     * @ingroup    GitWrap
+     *
+     * @brief      Represents a local or remote Git branch reference.
+     */
+
     GW_PRIVATE_IMPL(BranchRef, Reference)
 
 }

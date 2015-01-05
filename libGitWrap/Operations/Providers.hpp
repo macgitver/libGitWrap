@@ -55,8 +55,8 @@ namespace Git
     };
 
     // typedefs for shared pointers
-    typedef QExplicitlySharedDataPointer<TreeProvider> TreeProviderPtr;
-    typedef QExplicitlySharedDataPointer<ParentProvider> ParentProviderPtr;
+    typedef QExplicitlySharedDataPointer<TreeProvider>      TreeProviderPtr;
+    typedef QExplicitlySharedDataPointer<ParentProvider>    ParentProviderPtr;
 
 }
 
