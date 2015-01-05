@@ -45,7 +45,7 @@ namespace Git
             void unprepare();
 
         public:
-            Repository              mRepository;
+            Repository              mRepo;
             CheckoutFlags           mStrategy;
             CheckoutMode            mMode;
             QString                 mPath;

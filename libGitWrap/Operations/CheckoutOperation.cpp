@@ -98,27 +98,26 @@ namespace Git
 
         void CheckoutIndexOperationPrivate::run()
         {
-            git_repository* grepo = NULL;
-            git_index* gindex = NULL;
+            GW_CHECK_RESULT( mResult, void() );
 
             prepare();
 
-            if (mRepository.isValid()) {
-                Repository::Private* rp = BasePrivate::dataOf<Repository>(mRepository);
-                grepo = rp->mRepo;
+            git_repository* repo = NULL;
+            if ( mRepo.isValid() ) {
+                repo = BasePrivate::dataOf<Repository>( mRepo )->mRepo;
             }
 
-            if (mIndex.isValid()) {
-                Index::Private* ip = BasePrivate::dataOf<Index>(mIndex);
-                gindex = ip->index;
+            git_index* index = NULL;
+            if ( mIndex.isValid() ) {
+                index = BasePrivate::dataOf<Index>( mIndex )->index;
             }
 
-            mResult = git_checkout_index(grepo, gindex, mOpts);
+            mResult = git_checkout_index(repo, index, mOpts);
 
             unprepare();
         }
 
-        // -- CheckoutTreeOperationPrivate ------------------------------------------------------ >8
+        // -- CheckoutTreeOperationPrivate -->8
 
         CheckoutTreeOperationPrivate::CheckoutTreeOperationPrivate(CheckoutTreeOperation *owner)
             : CheckoutBaseOperationPrivate(owner)
@@ -127,27 +126,21 @@ namespace Git
 
         void CheckoutTreeOperationPrivate::run()
         {
-            git_repository* grepo = NULL;
-            const git_object* gtree = NULL;
+            GW_CHECK_RESULT( mResult, void() );
 
             prepare();
 
-            if (mRepository.isValid()) {
-                Repository::Private* rp = BasePrivate::dataOf<Repository>(mRepository);
-                grepo = rp->mRepo;
+            git_repository* repo = NULL;
+            if ( mRepo.isValid() ) {
+                repo = BasePrivate::dataOf<Repository>( mRepo )->mRepo;
             }
 
-            if (mTree.isValid()) {
-                Tree::Private* tp = BasePrivate::dataOf<Tree>(mTree);
-                gtree = tp->mObj;
+            git_object* tree = NULL;
+            if ( mTree.isValid() ) {
+                tree = BasePrivate::dataOf<Tree>( mTree )->mObj;
             }
 
-            if (gtree) {
-                mResult = git_checkout_tree(grepo, gtree, mOpts);
-            }
-            else {
-                mResult = git_checkout_head(grepo, mOpts);
-            }
+            mResult = git_checkout_tree(repo, tree, mOpts);
 
             unprepare();
         }
@@ -208,7 +201,7 @@ namespace Git
     {
         GW_D(CheckoutBaseOperation);
         Q_ASSERT(!isRunning());
-        d->mRepository = repo;
+        d->mRepo = repo;
     }
 
     void CheckoutBaseOperation::setMode(CheckoutMode mode)
@@ -249,7 +242,7 @@ namespace Git
     Repository CheckoutBaseOperation::repository() const
     {
         GW_CD(CheckoutBaseOperation);
-        return d->mRepository;
+        return d->mRepo;
     }
 
     CheckoutMode CheckoutBaseOperation::mode() const
