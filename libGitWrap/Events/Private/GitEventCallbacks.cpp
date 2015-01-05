@@ -213,8 +213,9 @@ namespace Git
         void CheckoutCallbacks::checkoutProgress(const char* path, size_t completed_steps, size_t total_steps, void* payload)
         {
             ICheckoutEvents* events = static_cast< ICheckoutEvents* >( payload );
+            Q_ASSERT( events );
 
-            qreal progress = 100 / total_steps * completed_steps;
+            qreal progress = total_steps ? (100 / total_steps * completed_steps) : 100;
             debugEvents( "checkout progress: %.2f", progress );
 
             if (events) {
