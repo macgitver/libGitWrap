@@ -18,8 +18,10 @@
 #define GITWRAP_CHECKOUT_OPERATION_HPP
 #pragma once
 
+#include "libGitWrap/Events/IGitEvents.hpp"
+
 #include "libGitWrap/Operations/BaseOperation.hpp"
-#include "libGitWrap/FileInfo.hpp"  // Required for moc, only
+
 
 namespace Git
 {
@@ -28,15 +30,13 @@ namespace Git
 
     namespace Internal
     {
-
         class CheckoutBaseOperationPrivate;
         class CheckoutIndexOperationPrivate;
         class CheckoutTreeOperationPrivate;
         class CheckoutBranchOperationPrivate;
-
     }
 
-    class GITWRAP_API CheckoutBaseOperation : public BaseOperation
+    class GITWRAP_API CheckoutBaseOperation : public BaseOperation, public ICheckoutEvents
     {
         Q_OBJECT
         #if QT_VERSION < 0x050000
@@ -47,6 +47,7 @@ namespace Git
 
     protected:
         CheckoutBaseOperation(Private& _d, QObject* parent = 0);
+
     public:
         ~CheckoutBaseOperation();
 
@@ -69,40 +70,15 @@ namespace Git
         Tree baseline() const;
 
     signals:
-        void conflict  (const CheckoutBaseOperation* opertation,
-                        const QString& path,
-                        const FileInfo& baseline,
-                        const FileInfo& target,
-                        const FileInfo& workTree);
-
-        void dirty     (const CheckoutBaseOperation* opertation,
-                        const QString& path,
-                        const FileInfo& baseline,
-                        const FileInfo& target,
-                        const FileInfo& workTree);
-
-        void updated   (const CheckoutBaseOperation* opertation,
-                        const QString& path,
-                        const FileInfo& baseline,
-                        const FileInfo& target,
-                        const FileInfo& workTree);
-
-        void untracked (const CheckoutBaseOperation* opertation,
-                        const QString& path,
-                        const FileInfo& baseline,
-                        const FileInfo& target,
-                        const FileInfo& workTree);
-
-        void ignored   (const CheckoutBaseOperation* opertation,
-                        const QString& path,
-                        const FileInfo& baseline,
-                        const FileInfo& target,
-                        const FileInfo& workTree);
-
-        void progress  (const CheckoutBaseOperation* opertation,
-                        const QString& path,
-                        quint32 completedSteps,
-                        quint32 totalSteps);
+        // ICheckoutEvents interface
+        void checkoutNotify( const CheckoutNotify& why,
+                             const QString& path,
+                             const DiffFile& baseline,
+                             const DiffFile& target,
+                             const DiffFile& workdir );
+        void checkoutProgress( const QString& path,
+                               quint32 total,
+                               quint32 completed );
     };
 
     class CheckoutIndexOperation : public CheckoutBaseOperation

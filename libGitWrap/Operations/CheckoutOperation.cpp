@@ -35,31 +35,6 @@ namespace Git
     namespace Internal
     {
 
-        static void checkoutProgress(const char* path, size_t completed_steps, size_t total_steps,
-                                     void* payload)
-        {
-            CheckoutBaseOperationPrivate* d =
-                    reinterpret_cast<CheckoutBaseOperationPrivate*>(payload);
-            Q_ASSERT(d);
-
-            QString pathName = GW_StringToQt(path);
-
-            d->emitProgress(pathName, completed_steps, total_steps);
-        }
-
-        static int checkoutNotify(git_checkout_notify_t why, const char* path,
-                                  const git_diff_file* baseline, const git_diff_file* target,
-                                  const git_diff_file* workdir, void* payload)
-        {
-            CheckoutBaseOperationPrivate* d =
-                    reinterpret_cast<CheckoutBaseOperationPrivate*>(payload);
-            Q_ASSERT(d);
-
-            d->emitFile(why, path, baseline, target, workdir);
-
-            return d->mCancel ? -1 : 0;
-        }
-
         // -- CheckoutBaseOperationPrivate -- >8
 
         CheckoutBaseOperationPrivate::CheckoutBaseOperationPrivate(CheckoutBaseOperation* owner)
@@ -73,51 +48,6 @@ namespace Git
         {
         }
 
-        void CheckoutBaseOperationPrivate::emitProgress(const QString& pathName, quint32 completed,
-                                                        quint32 total)
-        {
-            GW_OP_OWNER(CheckoutBaseOperation);
-            owner->progress(owner, pathName, completed, total);
-        }
-
-
-        void CheckoutBaseOperationPrivate::emitFile(git_checkout_notify_t why, const char *path,
-                                                    const git_diff_file *baseline,
-                                                    const git_diff_file *target,
-                                                    const git_diff_file *workdir)
-        {
-            GW_OP_OWNER(CheckoutBaseOperation);
-            QString pathName = GW_StringToQt(path);
-
-            FileInfo fiBaseLine = mkFileInfo(baseline);
-            FileInfo fiTarget   = mkFileInfo(target);
-            FileInfo fiWorkDir  = mkFileInfo(workdir);
-
-            switch (why) {
-            case GIT_CHECKOUT_NOTIFY_CONFLICT:
-                owner->conflict(owner, pathName, fiBaseLine, fiTarget, fiWorkDir);
-                break;
-
-            case GIT_CHECKOUT_NOTIFY_DIRTY:
-                owner->dirty(owner, pathName, fiBaseLine, fiTarget, fiWorkDir);
-                break;
-
-            case GIT_CHECKOUT_NOTIFY_UPDATED:
-                owner->updated(owner, pathName, fiBaseLine, fiTarget, fiWorkDir);
-                break;
-
-            case GIT_CHECKOUT_NOTIFY_UNTRACKED:
-                owner->untracked(owner, pathName, fiBaseLine, fiTarget, fiWorkDir);
-                break;
-
-            case GIT_CHECKOUT_NOTIFY_IGNORED:
-                owner->ignored(owner, pathName, fiBaseLine, fiTarget, fiWorkDir);
-                break;
-
-            default:
-                break;
-            }
-        }
         void CheckoutBaseOperationPrivate::prepare()
         {
             (*mOpts).target_directory = mPath.isEmpty() ? NULL : GW_StringFromQt(mPath);
@@ -153,12 +83,6 @@ namespace Git
             if (mBaseline.isValid()) {
                 (*mOpts).baseline = BasePrivate::dataOf<Tree>( mBaseline )->o();
             }
-
-            (*mOpts).progress_payload  = this;
-            (*mOpts).progress_cb       = &checkoutProgress;
-            (*mOpts).notify_payload    = this;
-            (*mOpts).notify_cb         = &checkoutNotify;
-            (*mOpts).notify_flags      = GIT_CHECKOUT_NOTIFY_ALL;
         }
 
         void CheckoutBaseOperationPrivate::unprepare()
