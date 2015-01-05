@@ -36,6 +36,7 @@ namespace Git
     class GITWRAP_API Reference : public RepoObject
     {
         GW_PRIVATE_DECL(Reference, RepoObject, public)
+
     public:
         int compare(const Reference& other) const;
 
@@ -88,12 +89,6 @@ namespace Git
         bool isLocal() const;
         bool isRemote() const;
         bool wasDestroyed() const;
-
-        CheckoutBaseOperation* checkoutOperation(Result& result) const;
-        void checkout( Result& result,
-                       CheckoutFlags flags = CheckoutNone,
-                       CheckoutMode mode = CheckoutSafeCreate,
-                       const QStringList &paths = QStringList() ) const;
 
         void destroy( Result& result );
 

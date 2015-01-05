@@ -26,7 +26,6 @@
 #include "libGitWrap/TagRef.hpp"
 #include "libGitWrap/NoteRef.hpp"
 
-#include "libGitWrap/Operations/CheckoutOperation.hpp"
 #include "libGitWrap/Operations/CommitOperation.hpp"
 
 #include "libGitWrap/Private/GitWrapPrivate.hpp"
@@ -97,21 +96,6 @@ namespace Git
                 return false;
             }
             return r;
-        }
-
-        CheckoutBaseOperation* ReferencePrivate::checkoutOperation(Result& result) const
-        {
-            Reference ref = outer<Reference>();
-            QScopedPointer<CheckoutTreeOperation> op(new CheckoutTreeOperation);
-            op->setRepository(repo());
-
-            op->setTree(ref.peeled<Tree>(result));
-
-            if (!result) {
-                return NULL;
-            }
-
-            return op.take();
         }
 
     }
@@ -385,56 +369,6 @@ namespace Git
         }
 
         return Object::Private::create(d->repo(), o);
-    }
-
-    CheckoutBaseOperation* Reference::checkoutOperation(Result& result) const
-    {
-        GW_CD_CHECKED(Reference, NULL, result);
-        return d->checkoutOperation(result);
-    }
-
-    void Reference::checkout(Result&            result,
-                             CheckoutFlags      flags,
-                             CheckoutMode       mode,
-                             const QStringList& paths) const
-    {
-        GW_CD_CHECKED_VOID(Reference, result);
-        QString refToUpdate = name();
-
-        QScopedPointer<CheckoutBaseOperation> op(checkoutOperation(result));
-        if (!result) {
-            return;
-        }
-
-        bool doUpdateHEAD    = flags.testFlag(CheckoutUpdateHEAD);
-        /*
-        bool doCreateLocal   = opts.testFlag(CheckoutCreateLocalBranch);
-        bool doAllowDetached = opts.testFlag(CheckoutAllowDetachHEAD);
-        bool doForceDetached = opts.testFlag(CheckoutForceDetachHEAD);
-        */
-
-        /*
-        if (doCreateLocal) {
-            if (!op->supports(CheckoutCreateLocalBranch) ) {
-                result.setError("Operation not supported.");
-                return;
-            }
-        }
-        */
-
-        op->setStrategy(flags);
-        op->setMode(mode);
-        op->setCheckoutPaths(paths);
-        op->setBackgroundMode(false);
-
-        result = op->execute();
-        if (!result) {
-            return;
-        }
-
-        if (doUpdateHEAD) {
-
-        }
     }
 
     /**
