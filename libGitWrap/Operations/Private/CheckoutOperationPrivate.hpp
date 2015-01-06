@@ -92,7 +92,8 @@ namespace Git
             TreeProviderPtr     mTreeProvider;
         };
 
-        class CheckoutReferenceOperationPrivate : public CheckoutBaseOperationPrivate
+
+        class CheckoutReferenceOperationPrivate : public CheckoutTreeOperationPrivate
         {
         public:
             CheckoutReferenceOperationPrivate(CheckoutReferenceOperation* owner);

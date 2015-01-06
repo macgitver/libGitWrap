@@ -107,12 +107,15 @@ namespace Git
         CheckoutTreeOperation(const Repository& repo, QObject* parent = 0);
         CheckoutTreeOperation(TreeProviderPtr tp, QObject* parent = 0);
 
+    protected:
+        explicit CheckoutTreeOperation(CheckoutTreeOperation::Private& _d, TreeProviderPtr tp, QObject* parent );
+
     public:
         void setTreeProvider(TreeProviderPtr tp);
         TreeProviderPtr treeProvider() const;
     };
 
-    class CheckoutReferenceOperation : public CheckoutBaseOperation
+    class CheckoutReferenceOperation : public CheckoutTreeOperation
     {
     public:
         typedef Internal::CheckoutReferenceOperationPrivate Private;

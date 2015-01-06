@@ -142,7 +142,7 @@ namespace Git
         // -- CheckoutBranchOperationPrivate ---------------------------------------------------- >8
 
         CheckoutReferenceOperationPrivate::CheckoutReferenceOperationPrivate(CheckoutReferenceOperation *owner)
-            : CheckoutBaseOperationPrivate(owner)
+            : CheckoutTreeOperationPrivate(owner)
         {
         }
 
@@ -154,22 +154,14 @@ namespace Git
                 return;
             }
 
+            CheckoutTreeOperationPrivate::runCheckout( repo );
+
             ReferencePrivate* p = BasePrivate::dataOf<Reference>( mBranch );
-
-            git_object* tree = NULL;
-            mResult = git_reference_peel( &tree, p->reference, GIT_OBJ_TREE );
-            git_object_free( tree );
-            GW_CHECK_RESULT( mResult, void() );
-            Q_ASSERT( tree );
-
-            mResult = git_checkout_tree( NULL, tree, mOpts);
-
-            git_object_free( tree );
 
             if ( mResult && git_reference_is_branch( p->reference ) )
             {
                 if ( mResult ) {
-                    mResult = git_repository_set_head( p->repo()->mRepo,
+                    mResult = git_repository_set_head( repo,
                                                        git_reference_name( p->reference ),
                                                        NULL, NULL);
                 }
@@ -347,8 +339,8 @@ namespace Git
 
     // -- CheckoutReferenceOperation -- >8
 
-    CheckoutReferenceOperation::CheckoutReferenceOperation(const Git::Reference& branch, QObject* parent)
-        : CheckoutBaseOperation(*new Private(this), parent)
+    CheckoutReferenceOperation::CheckoutReferenceOperation(const Reference& branch, QObject* parent)
+        : CheckoutTreeOperation( *new Private(this), branch, parent )
     {
         setBranch( branch );
     }
