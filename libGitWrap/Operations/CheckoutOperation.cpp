@@ -37,6 +37,21 @@ namespace Git
 
         // -- CheckoutBaseOperationPrivate -- >8
 
+        git_repository* CheckoutBaseOperationPrivate::gitPtr( const Repository& obj )
+        {
+            return obj.isValid() ? BasePrivate::dataOf<Repository>( obj )->mRepo : NULL;
+        }
+
+        git_index* CheckoutBaseOperationPrivate::gitPtr( const Index& obj )
+        {
+            return obj.isValid() ? (BasePrivate::dataOf<Index>( obj )->index) : NULL;
+        }
+
+        git_object* CheckoutBaseOperationPrivate::gitObjectPtr( const Tree& obj )
+        {
+            return obj.isValid() ? BasePrivate::dataOf<Tree>( obj )->mObj : NULL;
+        }
+
         CheckoutBaseOperationPrivate::CheckoutBaseOperationPrivate(CheckoutBaseOperation* owner)
             : BaseOperationPrivate(owner)
             , mMode(CheckoutDryRun)
@@ -344,7 +359,7 @@ namespace Git
         return d->mTree;
     }
 
-    // -- CheckoutBranchOperation --------------------------------------------------------------- >8
+    // -- CheckoutReferenceOperation -- >8
 
     CheckoutReferenceOperation::CheckoutReferenceOperation(const Git::Reference& branch, QObject* parent)
         : CheckoutBaseOperation(*new Private(this), parent)

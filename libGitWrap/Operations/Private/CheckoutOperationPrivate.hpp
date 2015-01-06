@@ -41,6 +41,12 @@ namespace Git
             CheckoutBaseOperationPrivate(CheckoutBaseOperation* owner);
             ~CheckoutBaseOperationPrivate();
 
+        protected:
+            static git_repository* gitPtr(const Repository& obj);
+            static git_index* gitPtr(const Index& obj);
+
+            static git_object* gitObjectPtr(const Tree& obj);
+
         public:
             void prepare();
             void unprepare();
