@@ -39,7 +39,6 @@ namespace Git
         {
         public:
             CheckoutBaseOperationPrivate(CheckoutBaseOperation* owner);
-            ~CheckoutBaseOperationPrivate();
 
         protected:
             static git_repository* gitPtr(const Repository& obj);

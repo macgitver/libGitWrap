@@ -59,10 +59,6 @@ namespace Git
             CheckoutCallbacks::initCallbacks( mOpts, owner );
         }
 
-        CheckoutBaseOperationPrivate::~CheckoutBaseOperationPrivate()
-        {
-        }
-
         void CheckoutBaseOperationPrivate::prepare()
         {
             (*mOpts).target_directory = mPath.isEmpty() ? NULL : GW_StringFromQt(mPath);
