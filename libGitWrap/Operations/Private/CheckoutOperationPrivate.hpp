@@ -47,9 +47,9 @@ namespace Git
 
             static git_object* gitObjectPtr(const Tree& obj);
 
-        public:
-            void prepare();
-            void unprepare();
+        protected:
+            virtual void prepare();
+            virtual void unprepare();
 
         public:
             Repository              mRepo;
