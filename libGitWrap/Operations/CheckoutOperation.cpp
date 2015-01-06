@@ -304,8 +304,8 @@ namespace Git
 
     void CheckoutIndexOperation::setIndex(const Index& index)
     {
-        GW_D(CheckoutIndexOperation);
         Q_ASSERT(!isRunning());
+        GW_D(CheckoutIndexOperation);
         d->mIndex = index;
     }
 
@@ -331,14 +331,14 @@ namespace Git
 
     void CheckoutTreeOperation::setTree(const Tree& tree)
     {
-        GW_D(CheckoutTreeOperation);
         Q_ASSERT(!isRunning());
+        GW_D( CheckoutTreeOperation );
         d->mTree = tree;
     }
 
     Tree CheckoutTreeOperation::tree() const
     {
-        GW_CD(CheckoutTreeOperation);
+        GW_CD( CheckoutTreeOperation );
         return d->mTree;
     }
 
