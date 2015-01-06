@@ -100,6 +100,17 @@ namespace Git
         {
         }
 
+        void CheckoutBaseOperationPrivate::run()
+        {
+            GW_CHECK_RESULT( mResult, void() );
+
+            prepare();
+
+            runCheckout( gitPtr( mRepo ) );
+
+            unprepare();
+        }
+
         // -- CheckoutIndexOperationPrivate -->8
 
         CheckoutIndexOperationPrivate::CheckoutIndexOperationPrivate(CheckoutIndexOperation *owner)
@@ -107,25 +118,9 @@ namespace Git
         {
         }
 
-        void CheckoutIndexOperationPrivate::run()
+        void CheckoutIndexOperationPrivate::runCheckout(git_repository* repo)
         {
-            GW_CHECK_RESULT( mResult, void() );
-
-            prepare();
-
-            git_repository* repo = NULL;
-            if ( mRepo.isValid() ) {
-                repo = BasePrivate::dataOf<Repository>( mRepo )->mRepo;
-            }
-
-            git_index* index = NULL;
-            if ( mIndex.isValid() ) {
-                index = BasePrivate::dataOf<Index>( mIndex )->index;
-            }
-
-            mResult = git_checkout_index(repo, index, mOpts);
-
-            unprepare();
+            mResult = git_checkout_index(repo, gitPtr( mIndex ), mOpts);
         }
 
         // -- CheckoutTreeOperationPrivate -->8
@@ -135,11 +130,8 @@ namespace Git
         {
         }
 
-        void CheckoutTreeOperationPrivate::run()
+        void CheckoutTreeOperationPrivate::runCheckout(git_repository* repo)
         {
-            GW_CHECK_RESULT( mResult, void() );
-
-            prepare();
 
             git_repository* repo = NULL;
             if ( mRepo.isValid() ) {
@@ -152,8 +144,6 @@ namespace Git
             }
 
             mResult = git_checkout_tree(repo, tree, mOpts);
-
-            unprepare();
         }
 
         // -- CheckoutBranchOperationPrivate ---------------------------------------------------- >8
@@ -163,7 +153,7 @@ namespace Git
         {
         }
 
-        void CheckoutReferenceOperationPrivate::run()
+        void CheckoutReferenceOperationPrivate::runCheckout(git_repository* repo)
         {
             if ( !mBranch.isValid() )
             {
@@ -179,8 +169,6 @@ namespace Git
             GW_CHECK_RESULT( mResult, void() );
             Q_ASSERT( tree );
 
-            prepare();
-
             mResult = git_checkout_tree( NULL, tree, mOpts);
 
             git_object_free( tree );
@@ -194,7 +182,6 @@ namespace Git
                 }
             }
 
-            unprepare();
         }
 
     }

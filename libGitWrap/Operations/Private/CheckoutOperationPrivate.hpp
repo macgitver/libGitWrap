@@ -50,6 +50,12 @@ namespace Git
             virtual void prepare();
             virtual void unprepare();
 
+        private:
+            void run();
+
+        private:
+            virtual void runCheckout(git_repository* repo) = 0;
+
         public:
             Repository              mRepo;
             CheckoutFlags           mStrategy;
@@ -60,25 +66,27 @@ namespace Git
             bool                    mCancel;
         };
 
+
         class CheckoutIndexOperationPrivate : public CheckoutBaseOperationPrivate
         {
         public:
             CheckoutIndexOperationPrivate(CheckoutIndexOperation* owner);
 
-        public:
-            void run();
+        protected:
+            virtual void runCheckout(git_repository* repo);
 
         public:
             Index               mIndex;
         };
+
 
         class CheckoutTreeOperationPrivate : public CheckoutBaseOperationPrivate
         {
         public:
             CheckoutTreeOperationPrivate(CheckoutTreeOperation* owner);
 
-        public:
-            void run();
+        protected:
+            virtual void runCheckout(git_repository* repo);
 
         public:
             Tree                mTree;
@@ -89,8 +97,8 @@ namespace Git
         public:
             CheckoutReferenceOperationPrivate(CheckoutReferenceOperation* owner);
 
-        public:
-            void run();
+        protected:
+            virtual void runCheckout(git_repository *repo);
 
         public:
             Reference       mBranch;
