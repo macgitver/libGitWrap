@@ -132,18 +132,11 @@ namespace Git
 
         void CheckoutTreeOperationPrivate::runCheckout(git_repository* repo)
         {
+            git_object* tree = mTreeProvider ? gitObjectPtr( mTreeProvider->tree(mResult) ) : NULL;
 
-            git_repository* repo = NULL;
-            if ( mRepo.isValid() ) {
-                repo = BasePrivate::dataOf<Repository>( mRepo )->mRepo;
+            if ( mResult ) {
+                mResult = git_checkout_tree(repo, tree, mOpts);
             }
-
-            git_object* tree = NULL;
-            if ( mTree.isValid() ) {
-                tree = BasePrivate::dataOf<Tree>( mTree )->mObj;
-            }
-
-            mResult = git_checkout_tree(repo, tree, mOpts);
         }
 
         // -- CheckoutBranchOperationPrivate ---------------------------------------------------- >8
@@ -181,7 +174,6 @@ namespace Git
                                                        NULL, NULL);
                 }
             }
-
         }
 
     }
@@ -312,34 +304,45 @@ namespace Git
     // -- CheckoutTreeOperation ----------------------------------------------------------------- >8
 
     CheckoutTreeOperation::CheckoutTreeOperation(QObject* parent)
-        : CheckoutBaseOperation(*new Private(this), parent)
+        : CheckoutBaseOperation( *new Private(this), parent )
     {
-    }
-
-    CheckoutTreeOperation::CheckoutTreeOperation(const Tree& tree, QObject* parent)
-        : CheckoutBaseOperation(*new Private(this), parent)
-    {
-        setRepository(tree.repository());
-        setTree(tree);
     }
 
     CheckoutTreeOperation::CheckoutTreeOperation(const Repository& repo, QObject* parent)
-        : CheckoutBaseOperation(*new Private(this), parent)
+        : CheckoutBaseOperation( *new Private(this), parent )
     {
-        setRepository(repo);
+        setRepository( repo );
     }
 
-    void CheckoutTreeOperation::setTree(const Tree& tree)
+    CheckoutTreeOperation::CheckoutTreeOperation(TreeProviderPtr tp, QObject* parent)
+        : CheckoutBaseOperation( *new Private(this), parent )
+    {
+        GW_D( CheckoutTreeOperation );
+        d->mTreeProvider = tp;
+    }
+
+    CheckoutTreeOperation::CheckoutTreeOperation(CheckoutTreeOperation::Private& _d,
+                                                 TreeProviderPtr tp, QObject* parent)
+        : CheckoutBaseOperation( _d, parent )
+    {
+        GW_D( CheckoutTreeOperation );
+        d->mTreeProvider = tp;
+        if ( tp ) {
+            d->mRepo = tp->repository();
+        }
+    }
+
+    void CheckoutTreeOperation::setTreeProvider(TreeProviderPtr tp)
     {
         Q_ASSERT(!isRunning());
         GW_D( CheckoutTreeOperation );
-        d->mTree = tree;
+        d->mTreeProvider = tp;
     }
 
-    Tree CheckoutTreeOperation::tree() const
+    TreeProviderPtr CheckoutTreeOperation::treeProvider() const
     {
         GW_CD( CheckoutTreeOperation );
-        return d->mTree;
+        return d->mTreeProvider;
     }
 
     // -- CheckoutReferenceOperation -- >8

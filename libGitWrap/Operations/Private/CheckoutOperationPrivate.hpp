@@ -89,7 +89,7 @@ namespace Git
             virtual void runCheckout(git_repository* repo);
 
         public:
-            Tree                mTree;
+            TreeProviderPtr     mTreeProvider;
         };
 
         class CheckoutReferenceOperationPrivate : public CheckoutBaseOperationPrivate

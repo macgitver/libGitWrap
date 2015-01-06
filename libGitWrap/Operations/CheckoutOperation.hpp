@@ -21,6 +21,7 @@
 #include "libGitWrap/Events/IGitEvents.hpp"
 
 #include "libGitWrap/Operations/BaseOperation.hpp"
+#include "libGitWrap/Operations/Providers.hpp"
 
 
 namespace Git
@@ -104,11 +105,11 @@ namespace Git
     public:
         CheckoutTreeOperation(QObject* parent = 0);
         CheckoutTreeOperation(const Repository& repo, QObject* parent = 0);
-        CheckoutTreeOperation(const Tree& tree, QObject* parent = 0);
+        CheckoutTreeOperation(TreeProviderPtr tp, QObject* parent = 0);
 
     public:
-        void setTree(const Tree& tree);
-        Tree tree() const;
+        void setTreeProvider(TreeProviderPtr tp);
+        TreeProviderPtr treeProvider() const;
     };
 
     class CheckoutReferenceOperation : public CheckoutBaseOperation
