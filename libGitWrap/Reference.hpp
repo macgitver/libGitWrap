@@ -104,6 +104,7 @@ namespace Git
 
     public:
         operator ParentProviderPtr() const;
+        operator TreeProviderPtr() const;
     };
 
     template< class T >
@@ -125,6 +126,20 @@ namespace Git
 
     private:
         Reference   mRef;
+    };
+
+    class GITWRAP_API ReferenceTreeProvider :public TreeProvider
+    {
+    public:
+        ReferenceTreeProvider( const Reference& ref );
+
+    private:
+        Reference   mRef;
+
+    public:
+        // INTERFACE REALIZATION
+        Repository repository() const;
+        Tree tree(Result& result);
     };
 
 }

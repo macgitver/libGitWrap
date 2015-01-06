@@ -481,6 +481,11 @@ namespace Git
         return ParentProviderPtr( new ReferenceParentProvider( *this ) );
     }
 
+    Reference::operator TreeProviderPtr() const
+    {
+        return TreeProviderPtr( new ReferenceTreeProvider( *this ) );
+    }
+
     ReferenceKinds Reference::kind() const
     {
         GW_CD(Reference);
@@ -519,7 +524,8 @@ namespace Git
         return NoteRef();
     }
 
-    // *** ReferenceParentProvider ***
+
+    //-- ReferenceParentProvider -->8
 
     ReferenceParentProvider::ReferenceParentProvider(const Reference& ref)
         : mRef( ref )
@@ -537,6 +543,24 @@ namespace Git
     Repository ReferenceParentProvider::repository() const
     {
         return mRef.repository();
+    }
+
+
+    //-- ReferenceTreeProvider -->8
+
+    ReferenceTreeProvider::ReferenceTreeProvider(const Git::Reference& ref)
+        : mRef( ref )
+    {
+    }
+
+    Repository ReferenceTreeProvider::repository() const
+    {
+        return mRef.repository();
+    }
+
+    Tree ReferenceTreeProvider::tree(Result& result)
+    {
+        return mRef.peeled(result, otTree).asTree();
     }
 
 }
