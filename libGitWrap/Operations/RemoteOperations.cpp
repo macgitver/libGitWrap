@@ -37,10 +37,8 @@ namespace Git
             BaseRemoteOperationPrivate* p = static_cast< BaseRemoteOperationPrivate* >( payload );
             Q_ASSERT( p );
 
-            const char* alias = p->mRemoteAlias.isEmpty() ? name : GW_StringFromQt(p->mRemoteAlias);
-
             int error = 0;
-            error = git_remote_create(out, repo, alias, url);
+            error = git_remote_create( out, repo, GW_StringFromQt_Def(p->mRemoteAlias, name), url);
 
             return error;
         }

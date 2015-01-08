@@ -360,16 +360,25 @@ namespace Git
 /**
   * @internal
   * @ingroup GitWrap
-  * @def Encode a QString into a QByteArray with the UTF-8 codec used by libgit2.
+  * @def Encode a QString @a s into a QByteArray with the UTF-8 codec used by libgit2.
   */
 #define GW_EncodeQString(s) (s).toUtf8()
 
 /**
   * @internal
   * @ingroup GitWrap
-  * @def Encode a QString with the UTF-8 codec used by libgit2.
+  * @def Encode a QString @a s with the UTF-8 codec used by libgit2.
   */
 #define GW_StringFromQt(s) GW_EncodeQString(s).constData()
+
+/**
+  * @internal
+  * @ingroup    GitWrap
+  * @def        Encode a QString @a s with the UTF-8 codec used by libgit2.
+  *             If @a s is empty, The default @a def will be set.
+  */
+#define GW_StringFromQt_Def(s, def) \
+    (s).isEmpty() ? def : GW_EncodeQString(s).constData()
 
 /**
   * @internal
