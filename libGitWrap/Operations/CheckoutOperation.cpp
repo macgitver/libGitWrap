@@ -174,7 +174,7 @@ namespace Git
 
             ReferencePrivate* p = BasePrivate::dataOf<Reference>( mBranch );
 
-            if ( mResult && git_reference_is_branch( p->reference ) )
+            if ( mStrategy.testFlag(CheckoutUpdateHEAD) )
             {
                 mResult = git_repository_set_head( repo,
                                                    git_reference_name( p->reference ),
