@@ -52,6 +52,7 @@ namespace Git
 
         private:
             void run();
+            virtual void postCheckout() = 0;
 
         private:
             virtual void runCheckout(git_repository* repo) = 0;
@@ -74,6 +75,7 @@ namespace Git
 
         protected:
             virtual void runCheckout(git_repository* repo);
+            virtual void postCheckout(git_repository* repo);
 
         public:
             Index               mIndex;
@@ -87,6 +89,7 @@ namespace Git
 
         protected:
             virtual void runCheckout(git_repository* repo);
+            virtual void postCheckout(git_repository* repo);
 
         public:
             TreeProviderPtr     mTreeProvider;
@@ -100,6 +103,7 @@ namespace Git
 
         protected:
             virtual void runCheckout(git_repository *repo);
+            virtual void postCheckout(git_repository* repo);
 
         public:
             Reference       mBranch;

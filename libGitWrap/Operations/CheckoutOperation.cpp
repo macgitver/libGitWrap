@@ -106,7 +106,9 @@ namespace Git
 
             prepare();
 
-            runCheckout( gitPtr( mRepo ) );
+            git_repository* repo = gitPtr( mRepo );
+            runCheckout( repo );
+            postCheckout( repo );
 
             unprepare();
         }
@@ -123,6 +125,11 @@ namespace Git
             mResult = git_checkout_index(repo, gitPtr( mIndex ), mOpts);
         }
 
+        void CheckoutIndexOperationPrivate::postCheckout(git_repository* repo)
+        {
+
+        }
+
         // -- CheckoutTreeOperationPrivate -->8
 
         CheckoutTreeOperationPrivate::CheckoutTreeOperationPrivate(CheckoutTreeOperation *owner)
@@ -133,9 +140,14 @@ namespace Git
         void CheckoutTreeOperationPrivate::runCheckout(git_repository* repo)
         {
             git_object* tree = mTreeProvider ? gitObjectPtr( mTreeProvider->tree(mResult) ) : NULL;
-            GW_CHECK_RESULT( mResult, void() )
+            GW_CHECK_RESULT( mResult, void() );
 
             mResult = git_checkout_tree(repo, tree, mOpts);
+        }
+
+        void CheckoutTreeOperationPrivate::postCheckout(git_repository* repo)
+        {
+
         }
 
         // -- CheckoutBranchOperationPrivate ---------------------------------------------------- >8
@@ -154,6 +166,10 @@ namespace Git
             }
 
             CheckoutTreeOperationPrivate::runCheckout( repo );
+        }
+
+        void CheckoutReferenceOperationPrivate::postCheckout(git_repository* repo)
+        {
             GW_CHECK_RESULT( mResult, void() );
 
             ReferencePrivate* p = BasePrivate::dataOf<Reference>( mBranch );
