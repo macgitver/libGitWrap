@@ -52,7 +52,7 @@ namespace Git
 
         private:
             void run();
-            virtual void postCheckout() = 0;
+            virtual void postCheckout(git_repository* repo) = 0;
 
         private:
             virtual void runCheckout(git_repository* repo) = 0;
