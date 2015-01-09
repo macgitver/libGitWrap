@@ -133,10 +133,9 @@ namespace Git
         void CheckoutTreeOperationPrivate::runCheckout(git_repository* repo)
         {
             git_object* tree = mTreeProvider ? gitObjectPtr( mTreeProvider->tree(mResult) ) : NULL;
+            GW_CHECK_RESULT( mResult, void() )
 
-            if ( mResult ) {
-                mResult = git_checkout_tree(repo, tree, mOpts);
-            }
+            mResult = git_checkout_tree(repo, tree, mOpts);
         }
 
         // -- CheckoutBranchOperationPrivate ---------------------------------------------------- >8
@@ -155,16 +154,15 @@ namespace Git
             }
 
             CheckoutTreeOperationPrivate::runCheckout( repo );
+            GW_CHECK_RESULT( mResult, void() );
 
             ReferencePrivate* p = BasePrivate::dataOf<Reference>( mBranch );
 
             if ( mResult && git_reference_is_branch( p->reference ) )
             {
-                if ( mResult ) {
-                    mResult = git_repository_set_head( repo,
-                                                       git_reference_name( p->reference ),
-                                                       NULL, NULL);
-                }
+                mResult = git_repository_set_head( repo,
+                                                   git_reference_name( p->reference ),
+                                                   NULL, NULL);
             }
         }
 
