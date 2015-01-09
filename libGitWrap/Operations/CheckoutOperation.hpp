@@ -55,7 +55,7 @@ namespace Git
     public:
         void setRepository(const Repository& repo);
         void setMode(CheckoutMode mode);
-        void setStrategy(CheckoutFlags strategy);
+        void setStrategy(unsigned int strategy);
         void setTargetDirectory(const QString& path);
         void setCheckoutPaths(const QStringList& paths);
         void setBaseline(const Tree& baseline);

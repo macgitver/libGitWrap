@@ -193,11 +193,11 @@ namespace Git
         d->mMode = mode;
     }
 
-    void CheckoutBaseOperation::setStrategy(CheckoutFlags strategy)
+    void CheckoutBaseOperation::setStrategy(unsigned int strategy)
     {
         GW_D(CheckoutBaseOperation);
         Q_ASSERT(!isRunning());
-        d->mStrategy = strategy;
+        d->mStrategy = static_cast<CheckoutFlags>(strategy);
     }
 
     void CheckoutBaseOperation::setTargetDirectory(const QString& path)
