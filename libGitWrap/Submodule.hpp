@@ -48,10 +48,12 @@ namespace Git
 
         enum UpdateStrategy
         {
-            Checkout,
-            Rebase,
-            Merge,
-            Ignore
+            Reset       = -1,
+            Default     = 0,
+            Checkout    = 1,
+            Rebase      = 2,
+            Merge       = 3,
+            Ignore      = 4
         };
 
     public:
