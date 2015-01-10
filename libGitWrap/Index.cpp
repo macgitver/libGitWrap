@@ -394,21 +394,18 @@ namespace Git
 
         git_reference *ref = NULL;
         result = git_repository_head( &ref, d->repo()->mRepo );
-        if ( !result )
-            return;
+        GW_CHECK_RESULT( result, void() );
 
         git_object *o = NULL;
         result = git_reference_peel( &o, ref, GIT_OBJ_COMMIT );
         git_reference_free( ref );
-        if ( !result )
-            return;
+        GW_CHECK_RESULT( result, void() );
 
         result = git_reset_default( d->repo()->mRepo, o, Internal::StrArray( paths ) );
+        GW_CHECK_RESULT( result, void() );
 
-        if (result) {
-            d->clearKnownConflicts();   // conflicts need to be reloaded as conflicts related to
-                                        // the paths (which we did reset) are removed now.
-        }
+        d->clearKnownConflicts();   // conflicts need to be reloaded as conflicts related to
+                                    // the paths (which we did reset) are removed now.
     }
 
     /**
