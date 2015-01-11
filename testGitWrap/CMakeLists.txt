@@ -13,6 +13,7 @@ SET(SRC_FILES
 
     Test_Commit.cpp
 
+    TestIndex.cpp
     TestRepository.cpp
     TestRefName.cpp
     TestReference.cpp
