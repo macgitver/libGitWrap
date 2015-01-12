@@ -202,90 +202,42 @@ namespace Git
         }
 
 
-        //-- StrArray --------------------------------------------------------------------------- >8
-
-        StrArray::StrArray()
-        {
-            mEncoded.count = 0;
-            mEncoded.strings = 0;
-        }
-
-        StrArray::StrArray(const QStringList &strings)
-        {
-            setStrings(strings);
-        }
-
-        StrArray::~StrArray()
-        {
-            delete[] mEncoded.strings;
-        }
-
-        int StrArray::count() const
-        {
-            return mEncoded.count;
-        }
-
-        StrArray::operator git_strarray*()
-        {
-            return &mEncoded;
-        }
-
-        StrArray::operator const git_strarray *() const
-        {
-            return &mEncoded;
-        }
-
-        StrArray::operator QStringList() const
-        {
-            return strings();
-        }
-
-        QStringList StrArray::strings() const
-        {
-            QStringList result;
-            for (int i=0; i < mEncoded.count; i++)
-            {
-                result << GW_StringToQt( mEncoded.strings[i] );
-            }
-
-            return result;
-        }
-
-        void StrArray::setStrings(const QStringList &strings)
-        {
-            delete[] mEncoded.strings;
-
-            mEncoded.count = strings.count();
-            mEncoded.strings = new char *[mEncoded.count];
-
-            for( int i = 0; i < strings.count(); i++ )
-            {
-                strcpy( mEncoded.strings[i], GW_EncodeQString( strings[i] ).data() );
-            }
-        }
-
-
         //-- StrArrayRef ------------------------------------------------------------------------ >8
 
         StrArrayRef::StrArrayRef(git_strarray& _a, bool init)
             : mEncoded( _a )
+            , mOwnsRef( false )
         {
             if ( init ) {
-                mEncoded.strings = 0;
                 mEncoded.count = 0;
+                mEncoded.strings = NULL;
             }
         }
 
         StrArrayRef::StrArrayRef(git_strarray& _a, const QStringList& strings)
             : mEncoded(_a)
+            , mOwnsRef( false )
         {
-            Q_ASSERT( !mEncoded.strings && !mEncoded.count );
+            Q_ASSERT( !mEncoded.count && !mEncoded.strings );
             setStrings( strings );
         }
 
         StrArrayRef::~StrArrayRef()
         {
+            clear();
+            if ( mOwnsRef ) {
+                delete &mEncoded;
+            }
+        }
+
+        void StrArrayRef::clear()
+        {
+            for ( int i = 0; i < mEncoded.count; ++i ) {
+                delete[] mEncoded.strings[i];
+            }
+
             delete[] mEncoded.strings;
+            mEncoded.count = 0;
         }
 
         bool StrArrayRef::operator ==(const git_strarray& other) const
@@ -321,8 +273,7 @@ namespace Git
         QStringList StrArrayRef::strings() const
         {
             QStringList result;
-            for (int i=0; i < mEncoded.count; i++)
-            {
+            for (int i=0; i < mEncoded.count; i++) {
                 result << GW_StringToQt( mEncoded.strings[i] );
             }
 
@@ -331,11 +282,10 @@ namespace Git
 
         void StrArrayRef::setStrings(const QStringList& strings)
         {
-            delete[] mEncoded.strings;
+            clear();
 
             mEncoded.count = strings.count();
-            if ( strings.isEmpty() )
-            {
+            if ( strings.isEmpty() ) {
                 // The strings pointer must be NULL in this case.
                 mEncoded.strings = NULL;
                 return;
@@ -343,10 +293,35 @@ namespace Git
 
             mEncoded.strings = new char *[mEncoded.count];
 
-            for( int i = 0; i < strings.count(); i++ )
-            {
-                strcpy( mEncoded.strings[i], GW_EncodeQString( strings[i] ).data() );
+            for( int i = 0; i < strings.count(); i++ ) {
+                mEncoded.strings[i] = qstrdup( GW_StringFromQt( strings[i] ) );
             }
+        }
+
+
+        //-- StrArray --------------------------------------------------------------------------- >8
+
+        StrArray::StrArray()
+            : StrArrayRef( *new git_strarray, true )
+        {
+            mOwnsRef = true;
+        }
+
+        StrArray::StrArray(const QStringList &strings)
+            : StrArrayRef( *new git_strarray, true )
+        {
+            mOwnsRef = true;
+            setStrings( strings );
+        }
+
+        StrArray::operator git_strarray*()
+        {
+            return &mEncoded;
+        }
+
+        StrArray::operator const git_strarray *() const
+        {
+            return &mEncoded;
         }
 
 

@@ -80,38 +80,6 @@ namespace Git
         /**
          * @internal
          * @ingroup     GitWrap
-         * @brief       Wraps a git_strarray for conversion from and to a QStringList.
-         */
-        class StrArray
-        {
-        public:
-            StrArray();
-            StrArray(const QStringList& strings);
-            ~StrArray();
-
-        public:
-            operator git_strarray*();
-            operator const git_strarray*() const;
-
-            operator QStringList() const;
-
-        public:
-            int count() const;
-
-            QStringList strings() const;
-            void setStrings( const QStringList& strings);
-
-        private:
-            StrArray( const StrArray& other );
-            StrArray& operator=(const StrArray& other);
-
-        private:
-            git_strarray          mEncoded;         //!< the encoded string data from the source QStringList
-        };
-
-        /**
-         * @internal
-         * @ingroup     GitWrap
          * @brief       Wraps an existing git_strarray for conversion from and to a QStringList.
          */
         class StrArrayRef : public QSharedData
@@ -119,7 +87,7 @@ namespace Git
         public:
             StrArrayRef(git_strarray& _a, bool init = false);
             StrArrayRef(git_strarray& _a, const QStringList& sl);
-            ~StrArrayRef();
+            virtual ~StrArrayRef();
 
         public:
             bool operator ==(const git_strarray& other) const;
@@ -133,13 +101,36 @@ namespace Git
             StrArrayRef& operator=(const StrArrayRef&);
 
         public:
+            void clear();
             int count() const;
 
             QStringList strings() const;
             void setStrings( const QStringList& strings );
 
-        private:
+        protected:
             git_strarray&       mEncoded;
+            bool                mOwnsRef;
+        };
+
+
+        /**
+         * @internal
+         * @ingroup     GitWrap
+         * @brief       Wraps a git_strarray for conversion from and to a QStringList.
+         */
+        class StrArray : public StrArrayRef
+        {
+        public:
+            StrArray();
+            StrArray(const QStringList& strings);
+
+        public:
+            operator git_strarray*();
+            operator const git_strarray*() const;
+
+        private:
+            StrArray( const StrArray& other );
+            StrArray& operator=(const StrArray& other);
         };
 
 
