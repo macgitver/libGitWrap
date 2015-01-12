@@ -171,6 +171,16 @@ namespace Git
         return repo.lookupCommit( result, ObjectId::fromRaw(commitId.id) );
     }
 
+    Commit::operator ParentProviderPtr() const
+    {
+        return ParentProviderPtr( new CommitParentProvider( *this ) );
+    }
+
+    Commit::operator TreeProviderPtr() const
+    {
+        return TreeProviderPtr( new CommitTreeProvider( *this ) );
+    }
+
     Tree Commit::tree( Result& result ) const
     {
         GW_CHECK_RESULT( result, Tree() );
@@ -414,7 +424,40 @@ namespace Git
         return dl;
     }
 
+
+    // -- CommitParentProvider -->8
+
+    CommitParentProvider::CommitParentProvider(const Commit &commit)
+        : mCommit( commit )
     {
+    }
+
+    Repository CommitParentProvider::repository() const
+    {
+        return mCommit.repository();
+    }
+
+    ObjectIdList CommitParentProvider::parents(Result& result) const
+    {
+        return mCommit.parentCommitIds( result );
+    }
+
+
+    // -- CommitTreeProvider -->8
+
+    CommitTreeProvider::CommitTreeProvider(const Commit &commit)
+        : mCommit( commit )
+    {
+    }
+
+    Repository CommitTreeProvider::repository() const
+    {
+        return mCommit.repository();
+    }
+
+    Tree CommitTreeProvider::tree(Result &result)
+    {
+        return mCommit.tree( result );
     }
 
 }

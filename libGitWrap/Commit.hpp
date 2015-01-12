@@ -21,6 +21,7 @@
 #include "libGitWrap/GitWrap.hpp"
 #include "libGitWrap/ObjectId.hpp"
 #include "libGitWrap/Object.hpp"
+#include "libGitWrap/Operations/Providers.hpp"
 #include "libGitWrap/Result.hpp"
 #include "libGitWrap/Signature.hpp"
 
@@ -52,6 +53,10 @@ namespace Git
                              const QString &message,
                              const Signature &author, const Signature &committer,
                              const ObjectIdList &parents);
+
+    public:
+        operator TreeProviderPtr() const;
+        operator ParentProviderPtr() const;
 
     public:
         Tree tree( Result& result ) const;
@@ -103,6 +108,34 @@ namespace Git
         return qHash(c.id());
     }
 
+
+    class GITWRAP_API CommitParentProvider : public ParentProvider
+    {
+    public:
+        CommitParentProvider(const Commit& commit );
+
+    public:
+        // INTERFACE REALIZATION
+        Repository repository() const;
+        ObjectIdList parents(Result& result) const;
+
+    private:
+        const Commit&   mCommit;
+    };
+
+    class GITWRAP_API CommitTreeProvider :public TreeProvider
+    {
+    public:
+        CommitTreeProvider( const Commit& commit );
+
+    private:
+        const Commit&   mCommit;
+
+    public:
+        // INTERFACE REALIZATION
+        Repository repository() const;
+        Tree tree(Result& result);
+    };
 }
 
 GITWRAP_API QDebug operator<<( QDebug debug, const Git::Commit& commit );
