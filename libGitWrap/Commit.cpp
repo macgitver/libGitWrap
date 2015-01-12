@@ -173,13 +173,12 @@ namespace Git
 
     Tree Commit::tree( Result& result ) const
     {
+        GW_CHECK_RESULT( result, Tree() );
         GW_CD_CHECKED(Commit, Tree(), result);
         git_tree* tree = NULL;
 
         result = git_commit_tree(&tree, d->o());
-        if(!result) {
-            return Tree();
-        }
+        GW_CHECK_RESULT( result, Tree() );
 
         return Tree::PrivatePtr(new Tree::Private(d->repo(), tree));
     }

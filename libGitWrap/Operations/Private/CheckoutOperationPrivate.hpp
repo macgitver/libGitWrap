@@ -14,11 +14,11 @@
  *
  */
 
+#include "libGitWrap/BranchRef.hpp"
+#include "libGitWrap/Index.hpp"
+#include "libGitWrap/Repository.hpp"
 #include "libGitWrap/Result.hpp"
 #include "libGitWrap/Tree.hpp"
-#include "libGitWrap/Repository.hpp"
-#include "libGitWrap/Index.hpp"
-#include "libGitWrap/BranchRef.hpp"
 
 #include "libGitWrap/Private/GitWrapPrivate.hpp"
 
@@ -28,8 +28,8 @@ namespace Git
 {
 
     class CheckoutBaseOperation;
-    class CheckoutReferenceOperation;
     class CheckoutIndexOperation;
+    class CheckoutReferenceOperation;
     class CheckoutTreeOperation;
 
     namespace Internal
@@ -106,7 +106,7 @@ namespace Git
             virtual void postCheckout(git_repository* repo);
 
         public:
-            Reference       mBranch;
+            Reference   mBranch;
         };
 
     }
