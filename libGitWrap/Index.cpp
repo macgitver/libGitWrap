@@ -383,15 +383,6 @@ namespace Git
     {
         GW_D_CHECKED(Index, void(), result)
 
-        if (paths.isEmpty()) {
-            return;
-        }
-
-        if (isBare()) {
-            result.setInvalidObject();
-            return;
-        }
-
         git_reference *ref = NULL;
         result = git_repository_head( &ref, d->repo()->mRepo );
         GW_CHECK_RESULT( result, void() );
