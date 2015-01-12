@@ -15,6 +15,7 @@
  */
 
 #include "libGitWrap/BranchRef.hpp"
+#include "libGitWrap/Commit.hpp"
 #include "libGitWrap/Index.hpp"
 #include "libGitWrap/Repository.hpp"
 #include "libGitWrap/Result.hpp"
@@ -28,6 +29,7 @@ namespace Git
 {
 
     class CheckoutBaseOperation;
+    class CheckoutCommitOperation;
     class CheckoutIndexOperation;
     class CheckoutReferenceOperation;
     class CheckoutTreeOperation;
@@ -93,6 +95,20 @@ namespace Git
 
         public:
             TreeProviderPtr     mTreeProvider;
+        };
+
+
+        class CheckoutCommitOperationPrivate : public CheckoutTreeOperationPrivate
+        {
+        public:
+            CheckoutCommitOperationPrivate(CheckoutCommitOperation* owner);
+
+        public:
+            void runCheckout(git_repository* repo);
+            void postCheckout(git_repository* repo);
+
+        public:
+            Commit      mCommit;
         };
 
 

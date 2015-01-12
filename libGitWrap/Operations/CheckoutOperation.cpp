@@ -151,6 +151,35 @@ namespace Git
         }
 
 
+        // -- CheckoutCommitOperationPrivate -->8
+
+        CheckoutCommitOperationPrivate::CheckoutCommitOperationPrivate(CheckoutCommitOperation *owner)
+            : CheckoutTreeOperationPrivate(owner)
+        {
+        }
+
+        void CheckoutCommitOperationPrivate::runCheckout(git_repository* repo)
+        {
+            if ( !mCommit.isValid() )
+            {
+                mResult.setInvalidObject();
+                return;
+            }
+
+            CheckoutTreeOperationPrivate::runCheckout( repo );
+        }
+
+        void CheckoutCommitOperationPrivate::postCheckout(git_repository *repo)
+        {
+            GW_CHECK_RESULT( mResult, void() );
+
+            if ( mStrategy.testFlag(CheckoutUpdateHEAD) )
+            {
+                mRepo.setDetachedHEAD( mResult, mCommit.id() );
+            }
+        }
+
+
         // -- CheckoutReferenceOperationPrivate -->8
 
         CheckoutReferenceOperationPrivate::CheckoutReferenceOperationPrivate(CheckoutReferenceOperation *owner)
@@ -350,6 +379,21 @@ namespace Git
     {
         GW_CD( CheckoutTreeOperation );
         return d->mTreeProvider;
+    }
+
+
+    // -- CheckoutCommitOperation -->8
+    CheckoutCommitOperation::CheckoutCommitOperation(const Commit& commit, QObject* parent)
+        : CheckoutTreeOperation( *new Private(this), commit, parent)
+    {
+        GW_D( CheckoutCommitOperation );
+        d->mCommit = commit;
+    }
+
+    Commit CheckoutCommitOperation::commit()
+    {
+        GW_CD( CheckoutCommitOperation );
+        return d ? d->mCommit : Commit();
     }
 
 

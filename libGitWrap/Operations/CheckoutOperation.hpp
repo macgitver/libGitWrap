@@ -32,6 +32,7 @@ namespace Git
     namespace Internal
     {
         class CheckoutBaseOperationPrivate;
+        class CheckoutCommitOperationPrivate;
         class CheckoutIndexOperationPrivate;
         class CheckoutReferenceOperationPrivate;
         class CheckoutTreeOperationPrivate;
@@ -113,6 +114,18 @@ namespace Git
     public:
         void setTreeProvider(TreeProviderPtr tp);
         TreeProviderPtr treeProvider() const;
+    };
+
+    class GITWRAP_API CheckoutCommitOperation : public CheckoutTreeOperation
+    {
+    public:
+        typedef Internal::CheckoutCommitOperationPrivate Private;
+
+    public:
+        explicit CheckoutCommitOperation(const Commit& commit, QObject* parent = 0);
+
+    public:
+        Commit commit();
     };
 
     class GITWRAP_API CheckoutReferenceOperation : public CheckoutTreeOperation
