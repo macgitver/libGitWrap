@@ -441,8 +441,10 @@ namespace Git
      */
     void Reference::setAsDetachedHEAD(Result& result) const
     {
+        GW_CHECK_RESULT( result, void() );
         GW_CD_CHECKED(Reference, void(), result);
-        peeled<Commit>(result).setAsDetachedHEAD(result);
+
+        repository().setDetachedHEAD( result, peeled<Commit>(result).id() );
     }
 
     void Reference::updateHEAD(Result &result) const

@@ -86,7 +86,6 @@ namespace Git
         DiffList diffFromParent( Result& result, unsigned int index );
         DiffList diffFromAllParents( Result& result );
 
-        void setAsDetachedHEAD(Result& result) const;
     };
 
     template<>

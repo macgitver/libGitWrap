@@ -386,9 +386,6 @@ namespace Git
 
         tree(result).checkout(result, force, paths);
 
-        if (result && updateHEAD) {
-            setAsDetachedHEAD(result);
-        }
     }
 
     DiffList Commit::diffFromParent(Result& result, unsigned int index)
@@ -418,10 +415,7 @@ namespace Git
         return dl;
     }
 
-    void Commit::setAsDetachedHEAD(Result& result) const
     {
-        GW_CD_CHECKED_VOID(Commit, result);
-        repository().setDetachedHEAD(result, *this);
     }
 
 }

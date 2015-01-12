@@ -972,25 +972,6 @@ namespace Git
         setHEAD(result, branch.name());
     }
 
-    /**
-     * @brief           Set the HEAD detached to a commit
-     *
-     * @param[in,out]   result  A Result object; see @ref GitWrapErrorHandling
-     *
-     * @param[in]       commit  The commit to point to.
-     *
-     */
-    void Repository::setDetachedHEAD(Result& result, const Commit& commit)
-    {
-        GW_D_CHECKED(Repository, void(), result);
-
-        if (!commit.isValid()) {
-            result.setInvalidObject();
-            return;
-        }
-
-        setDetachedHEAD(result, commit.id());
-    }
 
     /**
      * @brief           Set the HEAD detached to a commit
