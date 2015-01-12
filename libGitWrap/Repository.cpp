@@ -642,7 +642,7 @@ namespace Git
         GW_D_EX_CHECKED(Repository, Object(), result);
 
         git_object* obj = NULL;
-        git_otype gitObjType = Internal::objectType2gitotype(ot);
+        git_otype gitObjType = Internal::objectType2git(ot);
 
         result = git_object_lookup(&obj, d->mRepo, Private::sha(id), gitObjType);
         GW_CHECK_RESULT( result, Object() );

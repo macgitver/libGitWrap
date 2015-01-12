@@ -260,7 +260,7 @@ namespace Git
          * @return      The GIT_OBJ_xxx constant
          *
          */
-        static inline git_otype objectType2gitotype(ObjectType ot)
+        static inline git_otype objectType2git(ObjectType ot)
         {
             switch (ot) {
             default:        Q_ASSERT(false);
