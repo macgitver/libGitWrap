@@ -362,11 +362,8 @@ namespace Git
         GW_CD_CHECKED(Reference, Object(), result);
 
         git_object* o = NULL;
-        result = git_reference_peel(&o, d->reference, Internal::objectType2gitotype(ot));
-
-        if (!result) {
-            return Object();
-        }
+        result = git_reference_peel(&o, d->reference, Internal::objectType2git(ot));
+        GW_CHECK_RESULT( result, Object() );
 
         return Object::Private::create(d->repo(), o);
     }

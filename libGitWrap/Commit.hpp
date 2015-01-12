@@ -17,12 +17,12 @@
 #ifndef GIT_OBJECT_COMMIT_H
 #define GIT_OBJECT_COMMIT_H
 
+#include "libGitWrap/DiffList.hpp"
 #include "libGitWrap/GitWrap.hpp"
 #include "libGitWrap/ObjectId.hpp"
 #include "libGitWrap/Object.hpp"
-#include "libGitWrap/Signature.hpp"
-#include "libGitWrap/DiffList.hpp"
 #include "libGitWrap/Result.hpp"
+#include "libGitWrap/Signature.hpp"
 
 namespace Git
 {

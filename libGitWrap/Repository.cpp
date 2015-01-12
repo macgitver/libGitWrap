@@ -645,9 +645,7 @@ namespace Git
         git_otype gitObjType = Internal::objectType2gitotype(ot);
 
         result = git_object_lookup(&obj, d->mRepo, Private::sha(id), gitObjType);
-        if (!result) {
-            return Object();
-        }
+        GW_CHECK_RESULT( result, Object() );
 
         return Object::Private::create(d, obj);
     }
@@ -1004,7 +1002,9 @@ namespace Git
      */
     void Repository::setDetachedHEAD(Result& result, const ObjectId& sha)
     {
+        GW_CHECK_RESULT( result, void() );
         GW_D_CHECKED(Repository, void(), result);
+
         result = git_repository_set_head_detached( d->mRepo, Private::sha(sha), NULL, NULL);
     }
 

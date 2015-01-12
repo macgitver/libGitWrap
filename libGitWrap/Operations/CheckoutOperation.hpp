@@ -33,8 +33,8 @@ namespace Git
     {
         class CheckoutBaseOperationPrivate;
         class CheckoutIndexOperationPrivate;
-        class CheckoutTreeOperationPrivate;
         class CheckoutReferenceOperationPrivate;
+        class CheckoutTreeOperationPrivate;
     }
 
     class GITWRAP_API CheckoutBaseOperation : public BaseOperation, public ICheckoutEvents
@@ -82,7 +82,7 @@ namespace Git
                                quint32 completed );
     };
 
-    class CheckoutIndexOperation : public CheckoutBaseOperation
+    class GITWRAP_API CheckoutIndexOperation : public CheckoutBaseOperation
     {
     public:
         typedef Internal::CheckoutIndexOperationPrivate Private;
@@ -97,7 +97,7 @@ namespace Git
         Index index() const;
     };
 
-    class CheckoutTreeOperation : public CheckoutBaseOperation
+    class GITWRAP_API CheckoutTreeOperation : public CheckoutBaseOperation
     {
     public:
         typedef Internal::CheckoutTreeOperationPrivate Private;
@@ -115,7 +115,7 @@ namespace Git
         TreeProviderPtr treeProvider() const;
     };
 
-    class CheckoutReferenceOperation : public CheckoutTreeOperation
+    class GITWRAP_API CheckoutReferenceOperation : public CheckoutTreeOperation
     {
     public:
         typedef Internal::CheckoutReferenceOperationPrivate Private;

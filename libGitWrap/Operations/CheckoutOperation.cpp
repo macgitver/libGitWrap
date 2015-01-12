@@ -150,7 +150,8 @@ namespace Git
 
         }
 
-        // -- CheckoutBranchOperationPrivate ---------------------------------------------------- >8
+
+        // -- CheckoutReferenceOperationPrivate -->8
 
         CheckoutReferenceOperationPrivate::CheckoutReferenceOperationPrivate(CheckoutReferenceOperation *owner)
             : CheckoutTreeOperationPrivate(owner)
@@ -184,7 +185,7 @@ namespace Git
 
     }
 
-    // -- CheckoutBaseOperation ----------------------------------------------------------------- >8
+    // -- CheckoutBaseOperation -->8
 
     CheckoutBaseOperation::CheckoutBaseOperation(Private& _d, QObject* parent)
         : BaseOperation(_d, parent)
@@ -351,7 +352,8 @@ namespace Git
         return d->mTreeProvider;
     }
 
-    // -- CheckoutReferenceOperation -- >8
+
+    // -- CheckoutReferenceOperation -->8
 
     CheckoutReferenceOperation::CheckoutReferenceOperation(const Reference& branch, QObject* parent)
         : CheckoutTreeOperation( *new Private(this), branch, parent )
@@ -367,7 +369,7 @@ namespace Git
 
     Reference CheckoutReferenceOperation::branch() const
     {
-        GW_CD(CheckoutReferenceOperation);
+        GW_CD( CheckoutReferenceOperation );
         return d ? d->mBranch : Reference();
     }
 
