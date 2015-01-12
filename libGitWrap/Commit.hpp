@@ -83,11 +83,6 @@ namespace Git
         QString message() const;
         QString shortMessage() const;
 
-        void checkout( Result &result,
-                       bool force = false,
-                       bool updateHEAD = true,
-                       const QStringList &paths = QStringList() ) const;
-
         DiffList diffFromParent( Result& result, unsigned int index );
         DiffList diffFromAllParents( Result& result );
 

@@ -151,16 +151,6 @@ namespace Git
         return TreeEntry::PrivatePtr(new TreeEntry::Private(entry));
     }
 
-    void Tree::checkout(Result& result, bool force, const QStringList &paths) const
-    {
-        GW_CD_CHECKED(Tree, void(), result);
-
-        Internal::CheckoutOptions opts( paths );
-        (*opts).checkout_strategy = force ? GIT_CHECKOUT_FORCE : GIT_CHECKOUT_SAFE;
-
-        result = git_checkout_tree(d->repo()->mRepo, d->mObj, opts);
-    }
-
     TreeEntry Tree::operator[](const QString& fileName) const
     {
         return entry( fileName );

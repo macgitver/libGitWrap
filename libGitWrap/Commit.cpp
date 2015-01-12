@@ -372,31 +372,6 @@ namespace Git
         return GW_StringToQt(msg, len);
     }
 
-    /**
-     * @brief           Checkout this commit.
-     *
-     * @param[in,out]   result  A Result object; see @ref GitWrapErrorHandling
-     *
-     * @param[in]       force   If @c true, files will be overwritten. If @c false (the default),
-     *                          the operation is canceled in case of any problem.
-     *
-     * @param[in]       updateHEAD  If @c true, Commit::updateHEAD() is called after a
-     *                              successful checkout. If @c false (the default), updateHEAD is
-     *                              not called.
-     *
-     * @param[in]       paths   Inclusive filters to the tree to checkout. If empty (the default),
-     *                          the whole tree is checked out.
-     *
-     */
-    void Commit::checkout(Result &result, bool force, bool updateHEAD,
-                                const QStringList &paths) const
-    {
-        GW_CD_CHECKED(Commit, void(), result);
-
-        tree(result).checkout(result, force, paths);
-
-    }
-
     DiffList Commit::diffFromParent(Result& result, unsigned int index)
     {
         GW_CD_CHECKED(Commit, DiffList(), result)
@@ -473,4 +448,3 @@ QDebug operator<<( QDebug debug, const Git::Commit& commit )
 {
     return debug << "Commit(id=" << commit.id() << ";author=" << commit.author() << ")";
 }
-
