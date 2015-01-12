@@ -382,7 +382,7 @@ namespace Git
     void Commit::checkout(Result &result, bool force, bool updateHEAD,
                                 const QStringList &paths) const
     {
-        GW_CD_CHECKED_VOID(Commit, result);
+        GW_CD_CHECKED(Commit, void(), result);
 
         tree(result).checkout(result, force, paths);
 

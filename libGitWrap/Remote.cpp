@@ -180,7 +180,7 @@ namespace Git
 
     void Remote::disconnect( Result& result )
     {
-        GW_D_CHECKED_VOID(Remote, result);
+        GW_D_CHECKED(Remote, void(), result);
 
         git_remote_disconnect(d->mRemote);
     }

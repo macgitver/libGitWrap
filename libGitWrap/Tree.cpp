@@ -153,7 +153,7 @@ namespace Git
 
     void Tree::checkout(Result& result, bool force, const QStringList &paths) const
     {
-        GW_CD_CHECKED_VOID(Tree, result);
+        GW_CD_CHECKED(Tree, void(), result);
 
         Internal::CheckoutOptions opts( paths );
         (*opts).checkout_strategy = force ? GIT_CHECKOUT_FORCE : GIT_CHECKOUT_SAFE;

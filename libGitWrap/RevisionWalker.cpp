@@ -66,13 +66,13 @@ namespace Git
 
     void RevisionWalker::reset( Result& result )
     {
-        GW_D_CHECKED_VOID(RevisionWalker, result);
+        GW_D_CHECKED(RevisionWalker, void(), result);
         git_revwalk_reset( d->mWalker );
     }
 
     void RevisionWalker::push(Result& result, const ObjectId& id)
     {
-        GW_D_CHECKED_VOID(RevisionWalker, result);
+        GW_D_CHECKED(RevisionWalker, void(), result);
         result = git_revwalk_push( d->mWalker, (const git_oid*) id.raw() );
     }
 
@@ -83,19 +83,19 @@ namespace Git
 
     void RevisionWalker::pushRef(Result& result, const QString& name)
     {
-        GW_D_CHECKED_VOID(RevisionWalker, result);
+        GW_D_CHECKED(RevisionWalker, void(), result);
         result = git_revwalk_push_ref( d->mWalker, GW_StringFromQt(name) );
     }
 
     void RevisionWalker::pushHead( Result& result )
     {
-        GW_D_CHECKED_VOID(RevisionWalker, result);
+        GW_D_CHECKED(RevisionWalker, void(), result);
         result = git_revwalk_push_head( d->mWalker );
     }
 
     void RevisionWalker::hide( Result& result, const ObjectId& id )
     {
-        GW_D_CHECKED_VOID(RevisionWalker, result);
+        GW_D_CHECKED(RevisionWalker, void(), result);
         result = git_revwalk_hide( d->mWalker, (const git_oid*) id.raw() );
     }
 
@@ -106,13 +106,13 @@ namespace Git
 
     void RevisionWalker::hideRef(Result& result, const QString& name)
     {
-        GW_D_CHECKED_VOID(RevisionWalker, result);
+        GW_D_CHECKED(RevisionWalker, void(), result);
         result = git_revwalk_hide_ref( d->mWalker, GW_StringFromQt(name) );
     }
 
     void RevisionWalker::hideHead( Result& result )
     {
-        GW_D_CHECKED_VOID(RevisionWalker, result);
+        GW_D_CHECKED(RevisionWalker, void(), result);
         result = git_revwalk_hide_head( d->mWalker );
     }
 
@@ -154,7 +154,7 @@ namespace Git
 
     void RevisionWalker::setSorting(Result& result, bool topological, bool timed)
     {
-        GW_D_CHECKED_VOID(RevisionWalker, result);
+        GW_D_CHECKED(RevisionWalker, void(), result);
         git_revwalk_sorting( d->mWalker,
                              ( topological ? GIT_SORT_TOPOLOGICAL : 0 ) |
                              ( timed ? GIT_SORT_TIME : 0 ) );

@@ -383,7 +383,7 @@ namespace Git
      */
     void Reference::destroy(Result& result)
     {
-        GW_D_CHECKED_VOID(Reference, result);
+        GW_D_CHECKED(Reference, void(), result);
 
         result = git_reference_delete(d->reference);
 
@@ -400,7 +400,7 @@ namespace Git
 
     void Reference::move(Result &result, const Commit &target)
     {
-        GW_D_CHECKED_VOID(Reference, result);
+        GW_D_CHECKED(Reference, void(), result);
 
         ObjectId targetId = target.id();
         if (targetId.isNull()) {
@@ -420,7 +420,7 @@ namespace Git
 
     void Reference::rename(Result &result, const QString &newName, bool force)
     {
-        GW_D_CHECKED_VOID(Reference, result);
+        GW_D_CHECKED(Reference, void(), result);
 
         git_reference* newRef = NULL;
         result = git_reference_rename(&newRef, d->reference, GW_StringFromQt(newName), force, NULL, NULL);
@@ -444,13 +444,13 @@ namespace Git
      */
     void Reference::setAsDetachedHEAD(Result& result) const
     {
-        GW_CD_CHECKED_VOID(Reference, result);
+        GW_CD_CHECKED(Reference, void(), result);
         peeled<Commit>(result).setAsDetachedHEAD(result);
     }
 
     void Reference::updateHEAD(Result &result) const
     {
-        GW_CD_CHECKED_VOID(Reference, result);
+        GW_CD_CHECKED(Reference, void(), result);
 
         if (git_reference_is_branch(d->reference)) {
             // reference is a local branch

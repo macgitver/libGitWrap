@@ -382,17 +382,10 @@ namespace Git
 // -- pimpl helper macro definitions ->8
 
 #define GW__CHECK(returns, result) \
-    if (!Private::isValid(result, d)) { return returns; }
-
-#define GW__CHECK_VOID(result) \
-    if (!Private::isValid(result, d)) { return; }
-
+    if (!Private::isValid(result, d)) { result.setInvalidObject(); return returns; }
 
 #define GW__EX_CHECK(returns, result) \
-    if (!Private::isValid(result, d.constData())) { return returns; }
-
-#define GW__EX_CHECK_VOID(result) \
-    if (!Private::isValid(result, d.constData())) { return; }
+    if (!Private::isValid(result, d.constData())) { result.setInvalidObject(); return returns; }
 
 #define GW_D(CLASS) \
     Private* d = static_cast<Private*>(mData.data()); \
@@ -423,14 +416,5 @@ namespace Git
 #define GW_CD_CHECKED(CLASS, returns, result) \
     GW_CD(CLASS); \
     GW__CHECK(returns, result)
-
-// Wherever we have to use one of those two, we've made bad API design!
-#define GW_D_CHECKED_VOID(CLASS, result) \
-    GW_D(CLASS); \
-    GW__CHECK_VOID(result)
-
-#define GW_CD_CHECKED_VOID(CLASS, result) \
-    GW_CD(CLASS); \
-    GW__CHECK_VOID(result)
 
 #endif

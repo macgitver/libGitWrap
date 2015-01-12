@@ -947,7 +947,7 @@ namespace Git
      */
     void Repository::setHEAD(Result& result, const QString& branchName)
     {
-        GW_D_CHECKED_VOID(Repository, result);
+        GW_D_CHECKED(Repository, void(), result);
 
         result = git_repository_set_head( d->mRepo, GW_StringFromQt(branchName), NULL, NULL );
     }
@@ -984,7 +984,7 @@ namespace Git
      */
     void Repository::setDetachedHEAD(Result& result, const Commit& commit)
     {
-        GW_D_CHECKED_VOID(Repository, result);
+        GW_D_CHECKED(Repository, void(), result);
 
         if (!commit.isValid()) {
             result.setInvalidObject();
@@ -1004,7 +1004,7 @@ namespace Git
      */
     void Repository::setDetachedHEAD(Result& result, const ObjectId& sha)
     {
-        GW_D_CHECKED_VOID(Repository, result);
+        GW_D_CHECKED(Repository, void(), result);
         result = git_repository_set_head_detached( d->mRepo, Private::sha(sha), NULL, NULL);
     }
 
