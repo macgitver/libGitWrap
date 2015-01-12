@@ -85,8 +85,8 @@ namespace Git
         class StrArrayRef : public QSharedData
         {
         public:
-            StrArrayRef(git_strarray& _a, bool init = false);
-            StrArrayRef(git_strarray& _a, const QStringList& sl);
+            explicit StrArrayRef(git_strarray& _a, bool init = false);
+            explicit StrArrayRef(git_strarray& _a, const QStringList& sl);
             virtual ~StrArrayRef();
 
         public:
@@ -121,8 +121,8 @@ namespace Git
         class StrArray : public StrArrayRef
         {
         public:
-            StrArray();
-            StrArray(const QStringList& strings);
+            explicit StrArray();
+            explicit StrArray(const QStringList& strings);
 
         public:
             operator git_strarray*();
