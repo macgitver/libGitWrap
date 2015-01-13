@@ -165,7 +165,7 @@ namespace Git
         result = git_commit_create_from_ids( &commitId, rp->mRepo, GW_StringFromQt(branchName),
                                              gitAuthor, gitCommitter,
                                              NULL, GW_StringFromQt(message),
-                                             Internal::ObjectId2git_oid(tree.id()),
+                                             Internal::ObjectId2git(tree.id()),
                                              parents.count(), constParents.data() );
 
         return repo.lookupCommit( result, ObjectId::fromRaw(commitId.id) );

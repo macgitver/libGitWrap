@@ -118,7 +118,7 @@ namespace Git
     void RefLog::append(Git::Result& result, const Git::ObjectId& oid, const Git::Signature& committer, const QString& message)
     {
         GW_CD_CHECKED( RefLog, void(), result );
-        result = git_reflog_append( d->reflog, Internal::ObjectId2git_oid( oid ),
+        result = git_reflog_append( d->reflog, Internal::ObjectId2git( oid ),
                                     Internal::signature2git( result, committer ),
                                     GW_StringFromQt( message ) );
     }

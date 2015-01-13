@@ -286,12 +286,12 @@ namespace Git
             static GitWrapPrivate* self;    // Make this an QAtomicPointer
         };
 
-        inline const git_oid* const ObjectId2git_oid(const ObjectId& id)
+        inline const git_oid* const ObjectId2git(const ObjectId& id)
         {
             return (const git_oid* const) id.raw();
         }
 
-        inline git_oid* ObjectId2git_oid(ObjectId& id)
+        inline git_oid* ObjectId2git(ObjectId& id)
         {
             return (git_oid*) id.rawWritable();
         }
@@ -303,7 +303,7 @@ namespace Git
             const git_oid** ret = new const git_oid *[list.count()];
             for ( int i=0; i < list.count(); ++i )
             {
-                ret[i] = ObjectId2git_oid( list[i] );
+                ret[i] = ObjectId2git( list[i] );
             }
 
             return ret;
