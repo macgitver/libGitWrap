@@ -195,16 +195,18 @@ namespace Git
 
     ObjectId Commit::treeId( Result& result ) const
     {
+        GW_CHECK_RESULT( result, ObjectId() );
         GW_CD_CHECKED(Commit, ObjectId(), result);
         return Private::oid2sha(git_commit_tree_id(d->o()));
     }
 
     ObjectIdList Commit::parentCommitIds( Result& result ) const
     {
+        GW_CHECK_RESULT( result, ObjectIdList() );
         GW_CD_CHECKED(Commit, ObjectIdList(), result);
+
         const git_commit* commit = d->o();
         ObjectIdList ids;
-
         for (unsigned int i = 0; i < numParentCommits(); i++) {
             ids << Private::oid2sha(git_commit_parent_id(commit, i));
         }
