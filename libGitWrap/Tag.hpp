@@ -39,6 +39,21 @@ namespace Git
         GW_PRIVATE_DECL(Tag, Object, public)
     public:
         enum { ObjectTypeId = otTag };
+
+    public:
+        static ObjectId create(Result& result,
+                               const QString& name,
+                               const Object& target,
+                               const Signature& tagger,
+                               const QString& message,
+                               bool force);
+
+        static ObjectId createLight(Result& result,
+                                    const QString& name,
+                                    const Object& target,
+                                    bool force);
+
+        static Tag lookup(Result& result, const Repository& repo, const ObjectId& tagId);
     };
 
     template<>
