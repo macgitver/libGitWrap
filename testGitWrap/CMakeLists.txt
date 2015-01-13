@@ -17,6 +17,7 @@ SET(SRC_FILES
     TestRepository.cpp
     TestRefName.cpp
     TestReference.cpp
+    TestTag.cpp
 )
 
 SET(HDR_FILES
