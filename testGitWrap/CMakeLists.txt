@@ -11,7 +11,7 @@ SET(SRC_FILES
     Infra/TempDirProvider.cpp
     Infra/Fixture.cpp
 
-    Test_Commit.cpp
+    TestCommit.cpp
 
     TestIndex.cpp
     TestRepository.cpp
