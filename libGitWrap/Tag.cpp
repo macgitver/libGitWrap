@@ -150,6 +150,8 @@ namespace Git
      */
     Tag Tag::lookup(Result& result, const Repository& repo, const ObjectId& tagId)
     {
+        GW_CHECK_RESULT( result, Tag() );
+
         if ( !repo.isValid() ) {
             result.setInvalidObject();
             return Tag();
