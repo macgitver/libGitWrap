@@ -46,12 +46,12 @@ namespace Git
                                const Object& target,
                                const Signature& tagger,
                                const QString& message,
-                               bool force);
+                               bool force = false);
 
         static ObjectId createLight(Result& result,
                                     const QString& name,
                                     const Object& target,
-                                    bool force);
+                                    bool force = false);
 
         static Tag lookup(Result& result, const Repository& repo, const ObjectId& tagId);
     };
