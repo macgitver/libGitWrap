@@ -37,10 +37,15 @@ namespace Git
             BaseRemoteOperationPrivate* p = static_cast< BaseRemoteOperationPrivate* >( payload );
             Q_ASSERT( p );
 
-            int error = 0;
-            error = git_remote_create( out, repo, GW_StringFromQt_Def(p->mRemoteAlias, name), url);
+            Result r = p->mResult;
+            GW_CHECK_RESULT( r, r.errorCode() );
 
-            return error;
+            r = git_remote_create( out, repo, GW_StringFromQt_Def(p->mRemoteAlias, name), url);
+            GW_CHECK_RESULT( r, r.errorCode() );
+
+            r = git_remote_set_callbacks( *out, &p->mRemoteCallbacks );
+
+            return r.errorCode();
         }
 
         Remote::PrivatePtr BaseRemoteOperationPrivate::lookupRemote(Result& result, Repository::Private* repo, QString& remoteName)
@@ -73,10 +78,10 @@ namespace Git
             return Remote::PrivatePtr( new RemotePrivate( repo, remote ) );
         }
 
-        BaseRemoteOperationPrivate::BaseRemoteOperationPrivate(git_remote_callbacks& callbacks, BaseRemoteOperation *owner)
+        BaseRemoteOperationPrivate::BaseRemoteOperationPrivate(BaseRemoteOperation *owner)
             : BaseOperationPrivate( owner )
         {
-            RemoteCallbacks::initCallbacks( callbacks, owner );
+            RemoteCallbacks::initCallbacks( mRemoteCallbacks, owner );
         }
 
         BaseRemoteOperationPrivate::~BaseRemoteOperationPrivate()
@@ -87,7 +92,7 @@ namespace Git
         //-- FetchOperationPrivate -->8
 
         FetchOperationPrivate::FetchOperationPrivate(FetchOperation *owner)
-            : BaseRemoteOperationPrivate( mRemoteCallbacks, owner )
+            : BaseRemoteOperationPrivate( owner )
         {
         }
 
@@ -97,6 +102,11 @@ namespace Git
 
             Repository::Private* rp = Repository::Private::dataOf<Repository>( mRepo );
             Remote::PrivatePtr remote = lookupRemote( mResult, rp, mRemoteAlias );
+
+            if ( mResult )
+            {
+                mResult = git_remote_set_callbacks( remote->mRemote, &mRemoteCallbacks );
+            }
 
             if ( mResult )
             {
@@ -110,7 +120,7 @@ namespace Git
         //-- PushOperationPrivate -->8
 
         PushOperationPrivate::PushOperationPrivate(PushOperation *owner)
-            : BaseRemoteOperationPrivate(mRemoteCallbacks, owner)
+            : BaseRemoteOperationPrivate( owner )
         {
             git_push_init_options( &mOpts, GIT_PUSH_OPTIONS_VERSION );
         }

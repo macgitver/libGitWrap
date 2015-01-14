@@ -43,7 +43,7 @@ namespace Git
 
 
         CloneOperationPrivate::CloneOperationPrivate(CloneOperation* owner)
-            : BaseRemoteOperationPrivate( (*mCloneOpts).remote_callbacks, owner)
+            : BaseRemoteOperationPrivate( owner )
         {
             CheckoutOptionsRef coo = mCloneOpts.checkoutOptions();
             (*coo).checkout_strategy = GIT_CHECKOUT_SAFE_CREATE;
