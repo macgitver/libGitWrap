@@ -61,8 +61,6 @@ namespace Git
 
         void CheckoutBaseOperationPrivate::prepare()
         {
-            (*mOpts).target_directory = mPath.isEmpty() ? NULL : GW_StringFromQt(mPath);
-
             switch (mMode) {
             default:
             case CheckoutDryRun:     /* this is the default */                               break;
@@ -250,7 +248,7 @@ namespace Git
     {
         GW_D(CheckoutBaseOperation);
         Q_ASSERT(!isRunning());
-        d->mPath = path;
+        d->mOpts.setTargetDirectory( path );
     }
 
     void CheckoutBaseOperation::setCheckoutPaths(const QStringList& paths)
@@ -288,7 +286,7 @@ namespace Git
     QString CheckoutBaseOperation::targetDirectory() const
     {
         GW_CD(CheckoutBaseOperation);
-        return d->mPath;
+        return d->mOpts.targetDirectory();
     }
 
     QStringList CheckoutBaseOperation::checkoutPaths() const

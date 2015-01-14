@@ -146,6 +146,7 @@ namespace Git
         public:
             CheckoutOptionsRef(git_checkout_options& ref, bool init = false);
             CheckoutOptionsRef(git_checkout_options& ref, const QStringList& paths, bool init = false);
+            virtual ~CheckoutOptionsRef();
 
         public:
             operator git_checkout_options*();
@@ -157,6 +158,18 @@ namespace Git
         public:
             QStringList paths() const;
             void setPaths( const QStringList& paths );
+
+            QString targetDirectory() const;
+            void setTargetDirectory( const QString& path );
+
+            QString ancestorLabel() const;
+            void setAncestorLabel(const QString& base );
+
+            QString ourLabel() const;
+            void setOurLabel(const QString& ours );
+
+            QString theirLabel() const;
+            void setTheirLabel(const QString& theirs );
 
         private:
             void init();
@@ -194,6 +207,7 @@ namespace Git
         {
         public:
             CloneOptions();
+            ~CloneOptions();
 
         public:
             operator const git_clone_options*() const;
@@ -203,6 +217,9 @@ namespace Git
 
         public:
             CheckoutOptionsRef checkoutOptions();
+
+            QString checkoutBranch() const;
+            void setCheckoutBranch(const QString& branch);
 
         private:
             git_clone_options       mOptions;

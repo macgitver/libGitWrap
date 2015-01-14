@@ -63,7 +63,6 @@ namespace Git
             Repository              mRepo;
             CheckoutFlags           mStrategy;
             CheckoutMode            mMode;
-            QString                 mPath;
             Tree                    mBaseline;
             CheckoutOptions         mOpts;
             bool                    mCancel;

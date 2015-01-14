@@ -121,6 +121,14 @@ namespace Git
             Q_ASSERT( (*mPaths) == mOptionsRef.paths );
         }
 
+        CheckoutOptionsRef::~CheckoutOptionsRef()
+        {
+            delete[] mOptionsRef.target_directory;
+            delete[] mOptionsRef.ancestor_label;
+            delete[] mOptionsRef.our_label;
+            delete[] mOptionsRef.their_label;
+        }
+
         void CheckoutOptionsRef::init()
         {
             const git_checkout_options *assert_coo_ptr = &mOptionsRef;
@@ -160,6 +168,50 @@ namespace Git
             mPaths->setStrings( paths );
         }
 
+        QString CheckoutOptionsRef::targetDirectory() const
+        {
+            return GW_StringToQt(mOptionsRef.target_directory);
+        }
+
+        void CheckoutOptionsRef::setTargetDirectory(const QString& path)
+        {
+            delete[] mOptionsRef.target_directory;
+            mOptionsRef.target_directory = qstrdup( GW_StringFromQt(path) );
+        }
+
+        QString CheckoutOptionsRef::ancestorLabel() const
+        {
+            return GW_StringToQt( mOptionsRef.ancestor_label );
+        }
+
+        void CheckoutOptionsRef::setAncestorLabel(const QString& base)
+        {
+            delete[] mOptionsRef.ancestor_label;
+            mOptionsRef.ancestor_label = qstrdup( GW_StringFromQt(base) );
+        }
+
+        QString CheckoutOptionsRef::ourLabel() const
+        {
+            return GW_StringToQt( mOptionsRef.our_label );
+        }
+
+        void CheckoutOptionsRef::setOurLabel(const QString& ours)
+        {
+            delete[] mOptionsRef.our_label;
+            mOptionsRef.our_label = qstrdup( GW_StringFromQt(ours) );
+        }
+
+        QString CheckoutOptionsRef::theirLabel() const
+        {
+            return GW_StringToQt( mOptionsRef.their_label );
+        }
+
+        void CheckoutOptionsRef::setTheirLabel(const QString& theirs)
+        {
+            delete[] mOptionsRef.their_label;
+            mOptionsRef.their_label = qstrdup( GW_StringFromQt(theirs) );
+        }
+
 
         //-- CheckoutOptions -------------------------------------------------------------------- >8
 
@@ -181,6 +233,11 @@ namespace Git
             git_clone_init_options( &mOptions, GIT_CLONE_OPTIONS_VERSION );
         }
 
+        CloneOptions::~CloneOptions()
+        {
+            delete[] mOptions.checkout_branch;
+        }
+
         CloneOptions::operator const git_clone_options*() const
         {
             return &mOptions;
@@ -199,6 +256,17 @@ namespace Git
         CheckoutOptionsRef CloneOptions::checkoutOptions()
         {
             return mOptions.checkout_opts;
+        }
+
+        QString CloneOptions::checkoutBranch() const
+        {
+            return GW_StringToQt( mOptions.checkout_branch );
+        }
+
+        void CloneOptions::setCheckoutBranch(const QString& branch)
+        {
+            delete[] mOptions.checkout_branch;
+            mOptions.checkout_branch = qstrdup( GW_StringFromQt(branch) );
         }
 
 
