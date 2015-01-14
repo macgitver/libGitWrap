@@ -98,6 +98,8 @@ namespace Git
 
         void FetchOperationPrivate::run()
         {
+            GW_CHECK_RESULT( mResult, void() );
+
             git_signature* sig = signature2git(mResult, mSignature);
 
             Repository::Private* rp = Repository::Private::dataOf<Repository>( mRepo );
@@ -122,11 +124,13 @@ namespace Git
         PushOperationPrivate::PushOperationPrivate(PushOperation *owner)
             : BaseRemoteOperationPrivate( owner )
         {
-            git_push_init_options( &mOpts, GIT_PUSH_OPTIONS_VERSION );
+            mResult = git_push_init_options( &mOpts, GIT_PUSH_OPTIONS_VERSION );
         }
 
         void PushOperationPrivate::run()
         {
+            GW_CHECK_RESULT( mResult, void() );
+
             git_signature* sig = signature2git( mResult, mSignature );
 
             Repository::Private* rp = Repository::Private::dataOf<Repository>( mRepo );
