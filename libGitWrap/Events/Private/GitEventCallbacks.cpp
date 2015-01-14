@@ -219,6 +219,11 @@ namespace Git
 
             if (events) {
                 events->checkoutProgress( GW_StringToQt(path), total_steps, completed_steps );
+
+                if ( completed_steps == total_steps )
+                {
+                    events->doneCheckout();
+                }
             }
         }
 

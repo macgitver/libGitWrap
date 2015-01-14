@@ -61,6 +61,7 @@ namespace Git
         virtual void checkoutProgress( const QString& path,
                                        quint32 total,
                                        quint32 completed ) = 0;
+        virtual void doneCheckout() = 0;
     };
 }
 

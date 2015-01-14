@@ -81,6 +81,7 @@ namespace Git
         void checkoutProgress( const QString& path,
                                quint32 total,
                                quint32 completed );
+        void doneCheckout();
     };
 
     class GITWRAP_API CheckoutIndexOperation : public CheckoutBaseOperation
