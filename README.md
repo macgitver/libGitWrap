@@ -1,7 +1,10 @@
 # GitWrap - Git API for Qt
 This library provides an easy to use Qt'ish API, based on the libgit2 library.
 
-If you want to write an Qt application accessing a Git repository, GitWrap is probably what you are looking for.
+If you want to write a Qt application with access to Git repositories, GitWrap is probably what you are looking for.
+
+**Important Note:**
+Development and API-Design of this library is mainly driven by the [MacGitver-Project](www.macgitver.org). We provide a deprecation mechanism, that avoids unnecessary API-breakage. Sometimes this is not possible though and you have to make adjustments by your own, when updating to a newer development version.
 
 ## License
 GitWrap is released under the terms of GPL version 2. 
@@ -82,8 +85,8 @@ void initRepositoryExample()
 ```
 
 # How to compile libGitWrap
-__**Important Note:**__
-Development and API-Design of this library is mainly driven by the [MacGitver-Project](www.macgitver.org). We provide a deprecation mechanism, that avoids unnecessary API-breakage. Sometimes this is not possible though and you have to make adjustments by your own, when updating to a newer development version.
+
+For now, the only way to install and use GitWrap is compiling from source code.
 
 ## Pre-Requisites
 
