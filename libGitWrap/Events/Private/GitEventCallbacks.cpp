@@ -86,7 +86,6 @@ namespace Git
                         stats->received_bytes);
 
             if (events) {
-
                 events->transportProgress(stats->total_objects, stats->indexed_objects,
                                           stats->received_objects, stats->received_bytes);
 
@@ -97,7 +96,6 @@ namespace Git
                 if (stats->indexed_objects == stats->total_objects) {
                     events->doneIndexing();
                 }
-
             }
 
             return 0;
@@ -177,11 +175,11 @@ namespace Git
             Q_ASSERT_X( r, "git_remote_init_callbacks", qPrintable(r.errorText()) );
             GW_CHECK_RESULT( r, void() )
 
-            cb.sideband_progress   = &RemoteCallbacks::remoteProgress;
-            cb.transfer_progress   = &RemoteCallbacks::fetchProgress;
-            cb.completion          = &RemoteCallbacks::remoteComplete;
-            cb.update_tips         = &RemoteCallbacks::remoteUpdateTips;
-            cb.credentials         = &RemoteCallbacks::credAccquire;
+            cb.sideband_progress   = RemoteCallbacks::remoteProgress;
+            cb.transfer_progress   = RemoteCallbacks::fetchProgress;
+            cb.completion          = RemoteCallbacks::remoteComplete;
+            cb.update_tips         = RemoteCallbacks::remoteUpdateTips;
+            cb.credentials         = RemoteCallbacks::credAccquire;
 
             cb.payload             = receiver;
         }
@@ -210,25 +208,35 @@ namespace Git
             return GITERR_NONE;
         }
 
-        void CheckoutCallbacks::checkoutProgress(const char* path, size_t completed_steps, size_t total_steps, void* payload)
+        void CheckoutCallbacks::checkoutProgress(const char* path, size_t completed_steps,
+                                                 size_t total_steps, void* payload)
         {
             ICheckoutEvents* events = static_cast< ICheckoutEvents* >( payload );
+            Q_ASSERT( events );
 
-            qreal progress = 100 / total_steps * completed_steps;
-            debugEvents( "checkout progress: %.2f", progress );
+            debugEvents( "checkout progress: %d / %d", completed_steps, total_steps );
 
             if (events) {
                 events->checkoutProgress( GW_StringToQt(path), total_steps, completed_steps );
+
+                if ( completed_steps == total_steps )
+                {
+                    events->doneCheckout();
+                }
             }
         }
 
-        void CheckoutCallbacks::initCallbacks(git_checkout_options& opts, ICheckoutEvents* receiver)
+        void CheckoutCallbacks::initCallbacks( git_checkout_options& opts,
+                                               ICheckoutEvents* receiver,
+                                               unsigned int notifyFlags )
         {
-            opts.notify_cb          = &CheckoutCallbacks::notify;
+            opts.notify_cb          = CheckoutCallbacks::notify;
             opts.notify_payload     = receiver;
 
-            opts.progress_cb        = &CheckoutCallbacks::checkoutProgress;
+            opts.progress_cb        = CheckoutCallbacks::checkoutProgress;
             opts.progress_payload   = receiver;
+
+            opts.notify_flags       = notifyFlags;
         }
 
     }

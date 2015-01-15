@@ -320,7 +320,7 @@ namespace Git
      */
     void Index::updateEntry(Result &result, const IndexEntry& entry)
     {
-        GW_D_CHECKED_VOID(Index, result)
+        GW_D_CHECKED(Index, void(), result)
 
         if (!entry.isValid()) {
             result.setInvalidObject();
@@ -346,7 +346,7 @@ namespace Git
      */
     void Index::addFile(Result &result, const QString &path)
     {
-        GW_CD_CHECKED_VOID(Index, result)
+        GW_CD_CHECKED(Index, void(), result)
         result = git_index_add_bypath( d->index, GW_StringFromQt(path) );
     }
 
@@ -361,7 +361,7 @@ namespace Git
      */
     void Index::removeFile(Result &result, const QString &path)
     {
-        GW_D_CHECKED_VOID(Index, result)
+        GW_D_CHECKED(Index, void(), result)
         result = git_index_remove_bypath( d->index, GW_StringFromQt(path) );
     }
 
@@ -381,34 +381,22 @@ namespace Git
      */
     void Index::resetFiles(Result &result, const QStringList &paths)
     {
-        GW_D_CHECKED_VOID(Index, result)
-
-        if (paths.isEmpty()) {
-            return;
-        }
-
-        if (isBare()) {
-            result.setInvalidObject();
-            return;
-        }
+        GW_D_CHECKED(Index, void(), result)
 
         git_reference *ref = NULL;
         result = git_repository_head( &ref, d->repo()->mRepo );
-        if ( !result )
-            return;
+        GW_CHECK_RESULT( result, void() );
 
         git_object *o = NULL;
         result = git_reference_peel( &o, ref, GIT_OBJ_COMMIT );
         git_reference_free( ref );
-        if ( !result )
-            return;
+        GW_CHECK_RESULT( result, void() );
 
         result = git_reset_default( d->repo()->mRepo, o, Internal::StrArray( paths ) );
+        GW_CHECK_RESULT( result, void() );
 
-        if (result) {
-            d->clearKnownConflicts();   // conflicts need to be reloaded as conflicts related to
-                                        // the paths (which we did reset) are removed now.
-        }
+        d->clearKnownConflicts();   // conflicts need to be reloaded as conflicts related to
+                                    // the paths (which we did reset) are removed now.
     }
 
     /**
@@ -424,7 +412,7 @@ namespace Git
      */
     void Index::checkoutFiles(Result &result, const QStringList &paths)
     {
-        GW_D_CHECKED_VOID(Index, result)
+        GW_D_CHECKED(Index, void(), result)
         Internal::CheckoutOptions options( paths );
         (*options).checkout_strategy = GIT_CHECKOUT_FORCE;
 
@@ -445,7 +433,7 @@ namespace Git
      */
     void Index::read(Result& result, bool force)
     {
-        GW_D_CHECKED_VOID(Index, result)
+        GW_D_CHECKED(Index, void(), result)
 
         result = git_index_read(d->index, force ? 1 : 0);
 
@@ -464,7 +452,7 @@ namespace Git
      */
     void Index::write( Result& result )
     {
-        GW_D_CHECKED_VOID(Index, result)
+        GW_D_CHECKED(Index, void(), result)
         result = git_index_write( d->index );
     }
 
@@ -492,7 +480,7 @@ namespace Git
      */
     void Index::readTree(Result& result, Tree& tree)
     {
-        GW_D_CHECKED_VOID(Index, result);
+        GW_D_CHECKED(Index, void(), result);
 
         if (!tree.isValid()) {
             result.setInvalidObject();
@@ -599,7 +587,6 @@ namespace Git
 
 
     // *** IndexTreeProvider ***
-
 
     IndexTreeProvider::IndexTreeProvider(const Index& index)
         : mIndex( index )

@@ -17,12 +17,13 @@
 #ifndef GIT_OBJECT_COMMIT_H
 #define GIT_OBJECT_COMMIT_H
 
+#include "libGitWrap/DiffList.hpp"
 #include "libGitWrap/GitWrap.hpp"
 #include "libGitWrap/ObjectId.hpp"
 #include "libGitWrap/Object.hpp"
-#include "libGitWrap/Signature.hpp"
-#include "libGitWrap/DiffList.hpp"
+#include "libGitWrap/Operations/Providers.hpp"
 #include "libGitWrap/Result.hpp"
+#include "libGitWrap/Signature.hpp"
 
 namespace Git
 {
@@ -44,14 +45,18 @@ namespace Git
         enum { ObjectTypeId = otCommit };
 
     public:
-        static Commit create( Result& result, Repository& repo, const Tree& tree,
-                              const QString& message,
-                              const Signature& author, const Signature& committer,
-                              const CommitList& parents );
+        static Commit create(Result& result, Repository& repo, const Tree& tree,
+                             const QString& message,
+                             const Signature& author, const Signature& committer,
+                             const CommitList& parents );
         static Commit create(Result &result, Repository &repo, const Tree &tree,
                              const QString &message,
                              const Signature &author, const Signature &committer,
                              const ObjectIdList &parents);
+
+    public:
+        operator TreeProviderPtr() const;
+        operator ParentProviderPtr() const;
 
     public:
         Tree tree( Result& result ) const;
@@ -78,16 +83,9 @@ namespace Git
         QString message() const;
         QString shortMessage() const;
 
-        void checkout( Result &result,
-                       bool force = false,
-                       bool updateHEAD = true,
-                       const QStringList &paths = QStringList() ) const;
-        Reference createBranch( Result& result, const QString& name, bool force ) const;
-
         DiffList diffFromParent( Result& result, unsigned int index );
         DiffList diffFromAllParents( Result& result );
 
-        void setAsDetachedHEAD(Result& result) const;
     };
 
     template<>
@@ -105,6 +103,34 @@ namespace Git
         return qHash(c.id());
     }
 
+
+    class GITWRAP_API CommitParentProvider : public ParentProvider
+    {
+    public:
+        CommitParentProvider(const Commit& commit );
+
+    public:
+        // INTERFACE REALIZATION
+        Repository repository() const;
+        ObjectIdList parents(Result& result) const;
+
+    private:
+        const Commit&   mCommit;
+    };
+
+    class GITWRAP_API CommitTreeProvider :public TreeProvider
+    {
+    public:
+        CommitTreeProvider( const Commit& commit );
+
+    private:
+        const Commit&   mCommit;
+
+    public:
+        // INTERFACE REALIZATION
+        Repository repository() const;
+        Tree tree(Result& result);
+    };
 }
 
 GITWRAP_API QDebug operator<<( QDebug debug, const Git::Commit& commit );

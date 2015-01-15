@@ -36,19 +36,19 @@ namespace Git
     class GITWRAP_API Reference : public RepoObject
     {
         GW_PRIVATE_DECL(Reference, RepoObject, public)
+
     public:
         int compare(const Reference& other) const;
 
     public:
-        static Reference create(
-                Result& result,
-                Repository repo,
+        static Reference create(Result& result,
+                const Repository& repo,
                 const QString& name,
                 const ObjectId& sha);
 
         static Reference create(
                 Result& result,
-                Repository repo,
+                const Repository& repo,
                 const QString& name,
                 const Commit& commit);
 
@@ -90,12 +90,6 @@ namespace Git
         bool isRemote() const;
         bool wasDestroyed() const;
 
-        CheckoutBaseOperation* checkoutOperation(Result& result) const;
-        void checkout( Result& result,
-                       CheckoutFlags flags = CheckoutNone,
-                       CheckoutMode mode = CheckoutSafeCreate,
-                       const QStringList &paths = QStringList() ) const;
-
         void destroy( Result& result );
 
         void setAsDetachedHEAD(Result& result) const;
@@ -110,6 +104,7 @@ namespace Git
 
     public:
         operator ParentProviderPtr() const;
+        operator TreeProviderPtr() const;
     };
 
     template< class T >
@@ -125,13 +120,26 @@ namespace Git
         ReferenceParentProvider( const Reference& ref );
 
     public:
-
         // INTERFACE REALIZATION
         ObjectIdList parents(Result& result) const;
         Repository repository() const;
 
     private:
         Reference   mRef;
+    };
+
+    class GITWRAP_API ReferenceTreeProvider :public TreeProvider
+    {
+    public:
+        ReferenceTreeProvider( const Reference& ref );
+
+    private:
+        Reference   mRef;
+
+    public:
+        // INTERFACE REALIZATION
+        Repository repository() const;
+        Tree tree(Result& result);
     };
 
 }

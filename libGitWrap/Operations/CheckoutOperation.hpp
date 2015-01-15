@@ -1,6 +1,6 @@
 /*
  * MacGitver
- * Copyright (C) 2012-2013 Sascha Cunz <sascha@babbelbox.org>
+ * Copyright (C) 2014 Sascha Cunz <sascha@macgitver.org>
  *
  * This program is free software; you can redistribute it and/or modify it under the terms of the
  * GNU General Public License (Version 2) as published by the Free Software Foundation.
@@ -18,8 +18,11 @@
 #define GITWRAP_CHECKOUT_OPERATION_HPP
 #pragma once
 
+#include "libGitWrap/Events/IGitEvents.hpp"
+
 #include "libGitWrap/Operations/BaseOperation.hpp"
-#include "libGitWrap/FileInfo.hpp"  // Required for moc, only
+#include "libGitWrap/Operations/Providers.hpp"
+
 
 namespace Git
 {
@@ -28,15 +31,14 @@ namespace Git
 
     namespace Internal
     {
-
         class CheckoutBaseOperationPrivate;
+        class CheckoutCommitOperationPrivate;
         class CheckoutIndexOperationPrivate;
+        class CheckoutReferenceOperationPrivate;
         class CheckoutTreeOperationPrivate;
-        class CheckoutBranchOperationPrivate;
-
     }
 
-    class GITWRAP_API CheckoutBaseOperation : public BaseOperation
+    class GITWRAP_API CheckoutBaseOperation : public BaseOperation, public ICheckoutEvents
     {
         Q_OBJECT
         #if QT_VERSION < 0x050000
@@ -47,13 +49,14 @@ namespace Git
 
     protected:
         CheckoutBaseOperation(Private& _d, QObject* parent = 0);
+
     public:
         ~CheckoutBaseOperation();
 
     public:
         void setRepository(const Repository& repo);
         void setMode(CheckoutMode mode);
-        void setFlags(CheckoutFlags opts);
+        void setStrategy(unsigned int strategy);
         void setTargetDirectory(const QString& path);
         void setCheckoutPaths(const QStringList& paths);
         void setBaseline(const Tree& baseline);
@@ -63,49 +66,25 @@ namespace Git
     public:
         Repository repository() const;
         CheckoutMode mode() const;
-        CheckoutFlags flags() const;
+        CheckoutFlags strategy() const;
         QString targetDirectory() const;
         QStringList checkoutPaths() const;
         Tree baseline() const;
 
     signals:
-        void conflict  (const CheckoutBaseOperation* opertation,
-                        const QString& path,
-                        const FileInfo& baseline,
-                        const FileInfo& target,
-                        const FileInfo& workTree);
-
-        void dirty     (const CheckoutBaseOperation* opertation,
-                        const QString& path,
-                        const FileInfo& baseline,
-                        const FileInfo& target,
-                        const FileInfo& workTree);
-
-        void updated   (const CheckoutBaseOperation* opertation,
-                        const QString& path,
-                        const FileInfo& baseline,
-                        const FileInfo& target,
-                        const FileInfo& workTree);
-
-        void untracked (const CheckoutBaseOperation* opertation,
-                        const QString& path,
-                        const FileInfo& baseline,
-                        const FileInfo& target,
-                        const FileInfo& workTree);
-
-        void ignored   (const CheckoutBaseOperation* opertation,
-                        const QString& path,
-                        const FileInfo& baseline,
-                        const FileInfo& target,
-                        const FileInfo& workTree);
-
-        void progress  (const CheckoutBaseOperation* opertation,
-                        const QString& path,
-                        quint32 completedSteps,
-                        quint32 totalSteps);
+        // ICheckoutEvents interface
+        void checkoutNotify( const CheckoutNotify& why,
+                             const QString& path,
+                             const DiffFile& baseline,
+                             const DiffFile& target,
+                             const DiffFile& workdir );
+        void checkoutProgress( const QString& path,
+                               quint64 total,
+                               quint64 completed );
+        void doneCheckout();
     };
 
-    class CheckoutIndexOperation : public CheckoutBaseOperation
+    class GITWRAP_API CheckoutIndexOperation : public CheckoutBaseOperation
     {
     public:
         typedef Internal::CheckoutIndexOperationPrivate Private;
@@ -120,7 +99,7 @@ namespace Git
         Index index() const;
     };
 
-    class CheckoutTreeOperation : public CheckoutBaseOperation
+    class GITWRAP_API CheckoutTreeOperation : public CheckoutBaseOperation
     {
     public:
         typedef Internal::CheckoutTreeOperationPrivate Private;
@@ -128,29 +107,41 @@ namespace Git
     public:
         CheckoutTreeOperation(QObject* parent = 0);
         CheckoutTreeOperation(const Repository& repo, QObject* parent = 0);
-        CheckoutTreeOperation(const Tree& tree, QObject* parent = 0);
+        CheckoutTreeOperation(TreeProviderPtr tp, QObject* parent = 0);
+
+    protected:
+        explicit CheckoutTreeOperation(CheckoutTreeOperation::Private& _d, TreeProviderPtr tp, QObject* parent );
 
     public:
-        void setTree(const Tree& tree);
-        Tree tree() const;
+        void setTreeProvider(TreeProviderPtr tp);
+        TreeProviderPtr treeProvider() const;
     };
 
-    class CheckoutBranchOperation : public CheckoutBaseOperation
+    class GITWRAP_API CheckoutCommitOperation : public CheckoutTreeOperation
     {
     public:
-        typedef Internal::CheckoutBranchOperationPrivate Private;
+        typedef Internal::CheckoutCommitOperationPrivate Private;
 
     public:
-        CheckoutBranchOperation(QObject* parent = 0);
-        CheckoutBranchOperation(const BranchRef& branch, QObject* parent = 0);
-        CheckoutBranchOperation(const Repository& repo, QObject* parent = 0);
-        CheckoutBranchOperation(const Repository& repo, const QString& branchName,
-                                QObject* parent = 0);
+        explicit CheckoutCommitOperation(const Commit& commit, QObject* parent = 0);
 
     public:
-        bool setBranch(const QString& branchName);
-        bool setBranch(const BranchRef& branch);
-        BranchRef branch() const;
+        Commit commit();
+    };
+
+    class GITWRAP_API CheckoutReferenceOperation : public CheckoutTreeOperation
+    {
+    public:
+        typedef Internal::CheckoutReferenceOperationPrivate Private;
+
+    public:
+        explicit CheckoutReferenceOperation(const Reference& branch, QObject* parent = 0);
+
+    public:
+        Reference branch() const;
+
+    private:
+        inline void setBranch(const Reference& ref);
     };
 
 }

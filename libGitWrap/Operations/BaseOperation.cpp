@@ -1,6 +1,6 @@
 /*
  * MacGitver
- * Copyright (C) 2012-2013 Sascha Cunz <sascha@babbelbox.org>
+ * Copyright (C) 2014 Sascha Cunz <sascha@macgitver.org>
  *
  * This program is free software; you can redistribute it and/or modify it under the terms of the
  * GNU General Public License (Version 2) as published by the Free Software Foundation.
@@ -57,7 +57,7 @@ namespace Git
         return mData->mBackgroundMode;
     }
 
-    Result BaseOperation::execute()
+    void BaseOperation::execute()
     {
         if (mData->mBackgroundMode) {
             Q_ASSERT(!mData->mThread);
@@ -67,12 +67,10 @@ namespace Git
             connect(mData->mThread, SIGNAL(finished()), this, SLOT(workerFinished()));
 
             mData->mThread->start();
-            return Result();
         }
         else
         {
             mData->run();
-            return mData->mResult;
         }
     }
 

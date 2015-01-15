@@ -53,7 +53,7 @@ namespace Git
 
     void TreeBuilder::clear( Result& result )
     {
-        GW_D_CHECKED_VOID(TreeBuilder, result);
+        GW_D_CHECKED(TreeBuilder, void(), result);
         git_treebuilder_clear( d->mBuilder );
     }
 

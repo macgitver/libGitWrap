@@ -37,12 +37,15 @@ namespace Git
             BaseRemoteOperationPrivate* p = static_cast< BaseRemoteOperationPrivate* >( payload );
             Q_ASSERT( p );
 
-            const char* alias = p->mRemoteAlias.isEmpty() ? name : GW_StringFromQt(p->mRemoteAlias);
+            Result r = p->mResult;
+            GW_CHECK_RESULT( r, r.errorCode() );
 
-            int error = 0;
-            error = git_remote_create(out, repo, alias, url);
+            r = git_remote_create( out, repo, GW_StringFromQt_Def(p->mRemoteAlias, name), url);
+            GW_CHECK_RESULT( r, r.errorCode() );
 
-            return error;
+            r = git_remote_set_callbacks( *out, &p->mRemoteCallbacks );
+
+            return r.errorCode();
         }
 
         Remote::PrivatePtr BaseRemoteOperationPrivate::lookupRemote(Result& result, Repository::Private* repo, QString& remoteName)
@@ -75,10 +78,10 @@ namespace Git
             return Remote::PrivatePtr( new RemotePrivate( repo, remote ) );
         }
 
-        BaseRemoteOperationPrivate::BaseRemoteOperationPrivate(git_remote_callbacks& callbacks, BaseRemoteOperation *owner)
+        BaseRemoteOperationPrivate::BaseRemoteOperationPrivate(BaseRemoteOperation *owner)
             : BaseOperationPrivate( owner )
         {
-            RemoteCallbacks::initCallbacks( callbacks, owner );
+            RemoteCallbacks::initCallbacks( mRemoteCallbacks, owner );
         }
 
         BaseRemoteOperationPrivate::~BaseRemoteOperationPrivate()
@@ -89,16 +92,23 @@ namespace Git
         //-- FetchOperationPrivate -->8
 
         FetchOperationPrivate::FetchOperationPrivate(FetchOperation *owner)
-            : BaseRemoteOperationPrivate( mRemoteCallbacks, owner )
+            : BaseRemoteOperationPrivate( owner )
         {
         }
 
         void FetchOperationPrivate::run()
         {
+            GW_CHECK_RESULT( mResult, void() );
+
             git_signature* sig = signature2git(mResult, mSignature);
 
             Repository::Private* rp = Repository::Private::dataOf<Repository>( mRepo );
             Remote::PrivatePtr remote = lookupRemote( mResult, rp, mRemoteAlias );
+
+            if ( mResult )
+            {
+                mResult = git_remote_set_callbacks( remote->mRemote, &mRemoteCallbacks );
+            }
 
             if ( mResult )
             {
@@ -112,13 +122,15 @@ namespace Git
         //-- PushOperationPrivate -->8
 
         PushOperationPrivate::PushOperationPrivate(PushOperation *owner)
-            : BaseRemoteOperationPrivate(mRemoteCallbacks, owner)
+            : BaseRemoteOperationPrivate( owner )
         {
-            git_push_init_options( &mOpts, GIT_PUSH_OPTIONS_VERSION );
+            mResult = git_push_init_options( &mOpts, GIT_PUSH_OPTIONS_VERSION );
         }
 
         void PushOperationPrivate::run()
         {
+            GW_CHECK_RESULT( mResult, void() );
+
             git_signature* sig = signature2git( mResult, mSignature );
 
             Repository::Private* rp = Repository::Private::dataOf<Repository>( mRepo );

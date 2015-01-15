@@ -15,15 +15,16 @@
  */
 
 #include "libGitWrap/Commit.hpp"
-#include "libGitWrap/Tree.hpp"
+#include "libGitWrap/Private/CommitPrivate.hpp"
+
 #include "libGitWrap/Reference.hpp"
 #include "libGitWrap/Repository.hpp"
+#include "libGitWrap/Tree.hpp"
 
 #include "libGitWrap/Private/GitWrapPrivate.hpp"
 #include "libGitWrap/Private/ObjectPrivate.hpp"
 #include "libGitWrap/Private/RepositoryPrivate.hpp"
 #include "libGitWrap/Private/ReferencePrivate.hpp"
-#include "libGitWrap/Private/CommitPrivate.hpp"
 #include "libGitWrap/Private/TreePrivate.hpp"
 #include "libGitWrap/Private/DiffListPrivate.hpp"
 
@@ -164,37 +165,48 @@ namespace Git
         result = git_commit_create_from_ids( &commitId, rp->mRepo, GW_StringFromQt(branchName),
                                              gitAuthor, gitCommitter,
                                              NULL, GW_StringFromQt(message),
-                                             Internal::ObjectId2git_oid(tree.id()),
+                                             Internal::ObjectId2git(tree.id()),
                                              parents.count(), constParents.data() );
 
         return repo.lookupCommit( result, ObjectId::fromRaw(commitId.id) );
     }
 
+    Commit::operator ParentProviderPtr() const
+    {
+        return ParentProviderPtr( new CommitParentProvider( *this ) );
+    }
+
+    Commit::operator TreeProviderPtr() const
+    {
+        return TreeProviderPtr( new CommitTreeProvider( *this ) );
+    }
+
     Tree Commit::tree( Result& result ) const
     {
+        GW_CHECK_RESULT( result, Tree() );
         GW_CD_CHECKED(Commit, Tree(), result);
         git_tree* tree = NULL;
 
         result = git_commit_tree(&tree, d->o());
-        if(!result) {
-            return Tree();
-        }
+        GW_CHECK_RESULT( result, Tree() );
 
         return Tree::PrivatePtr(new Tree::Private(d->repo(), tree));
     }
 
     ObjectId Commit::treeId( Result& result ) const
     {
+        GW_CHECK_RESULT( result, ObjectId() );
         GW_CD_CHECKED(Commit, ObjectId(), result);
         return Private::oid2sha(git_commit_tree_id(d->o()));
     }
 
     ObjectIdList Commit::parentCommitIds( Result& result ) const
     {
+        GW_CHECK_RESULT( result, ObjectIdList() );
         GW_CD_CHECKED(Commit, ObjectIdList(), result);
+
         const git_commit* commit = d->o();
         ObjectIdList ids;
-
         for (unsigned int i = 0; i < numParentCommits(); i++) {
             ids << Private::oid2sha(git_commit_parent_id(commit, i));
         }
@@ -362,59 +374,6 @@ namespace Git
         return GW_StringToQt(msg, len);
     }
 
-    /**
-     * @brief           Checkout this commit.
-     *
-     * @param[in,out]   result  A Result object; see @ref GitWrapErrorHandling
-     *
-     * @param[in]       force   If @c true, files will be overwritten. If @c false (the default),
-     *                          the operation is canceled in case of any problem.
-     *
-     * @param[in]       updateHEAD  If @c true, Commit::updateHEAD() is called after a
-     *                              successful checkout. If @c false (the default), updateHEAD is
-     *                              not called.
-     *
-     * @param[in]       paths   Inclusive filters to the tree to checkout. If empty (the default),
-     *                          the whole tree is checked out.
-     *
-     */
-    void Commit::checkout(Result &result, bool force, bool updateHEAD,
-                                const QStringList &paths) const
-    {
-        GW_CD_CHECKED_VOID(Commit, result);
-
-        tree(result).checkout(result, force, paths);
-
-        if (result && updateHEAD) {
-            setAsDetachedHEAD(result);
-        }
-    }
-
-    /**
-     * @brief           Create a branch on this commit.
-     *
-     * @param[in,out]   result  A result object; see @ref GitWrapErrorHandling
-     *
-     * @param[in]       name    the branches reference name
-     *
-     * @param[in]       force   if true, creation is forced (an existing branch will be moved)
-     *
-     * @return          the created reference
-     */
-    Reference Commit::createBranch(Result& result, const QString& name, bool force) const
-    {
-        GW_CD_CHECKED(Commit, Reference(), result);
-
-        git_reference* ref = NULL;
-        result = git_branch_create( &ref, d->repo()->mRepo, GW_StringFromQt(name), d->o(), force, NULL, NULL );
-
-        if (!result) {
-            return Reference();
-        }
-
-        return Reference::PrivatePtr(new Reference::Private(d->repo(), ref));
-    }
-
     DiffList Commit::diffFromParent(Result& result, unsigned int index)
     {
         GW_CD_CHECKED(Commit, DiffList(), result)
@@ -442,10 +401,40 @@ namespace Git
         return dl;
     }
 
-    void Commit::setAsDetachedHEAD(Result& result) const
+
+    // -- CommitParentProvider -->8
+
+    CommitParentProvider::CommitParentProvider(const Commit &commit)
+        : mCommit( commit )
     {
-        GW_CD_CHECKED_VOID(Commit, result);
-        repository().setDetachedHEAD(result, *this);
+    }
+
+    Repository CommitParentProvider::repository() const
+    {
+        return mCommit.repository();
+    }
+
+    ObjectIdList CommitParentProvider::parents(Result& result) const
+    {
+        return mCommit.parentCommitIds( result );
+    }
+
+
+    // -- CommitTreeProvider -->8
+
+    CommitTreeProvider::CommitTreeProvider(const Commit &commit)
+        : mCommit( commit )
+    {
+    }
+
+    Repository CommitTreeProvider::repository() const
+    {
+        return mCommit.repository();
+    }
+
+    Tree CommitTreeProvider::tree(Result &result)
+    {
+        return mCommit.tree( result );
     }
 
 }
@@ -461,4 +450,3 @@ QDebug operator<<( QDebug debug, const Git::Commit& commit )
 {
     return debug << "Commit(id=" << commit.id() << ";author=" << commit.author() << ")";
 }
-

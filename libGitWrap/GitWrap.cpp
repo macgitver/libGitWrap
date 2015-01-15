@@ -121,6 +121,14 @@ namespace Git
             Q_ASSERT( (*mPaths) == mOptionsRef.paths );
         }
 
+        CheckoutOptionsRef::~CheckoutOptionsRef()
+        {
+            delete[] mOptionsRef.target_directory;
+            delete[] mOptionsRef.ancestor_label;
+            delete[] mOptionsRef.our_label;
+            delete[] mOptionsRef.their_label;
+        }
+
         void CheckoutOptionsRef::init()
         {
             const git_checkout_options *assert_coo_ptr = &mOptionsRef;
@@ -160,6 +168,50 @@ namespace Git
             mPaths->setStrings( paths );
         }
 
+        QString CheckoutOptionsRef::targetDirectory() const
+        {
+            return GW_StringToQt(mOptionsRef.target_directory);
+        }
+
+        void CheckoutOptionsRef::setTargetDirectory(const QString& path)
+        {
+            delete[] mOptionsRef.target_directory;
+            mOptionsRef.target_directory = qstrdup( GW_StringFromQt(path) );
+        }
+
+        QString CheckoutOptionsRef::ancestorLabel() const
+        {
+            return GW_StringToQt( mOptionsRef.ancestor_label );
+        }
+
+        void CheckoutOptionsRef::setAncestorLabel(const QString& base)
+        {
+            delete[] mOptionsRef.ancestor_label;
+            mOptionsRef.ancestor_label = qstrdup( GW_StringFromQt(base) );
+        }
+
+        QString CheckoutOptionsRef::ourLabel() const
+        {
+            return GW_StringToQt( mOptionsRef.our_label );
+        }
+
+        void CheckoutOptionsRef::setOurLabel(const QString& ours)
+        {
+            delete[] mOptionsRef.our_label;
+            mOptionsRef.our_label = qstrdup( GW_StringFromQt(ours) );
+        }
+
+        QString CheckoutOptionsRef::theirLabel() const
+        {
+            return GW_StringToQt( mOptionsRef.their_label );
+        }
+
+        void CheckoutOptionsRef::setTheirLabel(const QString& theirs)
+        {
+            delete[] mOptionsRef.their_label;
+            mOptionsRef.their_label = qstrdup( GW_StringFromQt(theirs) );
+        }
+
 
         //-- CheckoutOptions -------------------------------------------------------------------- >8
 
@@ -179,6 +231,11 @@ namespace Git
         CloneOptions::CloneOptions()
         {
             git_clone_init_options( &mOptions, GIT_CLONE_OPTIONS_VERSION );
+        }
+
+        CloneOptions::~CloneOptions()
+        {
+            delete[] mOptions.checkout_branch;
         }
 
         CloneOptions::operator const git_clone_options*() const
@@ -201,67 +258,15 @@ namespace Git
             return mOptions.checkout_opts;
         }
 
-
-        //-- StrArray --------------------------------------------------------------------------- >8
-
-        StrArray::StrArray()
+        QString CloneOptions::checkoutBranch() const
         {
-            mEncoded.count = 0;
-            mEncoded.strings = 0;
+            return GW_StringToQt( mOptions.checkout_branch );
         }
 
-        StrArray::StrArray(const QStringList &strings)
+        void CloneOptions::setCheckoutBranch(const QString& branch)
         {
-            setStrings(strings);
-        }
-
-        StrArray::~StrArray()
-        {
-            delete[] mEncoded.strings;
-        }
-
-        int StrArray::count() const
-        {
-            return mEncoded.count;
-        }
-
-        StrArray::operator git_strarray*()
-        {
-            return &mEncoded;
-        }
-
-        StrArray::operator const git_strarray *() const
-        {
-            return &mEncoded;
-        }
-
-        StrArray::operator QStringList() const
-        {
-            return strings();
-        }
-
-        QStringList StrArray::strings() const
-        {
-            QStringList result;
-            for (int i=0; i < mEncoded.count; i++)
-            {
-                result << GW_StringToQt( mEncoded.strings[i] );
-            }
-
-            return result;
-        }
-
-        void StrArray::setStrings(const QStringList &strings)
-        {
-            delete[] mEncoded.strings;
-
-            mEncoded.count = strings.count();
-            mEncoded.strings = new char *[mEncoded.count];
-
-            for( int i = 0; i < strings.count(); i++ )
-            {
-                strcpy( mEncoded.strings[i], GW_EncodeQString( strings[i] ).data() );
-            }
+            delete[] mOptions.checkout_branch;
+            mOptions.checkout_branch = qstrdup( GW_StringFromQt(branch) );
         }
 
 
@@ -269,23 +274,38 @@ namespace Git
 
         StrArrayRef::StrArrayRef(git_strarray& _a, bool init)
             : mEncoded( _a )
+            , mOwnsRef( false )
         {
             if ( init ) {
-                mEncoded.strings = 0;
                 mEncoded.count = 0;
+                mEncoded.strings = NULL;
             }
         }
 
         StrArrayRef::StrArrayRef(git_strarray& _a, const QStringList& strings)
             : mEncoded(_a)
+            , mOwnsRef( false )
         {
-            Q_ASSERT( !mEncoded.strings && !mEncoded.count );
+            Q_ASSERT( !mEncoded.count && !mEncoded.strings );
             setStrings( strings );
         }
 
         StrArrayRef::~StrArrayRef()
         {
+            clear();
+            if ( mOwnsRef ) {
+                delete &mEncoded;
+            }
+        }
+
+        void StrArrayRef::clear()
+        {
+            for ( int i = 0; i < mEncoded.count; ++i ) {
+                delete[] mEncoded.strings[i];
+            }
+
             delete[] mEncoded.strings;
+            mEncoded.count = 0;
         }
 
         bool StrArrayRef::operator ==(const git_strarray& other) const
@@ -321,8 +341,7 @@ namespace Git
         QStringList StrArrayRef::strings() const
         {
             QStringList result;
-            for (int i=0; i < mEncoded.count; i++)
-            {
+            for (int i=0; i < mEncoded.count; i++) {
                 result << GW_StringToQt( mEncoded.strings[i] );
             }
 
@@ -331,11 +350,10 @@ namespace Git
 
         void StrArrayRef::setStrings(const QStringList& strings)
         {
-            delete[] mEncoded.strings;
+            clear();
 
             mEncoded.count = strings.count();
-            if ( strings.isEmpty() )
-            {
+            if ( strings.isEmpty() ) {
                 // The strings pointer must be NULL in this case.
                 mEncoded.strings = NULL;
                 return;
@@ -343,10 +361,35 @@ namespace Git
 
             mEncoded.strings = new char *[mEncoded.count];
 
-            for( int i = 0; i < strings.count(); i++ )
-            {
-                strcpy( mEncoded.strings[i], GW_EncodeQString( strings[i] ).data() );
+            for( int i = 0; i < strings.count(); i++ ) {
+                mEncoded.strings[i] = qstrdup( GW_StringFromQt( strings[i] ) );
             }
+        }
+
+
+        //-- StrArray --------------------------------------------------------------------------- >8
+
+        StrArray::StrArray()
+            : StrArrayRef( *new git_strarray, true )
+        {
+            mOwnsRef = true;
+        }
+
+        StrArray::StrArray(const QStringList &strings)
+            : StrArrayRef( *new git_strarray, true )
+        {
+            mOwnsRef = true;
+            setStrings( strings );
+        }
+
+        StrArray::operator git_strarray*()
+        {
+            return &mEncoded;
+        }
+
+        StrArray::operator const git_strarray *() const
+        {
+            return &mEncoded;
         }
 
 

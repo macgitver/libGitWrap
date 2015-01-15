@@ -43,7 +43,7 @@ namespace Git
 
 
         CloneOperationPrivate::CloneOperationPrivate(CloneOperation* owner)
-            : BaseRemoteOperationPrivate( (*mCloneOpts).remote_callbacks, owner)
+            : BaseRemoteOperationPrivate( owner )
         {
             CheckoutOptionsRef coo = mCloneOpts.checkoutOptions();
             (*coo).checkout_strategy = GIT_CHECKOUT_SAFE_CREATE;
@@ -110,7 +110,7 @@ namespace Git
     {
         GW_D( CloneOperation );
         Q_ASSERT( !isRunning() );
-        (*(d->mCloneOpts)).checkout_branch = refName.isEmpty() ? NULL : GW_StringFromQt( refName );
+        d->mCloneOpts.setCheckoutBranch( refName );
     }
 
     void CloneOperation::setRemoteAlias(const QString& alias)
@@ -146,7 +146,7 @@ namespace Git
     QString CloneOperation::reference() const
     {
         GW_CD( CloneOperation );
-        return GW_StringToQt( (*(d->mCloneOpts)).checkout_branch );
+        return d->mCloneOpts.checkoutBranch();
     }
 
     QString CloneOperation::remoteAlias() const

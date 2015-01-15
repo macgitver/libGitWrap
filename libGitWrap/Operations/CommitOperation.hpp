@@ -39,6 +39,7 @@ namespace Git
         #endif
     public:
         typedef Internal::CommitOperationPrivate Private;
+
     public:
         CommitOperation( QObject* parent = 0 );
         CommitOperation( ParentProviderPtr pp, TreeProviderPtr tp, const QString& msg, QObject* parent = 0 );

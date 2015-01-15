@@ -17,8 +17,9 @@
 #ifndef GIT_REPOSITORY_PRIVATE_H
 #define GIT_REPOSITORY_PRIVATE_H
 
-#include "libGitWrap/Private/GitWrapPrivate.hpp"
 #include "libGitWrap/Private/BasePrivate.hpp"
+#include "libGitWrap/Private/GitWrapPrivate.hpp"
+
 #include "libGitWrap/Submodule.hpp"
 
 namespace Git

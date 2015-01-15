@@ -1,6 +1,6 @@
 /*
  * MacGitver
- * Copyright (C) 2012-2013 Sascha Cunz <sascha@babbelbox.org>
+ * Copyright (C) 2014 Sascha Cunz <sascha@macgitver.org>
  *
  * This program is free software; you can redistribute it and/or modify it under the terms of the
  * GNU General Public License (Version 2) as published by the Free Software Foundation.
@@ -14,11 +14,12 @@
  *
  */
 
+#include "libGitWrap/BranchRef.hpp"
+#include "libGitWrap/Commit.hpp"
+#include "libGitWrap/Index.hpp"
+#include "libGitWrap/Repository.hpp"
 #include "libGitWrap/Result.hpp"
 #include "libGitWrap/Tree.hpp"
-#include "libGitWrap/Repository.hpp"
-#include "libGitWrap/Index.hpp"
-#include "libGitWrap/BranchRef.hpp"
 
 #include "libGitWrap/Private/GitWrapPrivate.hpp"
 
@@ -28,7 +29,9 @@ namespace Git
 {
 
     class CheckoutBaseOperation;
+    class CheckoutCommitOperation;
     class CheckoutIndexOperation;
+    class CheckoutReferenceOperation;
     class CheckoutTreeOperation;
 
     namespace Internal
@@ -38,62 +41,87 @@ namespace Git
         {
         public:
             CheckoutBaseOperationPrivate(CheckoutBaseOperation* owner);
-            ~CheckoutBaseOperationPrivate();
+
+        protected:
+            static git_repository* gitPtr(const Repository& obj);
+            static git_index* gitPtr(const Index& obj);
+
+            static git_object* gitObjectPtr(const Tree& obj);
+
+        protected:
+            virtual void prepare();
+            virtual void unprepare();
+
+        private:
+            void run();
+            virtual void postCheckout(git_repository* repo) = 0;
+
+        private:
+            virtual void runCheckout(git_repository* repo) = 0;
 
         public:
-            void prepare();
-            void unprepare();
-
-        public:
-            void emitFile(git_checkout_notify_t why, const char *path,
-                          const git_diff_file *baseline, const git_diff_file *target,
-                          const git_diff_file *workdir);
-            void emitProgress(const QString& pathName, quint32 completed, quint32 total);
-
-        public:
-            Repository              mRepository;
-            CheckoutFlags           mOptions;
+            Repository              mRepo;
+            CheckoutFlags           mStrategy;
             CheckoutMode            mMode;
-            QString                 mPath;
             Tree                    mBaseline;
             CheckoutOptions         mOpts;
             bool                    mCancel;
         };
+
 
         class CheckoutIndexOperationPrivate : public CheckoutBaseOperationPrivate
         {
         public:
             CheckoutIndexOperationPrivate(CheckoutIndexOperation* owner);
 
-        public:
-            void run();
+        protected:
+            virtual void runCheckout(git_repository* repo);
+            virtual void postCheckout(git_repository* repo);
 
         public:
             Index               mIndex;
         };
+
 
         class CheckoutTreeOperationPrivate : public CheckoutBaseOperationPrivate
         {
         public:
             CheckoutTreeOperationPrivate(CheckoutTreeOperation* owner);
 
-        public:
-            void run();
+        protected:
+            virtual void runCheckout(git_repository* repo);
+            virtual void postCheckout(git_repository* repo);
 
         public:
-            Tree                mTree;
+            TreeProviderPtr     mTreeProvider;
         };
 
-        class CheckoutBranchOperationPrivate : public CheckoutBaseOperationPrivate
+
+        class CheckoutCommitOperationPrivate : public CheckoutTreeOperationPrivate
         {
         public:
-            CheckoutBranchOperationPrivate(CheckoutBranchOperation* owner);
+            CheckoutCommitOperationPrivate(CheckoutCommitOperation* owner);
 
         public:
-            void run();
+            void runCheckout(git_repository* repo);
+            void postCheckout(git_repository* repo);
 
         public:
-            BranchRef           branch;
+            Commit      mCommit;
+        };
+
+
+        class CheckoutReferenceOperationPrivate : public CheckoutTreeOperationPrivate
+        {
+        public:
+            CheckoutReferenceOperationPrivate(CheckoutReferenceOperation* owner);
+
+        protected:
+            virtual void runCheckout(git_repository *repo);
+            virtual void postCheckout(git_repository* repo);
+
+        public:
+            Reference   mBranch;
         };
 
     }

@@ -20,9 +20,9 @@
 #include "gtest/gtest.h"
 
 #include "libGitWrap/Commit.hpp"
-#include "libGitWrap/Result.hpp"
 #include "libGitWrap/ObjectId.hpp"
 #include "libGitWrap/Repository.hpp"
+#include "libGitWrap/Result.hpp"
 #include "libGitWrap/Tree.hpp"
 
 #include "Infra/Fixture.hpp"

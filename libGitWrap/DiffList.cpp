@@ -213,7 +213,7 @@ namespace Git
 
     void DiffList::mergeOnto(Result& result, const DiffList& onto) const
     {
-        GW_CD_CHECKED_VOID(DiffList, result)
+        GW_CD_CHECKED(DiffList, void(), result)
 
         if (!onto.isValid())
         {
@@ -227,7 +227,7 @@ namespace Git
 
     void DiffList::consumePatch(Result& result, PatchConsumer* consumer) const
     {
-        GW_CD_CHECKED_VOID(DiffList, result)
+        GW_CD_CHECKED(DiffList, void(), result)
 
         if (!consumer) {
             result.setInvalidObject();
@@ -243,7 +243,7 @@ namespace Git
 
     void DiffList::consumeChangeList(Result& result, ChangeListConsumer* consumer) const
     {
-        GW_CD_CHECKED_VOID(DiffList, result)
+        GW_CD_CHECKED(DiffList, void(), result)
 
         if (!consumer) {
             result.setInvalidObject();

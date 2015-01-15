@@ -92,9 +92,11 @@ namespace Git
 
     bool ObjectId::isNull() const
     {
-        for( int i = 0; i < SHA1_Length; i++ )
-            if( data[ i ] )
+        for( int i = 0; i < SHA1_Length; i++ ) {
+            if( data[ i ] ) {
                 return false;
+            }
+        }
 
         return true;
     }

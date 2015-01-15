@@ -188,9 +188,12 @@ namespace Git
             return Ignore;
         }
 
-        switch( git_submodule_update( sm ) )
+        switch( git_submodule_update_strategy( sm ) )
         {
         default:
+        case GIT_SUBMODULE_UPDATE_DEFAULT:  return Default;
+
+        case GIT_SUBMODULE_UPDATE_RESET:    return Reset;
         case GIT_SUBMODULE_UPDATE_CHECKOUT: return Checkout;
         case GIT_SUBMODULE_UPDATE_MERGE:    return Merge;
         case GIT_SUBMODULE_UPDATE_REBASE:   return Rebase;

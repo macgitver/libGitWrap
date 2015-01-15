@@ -26,7 +26,6 @@
 #include "libGitWrap/TagRef.hpp"
 #include "libGitWrap/NoteRef.hpp"
 
-#include "libGitWrap/Operations/CheckoutOperation.hpp"
 #include "libGitWrap/Operations/CommitOperation.hpp"
 
 #include "libGitWrap/Private/GitWrapPrivate.hpp"
@@ -99,21 +98,6 @@ namespace Git
             return r;
         }
 
-        CheckoutBaseOperation* ReferencePrivate::checkoutOperation(Result& result) const
-        {
-            Reference ref = outer<Reference>();
-            QScopedPointer<CheckoutTreeOperation> op(new CheckoutTreeOperation);
-            op->setRepository(repo());
-
-            op->setTree(ref.peeled<Tree>(result));
-
-            if (!result) {
-                return NULL;
-            }
-
-            return op.take();
-        }
-
     }
 
     GW_PRIVATE_IMPL(Reference, RepoObject)
@@ -149,8 +133,8 @@ namespace Git
     /**
      * @brief           Create a new reference
      *
-     * Creates a new reference named @a name that is pointing to the SHA1 @a sha in the repository
-     * @a repo.
+     *                  Creates a new reference named @a name that is pointing
+     *                  to the SHA1 @a sha in the repository @a repo.
      *
      * @param[in,out]   result  A Result object; see @ref GitWrapErrorHandling
      *
@@ -161,21 +145,18 @@ namespace Git
      *
      * @param[in]       sha     The SHA1 where the reference shall point to.
      *
-     * @return          The created reference object or an invalid reference object, if the an error
-     *                  occured while creating the reference.
+     * @return          The created reference object or an invalid reference object,
+     *                  if the an error occured while creating the reference.
      *
-     * @note    This method does not test whether the repository really has an object with the id
-     *          @a sha.
-     *
+     * @note            This method does not test whether the repository really has
+     *                  an object with the id @a sha.
      */
-    Reference Reference::create(Result& result, Repository repo,
+    Reference Reference::create(Result& result, const Repository& repo,
                                 const QString& name, const ObjectId& sha)
     {
-        if (!result) {
-            return Reference();
-        }
+        GW_CHECK_RESULT( result, Reference() );
 
-        if (!repo.isValid()) {
+        if ( !repo.isValid() ) {
             result.setInvalidObject();
             return Reference();
         }
@@ -185,28 +166,19 @@ namespace Git
         git_reference* ref = NULL;
         QByteArray utf8Name = GW_EncodeQString(name);
 
-        result = git_reference_create(
-                    &ref,
-                    repop->mRepo,
-                    utf8Name.constData(),
-                    Private::sha(sha),
-                    false,
-                    NULL,
-                    NULL);
+        result = git_reference_create( &ref, repop->mRepo, utf8Name.constData(),
+                                       Private::sha(sha), false, NULL, NULL);
+        GW_CHECK_RESULT( result, Reference() );
 
-        if (!result) {
-            return Reference();
-        }
-
-        return Private::createRefObject(repop, name, ref);
+        return Private::createRefObject( repop, name, ref );
     }
 
 
     /**
      * @brief           Create a new reference
      *
-     * Creates a new reference named @a name that is pointing to the commit @a commit in the
-     * repository @a repo.
+     *                  Creates a new reference named @a name that is pointing
+     *                  to the commit @a commit in the repository @a repo.
      *
      * @param[in,out]   result  A Result object; see @ref GitWrapErrorHandling
      *
@@ -217,17 +189,17 @@ namespace Git
      *
      * @param[in]       commit  The commit object where the new reference shall point to.
      *
-     * @return          The created reference object or an invalid reference object, if the an error
-     *                  occured while creating the reference.
-     *
+     * @return          The created reference object or an invalid reference object,
+     *                  if an error occured while creating the reference.
      */
-    Reference Reference::create(Result& result, Repository repo,
+    Reference Reference::create(Result& result, const Repository &repo,
                                 const QString& name, const Commit& commit)
     {
-        if (!commit.isValid()) {
+        if ( !commit.isValid() ) {
             result.setInvalidObject();
             return Reference();
         }
+
         return create(result, repo, name, commit.id());
     }
 
@@ -390,63 +362,10 @@ namespace Git
         GW_CD_CHECKED(Reference, Object(), result);
 
         git_object* o = NULL;
-        result = git_reference_peel(&o, d->reference, Internal::objectType2gitotype(ot));
-
-        if (!result) {
-            return Object();
-        }
+        result = git_reference_peel(&o, d->reference, Internal::objectType2git(ot));
+        GW_CHECK_RESULT( result, Object() );
 
         return Object::Private::create(d->repo(), o);
-    }
-
-    CheckoutBaseOperation* Reference::checkoutOperation(Result& result) const
-    {
-        GW_CD_CHECKED(Reference, NULL, result);
-        return d->checkoutOperation(result);
-    }
-
-    void Reference::checkout(Result&            result,
-                             CheckoutFlags      flags,
-                             CheckoutMode       mode,
-                             const QStringList& paths) const
-    {
-        GW_CD_CHECKED_VOID(Reference, result);
-        QString refToUpdate = name();
-
-        QScopedPointer<CheckoutBaseOperation> op(checkoutOperation(result));
-        if (!result) {
-            return;
-        }
-
-        bool doUpdateHEAD    = flags.testFlag(CheckoutUpdateHEAD);
-        /*
-        bool doCreateLocal   = opts.testFlag(CheckoutCreateLocalBranch);
-        bool doAllowDetached = opts.testFlag(CheckoutAllowDetachHEAD);
-        bool doForceDetached = opts.testFlag(CheckoutForceDetachHEAD);
-        */
-
-        /*
-        if (doCreateLocal) {
-            if (!op->supports(CheckoutCreateLocalBranch) ) {
-                result.setError("Operation not supported.");
-                return;
-            }
-        }
-        */
-
-        op->setFlags(flags);
-        op->setMode(mode);
-        op->setCheckoutPaths(paths);
-        op->setBackgroundMode(false);
-
-        result = op->execute();
-        if (!result) {
-            return;
-        }
-
-        if (doUpdateHEAD) {
-
-        }
     }
 
     /**
@@ -461,7 +380,7 @@ namespace Git
      */
     void Reference::destroy(Result& result)
     {
-        GW_D_CHECKED_VOID(Reference, result);
+        GW_D_CHECKED(Reference, void(), result);
 
         result = git_reference_delete(d->reference);
 
@@ -478,7 +397,7 @@ namespace Git
 
     void Reference::move(Result &result, const Commit &target)
     {
-        GW_D_CHECKED_VOID(Reference, result);
+        GW_D_CHECKED(Reference, void(), result);
 
         ObjectId targetId = target.id();
         if (targetId.isNull()) {
@@ -498,7 +417,7 @@ namespace Git
 
     void Reference::rename(Result &result, const QString &newName, bool force)
     {
-        GW_D_CHECKED_VOID(Reference, result);
+        GW_D_CHECKED(Reference, void(), result);
 
         git_reference* newRef = NULL;
         result = git_reference_rename(&newRef, d->reference, GW_StringFromQt(newName), force, NULL, NULL);
@@ -522,13 +441,15 @@ namespace Git
      */
     void Reference::setAsDetachedHEAD(Result& result) const
     {
-        GW_CD_CHECKED_VOID(Reference, result);
-        peeled<Commit>(result).setAsDetachedHEAD(result);
+        GW_CHECK_RESULT( result, void() );
+        GW_CD_CHECKED(Reference, void(), result);
+
+        repository().setDetachedHEAD( result, peeled<Commit>(result).id() );
     }
 
     void Reference::updateHEAD(Result &result) const
     {
-        GW_CD_CHECKED_VOID(Reference, result);
+        GW_CD_CHECKED(Reference, void(), result);
 
         if (git_reference_is_branch(d->reference)) {
             // reference is a local branch
@@ -557,6 +478,11 @@ namespace Git
     Reference::operator ParentProviderPtr() const
     {
         return ParentProviderPtr( new ReferenceParentProvider( *this ) );
+    }
+
+    Reference::operator TreeProviderPtr() const
+    {
+        return TreeProviderPtr( new ReferenceTreeProvider( *this ) );
     }
 
     ReferenceKinds Reference::kind() const
@@ -597,7 +523,8 @@ namespace Git
         return NoteRef();
     }
 
-    // *** ReferenceParentProvider ***
+
+    //-- ReferenceParentProvider -->8
 
     ReferenceParentProvider::ReferenceParentProvider(const Reference& ref)
         : mRef( ref )
@@ -615,6 +542,24 @@ namespace Git
     Repository ReferenceParentProvider::repository() const
     {
         return mRef.repository();
+    }
+
+
+    //-- ReferenceTreeProvider -->8
+
+    ReferenceTreeProvider::ReferenceTreeProvider(const Git::Reference& ref)
+        : mRef( ref )
+    {
+    }
+
+    Repository ReferenceTreeProvider::repository() const
+    {
+        return mRef.repository();
+    }
+
+    Tree ReferenceTreeProvider::tree(Result& result)
+    {
+        return mRef.peeled(result, otTree).asTree();
     }
 
 }

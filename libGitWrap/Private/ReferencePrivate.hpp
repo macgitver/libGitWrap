@@ -51,7 +51,6 @@ namespace Git
 
         public:
             virtual ReferenceKinds kind() const;
-            virtual CheckoutBaseOperation* checkoutOperation(Result& result) const;
 
         public:
             bool            wasDeleted;

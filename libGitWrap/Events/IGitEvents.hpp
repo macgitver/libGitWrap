@@ -59,8 +59,9 @@ namespace Git
                                      const DiffFile& target,
                                      const DiffFile& workdir ) = 0;
         virtual void checkoutProgress( const QString& path,
-                                       quint32 total,
-                                       quint32 completed ) = 0;
+                                       quint64 total,
+                                       quint64 completed ) = 0;
+        virtual void doneCheckout() = 0;
     };
 }
 

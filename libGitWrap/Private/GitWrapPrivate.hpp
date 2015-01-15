@@ -80,46 +80,14 @@ namespace Git
         /**
          * @internal
          * @ingroup     GitWrap
-         * @brief       Wraps a git_strarray for conversion from and to a QStringList.
-         */
-        class StrArray
-        {
-        public:
-            StrArray();
-            StrArray(const QStringList& strings);
-            ~StrArray();
-
-        public:
-            operator git_strarray*();
-            operator const git_strarray*() const;
-
-            operator QStringList() const;
-
-        public:
-            int count() const;
-
-            QStringList strings() const;
-            void setStrings( const QStringList& strings);
-
-        private:
-            StrArray( const StrArray& other );
-            StrArray& operator=(const StrArray& other);
-
-        private:
-            git_strarray          mEncoded;         //!< the encoded string data from the source QStringList
-        };
-
-        /**
-         * @internal
-         * @ingroup     GitWrap
          * @brief       Wraps an existing git_strarray for conversion from and to a QStringList.
          */
         class StrArrayRef : public QSharedData
         {
         public:
-            StrArrayRef(git_strarray& _a, bool init = false);
-            StrArrayRef(git_strarray& _a, const QStringList& sl);
-            ~StrArrayRef();
+            explicit StrArrayRef(git_strarray& _a, bool init = false);
+            explicit StrArrayRef(git_strarray& _a, const QStringList& sl);
+            virtual ~StrArrayRef();
 
         public:
             bool operator ==(const git_strarray& other) const;
@@ -133,13 +101,36 @@ namespace Git
             StrArrayRef& operator=(const StrArrayRef&);
 
         public:
+            void clear();
             int count() const;
 
             QStringList strings() const;
             void setStrings( const QStringList& strings );
 
-        private:
+        protected:
             git_strarray&       mEncoded;
+            bool                mOwnsRef;
+        };
+
+
+        /**
+         * @internal
+         * @ingroup     GitWrap
+         * @brief       Wraps a git_strarray for conversion from and to a QStringList.
+         */
+        class StrArray : public StrArrayRef
+        {
+        public:
+            explicit StrArray();
+            explicit StrArray(const QStringList& strings);
+
+        public:
+            operator git_strarray*();
+            operator const git_strarray*() const;
+
+        private:
+            StrArray( const StrArray& other );
+            StrArray& operator=(const StrArray& other);
         };
 
 
@@ -155,6 +146,7 @@ namespace Git
         public:
             CheckoutOptionsRef(git_checkout_options& ref, bool init = false);
             CheckoutOptionsRef(git_checkout_options& ref, const QStringList& paths, bool init = false);
+            virtual ~CheckoutOptionsRef();
 
         public:
             operator git_checkout_options*();
@@ -166,6 +158,18 @@ namespace Git
         public:
             QStringList paths() const;
             void setPaths( const QStringList& paths );
+
+            QString targetDirectory() const;
+            void setTargetDirectory( const QString& path );
+
+            QString ancestorLabel() const;
+            void setAncestorLabel(const QString& base );
+
+            QString ourLabel() const;
+            void setOurLabel(const QString& ours );
+
+            QString theirLabel() const;
+            void setTheirLabel(const QString& theirs );
 
         private:
             void init();
@@ -203,6 +207,7 @@ namespace Git
         {
         public:
             CloneOptions();
+            ~CloneOptions();
 
         public:
             operator const git_clone_options*() const;
@@ -212,6 +217,9 @@ namespace Git
 
         public:
             CheckoutOptionsRef checkoutOptions();
+
+            QString checkoutBranch() const;
+            void setCheckoutBranch(const QString& branch);
 
         private:
             git_clone_options       mOptions;
@@ -269,7 +277,7 @@ namespace Git
          * @return      The GIT_OBJ_xxx constant
          *
          */
-        static inline git_otype objectType2gitotype(ObjectType ot)
+        static inline git_otype objectType2git(ObjectType ot)
         {
             switch (ot) {
             default:        Q_ASSERT(false);
@@ -295,12 +303,12 @@ namespace Git
             static GitWrapPrivate* self;    // Make this an QAtomicPointer
         };
 
-        inline const git_oid* const ObjectId2git_oid(const ObjectId& id)
+        inline const git_oid* const ObjectId2git(const ObjectId& id)
         {
             return (const git_oid* const) id.raw();
         }
 
-        inline git_oid* ObjectId2git_oid(ObjectId& id)
+        inline git_oid* ObjectId2git(ObjectId& id)
         {
             return (git_oid*) id.rawWritable();
         }
@@ -312,7 +320,7 @@ namespace Git
             const git_oid** ret = new const git_oid *[list.count()];
             for ( int i=0; i < list.count(); ++i )
             {
-                ret[i] = ObjectId2git_oid( list[i] );
+                ret[i] = ObjectId2git( list[i] );
             }
 
             return ret;
@@ -360,16 +368,25 @@ namespace Git
 /**
   * @internal
   * @ingroup GitWrap
-  * @def Encode a QString into a QByteArray with the UTF-8 codec used by libgit2.
+  * @def Encode a QString @a s into a QByteArray with the UTF-8 codec used by libgit2.
   */
 #define GW_EncodeQString(s) (s).toUtf8()
 
 /**
   * @internal
   * @ingroup GitWrap
-  * @def Encode a QString with the UTF-8 codec used by libgit2.
+  * @def Encode a QString @a s with the UTF-8 codec used by libgit2.
   */
 #define GW_StringFromQt(s) GW_EncodeQString(s).constData()
+
+/**
+  * @internal
+  * @ingroup    GitWrap
+  * @def        Encode a QString @a s with the UTF-8 codec used by libgit2.
+  *             If @a s is empty, The default @a def will be set.
+  */
+#define GW_StringFromQt_Def(s, def) \
+    (s).isEmpty() ? def : GW_EncodeQString(s).constData()
 
 /**
   * @internal
@@ -382,17 +399,10 @@ namespace Git
 // -- pimpl helper macro definitions ->8
 
 #define GW__CHECK(returns, result) \
-    if (!Private::isValid(result, d)) { return returns; }
-
-#define GW__CHECK_VOID(result) \
-    if (!Private::isValid(result, d)) { return; }
-
+    if (!Private::isValid(result, d)) { result.setInvalidObject(); return returns; }
 
 #define GW__EX_CHECK(returns, result) \
-    if (!Private::isValid(result, d.constData())) { return returns; }
-
-#define GW__EX_CHECK_VOID(result) \
-    if (!Private::isValid(result, d.constData())) { return; }
+    if (!Private::isValid(result, d.constData())) { result.setInvalidObject(); return returns; }
 
 #define GW_D(CLASS) \
     Private* d = static_cast<Private*>(mData.data()); \
@@ -423,14 +433,5 @@ namespace Git
 #define GW_CD_CHECKED(CLASS, returns, result) \
     GW_CD(CLASS); \
     GW__CHECK(returns, result)
-
-// Wherever we have to use one of those two, we've made bad API design!
-#define GW_D_CHECKED_VOID(CLASS, result) \
-    GW_D(CLASS); \
-    GW__CHECK_VOID(result)
-
-#define GW_CD_CHECKED_VOID(CLASS, result) \
-    GW_CD(CLASS); \
-    GW__CHECK_VOID(result)
 
 #endif

@@ -642,12 +642,10 @@ namespace Git
         GW_D_EX_CHECKED(Repository, Object(), result);
 
         git_object* obj = NULL;
-        git_otype gitObjType = Internal::objectType2gitotype(ot);
+        git_otype gitObjType = Internal::objectType2git(ot);
 
         result = git_object_lookup(&obj, d->mRepo, Private::sha(id), gitObjType);
-        if (!result) {
-            return Object();
-        }
+        GW_CHECK_RESULT( result, Object() );
 
         return Object::Private::create(d, obj);
     }
@@ -947,7 +945,7 @@ namespace Git
      */
     void Repository::setHEAD(Result& result, const QString& branchName)
     {
-        GW_D_CHECKED_VOID(Repository, result);
+        GW_D_CHECKED(Repository, void(), result);
 
         result = git_repository_set_head( d->mRepo, GW_StringFromQt(branchName), NULL, NULL );
     }
@@ -974,25 +972,6 @@ namespace Git
         setHEAD(result, branch.name());
     }
 
-    /**
-     * @brief           Set the HEAD detached to a commit
-     *
-     * @param[in,out]   result  A Result object; see @ref GitWrapErrorHandling
-     *
-     * @param[in]       commit  The commit to point to.
-     *
-     */
-    void Repository::setDetachedHEAD(Result& result, const Commit& commit)
-    {
-        GW_D_CHECKED_VOID(Repository, result);
-
-        if (!commit.isValid()) {
-            result.setInvalidObject();
-            return;
-        }
-
-        setDetachedHEAD(result, commit.id());
-    }
 
     /**
      * @brief           Set the HEAD detached to a commit
@@ -1004,7 +983,9 @@ namespace Git
      */
     void Repository::setDetachedHEAD(Result& result, const ObjectId& sha)
     {
-        GW_D_CHECKED_VOID(Repository, result);
+        GW_CHECK_RESULT( result, void() );
+        GW_D_CHECKED(Repository, void(), result);
+
         result = git_repository_set_head_detached( d->mRepo, Private::sha(sha), NULL, NULL);
     }
 
