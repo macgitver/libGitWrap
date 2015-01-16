@@ -34,7 +34,7 @@ Here's how to use it:
 void myFunction()
 {
     // provide a path (or sub-path) to your repo
-    QString::fromUtf8("/path/to/repo/or/any/sub-path");
+    QStringLiteral repoSubPath("/path/to/repo/or/any/sub-path");
 
     // Let the show begin!
     Git::Result r;
@@ -43,8 +43,9 @@ void myFunction()
 
     if ( !r )
     {
-        qCritical( "Unable to open repository at %s:"
-                       "\nGit error: %s", qPrintable( r.errorText() ) );
+        qCritical( "Unable to open repository at %s:\nGit error: %s",
+                       qPrintable(repoSubPath),
+                       qPrintable( r.errorText() ) );
         // return;
     }
 
@@ -73,7 +74,7 @@ This example shows how you `git init` with GitWrap.
 void initRepositoryExample()
 {
     Git::Result r;
-    QString path = QString::fromUtf8( "/here/is/my/new/repository" );
+    QStringLiteral path( "/here/is/my/new/repository" );
     bool bare = false;
     Git::Repository newRepo = Git::Repository::create( path, bare, r );
     if ( !r )
@@ -136,7 +137,7 @@ git clone --recursive https://github.com/macgitver/libGitWrap.git
 
 # You need to provide the path to your Qt5 installation.
 # This is an example:
-export $QTDIR=$HOME/Qt/5.4/gcc_64 
+export QTDIR=$HOME/Qt/5.4/gcc_64 
 export PATH=$QTDIR/bin:$PATH
 
 # now build & install!
