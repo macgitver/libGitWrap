@@ -43,17 +43,22 @@ namespace Git
         GW_PRIVATE_DECL(Repository, Base, public)
 
     public:
-        static Repository create( const QString& path,
-                                  bool bare,
-                                  Result& result );
+        GW_DEPRECATED
+        static Repository create(const QString &path, bool bare, Result& result);
+        static Repository create(Result& result,
+                                 const QString& path,
+                                 bool bare);
 
-        static QString discover( const QString& startPath,
-                                 bool acrossFs /* = false */,
-                                 const QStringList& ceilingDirs /* = QStringList() */,
-                                 Result& result );
+        GW_DEPRECATED
+        static QString discover(const QString &startPath, bool acrossFs, const QStringList &ceilingDirs, Result& result);
+        static QString discover(Result& result , const QString& startPath,
+                                bool acrossFs = false,
+                                const QStringList& ceilingDirs = QStringList());
 
-        static Repository open( const QString& path,
-                                Result& result );
+        GW_DEPRECATED
+        static Repository open(const QString &path, Result& result);
+        static Repository open(Result& result,
+                               const QString& path );
 
         Repository reopen(Result& result) const;
 

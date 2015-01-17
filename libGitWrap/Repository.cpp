@@ -139,9 +139,9 @@ namespace Git
      *
      * @see	Repository::open()
      */
-    Repository Repository::create( const QString& path,
-                                   bool bare,
-                                   Result& result )
+    Repository Repository::create( Result& result,
+                                   const QString& path,
+                                   bool bare )
     {
         GW_CHECK_RESULT( result, Repository() );
 
@@ -178,10 +178,10 @@ namespace Git
      *
      * @see Repository::open(), Repository::create()
      */
-    QString Repository::discover( const QString& startPath,
+    QString Repository::discover( Result& result,
+                                  const QString& startPath,
                                   bool acrossFs,
-                                  const QStringList& ceilingDirs,
-                                  Result& result )
+                                  const QStringList& ceilingDirs )
     {
         GW_CHECK_RESULT( result, QString() );
 
@@ -219,8 +219,7 @@ namespace Git
      *
      * @sa	Repository::discover(), Repository::create()
      */
-    Repository Repository::open( const QString& path,
-                                 Result& result )
+    Repository Repository::open(Result& result, const QString& path)
     {
         GW_CHECK_RESULT( result, Repository() );
 
@@ -241,11 +240,10 @@ namespace Git
      *                  absolutely independant of this repository object.
      *
      * The repository is opened using the working directory path, not the .git path.
-     *
      */
     Repository Repository::reopen(Result& result) const
     {
-        return open(basePath(), result);
+        return open( result, basePath() );
     }
 
     /**
@@ -695,11 +693,6 @@ namespace Git
         return lookupTag(result, reference(result, refName).resolveToObjectId(result));
     }
 
-    RevisionWalker Repository::newWalker( Result& result )
-    {
-        return RevisionWalker::create(result, *this);
-    }
-
     bool Repository::shouldIgnore(Result& result, const QString& filePath) const
     {
         GW_CD_CHECKED(Repository, false, result);
@@ -792,12 +785,6 @@ namespace Git
         }
 
         return new Remote::Private(d.data(), remote);
-    }
-
-    Remote Repository::createRemote(Result& result, const QString& remoteName, const QString& url,
-                                    const QString& fetchSpec)
-    {
-        return Remote::create(result, *this, remoteName, url, fetchSpec);
     }
 
     DiffList Repository::diffCommitToCommit( Result& result, Commit oldCommit,
@@ -1081,5 +1068,57 @@ namespace Git
 
         return ref.asNote();
     }
+
+
+
+    // -- DEPRECATED FUNCTIONS BEGIN -->8
+
+    /**
+     * @brief           Repository::create
+     * @deprecated      Use @ref Repository::create(Result& result, const QString& path, bool bare) instead.
+     */
+    Repository Repository::create(const QString& path, bool bare, Result& result)
+    {
+        return create( result, path, bare );
+    }
+
+    /**
+     * @brief           Repository::discover
+     * @deprecated      Use @ref Repository::create(Result& result, const QString& startPath, bool acrossFs, const QStringList& ceilingDirs) instead.
+     */
+    QString Repository::discover(const QString& startPath, bool acrossFs, const QStringList& ceilingDirs, Git::Result& result)
+    {
+        return discover(result, startPath, acrossFs, ceilingDirs);
+    }
+
+    /**
+     * @brief           Repository::open
+     * @deprecated      Use @ref Repository::create(Result& result, const QString& startPath, bool acrossFs, const QStringList& ceilingDirs) instead.
+     */
+    Repository Repository::open(const QString &path, Result &result)
+    {
+        return open( result, path );
+    }
+
+    /**
+     * @brief           Repository::newWalker
+     * @deprecated      Use @ref RevisionWalker::create() instead.
+     */
+    RevisionWalker Repository::newWalker( Result& result )
+    {
+        return RevisionWalker::create(result, *this);
+    }
+
+    /**
+     * @brief           Repository::createRemote
+     * @deprecated      Use @ref Remote::create() instead.
+     */
+    Remote Repository::createRemote(Result& result, const QString& remoteName, const QString& url,
+                                    const QString& fetchSpec)
+    {
+        return Remote::create(result, *this, remoteName, url, fetchSpec);
+    }
+
+    // -- DEPRECATED FUNCTIONS END --<8
 
 }
