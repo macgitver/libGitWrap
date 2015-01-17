@@ -294,6 +294,7 @@ namespace Git
      */
     Index Repository::index( Result& result )
     {
+        GW_CHECK_RESULT( result, Index() );
         GW_D_CHECKED(Repository, Index(), result);
 
         if( isBare() ) {
@@ -329,20 +330,19 @@ namespace Git
      */
     Git::StatusFlags Repository::status(Result &result, const QString &fileName) const
     {
-        unsigned int status = GIT_STATUS_CURRENT;
+        GW_CHECK_RESULT( result, FileInvalidStatus );
         GW_CD_CHECKED(Repository, FileInvalidStatus, result);
 
+        unsigned int status = GIT_STATUS_CURRENT;
         result = git_status_file( &status, d->mRepo, GW_StringFromQt(fileName) );
-        if (!result) {
-            return FileInvalidStatus;
-        }
+        GW_CHECK_RESULT( result, FileInvalidStatus );
 
         return Internal::convertFileStatus( status );
     }
 
     StatusHash Repository::status(Result &result) const
     {
-        StatusHash sh;
+        GW_CHECK_RESULT( result, StatusHash() );
         GW_CD_CHECKED(Repository, StatusHash(), result);
 
         git_status_options opt = GIT_STATUS_OPTIONS_INIT;
@@ -352,11 +352,9 @@ namespace Git
                   | GIT_STATUS_OPT_INCLUDE_UNMODIFIED
                   | GIT_STATUS_OPT_RECURSE_UNTRACKED_DIRS;
 
+        StatusHash sh;
         result = git_status_foreach_ext( d->mRepo, &opt, &Internal::statusHashCB, (void*) &sh );
-        if( !result )
-        {
-            return Git::StatusHash();
-        }
+        GW_CHECK_RESULT( result, StatusHash() );
 
         return sh;
     }
@@ -371,27 +369,26 @@ namespace Git
      */
     QStringList Repository::allReferenceNames( Result& result )
     {
+        GW_CHECK_RESULT( result, QStringList() );
         GW_D_CHECKED(Repository, QStringList(), result);
 
         git_strarray arr;
         result = git_reference_list( &arr, d->mRepo );
-        if( !result )
-        {
-            return QStringList();
-        }
+        GW_CHECK_RESULT( result, QStringList() );
 
         return Internal::slFromStrArray( &arr );
     }
 
     ReferenceList Repository::allReferences(Result &result)
     {
+        GW_CHECK_RESULT( result, ReferenceList() );
         GW_D_CHECKED(Repository, ReferenceList(), result);
 
         Internal::cb_append_reference_data data = { d };
         result = git_reference_foreach( d->mRepo,
                                         &Internal::cb_append_reference,
                                         &data );
-        if (!result) return ReferenceList();
+        GW_CHECK_RESULT( result, ReferenceList() );
 
         return data.refs;
     }
@@ -430,6 +427,7 @@ namespace Git
 
     ResolvedRefs Repository::allResolvedRefs( Result& result )
     {
+        GW_CHECK_RESULT( result, ResolvedRefs() );
         GW_CD_CHECKED(Repository, ResolvedRefs(), result);
 
         Internal::cb_enum_resolvedrefs_data data;
@@ -459,13 +457,14 @@ namespace Git
     QString Repository::currentBranch(Result &result)
     {
         Reference refHEAD = HEAD( result );
-        if ( !refHEAD.isValid() ) return QString();
+        GW_CHECK_RESULT( result, QString() );
 
         return refHEAD.shorthand();
     }
 
     QStringList Repository::branchNames(Result& result, bool local, bool remote)
     {
+        GW_CHECK_RESULT( result, QStringList() );
         GW_CD_CHECKED(Repository, QStringList(), result);
 
         QStringList sl;
@@ -507,9 +506,9 @@ namespace Git
         return sl;
     }
 
-    bool Repository::renameBranch( const QString& oldName, const QString& newName, bool force,
-                                   Result& result )
+    bool Repository::renameBranch(Result& result, const QString& oldName, const QString& newName, bool force)
     {
+        GW_CHECK_RESULT( result, false );
         GW_CD_CHECKED(Repository, false, result);
 
         git_reference* ref = NULL;
@@ -543,6 +542,7 @@ namespace Git
 
     QStringList Repository::allTagNames( Result& result )
     {
+        GW_CHECK_RESULT( result, QStringList() );
         GW_CD_CHECKED(Repository, QStringList(), result);
 
         git_strarray arr;
@@ -608,15 +608,12 @@ namespace Git
 
     Reference Repository::HEAD( Result& result ) const
     {
+        GW_CHECK_RESULT( result, Reference() );
         GW_CD_EX_CHECKED(Repository, Reference(), result);
 
         git_reference* refHead = NULL;
-
         result = git_repository_head( &refHead, d->mRepo );
-        if( !result )
-        {
-            return Reference();
-        }
+        GW_CHECK_RESULT( result, Reference() );
 
         return Reference::PrivatePtr(new Reference::Private(PrivatePtr(d), refHead));
     }
@@ -637,6 +634,7 @@ namespace Git
 
     Object Repository::lookup( Result& result, const ObjectId& id, ObjectType ot )
     {
+        GW_CHECK_RESULT( result, Object() );
         GW_D_EX_CHECKED(Repository, Object(), result);
 
         git_object* obj = NULL;
@@ -695,6 +693,7 @@ namespace Git
 
     bool Repository::shouldIgnore(Result& result, const QString& filePath) const
     {
+        GW_CHECK_RESULT( result, false );
         GW_CD_CHECKED(Repository, false, result);
 
         int ignore = 0;
@@ -718,6 +717,7 @@ namespace Git
      */
     Remote::List Repository::allRemotes(Result& result) const
     {
+        GW_CHECK_RESULT( result, Remote::List() );
         GW_CD_EX_CHECKED(Repository, Remote::List(), result);
 
         git_strarray arr;
@@ -752,6 +752,7 @@ namespace Git
      */
     QStringList Repository::allRemoteNames( Result& result ) const
     {
+        GW_CHECK_RESULT( result, QStringList() );
         GW_CD_CHECKED(Repository, QStringList(), result);
 
         Internal::StrArray arr;
@@ -774,6 +775,7 @@ namespace Git
      */
     Remote Repository::remote(Result& result, const QString& remoteName) const
     {
+        GW_CHECK_RESULT( result, Remote() );
         GW_CD_EX_CHECKED(Repository, Remote(), result);
 
         git_remote* remote = NULL;
@@ -810,6 +812,7 @@ namespace Git
 
     DiffList Repository::diffIndexToWorkingDir( Result& result )
     {
+        GW_CHECK_RESULT( result, DiffList() );
         GW_D_EX_CHECKED(Repository, DiffList(), result);
 
         git_diff* diff = NULL;
@@ -852,33 +855,32 @@ namespace Git
 
     Submodule::List Repository::submodules( Result& result )
     {
+        GW_CHECK_RESULT( result, Submodule::List() );
         GW_D_CHECKED(Repository, Submodule::List(), result);
         Internal::cb_enum_submodules_t data = { d };
 
         result = git_submodule_foreach( d->mRepo, &Internal::cb_enum_submodules, &data );
-        if( !result )
-        {
-            return Submodule::List();
-        }
+        GW_CHECK_RESULT( result, Submodule::List() );
 
         return data.subs;
     }
 
     QStringList Repository::submoduleNames(Result& result) const
     {
+        GW_CHECK_RESULT( result, QStringList() );
         GW_CD_CHECKED(Repository, QStringList(), result);
+
         QStringList names;
 
         result = git_submodule_foreach(d->mRepo, &Internal::cb_enum_submodule_names, &names);
-        if (!result) {
-            return QStringList();
-        }
+        GW_CHECK_RESULT( result, QStringList() );
 
         return names;
     }
 
     Submodule Repository::submodule(Result& result, const QString& name) const
     {
+        GW_CHECK_RESULT( result, Submodule() );
         GW_CD_EX_CHECKED(Repository, Submodule(), result);
 
         if (submoduleNames(result).contains(name)) {
@@ -913,6 +915,7 @@ namespace Git
      */
     bool Repository::detachHead(Result& result)
     {
+        GW_CHECK_RESULT( result, false );
         GW_D_CHECKED(Repository, false, result);
 
         result = git_repository_detach_head( d->mRepo, NULL, NULL );
@@ -932,6 +935,7 @@ namespace Git
      */
     void Repository::setHEAD(Result& result, const QString& branchName)
     {
+        GW_CHECK_RESULT( result, void() );
         GW_D_CHECKED(Repository, void(), result);
 
         result = git_repository_set_head( d->mRepo, GW_StringFromQt(branchName), NULL, NULL );
@@ -947,11 +951,9 @@ namespace Git
      */
     void Repository::setHEAD(Result& result, const BranchRef& branch)
     {
-        if (!result) {
-            return;
-        }
+        GW_CHECK_RESULT( result, void() );
 
-        if (!branch.isValid()) {
+        if ( !branch.isValid() ) {
             result.setInvalidObject();
             return;
         }
@@ -1000,10 +1002,12 @@ namespace Git
     {
         GW_CD(Repository);
         if (!d) {
+            GitWrap::lastResult().setInvalidObject();
             return Submodule();
         }
 
         if (!d->openedFrom.isValid()) {
+            GitWrap::lastResult().setInvalidObject();
             return Submodule();
         }
 
@@ -1012,6 +1016,7 @@ namespace Git
 
     Reference Repository::reference(Result& result, const QString& refName, bool dwim)
     {
+        GW_CHECK_RESULT( result, Reference() );
         GW_D_CHECKED(Repository, Reference(), result);
 
         //GW_D_EX_CHECKED(Repository, Reference(), result);
@@ -1040,33 +1045,18 @@ namespace Git
 
     BranchRef Repository::branchRef(Result& result, const QString& branchName)
     {
-        Reference ref = reference(result, branchName, true);
-        if (!result) {
-            return BranchRef();
-        }
-
-        return ref.asBranch();
+        return reference(result, branchName, true).asBranch();
     }
 
     TagRef Repository::tagRef(Result& result, const QString& tagName)
     {
-        Reference ref = reference(result, tagName, true);
-        if (!result) {
-            return TagRef();
-        }
-
-        return ref.asTag();
+        return reference(result, tagName, true).asTag();
     }
 
     NoteRef Repository::noteRef(Result& result, const QString& noteName)
     {
-        // dwin doesn't work for notes
-        Reference ref = reference(result, QLatin1Literal("refs/notes/") % noteName);
-        if (!result) {
-            return NoteRef();
-        }
-
-        return ref.asNote();
+        // dwim doesn't work for notes
+        return reference(result, QLatin1Literal("refs/notes/") % noteName).asNote();
     }
 
 
@@ -1117,6 +1107,15 @@ namespace Git
                                     const QString& fetchSpec)
     {
         return Remote::create(result, *this, remoteName, url, fetchSpec);
+    }
+
+    /**
+     * @brief Repository::renameBranch
+     * @deprecated      Use @ref Repository::renameBranch(Result& result, const QString& oldName, const QString& newName, bool force) instead.
+     */
+    bool Repository::renameBranch(const QString& oldName, const QString& newName, bool force, Git::Result& result)
+    {
+        return renameBranch( result, oldName, newName, force );
     }
 
     // -- DEPRECATED FUNCTIONS END --<8

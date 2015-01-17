@@ -87,9 +87,10 @@ namespace Git
 
         ResolvedRefs allResolvedRefs( Result& result );
 
-        // ### move to BranchRef
-        bool renameBranch( const QString& oldName, const QString& newName, bool force /* = false */,
-                           Result& result );
+        // TODO: move to BranchRef
+        GW_DEPRECATED
+        bool renameBranch(const QString &oldName, const QString &newName, bool force, Result& result);
+        bool renameBranch(Result& result, const QString& oldName, const QString& newName, bool force = false);
 
         Repository superproject() const;
         Submodule superprojectSubmodule() const;
