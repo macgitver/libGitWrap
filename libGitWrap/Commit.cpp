@@ -97,7 +97,7 @@ namespace Git
     Commit Commit::create(Result &result, Repository& repo, const Tree &tree, const QString &message,
                           const Signature &author, const Signature &committer, const CommitList &parents)
     {
-        if (!result) return Commit();
+        GW_CHECK_RESULT( result, Commit() );
         if (!repo.isValid() || !tree.isValid())
         {
             result.setInvalidObject();
@@ -146,7 +146,7 @@ namespace Git
     Commit Commit::create(Result &result, Repository& repo, const Tree &tree, const QString &message,
                           const Signature &author, const Signature &committer, const ObjectIdList &parents)
     {
-        if (!result) return Commit();
+        GW_CHECK_RESULT( result, Commit() );
         if (!repo.isValid() || !tree.isValid())
         {
             result.setInvalidObject();
@@ -216,6 +216,7 @@ namespace Git
 
     Commit Commit::parentCommit(Result& result, unsigned int index) const
     {
+        GW_CHECK_RESULT( result, Commit() );
         GW_CD_CHECKED(Commit, Commit(), result);
         git_commit* gitparent = NULL;
 
@@ -229,6 +230,7 @@ namespace Git
 
     ObjectId Commit::parentCommitId(Result& result, unsigned int index) const
     {
+        GW_CHECK_RESULT( result, ObjectId() );
         GW_CD_CHECKED(Commit, ObjectId(), result)
 
         if(numParentCommits() > index) {
@@ -243,6 +245,7 @@ namespace Git
 
     CommitList Commit::parentCommits( Result& result ) const
     {
+        GW_CHECK_RESULT( result, CommitList() );
         GW_CD_CHECKED(Commit, CommitList(), result)
         CommitList objs;
 
@@ -376,6 +379,7 @@ namespace Git
 
     DiffList Commit::diffFromParent(Result& result, unsigned int index)
     {
+        GW_CHECK_RESULT( result, DiffList() );
         GW_CD_CHECKED(Commit, DiffList(), result)
 
         Commit parentObjCommit = parentCommit( result, index );
@@ -386,6 +390,7 @@ namespace Git
 
     DiffList Commit::diffFromAllParents( Result& result )
     {
+        GW_CHECK_RESULT( result, DiffList() );
         GW_CD_CHECKED(Commit, DiffList(), result)
 
         if (numParentCommits() == 0) {
