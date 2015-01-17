@@ -91,8 +91,10 @@ namespace Git
 
         bool ReferencePrivate::isValidObject(Result &r) const
         {
+            // don't check r here! it will be correctly set.
+
             if (wasDeleted) {
-                r.setError("Tried to access a destroyed reference.", GIT_ERROR);
+                r.setError("Tried to access a destroyed reference.", GIT_EUSER);
                 return false;
             }
             return r;
@@ -195,6 +197,7 @@ namespace Git
     Reference Reference::create(Result& result, const Repository &repo,
                                 const QString& name, const Commit& commit)
     {
+        GW_CHECK_RESULT( result, Reference() );
         if ( !commit.isValid() ) {
             result.setInvalidObject();
             return Reference();
@@ -259,6 +262,7 @@ namespace Git
     {
         GW_CD(Reference);
         if (!d || d->wasDeleted) {
+            GitWrap::lastResult().setInvalidObject();
             return ReferenceInvalid;
         }
 
@@ -300,13 +304,12 @@ namespace Git
 
     Reference Reference::resolved( Result& result ) const
     {
+        GW_CHECK_RESULT( result, Reference() );
         GW_CD_CHECKED(Reference, Reference(), result);
 
         git_reference* ref;
         result = git_reference_resolve(&ref, d->reference);
-        if (!result) {
-            return Reference();
-        }
+        GW_CHECK_RESULT( result, Reference() );
 
         return PrivatePtr(new Private(d->repo(), ref));
     }
@@ -314,9 +317,7 @@ namespace Git
     ObjectId Reference::resolveToObjectId( Result& result ) const
     {
         Reference resolvedRef = resolved(result);
-        if (!result) {
-            return ObjectId();
-        }
+        GW_CHECK_RESULT( result, ObjectId() );
 
         return resolvedRef.objectId();
     }
@@ -359,6 +360,7 @@ namespace Git
 
     Object Reference::peeled(Result& result, ObjectType ot) const
     {
+        GW_CHECK_RESULT( result, Object() );
         GW_CD_CHECKED(Reference, Object(), result);
 
         git_object* o = NULL;
@@ -380,6 +382,7 @@ namespace Git
      */
     void Reference::destroy(Result& result)
     {
+        GW_CHECK_RESULT( result, void() );
         GW_D_CHECKED(Reference, void(), result);
 
         result = git_reference_delete(d->reference);
@@ -397,6 +400,7 @@ namespace Git
 
     void Reference::move(Result &result, const Commit &target)
     {
+        GW_CHECK_RESULT( result, void() );
         GW_D_CHECKED(Reference, void(), result);
 
         ObjectId targetId = target.id();
@@ -417,6 +421,7 @@ namespace Git
 
     void Reference::rename(Result &result, const QString &newName, bool force)
     {
+        GW_CHECK_RESULT( result, void() );
         GW_D_CHECKED(Reference, void(), result);
 
         git_reference* newRef = NULL;
@@ -449,6 +454,7 @@ namespace Git
 
     void Reference::updateHEAD(Result &result) const
     {
+        GW_CHECK_RESULT( result, void() )
         GW_CD_CHECKED(Reference, void(), result);
 
         if (git_reference_is_branch(d->reference)) {
@@ -533,6 +539,8 @@ namespace Git
 
     ObjectIdList ReferenceParentProvider::parents(Result& result) const
     {
+        GW_CHECK_RESULT( result, ObjectIdList() );
+
         ObjectId oid = mRef.resolveToObjectId(result);
         if (!result) return ObjectIdList();
 
