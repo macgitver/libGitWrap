@@ -895,11 +895,6 @@ namespace Git
         return headBranch(result).commitOperation( index(result), msg );
     }
 
-    Reference Repository::lookupRef(Result& result, const QString& refName, bool dwim)
-    {
-        return reference(result, refName, dwim);
-    }
-
     /**
      * @brief           Detach the current HEAD
      *
@@ -1058,66 +1053,5 @@ namespace Git
         // dwim doesn't work for notes
         return reference(result, QLatin1Literal("refs/notes/") % noteName).asNote();
     }
-
-
-
-    // -- DEPRECATED FUNCTIONS BEGIN -->8
-
-    /**
-     * @brief           Repository::create
-     * @deprecated      Use @ref Repository::create(Result& result, const QString& path, bool bare) instead.
-     */
-    Repository Repository::create(const QString& path, bool bare, Result& result)
-    {
-        return create( result, path, bare );
-    }
-
-    /**
-     * @brief           Repository::discover
-     * @deprecated      Use @ref Repository::create(Result& result, const QString& startPath, bool acrossFs, const QStringList& ceilingDirs) instead.
-     */
-    QString Repository::discover(const QString& startPath, bool acrossFs, const QStringList& ceilingDirs, Git::Result& result)
-    {
-        return discover(result, startPath, acrossFs, ceilingDirs);
-    }
-
-    /**
-     * @brief           Repository::open
-     * @deprecated      Use @ref Repository::create(Result& result, const QString& startPath, bool acrossFs, const QStringList& ceilingDirs) instead.
-     */
-    Repository Repository::open(const QString &path, Result &result)
-    {
-        return open( result, path );
-    }
-
-    /**
-     * @brief           Repository::newWalker
-     * @deprecated      Use @ref RevisionWalker::create() instead.
-     */
-    RevisionWalker Repository::newWalker( Result& result )
-    {
-        return RevisionWalker::create(result, *this);
-    }
-
-    /**
-     * @brief           Repository::createRemote
-     * @deprecated      Use @ref Remote::create() instead.
-     */
-    Remote Repository::createRemote(Result& result, const QString& remoteName, const QString& url,
-                                    const QString& fetchSpec)
-    {
-        return Remote::create(result, *this, remoteName, url, fetchSpec);
-    }
-
-    /**
-     * @brief Repository::renameBranch
-     * @deprecated      Use @ref Repository::renameBranch(Result& result, const QString& oldName, const QString& newName, bool force) instead.
-     */
-    bool Repository::renameBranch(const QString& oldName, const QString& newName, bool force, Git::Result& result)
-    {
-        return renameBranch( result, oldName, newName, force );
-    }
-
-    // -- DEPRECATED FUNCTIONS END --<8
 
 }
