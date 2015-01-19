@@ -214,7 +214,7 @@ namespace Git
             ICheckoutEvents* events = static_cast< ICheckoutEvents* >( payload );
             Q_ASSERT( events );
 
-            debugEvents( "checkout progress: %d / %d", completed_steps, total_steps );
+            debugEvents( "checkout progress: %lu / %lu", completed_steps, total_steps );
 
             if (events) {
                 events->checkoutProgress( GW_StringToQt(path), total_steps, completed_steps );
