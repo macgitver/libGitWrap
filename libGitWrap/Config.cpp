@@ -119,9 +119,9 @@ namespace Git
 
     bool Config::addFile(Result& result, const QString& fileName, int priority)
     {
-        GW_D(Config);
+        GW_D_CHECKED( Config, false, result );
 
-        if( !d || fileName.isEmpty() )
+        if( fileName.isEmpty() )
         {
             return false;
         }
@@ -141,7 +141,8 @@ namespace Git
 
     ConfigValues Config::values(Result &result) const
     {
-        GW_CD(Config);
+        GW_CD_CHECKED( Config, ConfigValues(), result );
+
         ConfigValues values;
         result = git_config_foreach( d->mCfg, &read_config_cb, (void*) &values );
         GW_CHECK_RESULT( result, ConfigValues() );
