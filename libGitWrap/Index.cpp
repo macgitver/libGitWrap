@@ -155,9 +155,7 @@ namespace Git
      */
     Index Index::openPath(Result& result, const QString& path)
     {
-        if (!result) {
-            return Index();
-        }
+        GW_CHECK_RESULT( result, Index() );
 
         git_index* index = NULL;
         result = git_index_open( &index, GW_StringFromQt(path) );

@@ -49,16 +49,13 @@ namespace Git
 
     QString Config::globalFilePath(Result &result)
     {
-        QString filePath;
+        GW_CHECK_RESULT( result, QString() );
+
         Internal::Buffer path;
-
         result = git_config_find_system( path );
-        if( result )
-        {
-            filePath = path.toString();
-        }
+        GW_CHECK_RESULT( result, QString() );
 
-        return filePath;
+        return path.toString();
     }
 
     QString Config::userFilePath()
@@ -69,16 +66,13 @@ namespace Git
 
     QString Config::userFilePath( Result& result)
     {
-        QString filePath;
+        GW_CHECK_RESULT( result, QString() );
+
         Internal::Buffer path;
-
         result = git_config_find_global( path );
-        if( result )
-        {
-            filePath = path.toString();
-        }
+        GW_CHECK_RESULT( result, QString() );
 
-        return filePath;
+        return path.toString();
     }
 
     Config Config::global()
@@ -89,16 +83,18 @@ namespace Git
 
     Config Config::global(Result &result)
     {
+        GW_CHECK_RESULT( result, Config() );
+
         Internal::Buffer path;
         git_config* cfg = NULL;
 
         result = git_config_find_system( path );
-        if( result )
-        {
-            result = git_config_open_ondisk( &cfg, path );
-        }
+        GW_CHECK_RESULT( result, Config() );
 
-        return result ? PrivatePtr(new Private(cfg)) : Config();
+        result = git_config_open_ondisk( &cfg, path );
+        GW_CHECK_RESULT( result, Config() );
+
+        return PrivatePtr(new Private(cfg));
     }
 
     Config Config::user()
@@ -109,16 +105,18 @@ namespace Git
 
     Config Config::user(Result &result)
     {
+        GW_CHECK_RESULT( result, Config() );
+
         Internal::Buffer path;
         git_config* cfg = NULL;
 
         result = git_config_find_global( path );
-        if ( result )
-        {
-            result = git_config_open_ondisk( &cfg, path );
-        }
+        GW_CHECK_RESULT( result, Config() );
 
-        return result ? PrivatePtr(new Private(cfg)) : Config();
+        result = git_config_open_ondisk( &cfg, path );
+        GW_CHECK_RESULT( result, Config() );
+
+        return PrivatePtr(new Private(cfg));
     }
 
     Config Config::file( const QString& fileName )
@@ -129,13 +127,11 @@ namespace Git
 
     Config Config::file( Result& result, const QString& fileName )
     {
+        GW_CHECK_RESULT( result, Config() );
         git_config* cfg = NULL;
 
         result = git_config_open_ondisk( &cfg, fileName.toLocal8Bit().constData() );
-        if( !result )
-        {
-            return Config();
-        }
+        GW_CHECK_RESULT( result, Config() );
 
         return PrivatePtr(new Private(cfg));
     }
@@ -148,13 +144,11 @@ namespace Git
 
     Config Config::create(Result& result)
     {
+        GW_CHECK_RESULT( result, Config() );
+
         git_config* cfg = NULL;
         result = git_config_new( &cfg );
-
-        if( !result )
-        {
-            return Config();
-        }
+        GW_CHECK_RESULT( result, Config() );
 
         return PrivatePtr(new Private(cfg));
     }
@@ -198,6 +192,8 @@ namespace Git
         GW_CD(Config);
         ConfigValues values;
         result = git_config_foreach( d->mCfg, &read_config_cb, (void*) &values );
+        GW_CHECK_RESULT( result, ConfigValues() );
+
         return values;
     }
 

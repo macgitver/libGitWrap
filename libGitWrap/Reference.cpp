@@ -93,7 +93,7 @@ namespace Git
         {
             // don't check r here! it will be correctly set.
 
-            if (wasDeleted) {
+            if ( wasDeleted ) {
                 r.setError("Tried to access a destroyed reference.", GIT_EUSER);
                 return false;
             }
