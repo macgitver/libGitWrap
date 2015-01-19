@@ -41,12 +41,6 @@ namespace Git
 
     GW_PRIVATE_IMPL(Config, Base)
 
-    QString Config::globalFilePath()
-    {
-        Result r;
-        return globalFilePath( r );
-    }
-
     QString Config::globalFilePath(Result &result)
     {
         GW_CHECK_RESULT( result, QString() );
@@ -58,12 +52,6 @@ namespace Git
         return path.toString();
     }
 
-    QString Config::userFilePath()
-    {
-        Result r;
-        return userFilePath( r );
-    }
-
     QString Config::userFilePath( Result& result)
     {
         GW_CHECK_RESULT( result, QString() );
@@ -73,12 +61,6 @@ namespace Git
         GW_CHECK_RESULT( result, QString() );
 
         return path.toString();
-    }
-
-    Config Config::global()
-    {
-        Result r;
-        return global( r );
     }
 
     Config Config::global(Result &result)
@@ -97,12 +79,6 @@ namespace Git
         return PrivatePtr(new Private(cfg));
     }
 
-    Config Config::user()
-    {
-        Result r;
-        return user(r);
-    }
-
     Config Config::user(Result &result)
     {
         GW_CHECK_RESULT( result, Config() );
@@ -119,12 +95,6 @@ namespace Git
         return PrivatePtr(new Private(cfg));
     }
 
-    Config Config::file( const QString& fileName )
-    {
-        Result r;
-        return file( r, fileName );
-    }
-
     Config Config::file( Result& result, const QString& fileName )
     {
         GW_CHECK_RESULT( result, Config() );
@@ -136,12 +106,6 @@ namespace Git
         return PrivatePtr(new Private(cfg));
     }
 
-    Config Config::create()
-    {
-        Result r;
-        return create( r );
-    }
-
     Config Config::create(Result& result)
     {
         GW_CHECK_RESULT( result, Config() );
@@ -151,12 +115,6 @@ namespace Git
         GW_CHECK_RESULT( result, Config() );
 
         return PrivatePtr(new Private(cfg));
-    }
-
-    bool Config::addFile(const QString& fileName, int priority)
-    {
-        Result r;
-        return addFile( r, fileName, priority );
     }
 
     bool Config::addFile(Result& result, const QString& fileName, int priority)
@@ -179,12 +137,6 @@ namespace Git
         cv->insert( GW_StringToQt( entry->name ),
                     GW_StringToQt( entry->value ) );
         return 0;
-    }
-
-    ConfigValues Config::values() const
-    {
-        Result r;
-        return values( r );
     }
 
     ConfigValues Config::values(Result &result) const
