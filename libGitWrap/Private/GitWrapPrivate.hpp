@@ -399,10 +399,11 @@ namespace Git
 // -- pimpl helper macro definitions ->8
 
 #define GW__CHECK(returns, result) \
-    if (!Private::isValid(result, d)) { return returns; }
+    if (!Internal::BasePrivate::isValid(result, d)) { return returns; }
 
 #define GW__EX_CHECK(returns, result) \
-    if (!Private::isValid(result, d.constData())) { return returns; }
+    if (!Internal::BasePrivate::isValid(result, d.constData())) { return returns; }
+
 
 #define GW_D(CLASS) \
     Private* d = static_cast<Private*>(mData.data()); \
