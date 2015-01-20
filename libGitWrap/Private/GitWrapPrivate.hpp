@@ -419,6 +419,11 @@ namespace Git
 #define GW_CD_EX(CLASS) \
     const CLASS::PrivatePtr d(static_cast<CLASS::Private*>(mData.data()))
 
+
+#define GW_CD_CHECKED(CLASS, returns, result) \
+    GW_CD(CLASS); \
+    GW__CHECK(returns, result)
+
 #define GW_CD_EX_CHECKED(CLASS, returns, result) \
     GW_CD_EX(CLASS); \
     GW__EX_CHECK(returns, result)
@@ -430,9 +435,5 @@ namespace Git
 #define GW_D_EX_CHECKED(CLASS, returns, result) \
     GW_D_EX(CLASS); \
     GW__EX_CHECK(returns, result)
-
-#define GW_CD_CHECKED(CLASS, returns, result) \
-    GW_CD(CLASS); \
-    GW__CHECK(returns, result)
 
 #endif
