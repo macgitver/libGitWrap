@@ -38,7 +38,7 @@ TempRepo::~TempRepo()
 TempRepoOpener::TempRepoOpener(Fixture* fixture, const char* name, Git::Result& r)
     : mTempRepo(fixture, name)
 {
-    mRepo = Git::Repository::open(mTempRepo, r);
+    mRepo = Git::Repository::open( r, mTempRepo );
 }
 
 TempRepoOpener::~TempRepoOpener()
