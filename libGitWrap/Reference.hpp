@@ -59,10 +59,6 @@ namespace Git
 
         RefName nameAnalyzer() const;
 
-        GW_DEPRECATED ReferenceTypes type(Result& result) const   { return type(); }
-        GW_DEPRECATED ObjectId objectId(Result& result) const     { return objectId(); }
-        GW_DEPRECATED QString target(Result& result) const        { return target(); }
-
         ReferenceTypes type() const;
         ObjectId objectId() const;
         QString target() const;
@@ -105,6 +101,28 @@ namespace Git
     public:
         operator ParentProviderPtr() const;
         operator TreeProviderPtr() const;
+
+    public:
+       // -- DEPRECATED FUNCTIONS BEGIN --8>
+       /**
+        * @brief        Deprecated: Reference::type
+        * @deprecated   Use @ref Reference::type() instead.
+        */
+       GW_DEPRECATED inline ReferenceTypes type(Result& result) const   { return type(); }
+
+       /**
+        * @brief        Deprecated: Reference::objectId
+        * @deprecated   Use @ref Reference::objectId() instead.
+        */
+       GW_DEPRECATED inline ObjectId objectId(Result& result) const     { return objectId(); }
+
+       /**
+        * @brief        Deprecated: Reference::target
+        * @deprecated   Use @ref Reference::target() instead.
+        */
+       GW_DEPRECATED inline QString target(Result& result) const        { return target(); }
+
+       // <8-- DEPRECATED FUNCTIONS END --
     };
 
     template< class T >
