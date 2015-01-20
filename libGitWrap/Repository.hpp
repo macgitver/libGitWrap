@@ -183,7 +183,7 @@ namespace Git
 
         /**
          * @brief           Deprecated: Repository::open
-         * @deprecated      Use @ref Repository::create(Result& result, const QString& startPath, bool acrossFs, const QStringList& ceilingDirs) instead.
+         * @deprecated      Use @ref Repository::open(Result& result, const QString& startPath, bool acrossFs, const QStringList& ceilingDirs) instead.
          */
         GW_DEPRECATED
         static Repository open(const QString &path, Result &result)

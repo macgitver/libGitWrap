@@ -63,7 +63,7 @@ namespace Git
         static Config create( Result &result );
 
     public:
-        // -- DEPRECATED FUNCTION BEGIN --8>
+        // -- DEPRECATED FUNCTIONS BEGIN --8>
 
         /**
          * @brief Deprecated: Config::addFile

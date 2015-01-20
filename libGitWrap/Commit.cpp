@@ -299,42 +299,16 @@ namespace Git
         return result && id() == commit.id();
     }
 
-    Signature Commit::author( Result& result ) const
-    {
-        return author();
-    }
-
-    Signature Commit::committer( Result& result ) const
-    {
-        return committer();
-    }
-
-    QString Commit::message( Result& result ) const
-    {
-        return message();
-    }
-
-    QString Commit::shortMessage( Result& result ) const
-    {
-        return shortMessage();
-    }
-
     Signature Commit::author() const
     {
         GW_CD(Commit);
-        if (!d) {
-            return Signature();
-        }
-        return Internal::git2Signature(git_commit_author(d->o()));
+        return d ? Internal::git2Signature( git_commit_author(d->o()) ) : Signature();
     }
 
     Signature Commit::committer() const
     {
         GW_CD(Commit);
-        if (!d) {
-            return Signature();
-        }
-        return Internal::git2Signature(git_commit_committer(d->o()));
+        return d ? Internal::git2Signature( git_commit_committer(d->o()) ) : Signature();
     }
 
     QString Commit::message() const
