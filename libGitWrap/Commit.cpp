@@ -183,7 +183,6 @@ namespace Git
 
     Tree Commit::tree( Result& result ) const
     {
-        GW_CHECK_RESULT( result, Tree() );
         GW_CD_CHECKED(Commit, Tree(), result);
         git_tree* tree = NULL;
 
@@ -195,14 +194,12 @@ namespace Git
 
     ObjectId Commit::treeId( Result& result ) const
     {
-        GW_CHECK_RESULT( result, ObjectId() );
         GW_CD_CHECKED(Commit, ObjectId(), result);
         return Private::oid2sha(git_commit_tree_id(d->o()));
     }
 
     ObjectIdList Commit::parentCommitIds( Result& result ) const
     {
-        GW_CHECK_RESULT( result, ObjectIdList() );
         GW_CD_CHECKED(Commit, ObjectIdList(), result);
 
         const git_commit* commit = d->o();
@@ -216,7 +213,6 @@ namespace Git
 
     Commit Commit::parentCommit(Result& result, unsigned int index) const
     {
-        GW_CHECK_RESULT( result, Commit() );
         GW_CD_CHECKED(Commit, Commit(), result);
         git_commit* gitparent = NULL;
 
@@ -230,7 +226,6 @@ namespace Git
 
     ObjectId Commit::parentCommitId(Result& result, unsigned int index) const
     {
-        GW_CHECK_RESULT( result, ObjectId() );
         GW_CD_CHECKED(Commit, ObjectId(), result)
 
         if(numParentCommits() > index) {
@@ -245,7 +240,6 @@ namespace Git
 
     CommitList Commit::parentCommits( Result& result ) const
     {
-        GW_CHECK_RESULT( result, CommitList() );
         GW_CD_CHECKED(Commit, CommitList(), result)
         CommitList objs;
 
@@ -379,7 +373,6 @@ namespace Git
 
     DiffList Commit::diffFromParent(Result& result, unsigned int index)
     {
-        GW_CHECK_RESULT( result, DiffList() );
         GW_CD_CHECKED(Commit, DiffList(), result)
 
         Commit parentObjCommit = parentCommit( result, index );
@@ -390,7 +383,6 @@ namespace Git
 
     DiffList Commit::diffFromAllParents( Result& result )
     {
-        GW_CHECK_RESULT( result, DiffList() );
         GW_CD_CHECKED(Commit, DiffList(), result)
 
         if (numParentCommits() == 0) {
