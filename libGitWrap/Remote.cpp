@@ -159,16 +159,6 @@ namespace Git
         return result;
     }
 
-    bool Remote::isValidUrl( const QString& url )
-    {
-        return isSupportedUrl( url );
-    }
-
-    bool Remote::isSupportedUrl( const QString& url )
-    {
-        return true;
-    }
-
     bool Remote::connect(Result& result, bool forFetch)
     {
         GW_D_CHECKED(Remote, false, result);
