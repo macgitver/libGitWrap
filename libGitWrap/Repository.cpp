@@ -294,7 +294,6 @@ namespace Git
      */
     Index Repository::index( Result& result )
     {
-        GW_CHECK_RESULT( result, Index() );
         GW_D_CHECKED(Repository, Index(), result);
 
         if( isBare() ) {
@@ -330,7 +329,6 @@ namespace Git
      */
     Git::StatusFlags Repository::status(Result &result, const QString &fileName) const
     {
-        GW_CHECK_RESULT( result, FileInvalidStatus );
         GW_CD_CHECKED(Repository, FileInvalidStatus, result);
 
         unsigned int status = GIT_STATUS_CURRENT;
@@ -342,7 +340,6 @@ namespace Git
 
     StatusHash Repository::status(Result &result) const
     {
-        GW_CHECK_RESULT( result, StatusHash() );
         GW_CD_CHECKED(Repository, StatusHash(), result);
 
         git_status_options opt = GIT_STATUS_OPTIONS_INIT;
@@ -369,7 +366,6 @@ namespace Git
      */
     QStringList Repository::allReferenceNames( Result& result )
     {
-        GW_CHECK_RESULT( result, QStringList() );
         GW_D_CHECKED(Repository, QStringList(), result);
 
         git_strarray arr;
@@ -381,7 +377,6 @@ namespace Git
 
     ReferenceList Repository::allReferences(Result &result)
     {
-        GW_CHECK_RESULT( result, ReferenceList() );
         GW_D_CHECKED(Repository, ReferenceList(), result);
 
         Internal::cb_append_reference_data data = { d };
@@ -427,7 +422,6 @@ namespace Git
 
     ResolvedRefs Repository::allResolvedRefs( Result& result )
     {
-        GW_CHECK_RESULT( result, ResolvedRefs() );
         GW_CD_CHECKED(Repository, ResolvedRefs(), result);
 
         Internal::cb_enum_resolvedrefs_data data;
@@ -464,7 +458,6 @@ namespace Git
 
     QStringList Repository::branchNames(Result& result, bool local, bool remote)
     {
-        GW_CHECK_RESULT( result, QStringList() );
         GW_CD_CHECKED(Repository, QStringList(), result);
 
         QStringList sl;
@@ -508,7 +501,6 @@ namespace Git
 
     bool Repository::renameBranch(Result& result, const QString& oldName, const QString& newName, bool force)
     {
-        GW_CHECK_RESULT( result, false );
         GW_CD_CHECKED(Repository, false, result);
 
         git_reference* ref = NULL;
@@ -542,7 +534,6 @@ namespace Git
 
     QStringList Repository::allTagNames( Result& result )
     {
-        GW_CHECK_RESULT( result, QStringList() );
         GW_CD_CHECKED(Repository, QStringList(), result);
 
         git_strarray arr;
@@ -608,7 +599,6 @@ namespace Git
 
     Reference Repository::HEAD( Result& result ) const
     {
-        GW_CHECK_RESULT( result, Reference() );
         GW_CD_EX_CHECKED(Repository, Reference(), result);
 
         git_reference* refHead = NULL;
@@ -634,7 +624,6 @@ namespace Git
 
     Object Repository::lookup( Result& result, const ObjectId& id, ObjectType ot )
     {
-        GW_CHECK_RESULT( result, Object() );
         GW_D_EX_CHECKED(Repository, Object(), result);
 
         git_object* obj = NULL;
@@ -693,7 +682,6 @@ namespace Git
 
     bool Repository::shouldIgnore(Result& result, const QString& filePath) const
     {
-        GW_CHECK_RESULT( result, false );
         GW_CD_CHECKED(Repository, false, result);
 
         int ignore = 0;
@@ -717,7 +705,6 @@ namespace Git
      */
     Remote::List Repository::allRemotes(Result& result) const
     {
-        GW_CHECK_RESULT( result, Remote::List() );
         GW_CD_EX_CHECKED(Repository, Remote::List(), result);
 
         git_strarray arr;
@@ -752,7 +739,6 @@ namespace Git
      */
     QStringList Repository::allRemoteNames( Result& result ) const
     {
-        GW_CHECK_RESULT( result, QStringList() );
         GW_CD_CHECKED(Repository, QStringList(), result);
 
         Internal::StrArray arr;
@@ -775,7 +761,6 @@ namespace Git
      */
     Remote Repository::remote(Result& result, const QString& remoteName) const
     {
-        GW_CHECK_RESULT( result, Remote() );
         GW_CD_EX_CHECKED(Repository, Remote(), result);
 
         git_remote* remote = NULL;
@@ -812,7 +797,6 @@ namespace Git
 
     DiffList Repository::diffIndexToWorkingDir( Result& result )
     {
-        GW_CHECK_RESULT( result, DiffList() );
         GW_D_EX_CHECKED(Repository, DiffList(), result);
 
         git_diff* diff = NULL;
@@ -855,7 +839,6 @@ namespace Git
 
     Submodule::List Repository::submodules( Result& result )
     {
-        GW_CHECK_RESULT( result, Submodule::List() );
         GW_D_CHECKED(Repository, Submodule::List(), result);
         Internal::cb_enum_submodules_t data = { d };
 
@@ -867,7 +850,6 @@ namespace Git
 
     QStringList Repository::submoduleNames(Result& result) const
     {
-        GW_CHECK_RESULT( result, QStringList() );
         GW_CD_CHECKED(Repository, QStringList(), result);
 
         QStringList names;
@@ -880,7 +862,6 @@ namespace Git
 
     Submodule Repository::submodule(Result& result, const QString& name) const
     {
-        GW_CHECK_RESULT( result, Submodule() );
         GW_CD_EX_CHECKED(Repository, Submodule(), result);
 
         if (submoduleNames(result).contains(name)) {
@@ -910,7 +891,6 @@ namespace Git
      */
     bool Repository::detachHead(Result& result)
     {
-        GW_CHECK_RESULT( result, false );
         GW_D_CHECKED(Repository, false, result);
 
         result = git_repository_detach_head( d->mRepo, NULL, NULL );
@@ -930,7 +910,6 @@ namespace Git
      */
     void Repository::setHEAD(Result& result, const QString& branchName)
     {
-        GW_CHECK_RESULT( result, void() );
         GW_D_CHECKED(Repository, void(), result);
 
         result = git_repository_set_head( d->mRepo, GW_StringFromQt(branchName), NULL, NULL );
@@ -967,7 +946,6 @@ namespace Git
      */
     void Repository::setDetachedHEAD(Result& result, const ObjectId& sha)
     {
-        GW_CHECK_RESULT( result, void() );
         GW_D_CHECKED(Repository, void(), result);
 
         result = git_repository_set_head_detached( d->mRepo, Private::sha(sha), NULL, NULL);
@@ -1011,7 +989,6 @@ namespace Git
 
     Reference Repository::reference(Result& result, const QString& refName, bool dwim)
     {
-        GW_CHECK_RESULT( result, Reference() );
         GW_D_CHECKED(Repository, Reference(), result);
 
         //GW_D_EX_CHECKED(Repository, Reference(), result);

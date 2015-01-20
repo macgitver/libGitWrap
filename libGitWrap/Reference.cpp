@@ -304,7 +304,6 @@ namespace Git
 
     Reference Reference::resolved( Result& result ) const
     {
-        GW_CHECK_RESULT( result, Reference() );
         GW_CD_CHECKED(Reference, Reference(), result);
 
         git_reference* ref;
@@ -360,7 +359,6 @@ namespace Git
 
     Object Reference::peeled(Result& result, ObjectType ot) const
     {
-        GW_CHECK_RESULT( result, Object() );
         GW_CD_CHECKED(Reference, Object(), result);
 
         git_object* o = NULL;
@@ -382,7 +380,6 @@ namespace Git
      */
     void Reference::destroy(Result& result)
     {
-        GW_CHECK_RESULT( result, void() );
         GW_D_CHECKED(Reference, void(), result);
 
         result = git_reference_delete(d->reference);
@@ -400,7 +397,6 @@ namespace Git
 
     void Reference::move(Result &result, const Commit &target)
     {
-        GW_CHECK_RESULT( result, void() );
         GW_D_CHECKED(Reference, void(), result);
 
         ObjectId targetId = target.id();
@@ -421,7 +417,6 @@ namespace Git
 
     void Reference::rename(Result &result, const QString &newName, bool force)
     {
-        GW_CHECK_RESULT( result, void() );
         GW_D_CHECKED(Reference, void(), result);
 
         git_reference* newRef = NULL;
@@ -446,7 +441,6 @@ namespace Git
      */
     void Reference::setAsDetachedHEAD(Result& result) const
     {
-        GW_CHECK_RESULT( result, void() );
         GW_CD_CHECKED(Reference, void(), result);
 
         repository().setDetachedHEAD( result, peeled<Commit>(result).id() );
@@ -454,7 +448,6 @@ namespace Git
 
     void Reference::updateHEAD(Result &result) const
     {
-        GW_CHECK_RESULT( result, void() )
         GW_CD_CHECKED(Reference, void(), result);
 
         if (git_reference_is_branch(d->reference)) {
