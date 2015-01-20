@@ -62,68 +62,58 @@ namespace Git
 
     void RevisionWalker::reset( Result& result )
     {
-        GW_CHECK_RESULT( result, void() );
         GW_D_CHECKED(RevisionWalker, void(), result);
         git_revwalk_reset( d->mWalker );
     }
 
     void RevisionWalker::push(Result& result, const ObjectId& id)
     {
-        GW_CHECK_RESULT( result, void() );
         GW_D_CHECKED(RevisionWalker, void(), result);
         result = git_revwalk_push( d->mWalker, (const git_oid*) id.raw() );
     }
 
     void RevisionWalker::push(Result& result, const Reference& ref)
     {
-        GW_CHECK_RESULT( result, void() );
         pushRef(result, ref.name());
     }
 
     void RevisionWalker::pushRef(Result& result, const QString& name)
     {
-        GW_CHECK_RESULT( result, void() );
         GW_D_CHECKED(RevisionWalker, void(), result);
         result = git_revwalk_push_ref( d->mWalker, GW_StringFromQt(name) );
     }
 
     void RevisionWalker::pushHead( Result& result )
     {
-        GW_CHECK_RESULT( result, void() );
         GW_D_CHECKED(RevisionWalker, void(), result);
         result = git_revwalk_push_head( d->mWalker );
     }
 
     void RevisionWalker::hide( Result& result, const ObjectId& id )
     {
-        GW_CHECK_RESULT( result, void() );
         GW_D_CHECKED(RevisionWalker, void(), result);
         result = git_revwalk_hide( d->mWalker, (const git_oid*) id.raw() );
     }
 
     void RevisionWalker::hide(Result& result, const Reference& ref)
     {
-        GW_CHECK_RESULT( result, void() );
         hideRef(result, ref.name());
     }
 
     void RevisionWalker::hideRef(Result& result, const QString& name)
     {
-        GW_CHECK_RESULT( result, void() );
         GW_D_CHECKED(RevisionWalker, void(), result);
         result = git_revwalk_hide_ref( d->mWalker, GW_StringFromQt(name) );
     }
 
     void RevisionWalker::hideHead( Result& result )
     {
-        GW_CHECK_RESULT( result, void() );
         GW_D_CHECKED(RevisionWalker, void(), result);
         result = git_revwalk_hide_head( d->mWalker );
     }
 
     bool RevisionWalker::next(Result& result, ObjectId& oidNext)
     {
-        GW_CHECK_RESULT( result, false );
         GW_D_CHECKED(RevisionWalker, false, result);
 
         git_oid oid;
@@ -145,7 +135,6 @@ namespace Git
 
     ObjectIdList RevisionWalker::all( Result& result )
     {
-        GW_CHECK_RESULT( result, ObjectIdList() );
         GW_D_CHECKED(RevisionWalker, ObjectIdList(), result);
         ObjectIdList ids;
         ObjectId id;
@@ -162,7 +151,6 @@ namespace Git
 
     void RevisionWalker::setSorting(Result& result, bool topological, bool timed)
     {
-        GW_CHECK_RESULT( result, void() );
         GW_D_CHECKED(RevisionWalker, void(), result);
         git_revwalk_sorting( d->mWalker,
                              ( topological ? GIT_SORT_TOPOLOGICAL : 0 ) |

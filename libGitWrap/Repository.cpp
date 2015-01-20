@@ -991,7 +991,6 @@ namespace Git
     {
         GW_D_CHECKED(Repository, Reference(), result);
 
-        //GW_D_EX_CHECKED(Repository, Reference(), result);
         QString name = refName;
 
         git_reference* ref = NULL;
