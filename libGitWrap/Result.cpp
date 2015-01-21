@@ -25,6 +25,8 @@ namespace Git
      * @internal
      */
     Result::Result( int resultCode )
+        : mCode( 0 )
+        , mClass( 0 )
     {
         setError( resultCode );
     }
