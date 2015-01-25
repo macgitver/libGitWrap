@@ -54,8 +54,8 @@ namespace Git
 
     Repository RepoObject::repository() const
     {
-        GW_CD(RepoObject);
-        return d->repo();
+        GW_CD( RepoObject );
+        return d ? d->repo() : Repository();
     }
 
 }
