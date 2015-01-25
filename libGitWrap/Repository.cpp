@@ -873,7 +873,7 @@ namespace Git
 
     CommitOperation* Repository::commitOperation(Result& result, const QString& msg)
     {
-        return headBranch(result).commitOperation( index(result), msg );
+        return headBranch(result).commitOperation( result, index(result), msg );
     }
 
     /**

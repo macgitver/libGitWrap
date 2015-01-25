@@ -96,7 +96,7 @@ namespace Git
         void updateHEAD(Result &result) const;
 
     public:
-        virtual CommitOperation* commitOperation(const TreeProviderPtr treeProvider, const QString& msg);
+        virtual CommitOperation* commitOperation(Result& result, const TreeProviderPtr& treeProvider, const QString& msg) const;
 
     public:
         operator ParentProviderPtr() const;

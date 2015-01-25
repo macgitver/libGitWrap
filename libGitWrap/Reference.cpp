@@ -469,8 +469,9 @@ namespace Git
      *
      * @return a CommitOperation object.
      */
-    CommitOperation* Reference::commitOperation( const TreeProviderPtr treeProvider, const QString& msg )
+    CommitOperation* Reference::commitOperation(Result& result, const TreeProviderPtr& treeProvider, const QString& msg) const
     {
+        GW_CD_CHECKED( Reference, NULL, result );
         return new CommitOperation( *this, treeProvider, msg );
     }
 
@@ -535,7 +536,9 @@ namespace Git
         GW_CHECK_RESULT( result, ObjectIdList() );
 
         ObjectId oid = mRef.resolveToObjectId(result);
-        if (!result) return ObjectIdList();
+        if ( !result ) {
+            return ObjectIdList();
+        }
 
         return ObjectIdList() << oid;
     }
