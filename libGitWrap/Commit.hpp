@@ -72,11 +72,6 @@ namespace Git
         bool isChildOf( Result& result, const Git::Commit& parent ) const;
         bool isEqual( Result& result, const Git::Commit& commit ) const;
 
-        GW_DEPRECATED Signature author( Result& result ) const;
-        GW_DEPRECATED Signature committer( Result& result ) const;
-        GW_DEPRECATED QString message( Result& result ) const;
-        GW_DEPRECATED QString shortMessage( Result& result ) const;
-
         Signature author() const;
         Signature committer() const;
 
@@ -86,6 +81,47 @@ namespace Git
         DiffList diffFromParent( Result& result, unsigned int index );
         DiffList diffFromAllParents( Result& result );
 
+
+    public:
+        // -- DEPRECATED FUNCTIONS BEGIN --8>
+
+        /**
+         * @brief       Deprecated: Commit::author
+         * @deprecated  Use @ref Commit::author() instead.
+         */
+        GW_DEPRECATED inline Signature author( Result& result ) const
+        {
+            return author();
+        }
+
+        /**
+         * @brief       Deprecated: Commit::committer
+         * @deprecated  Use @ref Commit::committer() instead.
+         */
+        GW_DEPRECATED inline Signature committer( Result& result ) const
+        {
+            return committer();
+        }
+
+        /**
+         * @brief       Deprecated: Commit::message
+         * @deprecated  Use @ref Commit::message() instead.
+         */
+        GW_DEPRECATED inline QString message( Result& result ) const
+        {
+            return message();
+        }
+
+        /**
+         * @brief       Deprecated: Commit::shortMessage
+         * @deprecated  Use @ref Commit::shortMessage() instead.
+         */
+        GW_DEPRECATED inline QString shortMessage( Result& result ) const
+        {
+            return shortMessage();
+        }
+
+        // <8-- DEPRECATED FUNCTIONS END --
     };
 
     template<>

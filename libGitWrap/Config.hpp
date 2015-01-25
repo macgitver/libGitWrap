@@ -22,6 +22,12 @@
 
 #include "libGitWrap/Base.hpp"
 
+// -- DEPRECATED INCLUDES BEGIN --8>
+
+#include "libGitWrap/Result.hpp"
+
+// <8-- DEPRECATED INCLUDES END --
+
 namespace Git
 {
 
@@ -42,27 +48,104 @@ namespace Git
         GW_PRIVATE_DECL(Config, Base, public)
 
     public:
-        GW_DEPRECATED bool addFile( const QString& fileName, int priority );
         bool addFile( Result &result, const QString& fileName, int priority );
 
-        GW_DEPRECATED ConfigValues values() const;
         ConfigValues values( Result& result ) const;
 
     public:
-        GW_DEPRECATED static QString globalFilePath();
         static QString globalFilePath( Result& result );
-        GW_DEPRECATED static QString userFilePath();
         static QString userFilePath( Result& result );
 
-        GW_DEPRECATED static Config global();
         static Config global( Result &result );
-        GW_DEPRECATED static Config user();
         static Config user( Result &result );
-        GW_DEPRECATED static Config file( const QString& fileName );
         static Config file( Result& result, const QString& fileName );
 
-        GW_DEPRECATED static Config create();
         static Config create( Result &result );
+
+    public:
+        // -- DEPRECATED FUNCTIONS BEGIN --8>
+
+        /**
+         * @brief Deprecated: Config::addFile
+         * @deprecated Use @ref Config::addFile( Result &result, const QString& fileName, int priority ) instead.
+         */
+        GW_DEPRECATED inline bool addFile( const QString& fileName, int priority )
+        {
+            Result r;
+            return addFile( r, fileName, priority );
+        }
+
+        /**
+         * @brief Deprecated: Config::values
+         * @deprecated Use @ref Config::values( Result &result ) instead.
+         */
+        GW_DEPRECATED inline ConfigValues values() const
+        {
+            Result r;
+            return values( r );
+        }
+
+        /**
+         * @brief Deprecated: Config::globalFilePath
+         * @deprecated Use Config::globalFilePath( Result &result ) instead.
+         */
+        GW_DEPRECATED static QString globalFilePath()
+        {
+            Result r;
+            return globalFilePath( r );
+        }
+
+        /**
+         * @brief Deprecated: Config::userFilePath
+         * @deprecated Use Config::userFilePath( Result &result ) instead.
+         */
+        GW_DEPRECATED static QString userFilePath()
+        {
+            Result r;
+            return userFilePath( r );
+        }
+
+        /**
+         * @brief Deprecated: Config::global
+         * @deprecated Use Config::global( Result &result ) instead.
+         */
+        GW_DEPRECATED static Config global()
+        {
+            Result r;
+            return global( r );
+        }
+
+        /**
+         * @brief Deprecated: Config::user
+         * @deprecated Use Config::user( Result &result ) instead.
+         */
+        GW_DEPRECATED static Config user()
+        {
+            Result r;
+            return user(r);
+        }
+
+        /**
+         * @brief Deprecated: Config::file
+         * @deprecated Use Config::file( Result &result, const QString& fileName ) instead.
+         */
+        GW_DEPRECATED static Config file( const QString& fileName )
+        {
+            Result r;
+            return file( r, fileName );
+        }
+
+        /**
+         * @brief Deprecated: Config::create
+         * @deprecated Use Config::create( Result &result ) instead.
+         */
+        GW_DEPRECATED static Config create()
+        {
+            Result r;
+            return create( r );
+        }
+
+        // <8-- DEPRECATED FUNCTIONS END --
     };
 
 }

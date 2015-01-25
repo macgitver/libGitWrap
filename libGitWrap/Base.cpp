@@ -68,13 +68,13 @@ namespace Git
          *
          * @param[in]       d   The BasePrivate to check.
          *
-         * @return          `true`, if this object can be treated as vaild.
+         * @return          `true`, if this object can be treated as valid.
          *
          */
         bool BasePrivate::isValid(Result& r, const BasePrivate* d)
         {
-            if (Q_LIKELY(d)) {
-                return d->isValidObject(r);
+            if ( Q_LIKELY(d) ) {
+                return d->isValidObject( r );
             }
             r.setInvalidObject();
             return false;

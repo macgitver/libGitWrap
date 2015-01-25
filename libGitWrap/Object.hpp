@@ -21,6 +21,7 @@
 
 #include "libGitWrap/ObjectId.hpp"
 
+
 namespace Git
 {
 
@@ -50,8 +51,6 @@ namespace Git
          * @return the object's id (OID)
          */
         ObjectId id() const;
-
-        GW_DEPRECATED ObjectId id( Result& result ) const;
 
         /**
          * @brief Converts a generic object into a Git tree object.
@@ -117,20 +116,6 @@ namespace Git
          * @return true or false
          */
         bool isBlob() const;
-
-        GW_DEPRECATED bool isTree   (Result& result) const { return isTree();   }
-        GW_DEPRECATED bool isTag    (Result& result) const { return isTag();    }
-        GW_DEPRECATED bool isCommit (Result& result) const { return isCommit(); }
-        GW_DEPRECATED bool isBlob   (Result& result) const { return isBlob();   }
-
-        GW_DEPRECATED Tree   asTree  (Result& result) const;
-        GW_DEPRECATED Commit asCommit(Result& result) const;
-        GW_DEPRECATED Blob   asBlob  (Result& result) const;
-        GW_DEPRECATED Tag    asTag   (Result& result) const;
-
-        template< class T >
-        GW_DEPRECATED T as(Result& result) const { return as<T>(); }
-
     };
 
 }

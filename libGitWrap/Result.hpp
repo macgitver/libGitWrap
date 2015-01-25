@@ -71,6 +71,7 @@ namespace Git
      */
     inline Result::Result()
         : mCode( 0 )
+        , mClass( 0 )
     {
     }
 

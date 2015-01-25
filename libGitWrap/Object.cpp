@@ -80,11 +80,6 @@ namespace Git
         }
     }
 
-    ObjectId Object::id(Result& result) const
-    {
-        return id();
-    }
-
     ObjectId Object::id() const
     {
         GW_CD(Object);
@@ -159,10 +154,5 @@ namespace Git
         GW_CD(Object);
         return d && d->objectType() == otBlob;
     }
-
-    Tree   Object::asTree  (Result& result) const { return asTree();   }
-    Commit Object::asCommit(Result& result) const { return asCommit(); }
-    Blob   Object::asBlob  (Result& result) const { return asBlob();   }
-    Tag    Object::asTag   (Result& result) const { return asTag();    }
 
 }

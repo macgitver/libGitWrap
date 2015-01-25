@@ -25,6 +25,8 @@ namespace Git
      * @internal
      */
     Result::Result( int resultCode )
+        : mCode( 0 )
+        , mClass( 0 )
     {
         setError( resultCode );
     }
@@ -34,6 +36,12 @@ namespace Git
      */
     void Result::setInvalidObject()
     {
+        if ( mCode )
+        {
+            // result is already set
+            return;
+        }
+
         mCode = -255;
         mClass = -1;
         mText = QLatin1String( "An invalid GitWrap object was used." );
@@ -48,6 +56,12 @@ namespace Git
      */
     void Result::setError( int resultCode )
     {
+        if ( mCode )
+        {
+            // result is already set
+            return;
+        }
+
         mCode = resultCode;
         if( mCode < 0 )
         {
@@ -79,6 +93,12 @@ namespace Git
      */
     void Result::setError(const char* szErrorText, int code)
     {
+        if ( mCode )
+        {
+            // result is already set
+            return;
+        }
+
         mClass = -1;
         mCode = code;
         mText = GW_StringToQt(szErrorText);

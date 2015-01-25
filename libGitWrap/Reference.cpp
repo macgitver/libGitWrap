@@ -91,8 +91,10 @@ namespace Git
 
         bool ReferencePrivate::isValidObject(Result &r) const
         {
-            if (wasDeleted) {
-                r.setError("Tried to access a destroyed reference.", GIT_ERROR);
+            // don't check r here! it will be correctly set.
+
+            if ( wasDeleted ) {
+                r.setError("Tried to access a destroyed reference.", GIT_EUSER);
                 return false;
             }
             return r;
@@ -195,6 +197,7 @@ namespace Git
     Reference Reference::create(Result& result, const Repository &repo,
                                 const QString& name, const Commit& commit)
     {
+        GW_CHECK_RESULT( result, Reference() );
         if ( !commit.isValid() ) {
             result.setInvalidObject();
             return Reference();
@@ -259,6 +262,7 @@ namespace Git
     {
         GW_CD(Reference);
         if (!d || d->wasDeleted) {
+            GitWrap::lastResult().setInvalidObject();
             return ReferenceInvalid;
         }
 
@@ -304,9 +308,7 @@ namespace Git
 
         git_reference* ref;
         result = git_reference_resolve(&ref, d->reference);
-        if (!result) {
-            return Reference();
-        }
+        GW_CHECK_RESULT( result, Reference() );
 
         return PrivatePtr(new Private(d->repo(), ref));
     }
@@ -314,9 +316,7 @@ namespace Git
     ObjectId Reference::resolveToObjectId( Result& result ) const
     {
         Reference resolvedRef = resolved(result);
-        if (!result) {
-            return ObjectId();
-        }
+        GW_CHECK_RESULT( result, ObjectId() );
 
         return resolvedRef.objectId();
     }
@@ -441,7 +441,6 @@ namespace Git
      */
     void Reference::setAsDetachedHEAD(Result& result) const
     {
-        GW_CHECK_RESULT( result, void() );
         GW_CD_CHECKED(Reference, void(), result);
 
         repository().setDetachedHEAD( result, peeled<Commit>(result).id() );
@@ -533,6 +532,8 @@ namespace Git
 
     ObjectIdList ReferenceParentProvider::parents(Result& result) const
     {
+        GW_CHECK_RESULT( result, ObjectIdList() );
+
         ObjectId oid = mRef.resolveToObjectId(result);
         if (!result) return ObjectIdList();
 

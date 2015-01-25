@@ -41,135 +41,87 @@ namespace Git
 
     GW_PRIVATE_IMPL(Config, Base)
 
-    QString Config::globalFilePath()
-    {
-        Result r;
-        return globalFilePath( r );
-    }
-
     QString Config::globalFilePath(Result &result)
     {
-        QString filePath;
+        GW_CHECK_RESULT( result, QString() );
+
         Internal::Buffer path;
-
         result = git_config_find_system( path );
-        if( result )
-        {
-            filePath = path.toString();
-        }
+        GW_CHECK_RESULT( result, QString() );
 
-        return filePath;
-    }
-
-    QString Config::userFilePath()
-    {
-        Result r;
-        return userFilePath( r );
+        return path.toString();
     }
 
     QString Config::userFilePath( Result& result)
     {
-        QString filePath;
+        GW_CHECK_RESULT( result, QString() );
+
         Internal::Buffer path;
-
         result = git_config_find_global( path );
-        if( result )
-        {
-            filePath = path.toString();
-        }
+        GW_CHECK_RESULT( result, QString() );
 
-        return filePath;
-    }
-
-    Config Config::global()
-    {
-        Result r;
-        return global( r );
+        return path.toString();
     }
 
     Config Config::global(Result &result)
     {
+        GW_CHECK_RESULT( result, Config() );
+
         Internal::Buffer path;
         git_config* cfg = NULL;
 
         result = git_config_find_system( path );
-        if( result )
-        {
-            result = git_config_open_ondisk( &cfg, path );
-        }
+        GW_CHECK_RESULT( result, Config() );
 
-        return result ? PrivatePtr(new Private(cfg)) : Config();
-    }
+        result = git_config_open_ondisk( &cfg, path );
+        GW_CHECK_RESULT( result, Config() );
 
-    Config Config::user()
-    {
-        Result r;
-        return user(r);
+        return PrivatePtr(new Private(cfg));
     }
 
     Config Config::user(Result &result)
     {
+        GW_CHECK_RESULT( result, Config() );
+
         Internal::Buffer path;
         git_config* cfg = NULL;
 
         result = git_config_find_global( path );
-        if ( result )
-        {
-            result = git_config_open_ondisk( &cfg, path );
-        }
+        GW_CHECK_RESULT( result, Config() );
 
-        return result ? PrivatePtr(new Private(cfg)) : Config();
-    }
+        result = git_config_open_ondisk( &cfg, path );
+        GW_CHECK_RESULT( result, Config() );
 
-    Config Config::file( const QString& fileName )
-    {
-        Result r;
-        return file( r, fileName );
+        return PrivatePtr(new Private(cfg));
     }
 
     Config Config::file( Result& result, const QString& fileName )
     {
+        GW_CHECK_RESULT( result, Config() );
         git_config* cfg = NULL;
 
         result = git_config_open_ondisk( &cfg, fileName.toLocal8Bit().constData() );
-        if( !result )
-        {
-            return Config();
-        }
+        GW_CHECK_RESULT( result, Config() );
 
         return PrivatePtr(new Private(cfg));
-    }
-
-    Config Config::create()
-    {
-        Result r;
-        return create( r );
     }
 
     Config Config::create(Result& result)
     {
+        GW_CHECK_RESULT( result, Config() );
+
         git_config* cfg = NULL;
         result = git_config_new( &cfg );
-
-        if( !result )
-        {
-            return Config();
-        }
+        GW_CHECK_RESULT( result, Config() );
 
         return PrivatePtr(new Private(cfg));
     }
 
-    bool Config::addFile(const QString& fileName, int priority)
-    {
-        Result r;
-        return addFile( r, fileName, priority );
-    }
-
     bool Config::addFile(Result& result, const QString& fileName, int priority)
     {
-        GW_D(Config);
+        GW_D_CHECKED( Config, false, result );
 
-        if( !d || fileName.isEmpty() )
+        if( fileName.isEmpty() )
         {
             return false;
         }
@@ -187,17 +139,14 @@ namespace Git
         return 0;
     }
 
-    ConfigValues Config::values() const
-    {
-        Result r;
-        return values( r );
-    }
-
     ConfigValues Config::values(Result &result) const
     {
-        GW_CD(Config);
+        GW_CD_CHECKED( Config, ConfigValues(), result );
+
         ConfigValues values;
         result = git_config_foreach( d->mCfg, &read_config_cb, (void*) &values );
+        GW_CHECK_RESULT( result, ConfigValues() );
+
         return values;
     }
 

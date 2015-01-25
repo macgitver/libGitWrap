@@ -62,13 +62,27 @@ namespace Git
         QVector<RefSpec> fetchSpecs() const;
         QVector<RefSpec> pushSpecs() const;
 
-        GW_DEPRECATED static bool isValidUrl(const QString& url);
-        GW_DEPRECATED static bool isSupportedUrl(const QString& url);
-
         bool connect(Result& result, bool forFetch);
         void disconnect(Result& result);
         bool download(Result& result, const QStringList &refspecs = QStringList());
         bool updateTips(Result& result);
+
+    public:
+        // -- DEPRECATED FUNCTIONS BEGIN --8>
+
+        /**
+         * @brief       Deprecated: Remote::isValidUrl
+         * @deprecated  Obsolete method. Always returns true.
+         */
+        GW_DEPRECATED static bool isValidUrl(const QString& url) { return true; }
+
+        /**
+         * @brief       Deprecated: Remote::isSupportedUrl()
+         * @deprecated  Obsolete method. Always returns true.
+         */
+        GW_DEPRECATED static bool isSupportedUrl(const QString& url) { return true; }
+
+        // <8-- DEPRECATED FUNcTIONS END --
     };
 
 }

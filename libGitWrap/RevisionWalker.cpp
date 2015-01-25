@@ -44,11 +44,10 @@ namespace Git
 
     RevisionWalker RevisionWalker::create(Result& result, const Repository& repository)
     {
-        if (!result) {
-            return RevisionWalker();
-        }
+        GW_CHECK_RESULT( result, RevisionWalker() );
 
         if (!repository) {
+            result.setInvalidObject();
             return RevisionWalker();
         }
 
@@ -56,10 +55,7 @@ namespace Git
         git_revwalk* walker = NULL;
 
         result = git_revwalk_new(&walker, rp->mRepo);
-
-        if (!result) {
-            return RevisionWalker();
-        }
+        GW_CHECK_RESULT( result, RevisionWalker() );
 
         return new RevisionWalker::Private(rp, walker);
     }
@@ -126,6 +122,7 @@ namespace Git
         {
             return false;
         }
+
         if( !tmp )
         {
             result = tmp;

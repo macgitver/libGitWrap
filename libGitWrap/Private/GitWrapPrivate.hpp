@@ -399,10 +399,11 @@ namespace Git
 // -- pimpl helper macro definitions ->8
 
 #define GW__CHECK(returns, result) \
-    if (!Private::isValid(result, d)) { result.setInvalidObject(); return returns; }
+    if (!Internal::BasePrivate::isValid(result, d)) { return returns; }
 
 #define GW__EX_CHECK(returns, result) \
-    if (!Private::isValid(result, d.constData())) { result.setInvalidObject(); return returns; }
+    if (!Internal::BasePrivate::isValid(result, d.constData())) { return returns; }
+
 
 #define GW_D(CLASS) \
     Private* d = static_cast<Private*>(mData.data()); \
@@ -418,6 +419,11 @@ namespace Git
 #define GW_CD_EX(CLASS) \
     const CLASS::PrivatePtr d(static_cast<CLASS::Private*>(mData.data()))
 
+
+#define GW_CD_CHECKED(CLASS, returns, result) \
+    GW_CD(CLASS); \
+    GW__CHECK(returns, result)
+
 #define GW_CD_EX_CHECKED(CLASS, returns, result) \
     GW_CD_EX(CLASS); \
     GW__EX_CHECK(returns, result)
@@ -429,9 +435,5 @@ namespace Git
 #define GW_D_EX_CHECKED(CLASS, returns, result) \
     GW_D_EX(CLASS); \
     GW__EX_CHECK(returns, result)
-
-#define GW_CD_CHECKED(CLASS, returns, result) \
-    GW_CD(CLASS); \
-    GW__CHECK(returns, result)
 
 #endif
