@@ -61,7 +61,7 @@ void myFunction()
     // Let the show begin!
     Git::Result r;
     Git::Repository repo = 
-        Git::Repository::open(Git::Repository::discover( repoSubPath, r ), r );
+        Git::Repository::open( r, Git::Repository::discover( r, repoSubPath ) );
 
     if ( !r )
     {
