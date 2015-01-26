@@ -66,19 +66,19 @@ void myFunction()
     if ( !r )
     {
         qCritical( "Unable to open repository at %s:\nGit error: %s",
-                       qPrintable(repoSubPath),
-                       qPrintable( r.errorText() ) );
-        // return;
-    }
+                   qPrintable(repoSubPath),
+                   qPrintable( r.errorText() ) );
 
-    // No need to re-initialize "r"! If you want to, write:
-    // r.clear();
+        return;
+    }
 
     QString activeBranch = repo.currentBranch( r );
     if ( !r )
     {
         qCritical( "Unable to lookup the active branch."
-                       "\nGit error: %s", qPrintable( r.errorText() ) );
+                   "\nGit error: %s", qPrintable( r.errorText() ) );
+
+        return;
     }
 
     // enjoy using GitWrap and go on coding
