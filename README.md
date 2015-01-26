@@ -25,11 +25,33 @@ git_reference_name()
 Git::Reference::name()
 ```
 
-## Exceptions? Go away! - Handling Errors
-Yeah, GitWrap doesn't throw a single exception! Instead we provide reliable error handling, that binds closely to libgit2's error system. Sounds complicated? It's pretty easy and you'll probably love it!
+## Handling Errors - Life without Exceptions!
+GitWrap doesn't throw a single exception! Instead we provide reliable error handling, that binds closely to libgit2's error system. Sounds complicated? It's pretty easy and you'll probably love it!
 
 Here's how to use it:
 
+```c++
+// The general calling convention is:
+Result r;
+
+Git::some-function( r, /* other parameters */ );
+
+if ( !r )
+{
+    // React to the failed result.
+    // For example, you can display the descriptive error text.
+    showError( r.errorText() );
+
+    // Usually you want to return here.
+    return;
+
+    // If you need to continue for whatever reason,
+    // the result must be cleared:
+    r.clear();
+}
+```
+
+Here is a more complex example:
 ```c++
 void myFunction()
 {
