@@ -105,7 +105,7 @@ namespace Git
             QVector<int> customMatches;
 
         public:
-            static ReferencePrivate* createRefObject(Repository::Private *repo,
+            static ReferencePrivate* createRefObject(Result& result, Repository::Private *repo,
                                                      const QString& name, git_reference* lgo);
 
         public:

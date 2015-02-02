@@ -409,13 +409,15 @@ namespace Git
          * express that state in the private object.
          *
          */
-        ReferencePrivate* RefNamePrivate::createRefObject(Repository::Private* repo,
+        ReferencePrivate* RefNamePrivate::createRefObject(Result& result, Repository::Private* repo,
                                                           const QString& name, git_reference* lgo)
         {
-            if (!lgo) {
-                if (git_reference_lookup(&lgo, repo->mRepo, GW_StringFromQt(name)) < 0) {
-                    return NULL;
-                }
+            GW_CHECK_RESULT( result, NULL );
+            Q_ASSERT( repo );
+
+            if ( !lgo ) {
+                result = git_reference_lookup(&lgo, repo->mRepo, GW_StringFromQt(name));
+                GW_CHECK_RESULT( result, NULL );
             }
 
             return RefNamePrivate(repo, name).cloned(lgo);

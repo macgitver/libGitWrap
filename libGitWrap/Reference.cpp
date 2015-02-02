@@ -172,7 +172,7 @@ namespace Git
                                        Private::sha(sha), false, NULL, NULL);
         GW_CHECK_RESULT( result, Reference() );
 
-        return Private::createRefObject( repop, name, ref );
+        return Private::createRefObject( result, repop, name, ref );
     }
 
 

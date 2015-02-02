@@ -98,18 +98,27 @@ namespace Git
 
         struct cb_append_reference_data
         {
-            RepositoryPrivate* ptr;
-            ReferenceList refs;
+            Result&             result;
+            RepositoryPrivate*  ptr;
+            ReferenceList       refs;
+
+            cb_append_reference_data( Result& _result, RepositoryPrivate* _ptr )
+                : result( _result )
+                , ptr( _ptr )
+            {
+            }
         };
 
         static int cb_append_reference( git_reference *reference, void *payload )
         {
-            cb_append_reference_data *data = (cb_append_reference_data *)payload;
+            cb_append_reference_data *data = static_cast< cb_append_reference_data* >( payload );
+            Q_ASSERT( data );
 
-            QString name = GW_StringToQt(git_reference_name(reference));
-            Reference::Private* ref = Reference::Private::createRefObject(
-                        data->ptr, name, reference);
-
+            Reference::Private* ref =
+                    Reference::Private::createRefObject( data->result, data->ptr,
+                                                         GW_StringToQt(git_reference_name(reference)),
+                                                         reference);
+            GW_CHECK_RESULT( data->result, data->result.errorCode() );
             data->refs.append(ref);
 
             return 0;
@@ -379,7 +388,7 @@ namespace Git
     {
         GW_D_CHECKED(Repository, ReferenceList(), result);
 
-        Internal::cb_append_reference_data data = { d };
+        Internal::cb_append_reference_data data( result, d );
         result = git_reference_foreach( d->mRepo,
                                         &Internal::cb_append_reference,
                                         &data );
@@ -1011,7 +1020,7 @@ namespace Git
             }
         }
 
-        return Reference::Private::createRefObject(d, name, ref);
+        return Reference::Private::createRefObject(result, d, name, ref);
     }
 
     BranchRef Repository::branchRef(Result& result, const QString& branchName)
