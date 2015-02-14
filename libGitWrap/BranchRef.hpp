@@ -38,6 +38,15 @@ namespace Git
 
     public:
         static BranchRef create(Result& result, const QString& name, const Commit& commit, bool force = false);
+
+    public:
+        QString upstreamName(Result& result) const;
+        Reference upstreamReference(Result& result) const;
+        Remote upstreamRemote(Result& result) const;
+        QString upstreamRemoteName(Result& result) const;
+
+        void setUpstream(Result& result, const QString& ref);
+        void setUpstream(Result& result, const Remote& remote);
     };
 
     template<>
