@@ -21,6 +21,8 @@
 #include <QStringBuilder>
 
 #include "libGitWrap/BranchRef.hpp"
+#include "libGitWrap/Repository.hpp"
+#include "libGitWrap/Private/RepositoryPrivate.hpp"
 #include "libGitWrap/Private/BranchRefPrivate.hpp"
 
 #include "Private/CommitPrivate.hpp"
@@ -158,6 +160,17 @@ namespace Git
 
         QString ref = remote.name() % QChar(L'/') % shorthand();
         result = git_branch_set_upstream(d->reference, GW_StringFromQt(ref));
+    }
+
+    void BranchRef::getAheadBehind(Result& result, size_t& ahead, size_t& behind) const
+    {
+        GW_CD_CHECKED_VOID(BranchRef, result);
+
+        Repository(d->repo()).calculateDivergence(
+                    result,
+                    objectId(),
+                    upstreamReference(result).objectId(),
+                    ahead, behind);
     }
 
 }

@@ -47,6 +47,8 @@ namespace Git
 
         void setUpstream(Result& result, const QString& ref);
         void setUpstream(Result& result, const Remote& remote);
+
+        void getAheadBehind(Result& result, size_t& ahead, size_t& behind) const;
     };
 
     template<>
