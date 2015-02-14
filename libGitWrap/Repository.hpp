@@ -22,17 +22,12 @@
 #include "libGitWrap/Object.hpp"
 
 
-// -- DEPRECATED INCLUDES BEGIN --8>
-
 #include "libGitWrap/Commit.hpp"
 #include "libGitWrap/Diff.hpp"
 #include "libGitWrap/DiffList.hpp"
 #include "libGitWrap/RevisionWalker.hpp"
 #include "libGitWrap/Reference.hpp"
 #include "libGitWrap/Tree.hpp"
-
-// <8-- DEPRECATED INCLUDES END --
-
 
 namespace Git
 {
@@ -157,8 +152,6 @@ namespace Git
         CommitOperation* commitOperation(Result& result, const QString& msg);
 
     public:
-        // -- DEPRECATED FUNCTIONS BEGIN --8>
-
         /**
          * @brief       Deprecated: Repository::diffIndexToWorkingDir
          * @deprecated  Use @ref Diff::indexToWorkDir(Result& result, const Repository& repo) instead.
@@ -208,80 +201,6 @@ namespace Git
         {
             return Diff( result ).treeToIndex( result, oldTree );
         }
-
-
-        /**
-         * @brief           Deprecated: Repository::create
-         * @deprecated      Use @ref Repository::create(Result& result, const QString& path, bool bare) instead.
-         */
-        GW_DEPRECATED
-        static Repository create(const QString& path, bool bare, Result& result)
-        {
-            return create( result, path, bare );
-        }
-
-        /**
-         * @brief           Deprecated: Repository::discover
-         * @deprecated      Use @ref Repository::create(Result& result, const QString& startPath, bool acrossFs, const QStringList& ceilingDirs) instead.
-         */
-        GW_DEPRECATED
-        static QString discover(const QString& startPath, bool acrossFs, const QStringList& ceilingDirs, Git::Result& result)
-        {
-            return discover(result, startPath, acrossFs, ceilingDirs);
-        }
-
-        /**
-         * @brief           Deprecated: Repository::open
-         * @deprecated      Use @ref Repository::open(Result& result, const QString& startPath, bool acrossFs, const QStringList& ceilingDirs) instead.
-         */
-        GW_DEPRECATED
-        static Repository open(const QString &path, Result &result)
-        {
-            return open( result, path );
-        }
-
-        /**
-         * @brief           Deprecated: Repository::newWalker
-         * @deprecated      Use @ref RevisionWalker::create() instead.
-         */
-        GW_DEPRECATED
-        inline RevisionWalker newWalker( Result& result )
-        {
-            return RevisionWalker::create(result, *this);
-        }
-
-        /**
-         * @brief           Deprecated: Repository::createRemote
-         * @deprecated      Use @ref Remote::create() instead.
-         */
-        GW_DEPRECATED
-        inline Remote createRemote(Result& result, const QString& remoteName, const QString& url,
-                                   const QString& fetchSpec)
-        {
-            return Remote::create(result, *this, remoteName, url, fetchSpec);
-        }
-
-        /**
-         * @brief           Deprecated: Repository::renameBranch
-         * @deprecated      Use @ref Repository::renameBranch(Result& result, const QString& oldName, const QString& newName, bool force) instead.
-         */
-        GW_DEPRECATED
-        inline bool renameBranch(const QString& oldName, const QString& newName, bool force, Git::Result& result)
-        {
-            return renameBranch( result, oldName, newName, force );
-        }
-
-        /**
-         * @brief           Deprecated: Repository::lookupRef
-         * @deprecated      Use @ref Repository::reference(Result& result, const QString& refName , bool dwim = false) instead.
-         */
-        GW_DEPRECATED
-        inline Reference lookupRef(Result& result, const QString& refName , bool dwim = false)
-        {
-            return reference( result, refName, dwim );
-        }
-
-        // -- DEPRECATED FUNCTIONS END --<8
     };
 
     template< class T >
