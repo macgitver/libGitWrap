@@ -214,9 +214,9 @@ namespace Git
         }
 
         RefNameMatches::RefNameMatches()
-            : reNamespaces(QLatin1String("^refs\\/namespaces\\/([^\\/]+)\\/(.+)$"))
-            , reRemote(QLatin1String("^refs\\/remotes\\/([^\\/]+)\\/(.+)$"))
-            , reScopes(QLatin1String("^([^\\/]+)\\/(.+)$"))
+            : reNamespaces(QStringLiteral("^refs\\/namespaces\\/([^\\/]+)\\/(.+)$"))
+            , reRemote(QStringLiteral("^refs\\/remotes\\/([^\\/]+)\\/(.+)$"))
+            , reScopes(QStringLiteral("^([^\\/]+)\\/(.+)$"))
             , nextId(0)
         {
         }
@@ -307,13 +307,13 @@ namespace Git
             isMergeHead = isCommitNote = isPecuiliar = false;
             customMatches.clear();
 
-            if (fqrn == QLatin1String("refs/stage")) {
+            if (fqrn == QStringLiteral("refs/stage")) {
                 isStage = true;
             }
-            else if (fqrn == QLatin1String("MERGE_HEAD")) {
+            else if (fqrn == QStringLiteral("MERGE_HEAD")) {
                 isMergeHead = true;
             }
-            else if (fqrn == QLatin1String("HEAD")) {
+            else if (fqrn == QStringLiteral("HEAD")) {
                 name = fqrn;
                 isHead = true;
             }
@@ -334,21 +334,21 @@ namespace Git
                     remote = reRem.cap(1);
                     match = reRem.cap(2);
 
-                    isHead = (match == QLatin1String("HEAD"));
+                    isHead = (match == QStringLiteral("HEAD"));
                     isBranch = !isHead;
 
                     scopeTest(match);
                 }
-                else if (match.startsWith(QLatin1String("refs/notes/"))) {
+                else if (match.startsWith(QStringLiteral("refs/notes/"))) {
                     isNote = true;
-                    isCommitNote = (match == QLatin1String("refs/notes/commit"));
+                    isCommitNote = (match == QStringLiteral("refs/notes/commit"));
                     scopeTest(match.mid(11));
                 }
-                else if (match.startsWith(QLatin1String("refs/heads/"))) {
+                else if (match.startsWith(QStringLiteral("refs/heads/"))) {
                     isBranch = true;
                     scopeTest(match.mid(11));
                 }
-                else if (match.startsWith(QLatin1String("refs/tags/"))) {
+                else if (match.startsWith(QStringLiteral("refs/tags/"))) {
                     isTag = true;
                     scopeTest(match.mid(10));
                 }
@@ -796,7 +796,7 @@ namespace Git
                 return remote();
             }
 
-            return QLatin1String("HEAD");
+            return QStringLiteral("HEAD");
         }
 
         if (isBranch() || isTag()) {
