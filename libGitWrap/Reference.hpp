@@ -52,6 +52,10 @@ namespace Git
                 const QString& name,
                 const Commit& commit);
 
+        static ObjectId nameToId( Result& result,
+                                  const Repository& repo,
+                                  const QString& name );
+
     public:
         QString name() const;
         QString prefix() const;

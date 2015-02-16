@@ -207,6 +207,33 @@ namespace Git
     }
 
     /**
+     * @brief           Resolves a reference name directly to the target OID.
+     *
+     * @param[in,out]   result  A Result object; see @ref GitWrapErrorHandling
+     *
+     * @param[in]       repo    the owner repository
+     *
+     * @param[in]       name    the reference name
+     *
+     * @return          The resolved OID on success; otherwise an invalid ObjectId.
+     */
+    ObjectId Reference::nameToId(Git::Result& result, const Git::Repository& repo, const QString& name)
+    {
+        GW_CHECK_RESULT( result, ObjectId() );
+
+        Repository::Private* rp = Base::Private::dataOf<Repository>( repo );
+        if ( !rp )
+        {
+            result.setInvalidObject();
+            return ObjectId();
+        }
+
+        git_oid out;
+        result = git_reference_name_to_id( &out, rp->mRepo, GW_StringFromQt(name) );
+        return ObjectId::fromRaw( out.id );
+    }
+
+    /**
      * @brief       This reference's name
      *
      * @return      Returns the reference name (fully qualified)
