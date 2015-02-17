@@ -156,7 +156,7 @@ namespace Git
 #endif
 
 
-//-- macro definitions -->8
+//-- public macro definitions --8>
 
 /**
   * @ingroup    GitWrap
@@ -166,5 +166,6 @@ namespace Git
   */
 #define GW_CHECK_RESULT(result, returns) \
     if (!(result)) { \
-    qDebug("Git returned error code (%d) \"%s\"", (result).errorCode(), qPrintable((result).errorText())); \
+    qDebug("File %s, line %d:\nGit returned error code (%d) \"%s\"", \
+    __FILE__, __LINE__, (result).errorCode(), qUtf8Printable((result).errorText())); \
     return (returns); }
