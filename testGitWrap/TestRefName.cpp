@@ -1,6 +1,6 @@
 /*
  * MacGitver
- * Copyright (C) 2012-2013 The MacGitver-Developers <dev@macgitver.org>
+ * Copyright (C) 2012-2015 The MacGitver-Developers <dev@macgitver.org>
  *
  * (C) Sascha Cunz <sascha@macgitver.org>
  * (C) Cunz RaD Ltd.
@@ -21,7 +21,7 @@
 
 #include "libGitWrap/RefName.hpp"
 
-TEST(RefName, Analyze) {
+TEST(RefName, AnalyzeLocalBranch) {
     const char* sz = "refs/heads/master";
     Git::RefName rn = Git::RefName(QLatin1String(sz));
     EXPECT_TRUE (rn.isValid());
@@ -37,6 +37,7 @@ TEST(RefName, Analyze) {
     EXPECT_FALSE(rn.isPeculiar());
     EXPECT_FALSE(rn.isStage());
     EXPECT_FALSE(rn.isCustom());
+    EXPECT_FALSE(rn.isRemote());
 
     EXPECT_EQ(0, rn.namespaces().count());
     EXPECT_EQ(0, rn.scopes().count());
@@ -65,6 +66,7 @@ TEST(RefName, Namespaces) {
     EXPECT_FALSE(rn.isPeculiar());
     EXPECT_FALSE(rn.isStage());
     EXPECT_FALSE(rn.isCustom());
+    EXPECT_FALSE(rn.isRemote());
 
     EXPECT_STREQ("master", qPrintable(rn.name()));
     EXPECT_STREQ("master", qPrintable(rn.branchName()));
@@ -74,6 +76,7 @@ TEST(RefName, Namespaces) {
     EXPECT_STREQ("", qPrintable(rn.shorthand()));
 
     ASSERT_EQ   (1, rn.namespaces().count());
+    EXPECT_STREQ("foo", qUtf8Printable(rn.namespaces()[0]));
     EXPECT_STREQ("foo", qPrintable(rn.namespaces()[0]));
     EXPECT_STREQ("foo", qPrintable(rn.namespaceName()));
 
@@ -96,6 +99,7 @@ TEST(RefName, NestedNamespaces) {
     EXPECT_FALSE(rn.isPeculiar());
     EXPECT_FALSE(rn.isStage());
     EXPECT_FALSE(rn.isCustom());
+    EXPECT_FALSE(rn.isRemote());
 
     EXPECT_STREQ("master", qPrintable(rn.name()));
     EXPECT_STREQ("master", qPrintable(rn.branchName()));
@@ -113,7 +117,7 @@ TEST(RefName, NestedNamespaces) {
 }
 
 
-TEST(RefName, ScopeBranch) {
+TEST(RefName, LocalScopedBranch) {
     const char* sz = "refs/heads/feature/cool";
     Git::RefName rn = Git::RefName(QLatin1String(sz));
     EXPECT_TRUE (rn.isValid());
@@ -129,6 +133,7 @@ TEST(RefName, ScopeBranch) {
     EXPECT_FALSE(rn.isPeculiar());
     EXPECT_FALSE(rn.isStage());
     EXPECT_FALSE(rn.isCustom());
+    EXPECT_FALSE(rn.isRemote());
 
     EXPECT_STREQ("cool", qPrintable(rn.name()));
     EXPECT_STREQ("feature/cool", qPrintable(rn.branchName()));
@@ -143,7 +148,7 @@ TEST(RefName, ScopeBranch) {
     EXPECT_STREQ("feature", qPrintable(rn.scopeName()));
 }
 
-TEST(RefName, NestedScopeBranch) {
+TEST(RefName, LocalNestedScopedBranch) {
     const char* sz = "refs/heads/feature/new/cool";
     Git::RefName rn = Git::RefName(QLatin1String(sz));
     EXPECT_TRUE (rn.isValid());
@@ -159,6 +164,7 @@ TEST(RefName, NestedScopeBranch) {
     EXPECT_FALSE(rn.isPeculiar());
     EXPECT_FALSE(rn.isStage());
     EXPECT_FALSE(rn.isCustom());
+    EXPECT_FALSE(rn.isRemote());
 
     EXPECT_STREQ("cool", qPrintable(rn.name()));
     EXPECT_STREQ("feature/new/cool", qPrintable(rn.branchName()));
@@ -190,6 +196,7 @@ TEST(RefName, ScopedTag) {
     EXPECT_FALSE(rn.isPeculiar());
     EXPECT_FALSE(rn.isStage());
     EXPECT_FALSE(rn.isCustom());
+    EXPECT_FALSE(rn.isRemote());
 
     EXPECT_STREQ("cool", qPrintable(rn.name()));
     EXPECT_STREQ("", qPrintable(rn.branchName()));
@@ -221,6 +228,7 @@ TEST(RefName, NestedScopedTag) {
     EXPECT_FALSE(rn.isPeculiar());
     EXPECT_FALSE(rn.isStage());
     EXPECT_FALSE(rn.isCustom());
+    EXPECT_FALSE(rn.isRemote());
 
     EXPECT_STREQ("cool", qPrintable(rn.name()));
     EXPECT_STREQ("", qPrintable(rn.branchName()));
@@ -254,6 +262,7 @@ TEST(RefName, Specials_Stage) {
     EXPECT_FALSE(rn.isPeculiar());
     EXPECT_TRUE (rn.isStage());
     EXPECT_FALSE(rn.isCustom());
+    EXPECT_FALSE(rn.isRemote());
 
     EXPECT_STREQ("", qPrintable(rn.name()));
     EXPECT_STREQ("", qPrintable(rn.branchName()));
@@ -274,7 +283,7 @@ TEST(RefName, Specials_Head) {
     Git::RefName rn = Git::RefName(QLatin1String(sz));
     EXPECT_TRUE (rn.isValid());
 
-    EXPECT_TRUE (rn.isBranch());
+    EXPECT_FALSE(rn.isBranch());
     EXPECT_TRUE (rn.isSpecial());
     EXPECT_FALSE(rn.isTag());
     EXPECT_FALSE(rn.isCommitNote());
@@ -285,6 +294,7 @@ TEST(RefName, Specials_Head) {
     EXPECT_FALSE(rn.isPeculiar());
     EXPECT_FALSE(rn.isStage());
     EXPECT_FALSE(rn.isCustom());
+    EXPECT_FALSE(rn.isRemote());
 
     EXPECT_STREQ("HEAD", qPrintable(rn.name()));
     EXPECT_STREQ("HEAD", qPrintable(rn.branchName()));
@@ -316,6 +326,7 @@ TEST(RefName, Specials_MergeHead) {
     EXPECT_FALSE(rn.isPeculiar());
     EXPECT_FALSE(rn.isStage());
     EXPECT_FALSE(rn.isCustom());
+    EXPECT_FALSE(rn.isRemote());
 
     EXPECT_STREQ("", qPrintable(rn.name()));
     EXPECT_STREQ("", qPrintable(rn.branchName()));
@@ -347,6 +358,7 @@ TEST(RefName, Specials_CommitNotes) {
     EXPECT_FALSE(rn.isPeculiar());
     EXPECT_FALSE(rn.isStage());
     EXPECT_FALSE(rn.isCustom());
+    EXPECT_FALSE(rn.isRemote());
 
     EXPECT_STREQ("commit", qPrintable(rn.name()));
     EXPECT_STREQ("", qPrintable(rn.branchName()));
@@ -379,6 +391,7 @@ TEST(RefName, Peculiars) {
     EXPECT_TRUE (rn.isPeculiar());
     EXPECT_FALSE(rn.isStage());
     EXPECT_FALSE(rn.isCustom());
+    EXPECT_FALSE(rn.isRemote());
 
     EXPECT_STREQ("", qPrintable(rn.name()));
     EXPECT_STREQ("", qPrintable(rn.branchName()));
@@ -410,6 +423,7 @@ TEST(RefName, RemoteBranch) {
     EXPECT_FALSE(rn.isPeculiar());
     EXPECT_FALSE(rn.isStage());
     EXPECT_FALSE(rn.isCustom());
+    EXPECT_TRUE (rn.isRemote());
 
     EXPECT_STREQ("branch", qPrintable(rn.name()));
     EXPECT_STREQ("new/branch", qPrintable(rn.branchName()));
@@ -431,7 +445,7 @@ TEST(RefName, RemoteHead) {
     Git::RefName rn = Git::RefName(QLatin1String(sz));
     EXPECT_TRUE (rn.isValid());
 
-    EXPECT_TRUE (rn.isBranch());
+    EXPECT_FALSE(rn.isBranch());
     EXPECT_TRUE (rn.isSpecial());
     EXPECT_FALSE(rn.isTag());
     EXPECT_FALSE(rn.isCommitNote());
@@ -442,6 +456,7 @@ TEST(RefName, RemoteHead) {
     EXPECT_FALSE(rn.isPeculiar());
     EXPECT_FALSE(rn.isStage());
     EXPECT_FALSE(rn.isCustom());
+    EXPECT_TRUE (rn.isRemote());
 
     EXPECT_STREQ("HEAD", qPrintable(rn.name()));
     EXPECT_STREQ("HEAD", qPrintable(rn.branchName()));
@@ -476,6 +491,7 @@ TEST(RefName, CustomRule) {
     EXPECT_FALSE(rn.isScoped());
     EXPECT_FALSE(rn.isPeculiar());
     EXPECT_FALSE(rn.isStage());
+    EXPECT_FALSE(rn.isRemote());
     EXPECT_TRUE (rn.isCustom());
     EXPECT_TRUE (rn.matchesCustomRule(id));
 
