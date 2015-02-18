@@ -598,7 +598,7 @@ namespace Git
      */
     QString RefName::localName()
     {
-        if (isBranch() || isTag() || isNote()) {
+        if (isBranch() || isTag() || isNote() || isHead()) {
             return isScoped() ? scopeName() % QChar(L'/') % name() : name();
         }
         return QString();
@@ -628,8 +628,7 @@ namespace Git
      *
      * @return      If isBranch() returns `true` then return localName() else an empty string.
      *
-     * Works for local and remote branches and also for special references where isHead() returns
-     * `true`.
+     * Works for local and remote branches.
      *
      */
     QString RefName::branchName()
