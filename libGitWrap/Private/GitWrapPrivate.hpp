@@ -404,6 +404,8 @@ namespace Git
 #define GW__EX_CHECK(returns, result) \
     if (!Internal::BasePrivate::isValid(result, d.constData())) { return returns; }
 
+#define GW__CHECK_VOID(result) \
+    if (!Internal::BasePrivate::isValid(result, d)) { return; }
 
 #define GW_D(CLASS) \
     Private* d = static_cast<Private*>(mData.data()); \
@@ -435,5 +437,14 @@ namespace Git
 #define GW_D_EX_CHECKED(CLASS, returns, result) \
     GW_D_EX(CLASS); \
     GW__EX_CHECK(returns, result)
+
+#define GW_D_CHECKED_VOID(CLASS, result) \
+    GW_D(CLASS); \
+    GW__CHECK_VOID(result)
+
+#define GW_CD_CHECKED_VOID(CLASS, result) \
+    GW_CD(CLASS); \
+    GW__CHECK_VOID(result)
+
 
 #endif

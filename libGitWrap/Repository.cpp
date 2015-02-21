@@ -1039,4 +1039,52 @@ namespace Git
         return reference(result, QLatin1Literal("refs/notes/") % noteName).asNote();
     }
 
+    /**
+     * @brief       Calculates the relation between two commits
+     *
+     * This checks how two commits are related to each other. It is usually used in the context of
+     * a local branch following a remote branch (known as an @em upstream branch), but is not
+     * limited to that use case.
+     *
+     * In that context, @a idLocal is the id of the commit that your local branch is pointing to and
+     * @a idRemote the id that the remote branch is pointing to.
+     *
+     * The result can then be:
+     * - ahead and behind are zero: There are no new commits to download (fetch) and you do not have
+     *   local work that has to be pushed.
+     *
+     * - ahead is zero, behind is greater than zero: Someone else pushed to the branch and you have
+     *   not pulled yet.
+     *
+     * - behind is zero, ahead is greater than zero: You have local commits that can safely be
+     *   pushed to the remote.
+     *
+     * - ahead and behind are greater than zero: Different situations can lead to this. The most
+     *   obvious one is that you are preparing to push your changes, but someone else has pushed
+     *   already. The branches involved are said to "have diverged". This is also likely to be the
+     *   case after a rebase.
+     *
+     * @param[in,out]   result      A Result object; see @ref GitWrapErrorHandling
+     *
+     * @param[in]       idLocal     The id of the local commit
+     *
+     * @param[in]       idRemote    The id of the remote commit
+     *
+     * @param[out]      ahead       The number of commits that @a idLocal is ahead of @a idRemote
+     *                              will be placed into this.
+     *
+     * @param[out]      behind      The number of commits that @a idLocal is behind of @a idRemote
+     *                              will be placed into this.
+     */
+    void Repository::calculateDivergence(Result& result,
+                                         const ObjectId& idLocal, const ObjectId& idRemote,
+                                         size_t& ahead, size_t& behind) const
+    {
+        GW_CD_CHECKED_VOID(Repository, result);
+
+        result = git_graph_ahead_behind(&ahead, &behind, d->mRepo,
+                                        Internal::ObjectId2git(idLocal),
+                                        Internal::ObjectId2git(idRemote));
+    }
+
 }

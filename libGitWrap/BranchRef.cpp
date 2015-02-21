@@ -18,7 +18,11 @@
  *
  */
 
+#include <QStringBuilder>
+
 #include "libGitWrap/BranchRef.hpp"
+#include "libGitWrap/Repository.hpp"
+#include "libGitWrap/Private/RepositoryPrivate.hpp"
 #include "libGitWrap/Private/BranchRefPrivate.hpp"
 
 #include "Private/CommitPrivate.hpp"
@@ -94,6 +98,79 @@ namespace Git
         GW_CHECK_RESULT( result, BranchRef() );
 
         return new Internal::BranchRefPrivate(cp->repo(), ref);
+    }
+
+    QString BranchRef::upstreamName(Result& result) const
+    {
+        Internal::Buffer buf;
+        GW_CD_CHECKED(BranchRef, QString(), result);
+
+        if (d->wasDeleted) {
+            return QString();
+        }
+
+        result = git_branch_upstream_name(buf, d->repo()->mRepo, GW_StringFromQt(d->fqrn));
+        GW_CHECK_RESULT(result, QString());
+
+        return buf;
+    }
+
+    QString BranchRef::upstreamRemoteName(Result& result) const
+    {
+        Internal::Buffer buf;
+        GW_CD_CHECKED(BranchRef, QString(), result);
+
+        result = git_branch_upstream_remote(buf, d->repo()->mRepo, GW_StringFromQt(d->fqrn));
+        GW_CHECK_RESULT(result, QString());
+
+        return buf;
+    }
+
+    Remote BranchRef::upstreamRemote(Result& result) const
+    {
+        return repository().remote(result, upstreamRemoteName(result));
+    }
+
+    Reference BranchRef::upstreamReference(Result& result) const
+    {
+        git_reference* ref = NULL;
+
+        GW_CD_CHECKED(BranchRef, Reference(), result);
+
+        result = git_branch_upstream(&ref, d->reference);
+        GW_CHECK_RESULT(result, BranchRef());
+
+        return new Internal::ReferencePrivate(d->repo(), ref);
+    }
+
+    void BranchRef::setUpstream(Result& result, const QString& ref)
+    {
+        GW_D(BranchRef);
+        result = git_branch_set_upstream(d->reference, GW_StringFromQt(ref));
+    }
+
+    void BranchRef::setUpstream(Result& result, const Remote& remote)
+    {
+        GW_D(BranchRef);
+
+        if (!remote.isValid()) {
+            result.setInvalidObject();
+            return;
+        }
+
+        QString ref = remote.name() % QChar(L'/') % shorthand();
+        result = git_branch_set_upstream(d->reference, GW_StringFromQt(ref));
+    }
+
+    void BranchRef::getAheadBehind(Result& result, size_t& ahead, size_t& behind) const
+    {
+        GW_CD_CHECKED_VOID(BranchRef, result);
+
+        Repository(d->repo()).calculateDivergence(
+                    result,
+                    objectId(),
+                    upstreamReference(result).objectId(),
+                    ahead, behind);
     }
 
 }

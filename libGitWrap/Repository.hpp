@@ -155,6 +155,10 @@ namespace Git
         QStringList submoduleNames(Result& result) const;
         Submodule submodule(Result& result, const QString& name) const;
 
+        void calculateDivergence(Result& result,
+                                 const ObjectId& idLocal, const ObjectId& idRemote,
+                                 size_t& ahead, size_t& behind) const;
+
     public:
         CommitOperation* commitOperation(Result& result, const QString& msg);
 

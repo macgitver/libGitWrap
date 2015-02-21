@@ -333,7 +333,7 @@ namespace Git
     {
         GW_CD_CHECKED(Reference, Reference(), result);
 
-        git_reference* ref;
+        git_reference* ref = NULL;
         result = git_reference_resolve(&ref, d->reference);
         GW_CHECK_RESULT( result, Reference() );
 
