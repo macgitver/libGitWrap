@@ -34,9 +34,7 @@ namespace Git
     class GITWRAP_API CommitOperation : public BaseOperation
     {
         Q_OBJECT
-        #if QT_VERSION < 0x050000
-        friend class Internal::CommitOperationPrivate;
-        #endif
+
     public:
         typedef Internal::CommitOperationPrivate Private;
 
