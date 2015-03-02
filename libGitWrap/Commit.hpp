@@ -17,16 +17,24 @@
 #ifndef GIT_OBJECT_COMMIT_H
 #define GIT_OBJECT_COMMIT_H
 
-#include "libGitWrap/DiffList.hpp"
-#include "libGitWrap/GitWrap.hpp"
 #include "libGitWrap/ObjectId.hpp"
 #include "libGitWrap/Object.hpp"
 #include "libGitWrap/Operations/Providers.hpp"
 #include "libGitWrap/Result.hpp"
 #include "libGitWrap/Signature.hpp"
 
+
+// -- DEPRECATED INCLUDES BEGIN --8>
+
+#include "libGitWrap/DiffList.hpp"
+
+// <8-- DEPRECATED INCLUDES END --
+
+
 namespace Git
 {
+
+    class DiffTree;
 
     namespace Internal
     {
@@ -78,9 +86,14 @@ namespace Git
         QString message() const;
         QString shortMessage() const;
 
-        DiffList diffFromParent( Result& result, unsigned int index );
-        DiffList diffFromAllParents( Result& result );
+        DiffList diffFromAllParents(Result& result) const;
+        DiffList diffToAllParents(Result& result) const;
 
+        DiffList diffFromParent(Result& result, unsigned int index) const;
+        DiffList diffToParent(Result& result, unsigned int index) const;
+
+        DiffList diffFrom(Result& result, const Commit& oldCommit) const;
+        DiffList diffTo(Result& result, const Commit& oldCommit) const;
 
     public:
         // -- DEPRECATED FUNCTIONS BEGIN --8>

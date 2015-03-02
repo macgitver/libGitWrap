@@ -126,6 +126,7 @@ SET( SRC_FILES
     ChangeListConsumer.cpp
     Commit.cpp
     Config.cpp
+    Diff.cpp
     DiffList.cpp
     GitWrap.cpp
     Index.cpp
@@ -173,6 +174,7 @@ SET( PUB_HDR_FILES
     ChangeListConsumer.hpp
     Commit.hpp
     Config.hpp
+    Diff.hpp
     DiffList.hpp
     FileInfo.hpp
     GitWrap.hpp
@@ -222,7 +224,7 @@ SET( PRI_HDR_FILES
     Private/BranchRefPrivate.hpp
     Private/CommitPrivate.hpp
     Private/ConfigPrivate.hpp
-    Private/DiffListPrivate.hpp
+    Private/DiffPrivate.hpp
     Private/GitWrapPrivate.hpp
     Private/IndexConflictPrivate.hpp
     Private/IndexEntryPrivate.hpp

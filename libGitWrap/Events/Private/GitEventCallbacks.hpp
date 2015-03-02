@@ -23,8 +23,9 @@
 namespace Git
 {
 
-    class IRemoteEvents;
+    class IDiffEvents;
     class ICheckoutEvents;
+    class IRemoteEvents;
 
     namespace Internal
     {
@@ -83,6 +84,18 @@ namespace Git
                     ICheckoutEvents* receiver,
                     unsigned int notifyFlags = GIT_CHECKOUT_NOTIFY_ALL
                     );
+        };
+
+
+        struct DiffCallbacks
+        {
+            static int notify(const git_diff *diff_so_far,
+                              const git_diff_delta *delta_to_add,
+                              const char *matched_pathspec,
+                              void* payload
+                              );
+
+            static void initCallbacks(git_diff_options& opts, IDiffEvents* receiver);
         };
     }
 

@@ -1,6 +1,6 @@
 /*
  * libGitWrap - A Qt wrapper library for libgit2
- * Copyright (C) 2012-2013 The MacGitver-Developers <dev@macgitver.org>
+ * Copyright (C) 2015 The MacGitver-Developers <dev@macgitver.org>
  *
  * (C) Sascha Cunz <sascha@macgitver.org>
  *
@@ -28,8 +28,6 @@
 #include "libGitWrap/Private/IndexPrivate.hpp"
 #include "libGitWrap/Private/IndexEntryPrivate.hpp"
 #include "libGitWrap/Private/IndexConflictPrivate.hpp"
-#include "libGitWrap/Private/RepositoryPrivate.hpp"
-#include "libGitWrap/Private/ObjectPrivate.hpp"
 #include "libGitWrap/Private/TreePrivate.hpp"
 
 #include "libGitWrap/Operations/CommitOperation.hpp"
@@ -197,7 +195,7 @@ namespace Git
      */
     int Index::count( Result& result ) const
     {
-        GW_CD_CHECKED(Index, 0, result)
+        GW_CD_CHECKED(Index, 0, result);
         return (int)git_index_entrycount( d->index );
     }
 
@@ -218,7 +216,7 @@ namespace Git
      */
     IndexEntry Index::getEntry(Result &result, int n) const
     {
-        GW_CD_CHECKED(Index, IndexEntry(), result)
+        GW_CD_CHECKED(Index, IndexEntry(), result);
         const git_index_entry *entry = git_index_get_byindex(d->index, n);
         if(entry == NULL)
         {
@@ -248,7 +246,7 @@ namespace Git
      */
     IndexEntry Index::getEntry(Result &result, const QString &path, Stages stage) const
     {
-        GW_CD_CHECKED(Index, IndexEntry(), result)
+        GW_CD_CHECKED(Index, IndexEntry(), result);
         const git_index_entry *entry = git_index_get_bypath(d->index, GW_StringFromQt(path),
                                                             int(stage));
         if(entry == NULL)
@@ -308,7 +306,6 @@ namespace Git
     /**
      * @brief       Update an index entry
      *
-     *
      * @param[in,out]   result  A Result object; see @ref GitWrapErrorHandling
      *
      * @param[in]       entry   The entry to change
@@ -318,7 +315,7 @@ namespace Git
      */
     void Index::updateEntry(Result &result, const IndexEntry& entry)
     {
-        GW_D_CHECKED(Index, void(), result)
+        GW_D_CHECKED(Index, void(), result);
 
         if (!entry.isValid()) {
             result.setInvalidObject();
@@ -344,7 +341,7 @@ namespace Git
      */
     void Index::addFile(Result &result, const QString &path)
     {
-        GW_CD_CHECKED(Index, void(), result)
+        GW_CD_CHECKED(Index, void(), result);
         result = git_index_add_bypath( d->index, GW_StringFromQt(path) );
     }
 
@@ -359,7 +356,7 @@ namespace Git
      */
     void Index::removeFile(Result &result, const QString &path)
     {
-        GW_D_CHECKED(Index, void(), result)
+        GW_D_CHECKED(Index, void(), result);
         result = git_index_remove_bypath( d->index, GW_StringFromQt(path) );
     }
 
@@ -379,7 +376,7 @@ namespace Git
      */
     void Index::resetFiles(Result &result, const QStringList &paths)
     {
-        GW_D_CHECKED(Index, void(), result)
+        GW_D_CHECKED(Index, void(), result);
 
         git_reference *ref = NULL;
         result = git_repository_head( &ref, d->repo()->mRepo );
@@ -410,7 +407,7 @@ namespace Git
      */
     void Index::checkoutFiles(Result &result, const QStringList &paths)
     {
-        GW_D_CHECKED(Index, void(), result)
+        GW_D_CHECKED(Index, void(), result);
         Internal::CheckoutOptions options( paths );
         (*options).checkout_strategy = GIT_CHECKOUT_FORCE;
 
@@ -431,7 +428,7 @@ namespace Git
      */
     void Index::read(Result& result, bool force)
     {
-        GW_D_CHECKED(Index, void(), result)
+        GW_D_CHECKED(Index, void(), result);
 
         result = git_index_read(d->index, force ? 1 : 0);
 
@@ -450,7 +447,7 @@ namespace Git
      */
     void Index::write( Result& result )
     {
-        GW_D_CHECKED(Index, void(), result)
+        GW_D_CHECKED(Index, void(), result);
         result = git_index_write( d->index );
     }
 
@@ -513,7 +510,7 @@ namespace Git
      */
     Tree Index::writeTree(Result& result)
     {
-        GW_D_CHECKED(Index, Tree(), result)
+        GW_D_CHECKED(Index, Tree(), result);
 
         git_oid treeGitOid;
         result = git_index_write_tree(&treeGitOid, d->index);
@@ -541,7 +538,7 @@ namespace Git
      */
     Tree Index::writeTreeTo(Result& result, Repository& repo)
     {
-        GW_D_CHECKED(Index, Tree(), result)
+        GW_D_CHECKED(Index, Tree(), result);
 
         if (!repo.isValid()) {
             result.setInvalidObject();

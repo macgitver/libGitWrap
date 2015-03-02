@@ -1,6 +1,6 @@
 /*
  * MacGitver
- * Copyright (C) 2014 Sascha Cunz <sascha@macgitver.org>
+ * Copyright (C) 2015 Sascha Cunz <sascha@macgitver.org>
  *
  * This program is free software; you can redistribute it and/or modify it under the terms of the
  * GNU General Public License (Version 2) as published by the Free Software Foundation.
@@ -19,8 +19,7 @@
 #include "libGitWrap/DiffList.hpp"
 #include "libGitWrap/Repository.hpp"
 
-#include "libGitWrap/Private/GitWrapPrivate.hpp"
-#include "libGitWrap/Private/DiffListPrivate.hpp"
+#include "libGitWrap/Private/DiffPrivate.hpp"
 #include "libGitWrap/Private/RepositoryPrivate.hpp"
 
 namespace Git
@@ -56,43 +55,55 @@ namespace Git
         //-- DiffListPrivate -->8
 
         DiffListPrivate::DiffListPrivate(const RepositoryPrivate::Ptr& repo, git_diff* diff)
-            : RepoObjectPrivate(repo)
-            , mDiff(diff)
+            : RepoObjectPrivate( repo )
+            , mDiff( diff )
         {
+            // TODO: check, that repo equals diff->repo
             Q_ASSERT(diff);
         }
 
         DiffListPrivate::~DiffListPrivate()
         {
-            Q_ASSERT(mRepo);
-
-            if(mDiff) {
-                git_diff_free(mDiff);
-            }
+            git_diff_free(mDiff);
         }
 
 
-        //-- DiffFilePrivate -->8
+        /**
+          * @internal
+          * @ingroup GritWrap
+          *
+          * @class      DiffFile
+          *
+          * @brief      Private wrapper for git_diff_file.
+          */
 
-        DiffFilePrivate::DiffFilePrivate(const RepositoryPrivate::Ptr& repo, const git_diff_file* diffFile)
-            : RepoObjectPrivate(repo)
-            , mDiffFile( diffFile )
-        {
-        }
-
-        DiffFilePrivate::DiffFilePrivate(RepositoryPrivate* repo, const git_diff_file* diffFile)
-            : RepoObjectPrivate( repo )
-            , mDiffFile( diffFile )
+        /**
+         * @brief           DiffFilePrivate::DiffFilePrivate
+         *
+         * @param           diffFile    the git_diff_file
+         */
+        DiffFilePrivate::DiffFilePrivate(const git_diff_file* diffFile)
+            : mDiffFile( diffFile )
         {
         }
 
         DiffFilePrivate::~DiffFilePrivate()
         {
+            // FIXME: Do we have a mem-leak here for mDiffFile?
         }
 
 
-        //-- internal callbacks -->8
+        //-- internal callbacks --8>
 
+        /**
+         * @brief           patchFileCallBack
+         *
+         * @param           delta
+         *
+         * @param           cb_data     the payload
+         *
+         * @return          the reutrned error value is meatn to be used for @ref Git::Result
+         */
         static int patchFileCallBack( const git_diff_delta* delta, float, void* cb_data )
         {
             PatchConsumer* pc = (PatchConsumer*) cb_data;
@@ -204,7 +215,7 @@ namespace Git
 
     //-- DiffFile -->8
 
-    GW_PRIVATE_IMPL( DiffFile, RepoObject )
+    GW_PRIVATE_IMPL( DiffFile, Base )
 
 
     //-- DiffList -->8
@@ -213,7 +224,7 @@ namespace Git
 
     void DiffList::mergeOnto(Result& result, const DiffList& onto) const
     {
-        GW_CD_CHECKED(DiffList, void(), result)
+        GW_CD_CHECKED(DiffList, void(), result);
 
         if (!onto.isValid())
         {
@@ -227,7 +238,7 @@ namespace Git
 
     void DiffList::consumePatch(Result& result, PatchConsumer* consumer) const
     {
-        GW_CD_CHECKED(DiffList, void(), result)
+        GW_CD_CHECKED(DiffList, void(), result);
 
         if (!consumer) {
             result.setInvalidObject();
@@ -243,7 +254,7 @@ namespace Git
 
     void DiffList::consumeChangeList(Result& result, ChangeListConsumer* consumer) const
     {
-        GW_CD_CHECKED(DiffList, void(), result)
+        GW_CD_CHECKED(DiffList, void(), result);
 
         if (!consumer) {
             result.setInvalidObject();
@@ -274,7 +285,7 @@ namespace Git
      */
     bool DiffList::findRenames( Result& result )
     {
-        GW_CD_CHECKED(DiffList, false, result)
+        GW_CD_CHECKED(DiffList, false, result);
 
         git_diff_find_options opts = GIT_DIFF_FIND_OPTIONS_INIT;
         result = git_diff_find_similar(d->mDiff, &opts);

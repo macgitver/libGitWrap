@@ -19,17 +19,25 @@
 namespace Git
 {
 
-    // -- IRemoteEvents ->8
+    // -- IRemoteEvents --8>
 
     IRemoteEvents::~IRemoteEvents()
     {
     }
 
 
-    // -- ICheckoutEvents ->8
+    // -- ICheckoutEvents --8>
 
     ICheckoutEvents::~ICheckoutEvents()
     {
+    }
+
+
+    // -- IDiffEvents --8>
+
+    IDiffEvents::~IDiffEvents()
+    {
+
     }
 
 }

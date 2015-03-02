@@ -26,6 +26,7 @@ namespace Git
 {
 
     class CommitOperation;
+    class DiffIndex;
 
     namespace Internal
     {

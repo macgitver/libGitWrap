@@ -19,7 +19,7 @@
 #include "libGitWrap/DiffList.hpp"
 
 #include "libGitWrap/Events/Private/GitEventCallbacks.hpp"
-#include "libGitWrap/Private/DiffListPrivate.hpp"
+#include "libGitWrap/Private/DiffPrivate.hpp"
 
 #if 0
 #define debugEvents qDebug
@@ -172,8 +172,8 @@ namespace Git
         {
             Result r;
             r = git_remote_init_callbacks( &cb, GIT_REMOTE_CALLBACKS_VERSION );
-            Q_ASSERT_X( r, "git_remote_init_callbacks", qPrintable(r.errorText()) );
-            GW_CHECK_RESULT( r, void() )
+            Q_ASSERT_X( r, "git_remote_init_callbacks", qUtf8Printable(r.errorText()) );
+            GW_CHECK_RESULT( r, void() );
 
             cb.sideband_progress   = RemoteCallbacks::remoteProgress;
             cb.transfer_progress   = RemoteCallbacks::fetchProgress;
@@ -199,9 +199,9 @@ namespace Git
             if ( events ) {
                 events->checkoutNotify( CheckoutNotify( why ),
                                         GW_StringToQt( path ),
-                                        new DiffFilePrivate( RepositoryPrivate::Ptr(), baseline ),
-                                        new DiffFilePrivate( RepositoryPrivate::Ptr(), target ),
-                                        new DiffFilePrivate( RepositoryPrivate::Ptr(), workdir )
+                                        new DiffFilePrivate( baseline ),
+                                        new DiffFilePrivate( target ),
+                                        new DiffFilePrivate( workdir )
                                         );
             }
 
@@ -237,6 +237,30 @@ namespace Git
             opts.progress_payload   = receiver;
 
             opts.notify_flags       = notifyFlags;
+        }
+
+
+        // -- DiffCallbacks --8>
+
+        int DiffCallbacks::notify(const git_diff* diff_so_far,
+                                  const git_diff_delta* delta_to_add,
+                                  const char* matched_pathspec, void* payload)
+        {
+            IDiffEvents* events = static_cast< IDiffEvents* >( payload );
+            Q_ASSERT( events );
+
+            if (events) {
+                //RepositoryPrivate* rp = new RepositoryPrivate( diff_so_far->repo );
+                //events->diffNotify( new DiffListPrivate( rp, diff ) );
+            }
+
+            return 0;
+        }
+
+        void DiffCallbacks::initCallbacks(git_diff_options& opts, IDiffEvents* receiver)
+        {
+            opts.notify_cb      = DiffCallbacks::notify;
+            opts.notify_payload = receiver;
         }
 
     }

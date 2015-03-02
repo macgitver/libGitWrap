@@ -132,7 +132,6 @@ namespace Git
     void RefLog::write(Git::Result& result) const
     {
         GW_CD_CHECKED(RefLog, void(), result);
-
         result = git_reflog_write( d->reflog );
     }
 

@@ -24,8 +24,12 @@
 
 // -- DEPRECATED INCLUDES BEGIN --8>
 
+#include "libGitWrap/Commit.hpp"
+#include "libGitWrap/Diff.hpp"
+#include "libGitWrap/DiffList.hpp"
 #include "libGitWrap/RevisionWalker.hpp"
 #include "libGitWrap/Reference.hpp"
+#include "libGitWrap/Tree.hpp"
 
 // <8-- DEPRECATED INCLUDES END --
 
@@ -141,16 +145,6 @@ namespace Git
         Remote::List allRemotes(Result& result) const;
         Remote remote( Result& result, const QString& remoteName ) const;
 
-        DiffList diffCommitToCommit(Result& result, Commit oldCommit, Commit newCommit);
-
-        DiffList diffTreeToTree( Result& result, Tree oldTree,
-                                 Tree newTree);
-
-        DiffList diffIndexToTree( Result& result, Tree oldTree );
-
-        DiffList diffTreeToWorkingDir( Result& result, Tree oldTree );
-        DiffList diffIndexToWorkingDir( Result& result );
-
         SubmoduleList submodules(Result& result);
         QStringList submoduleNames(Result& result) const;
         Submodule submodule(Result& result, const QString& name) const;
@@ -164,6 +158,57 @@ namespace Git
 
     public:
         // -- DEPRECATED FUNCTIONS BEGIN --8>
+
+        /**
+         * @brief       Deprecated: Repository::diffIndexToWorkingDir
+         * @deprecated  Use @ref Diff::indexToWorkDir(Result& result, const Repository& repo) instead.
+         */
+        GW_DEPRECATED
+        inline DiffList diffIndexToWorkingDir( Result& result )
+        {
+            return Diff( result ).indexToWorkDir( result, *this );
+        }
+
+        /**
+         * @brief           Deprecated: Repository::diffCommitToCommit
+         * @deprecated      Use @ref Commit::diffFrom(Result& result, const Commit& oldCommit) instead.
+         */
+        GW_DEPRECATED
+        inline DiffList diffCommitToCommit( Result& result, Commit oldCommit, Commit newCommit )
+        {
+            return newCommit.diffFrom( result, newCommit );
+        }
+
+        /**
+         * @brief           Deprecated: Repository::diffTreeToTree
+         * @deprecated      Use @ref Diff::diffTreeToTree(Result& result, const Tree& oldTree, const Tree& newTree) instead.
+         */
+        GW_DEPRECATED
+        inline DiffList diffTreeToTree(Result& result, Tree oldTree, Tree newTree)
+        {
+            return Diff(result).treeToTree( result, oldTree, newTree );
+        }
+
+        /**
+         * @brief           Deprecated: Repository::diffTreeToWorkingDir
+         * @deprecated      Use @ref Diff::treeToWorkDir(Result& result, const Tree& tree) instead.
+         */
+        GW_DEPRECATED
+        inline DiffList diffTreeToWorkingDir(Result& result, Tree oldTree)
+        {
+            return Diff( result ).treeToWorkDir( result, oldTree );
+        }
+
+        /**
+         * @brief           Deprecated: Repository::diffIndexToTree
+         * @deprecated      Use @ref Diff::diffTreeToIndex(Result& result, const Tree& tree) instead.
+         */
+        GW_DEPRECATED
+        inline DiffList diffIndexToTree(Result& result, Tree oldTree)
+        {
+            return Diff( result ).treeToIndex( result, oldTree );
+        }
+
 
         /**
          * @brief           Deprecated: Repository::create

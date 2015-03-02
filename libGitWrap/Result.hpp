@@ -165,7 +165,10 @@ namespace Git
   *             when the result is invalid.
   */
 #define GW_CHECK_RESULT(result, returns) \
-    if (!(result)) { \
-    qDebug("File %s, line %d:\nGit returned error code (%d) \"%s\"", \
-    __FILE__, __LINE__, (result).errorCode(), qUtf8Printable((result).errorText())); \
-    return (returns); }
+    do { \
+        if (!(result)) { \
+            qDebug("File %s, line %d:\nGit returned error code (%d) \"%s\"", \
+            __FILE__, __LINE__, (result).errorCode(), qUtf8Printable((result).errorText())); \
+            return (returns); \
+        } \
+    } while (0)

@@ -162,20 +162,18 @@ namespace Git
     bool Remote::connect(Result& result, bool forFetch)
     {
         GW_D_CHECKED(Remote, false, result);
-
         result = git_remote_connect( d->mRemote, forFetch ? GIT_DIRECTION_FETCH
                                                           : GIT_DIRECTION_PUSH );
         return result;
     }
 
-    void Remote::disconnect( Result& result )
+    void Remote::disconnect(Result& result)
     {
         GW_D_CHECKED(Remote, void(), result);
-
         git_remote_disconnect(d->mRemote);
     }
 
-    bool Remote::download( Result& result, const QStringList &refspecs )
+    bool Remote::download(Result& result, const QStringList &refspecs)
     {
         GW_D_CHECKED(Remote, false, result);
         result = git_remote_download(d->mRemote, Internal::StrArray(refspecs));
@@ -185,7 +183,6 @@ namespace Git
     bool Remote::updateTips( Result& result )
     {
         GW_D_CHECKED(Remote, false, result);
-
         result = git_remote_update_tips( d->mRemote, NULL, NULL );
         return result;
     }

@@ -1,6 +1,6 @@
 /*
  * MacGitver
- * Copyright (C) 2012-2013 Sascha Cunz <sascha@babbelbox.org>
+ * Copyright (C) 2012-2015 Sascha Cunz <sascha@macgitver.org>
  *
  * This program is free software; you can redistribute it and/or modify it under the terms of the
  * GNU General Public License (Version 2) as published by the Free Software Foundation.
@@ -21,6 +21,7 @@
 #include "libGitWrap/Remote.hpp"
 #include "libGitWrap/Repository.hpp"
 #include "libGitWrap/Reference.hpp"
+#include "libGitWrap/Diff.hpp"
 #include "libGitWrap/DiffList.hpp"
 #include "libGitWrap/Object.hpp"
 #include "libGitWrap/Tag.hpp"
@@ -35,12 +36,11 @@
 
 #include "libGitWrap/Operations/CommitOperation.hpp"
 
-#include "libGitWrap/Private/GitWrapPrivate.hpp"
 #include "libGitWrap/Private/IndexPrivate.hpp"
 #include "libGitWrap/Private/RemotePrivate.hpp"
 #include "libGitWrap/Private/RepositoryPrivate.hpp"
 #include "libGitWrap/Private/ReferencePrivate.hpp"
-#include "libGitWrap/Private/DiffListPrivate.hpp"
+#include "libGitWrap/Private/DiffPrivate.hpp"
 #include "libGitWrap/Private/ObjectPrivate.hpp"
 #include "libGitWrap/Private/SubmodulePrivate.hpp"
 #include "libGitWrap/Private/RevisionWalkerPrivate.hpp"
@@ -783,40 +783,6 @@ namespace Git
         return new Remote::Private(d.data(), remote);
     }
 
-    DiffList Repository::diffCommitToCommit( Result& result, Commit oldCommit,
-                                             Commit newCommit )
-    {
-        return diffTreeToTree( result, oldCommit.tree( result ), newCommit.tree( result ) );
-    }
-
-    DiffList Repository::diffTreeToTree(Result& result, Tree oldTree, Tree newTree)
-    {
-        return oldTree.diffToTree( result, newTree );
-    }
-
-    DiffList Repository::diffIndexToTree(Result& result, Tree oldTree)
-    {
-        return oldTree.diffToIndex( result );
-    }
-
-    DiffList Repository::diffTreeToWorkingDir(Result& result, Tree oldTree)
-    {
-        return oldTree.diffToWorkingDir( result );
-    }
-
-    DiffList Repository::diffIndexToWorkingDir( Result& result )
-    {
-        GW_D_EX_CHECKED(Repository, DiffList(), result);
-
-        git_diff* diff = NULL;
-        result = git_diff_index_to_workdir(&diff, d->mRepo, NULL, NULL);
-        if (!result) {
-            return DiffList();
-        }
-
-        return DiffList::PrivatePtr(new DiffList::Private(d, diff));
-    }
-
     namespace Internal
     {
 
@@ -956,7 +922,6 @@ namespace Git
     void Repository::setDetachedHEAD(Result& result, const ObjectId& sha)
     {
         GW_D_CHECKED(Repository, void(), result);
-
         result = git_repository_set_head_detached( d->mRepo, Private::sha(sha), NULL, NULL);
     }
 

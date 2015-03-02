@@ -1,6 +1,8 @@
 /*
- * MacGitver
- * Copyright (C) 2012-2013 Sascha Cunz <sascha@babbelbox.org>
+ * libGitWrap - A Qt wrapper library for libgit2
+ * Copyright (C) 2015 The MacGitver-Developers <dev@macgitver.org>
+ *
+ * (C) Nils Fenner <nils@macgitver.org>
  *
  * This program is free software; you can redistribute it and/or modify it under the terms of the
  * GNU General Public License (Version 2) as published by the Free Software Foundation.
@@ -14,11 +16,10 @@
  *
  */
 
-#ifndef GIT_DIFFLIST_PRIVATE_H
-#define GIT_DIFFLIST_PRIVATE_H
+#pragma once
 
-#include "libGitWrap/Private/GitWrapPrivate.hpp"
 #include "libGitWrap/Private/RepoObjectPrivate.hpp"
+
 
 namespace Git
 {
@@ -26,33 +27,40 @@ namespace Git
     namespace Internal
     {
 
-        /**
-         * @internal
-         * @ingroup     GitWrap
-         *
-         * @brief       The DiffListPrivate class
-         */
+        class DiffOptions : public QSharedData
+        {
+        public:
+            typedef QExplicitlySharedDataPointer<DiffOptions> Ptr;
+
+        public:
+            DiffOptions(Result& result);
+            DiffOptions(Result& result, git_diff_options* opts);
+            ~DiffOptions();
+
+        public:
+            const operator git_diff_options*() const;
+            git_diff_options& operator *();
+
+        public:
+            git_diff_options*   mOpts;
+        };
+
+
         class DiffListPrivate : public RepoObjectPrivate
         {
         public:
-            explicit DiffListPrivate(const RepositoryPrivate::Ptr& repo, git_diff* diff);
+            DiffListPrivate(const RepositoryPrivate::Ptr& repo, git_diff* diff);
             ~DiffListPrivate();
 
         public:
             git_diff* mDiff;
         };
 
-        /**
-          * @internal
-          * @ingroup GritWrap
-          *
-          * @brief Wrapper for git_diff_file.
-          */
-        class DiffFilePrivate : public RepoObjectPrivate
+
+        class DiffFilePrivate : public BasePrivate
         {
         public:
-            explicit DiffFilePrivate( const RepositoryPrivate::Ptr& repo, const git_diff_file* diffFile );
-            explicit DiffFilePrivate( RepositoryPrivate* repo, const git_diff_file* diffFile );
+            DiffFilePrivate(const git_diff_file* diffFile);
             ~DiffFilePrivate();
 
         public:
@@ -62,5 +70,3 @@ namespace Git
     }
 
 }
-
-#endif

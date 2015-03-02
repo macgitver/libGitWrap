@@ -47,6 +47,7 @@ namespace Git
                                  const Git::ObjectId& to ) = 0;
     };
 
+
     class GITWRAP_API ICheckoutEvents
     {
     public:
@@ -62,6 +63,15 @@ namespace Git
                                        quint64 total,
                                        quint64 completed ) = 0;
         virtual void doneCheckout() = 0;
+    };
+
+
+    class GITWRAP_API IDiffEvents
+    {
+    public:
+        virtual ~IDiffEvents();
+
+//        virtual void diffNotify();
     };
 }
 

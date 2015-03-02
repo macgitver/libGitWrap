@@ -68,7 +68,7 @@ namespace Git
 
     ObjectType Object::type(Result& result) const
     {
-        GW_CD_CHECKED(Object, otAny, result)
+        GW_CD_CHECKED(Object, otAny, result);
 
         switch(git_object_type(d->mObj)) {
         case GIT_OBJ_BLOB:      return otBlob;

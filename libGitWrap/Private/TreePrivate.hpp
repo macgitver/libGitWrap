@@ -32,6 +32,9 @@ namespace Git
         class TreePrivate : public ObjectPrivate
         {
         public:
+            typedef QExplicitlySharedDataPointer<TreePrivate> Ptr;
+
+        public:
             TreePrivate(const RepositoryPrivate::Ptr& repo, git_object* o);
             TreePrivate(const RepositoryPrivate::Ptr& repo, git_tree* o);
 

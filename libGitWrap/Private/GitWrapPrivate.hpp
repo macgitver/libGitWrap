@@ -18,7 +18,7 @@
 #define GIT_P_H
 
 #include <QDebug>
-#include <QSharedPointer>
+#include <QSharedData>
 #include <QThreadStorage>
 
 #include "git2.h"
@@ -84,6 +84,9 @@ namespace Git
          */
         class StrArrayRef : public QSharedData
         {
+        public:
+            typedef QExplicitlySharedDataPointer<StrArrayRef> Ptr;
+
         public:
             explicit StrArrayRef(git_strarray& _a, bool init = false);
             explicit StrArrayRef(git_strarray& _a, const QStringList& sl);
@@ -175,8 +178,8 @@ namespace Git
             void init();
 
         private:
-            git_checkout_options&                       mOptionsRef;
-            QExplicitlySharedDataPointer<StrArrayRef>   mPaths;
+            git_checkout_options&   mOptionsRef;
+            StrArrayRef::Ptr        mPaths;
         };
 
         /**
@@ -362,9 +365,9 @@ namespace Git
 }
 
 
-// -- internal macro definitions -->8
+// -- internal macro definitions --8>
 
-// string macro definitions -->8
+// string macro definitions --8>
 /**
   * @internal
   * @ingroup GitWrap
@@ -396,13 +399,17 @@ namespace Git
 #define GW_StringToQt(s, ...) QString::fromUtf8(s, ##__VA_ARGS__)
 
 
-// -- pimpl helper macro definitions ->8
+// -- pimpl helper macro definitions -8>
 
 #define GW__CHECK(returns, result) \
-    if (!Internal::BasePrivate::isValid(result, d)) { return returns; }
+    do { \
+        if (!Internal::BasePrivate::isValid(result, d)) { return returns; } \
+    } while (0)
 
 #define GW__EX_CHECK(returns, result) \
-    if (!Internal::BasePrivate::isValid(result, d.constData())) { return returns; }
+    do { \
+        if (!Internal::BasePrivate::isValid(result, d.constData())) { return returns; } \
+    } while (0)
 
 #define GW__CHECK_VOID(result) \
     if (!Internal::BasePrivate::isValid(result, d)) { return; }

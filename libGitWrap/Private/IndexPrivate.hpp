@@ -21,7 +21,6 @@
 
 #include "libGitWrap/IndexConflict.hpp"
 
-#include "libGitWrap/Private/GitWrapPrivate.hpp"
 #include "libGitWrap/Private/RepoObjectPrivate.hpp"
 
 namespace Git
@@ -38,6 +37,9 @@ namespace Git
          */
         class IndexPrivate : public RepoObjectPrivate
         {
+        public:
+            typedef QExplicitlySharedDataPointer<IndexPrivate> Ptr;
+
         public:
             IndexPrivate(const RepositoryPrivate::Ptr& repo, git_index* index);
             ~IndexPrivate();

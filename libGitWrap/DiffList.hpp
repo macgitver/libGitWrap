@@ -34,9 +34,9 @@ namespace Git
      *
      * @brief The DiffFile class
      */
-    class GITWRAP_API DiffFile : public RepoObject
+    class GITWRAP_API DiffFile : public Base
     {
-        GW_PRIVATE_DECL( DiffFile, RepoObject, public )
+        GW_PRIVATE_DECL( DiffFile, Base, public )
     };
 
 

@@ -17,16 +17,16 @@
 #include "libGitWrap/Commit.hpp"
 #include "libGitWrap/Private/CommitPrivate.hpp"
 
+#include "libGitWrap/Diff.hpp"
 #include "libGitWrap/Reference.hpp"
 #include "libGitWrap/Repository.hpp"
 #include "libGitWrap/Tree.hpp"
 
-#include "libGitWrap/Private/GitWrapPrivate.hpp"
+#include "libGitWrap/Private/DiffPrivate.hpp"
 #include "libGitWrap/Private/ObjectPrivate.hpp"
 #include "libGitWrap/Private/RepositoryPrivate.hpp"
 #include "libGitWrap/Private/ReferencePrivate.hpp"
 #include "libGitWrap/Private/TreePrivate.hpp"
-#include "libGitWrap/Private/DiffListPrivate.hpp"
 
 namespace Git
 {
@@ -184,12 +184,12 @@ namespace Git
     Tree Commit::tree( Result& result ) const
     {
         GW_CD_CHECKED(Commit, Tree(), result);
-        git_tree* tree = NULL;
 
+        git_tree* tree = NULL;
         result = git_commit_tree(&tree, d->o());
         GW_CHECK_RESULT( result, Tree() );
 
-        return Tree::PrivatePtr(new Tree::Private(d->repo(), tree));
+        return new Tree::Private( d->repo(), tree );
     }
 
     ObjectId Commit::treeId( Result& result ) const
@@ -214,19 +214,17 @@ namespace Git
     Commit Commit::parentCommit(Result& result, unsigned int index) const
     {
         GW_CD_CHECKED(Commit, Commit(), result);
-        git_commit* gitparent = NULL;
 
+        git_commit* gitparent = NULL;
         result = git_commit_parent(&gitparent, d->o(), index);
-        if (!result) {
-            return Commit();
-        }
+        GW_CHECK_RESULT( result, Commit() );
 
         return PrivatePtr(new Private(d->repo(), gitparent));
     }
 
     ObjectId Commit::parentCommitId(Result& result, unsigned int index) const
     {
-        GW_CD_CHECKED(Commit, ObjectId(), result)
+        GW_CD_CHECKED(Commit, ObjectId(), result);
 
         if(numParentCommits() > index) {
             const git_oid* oid = git_commit_parent_id(d->o(), index);
@@ -240,7 +238,7 @@ namespace Git
 
     CommitList Commit::parentCommits( Result& result ) const
     {
-        GW_CD_CHECKED(Commit, CommitList(), result)
+        GW_CD_CHECKED(Commit, CommitList(), result);
         CommitList objs;
 
         for( unsigned int i = 0; i < numParentCommits(); i++ )
@@ -328,6 +326,11 @@ namespace Git
         return GW_StringToQt(msg, len);
     }
 
+    /**
+     * @brief           Shortens the commit message to the first line break.
+     *
+     * @return          the short message
+     */
     QString Commit::shortMessage() const
     {
         GW_CD(Commit);
@@ -345,31 +348,107 @@ namespace Git
         return GW_StringToQt(msg, len);
     }
 
-    DiffList Commit::diffFromParent(Result& result, unsigned int index)
+    /**
+     * @brief           Diff this commit to all direct parent commits
+     *
+     * @param[in,out]   result      A Result object; see @ref GitWrapErrorHandling
+     *
+     * @return          the resulting @ref DiffList object
+     */
+    DiffList Commit::diffFromAllParents(Result &result) const
     {
-        GW_CD_CHECKED(Commit, DiffList(), result)
-
-        Commit parentObjCommit = parentCommit( result, index );
-        Tree parentObjTree = parentObjCommit.tree( result );
-
-        return parentObjTree.diffToTree( result, tree( result ) );
-    }
-
-    DiffList Commit::diffFromAllParents( Result& result )
-    {
-        GW_CD_CHECKED(Commit, DiffList(), result)
-
-        if (numParentCommits() == 0) {
-            return DiffList();
-        }
+        GW_CD_CHECKED(Commit, DiffList(), result);
 
         DiffList dl = diffFromParent( result, 0 );
+
         for (unsigned int i = 1; i < numParentCommits(); i++) {
-            DiffList dl2 = diffFromParent( result, i );
+            DiffList dl2 = diffFromParent( result, i);
+            dl2.mergeOnto( result, dl );        }
+
+        return dl;
+    }
+
+    /**
+     * @brief           Diff this commit from all direct parent commits
+     *
+     * @param[in,out]   result      A Result object; see @ref GitWrapErrorHandling
+     *
+     * @return          the resulting @ref DiffList object
+     */
+    DiffList Commit::diffToAllParents(Result& result) const
+    {
+        GW_CD_CHECKED(Commit, DiffList(), result);
+
+        DiffList dl = diffToParent( result, 0 );
+
+        for (unsigned int i = 1; i < numParentCommits(); i++) {
+            DiffList dl2 = diffToParent(result, i);
             dl2.mergeOnto( result, dl );
         }
 
         return dl;
+    }
+
+    DiffList Commit::diffFromParent(Result &result, unsigned int index) const
+    {
+        GW_CD_CHECKED(Commit, DiffList(), result);
+        return diffFrom( result, numParentCommits() ? parentCommit( result, index ) : Commit() );
+    }
+
+    /**
+     * @brief           Diff this commit to one of its direct parent commits.
+     *
+     * @param[in,out]   result      A Result object; see @ref GitWrapErrorHandling
+     *
+     * @param[in]       index       the parent commit's index
+     *
+     * @return          the resulting @ref DiffList object
+     *
+     * This commit object must be a valid object and is considered
+     * chronologically older, than any of its parent commits.
+     */
+    DiffList Commit::diffToParent(Result& result, unsigned int index) const
+    {
+        GW_CD_CHECKED(Commit, DiffList(), result);
+        return diffTo( result, numParentCommits() ? parentCommit( result, index ) : Commit() );
+    }
+
+    /**
+     * @brief           Diff this commit from one of its direct parent commits.
+     *
+     * @param[in,out]   result      A Result object; see @ref GitWrapErrorHandling
+     *
+     * @param[in]       index       the parent commit's index
+     *
+     * @return          the resulting @ref DiffList object
+     *
+     * This commit object must be a valid object and is considered
+     * chronologically newer, than any of its parent commits.
+     */
+    DiffList Commit::diffFrom(Result& result, const Commit& oldCommit) const
+    {
+        Tree oldTree = oldCommit.isValid() ? oldCommit.tree( result ) : Tree();
+        return Diff( result ).treeToTree( result, oldTree, tree( result ) );
+    }
+
+    /**
+     * @brief           Convenience method to diff a commit to another one.
+     *
+     * @param[in,out]   result      A Result object; see @ref GitWrapErrorHandling
+     *
+     * @param[in]       oldCommit   is considered the older commit
+     *
+     * @return          the resulting @ref DiffList object
+     *
+     * @note            If @p oldCommit is newer than this commit,
+     *                  the result will be reversed.
+     */
+    DiffList Commit::diffTo(Result& result, const Commit& oldCommit) const
+    {
+        Tree oldTree = oldCommit.isValid() ? oldCommit.tree( result ) : Tree();
+        Diff differ( result );
+        differ.setFlags( GIT_DIFF_REVERSE );
+        return differ.treeToTree( result, oldTree, tree( result ) );
     }
 
 
