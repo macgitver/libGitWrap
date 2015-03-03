@@ -363,7 +363,8 @@ namespace Git
 
         for (unsigned int i = 1; i < numParentCommits(); i++) {
             DiffList dl2 = diffFromParent( result, i);
-            dl2.mergeOnto( result, dl );        }
+            dl2.mergeOnto( result, dl );
+        }
 
         return dl;
     }
