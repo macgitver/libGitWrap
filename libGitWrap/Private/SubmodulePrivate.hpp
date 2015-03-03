@@ -17,8 +17,6 @@
  *
  */
 
-#ifndef GITWRAP_SUBMODULE_PRIVATE_HPP
-#define GITWRAP_SUBMODULE_PRIVATE_HPP
 #pragma once
 
 #include "libGitWrap/Private/RepoObjectPrivate.hpp"
@@ -46,5 +44,3 @@ namespace Git
     }
 
 }
-
-#endif

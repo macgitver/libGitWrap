@@ -18,8 +18,6 @@
  *
  */
 
-#ifndef GITWRAP_BRANCH_REF_PRIVATE_HPP
-#define GITWRAP_BRANCH_REF_PRIVATE_HPP
 #pragma once
 
 #include "libGitWrap/Private/ReferencePrivate.hpp"
@@ -43,5 +41,3 @@ namespace Git
     }
 
 }
-
-#endif

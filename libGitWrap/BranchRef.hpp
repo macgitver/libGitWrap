@@ -18,8 +18,6 @@
  *
  */
 
-#ifndef GITWRAP_BRANCH_REF_HPP
-#define GITWRAP_BRANCH_REF_HPP
 #pragma once
 
 #include "libGitWrap/Reference.hpp"
@@ -59,5 +57,3 @@ namespace Git
 }
 
 Q_DECLARE_METATYPE(Git::BranchRef)
-
-#endif

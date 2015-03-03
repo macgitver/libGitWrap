@@ -18,8 +18,7 @@
  *
  */
 
-#ifndef GITWRAP_NOTE_REF_HPP
-#define GITWRAP_NOTE_REF_HPP
+#pragma once
 
 #include "libGitWrap/Reference.hpp"
 
@@ -48,5 +47,3 @@ namespace Git
 }
 
 Q_DECLARE_METATYPE(Git::NoteRef)
-
-#endif

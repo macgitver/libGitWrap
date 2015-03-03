@@ -14,6 +14,8 @@
  *
  */
 
+#pragma once
+
 #include "libGitWrap/Result.hpp"
 
 #include "libGitWrap/Private/GitWrapPrivate.hpp"

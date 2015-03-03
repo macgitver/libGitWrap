@@ -14,8 +14,7 @@
  *
  */
 
-#ifndef GIT_ERROR_H
-#define GIT_ERROR_H
+#pragma once
 
 #include "libGitWrap/GitWrap.hpp"
 
@@ -152,11 +151,6 @@ namespace Git
     }
 
 }
-
-#endif
-
-
-//-- public macro definitions --8>
 
 /**
   * @ingroup    GitWrap

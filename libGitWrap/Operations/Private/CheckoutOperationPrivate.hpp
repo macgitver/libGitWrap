@@ -14,6 +14,8 @@
  *
  */
 
+#pragma once
+
 #include "libGitWrap/BranchRef.hpp"
 #include "libGitWrap/Commit.hpp"
 #include "libGitWrap/Index.hpp"

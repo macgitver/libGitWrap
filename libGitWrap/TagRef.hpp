@@ -18,8 +18,7 @@
  *
  */
 
-#ifndef GITWRAP_TAG_REF_HPP
-#define GITWRAP_TAG_REF_HPP
+#pragma once
 
 #include "libGitWrap/Reference.hpp"
 
@@ -36,7 +35,6 @@ namespace Git
         GW_PRIVATE_DECL(TagRef, Reference, public)
 
     public:
-        // Reference interface
         CommitOperation* commitOperation(const TreeProviderPtr treeProvider, const QString& msg);
     };
 
@@ -48,5 +46,3 @@ namespace Git
 }
 
 Q_DECLARE_METATYPE(Git::TagRef)
-
-#endif

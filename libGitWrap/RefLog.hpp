@@ -17,8 +17,7 @@
  *
  */
 
-#ifndef GIT_REFLOG_HPP
-#define GIT_REFLOG_HPP
+#pragma once
 
 #include "libGitWrap/Base.hpp"
 #include "libGitWrap/Signature.hpp"
@@ -74,5 +73,3 @@ namespace Git
     };
 
 }
-
-#endif

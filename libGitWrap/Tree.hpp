@@ -16,15 +16,11 @@
  *
  */
 
-#ifndef GIT_OBJECT_TREE_H
-#define GIT_OBJECT_TREE_H
+#pragma once
 
 #include "libGitWrap/Object.hpp"
-
-// -- DEPRECATED INCLUDES BEGIN --8>
 #include "libGitWrap/Diff.hpp"
 #include "libGitWrap/DiffList.hpp"
-// <8-- DEPRECATED INCLUDES END --
 
 namespace Git
 {
@@ -113,5 +109,3 @@ namespace Git
 }
 
 Q_DECLARE_METATYPE(Git::Tree)
-
-#endif

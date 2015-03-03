@@ -14,8 +14,7 @@
  *
  */
 
-#ifndef GIT_REMOTE_PRIVATE_H
-#define GIT_REMOTE_PRIVATE_H
+#pragma once
 
 #include "libGitWrap/Private/GitWrapPrivate.hpp"
 #include "libGitWrap/Private/RepoObjectPrivate.hpp"
@@ -47,5 +46,3 @@ namespace Git
     }
 
 }
-
-#endif

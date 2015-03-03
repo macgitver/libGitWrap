@@ -14,22 +14,14 @@
  *
  */
 
-#ifndef GIT_OBJECT_COMMIT_H
-#define GIT_OBJECT_COMMIT_H
+#pragma once
 
 #include "libGitWrap/ObjectId.hpp"
 #include "libGitWrap/Object.hpp"
 #include "libGitWrap/Operations/Providers.hpp"
 #include "libGitWrap/Result.hpp"
 #include "libGitWrap/Signature.hpp"
-
-
-// -- DEPRECATED INCLUDES BEGIN --8>
-
 #include "libGitWrap/DiffList.hpp"
-
-// <8-- DEPRECATED INCLUDES END --
-
 
 namespace Git
 {
@@ -159,7 +151,6 @@ namespace Git
         CommitParentProvider(const Commit& commit );
 
     public:
-        // INTERFACE REALIZATION
         Repository repository() const;
         ObjectIdList parents(Result& result) const;
 
@@ -176,7 +167,6 @@ namespace Git
         const Commit&   mCommit;
 
     public:
-        // INTERFACE REALIZATION
         Repository repository() const;
         Tree tree(Result& result);
     };
@@ -185,5 +175,3 @@ namespace Git
 GITWRAP_API QDebug operator<<( QDebug debug, const Git::Commit& commit );
 
 Q_DECLARE_METATYPE(Git::Commit)
-
-#endif

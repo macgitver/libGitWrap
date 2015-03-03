@@ -14,8 +14,7 @@
  *
  */
 
-#ifndef GIT_TREE_BUILDER_H
-#define GIT_TREE_BUILDER_H
+#pragma once
 
 #include "libGitWrap/RepoObject.hpp"
 #include "libGitWrap/Operations/Providers.hpp"
@@ -66,5 +65,3 @@ namespace Git
 }
 
 Q_DECLARE_METATYPE( Git::TreeBuilder )
-
-#endif

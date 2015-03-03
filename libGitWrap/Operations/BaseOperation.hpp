@@ -14,8 +14,7 @@
  *
  */
 
-#ifndef GITWRAP_BASE_OPERATION_HPP
-#define GITWRAP_BASE_OPERATION_HPP
+#pragma once
 
 #include <QObject>
 
@@ -72,5 +71,3 @@ namespace Git
     };
 
 }
-
-#endif

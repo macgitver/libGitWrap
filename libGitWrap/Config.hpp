@@ -17,8 +17,7 @@
  *
  */
 
-#ifndef GITWRAP_CONFIG_H
-#define GITWRAP_CONFIG_H
+#pragma once
 
 #include "libGitWrap/Base.hpp"
 
@@ -60,5 +59,3 @@ namespace Git
 }
 
 Q_DECLARE_METATYPE(Git::Config)
-
-#endif

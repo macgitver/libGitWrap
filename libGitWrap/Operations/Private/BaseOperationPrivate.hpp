@@ -14,8 +14,6 @@
  *
  */
 
-#ifndef GITWRAP_OPS_BASEOP_PRIVATE_HPP
-#define GITWRAP_OPS_BASEOP_PRIVATE_HPP
 #pragma once
 
 #include "libGitWrap/Result.hpp"
@@ -57,5 +55,3 @@ namespace Git
 
 #define GW_OP_OWNER(CLS) \
     CLS* owner = static_cast<CLS*>(mOwner)
-
-#endif

@@ -14,8 +14,7 @@
  *
  */
 
-#ifndef GIT_REMOTE_H
-#define GIT_REMOTE_H
+#pragma once
 
 #include "libGitWrap/RepoObject.hpp"
 
@@ -88,5 +87,3 @@ namespace Git
 }
 
 Q_DECLARE_METATYPE( Git::Remote )
-
-#endif

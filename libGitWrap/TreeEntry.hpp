@@ -14,8 +14,7 @@
  *
  */
 
-#ifndef GIT_TREE_ENTRY_H
-#define GIT_TREE_ENTRY_H
+#pragma once
 
 #include "libGitWrap/Base.hpp"
 
@@ -46,5 +45,3 @@ namespace Git
 }
 
 Q_DECLARE_METATYPE( Git::TreeEntry )
-
-#endif

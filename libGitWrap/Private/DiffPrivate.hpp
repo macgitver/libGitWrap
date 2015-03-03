@@ -20,7 +20,6 @@
 
 #include "libGitWrap/Private/RepoObjectPrivate.hpp"
 
-
 namespace Git
 {
 

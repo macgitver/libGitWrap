@@ -14,8 +14,7 @@
  *
  */
 
-#ifndef GIT_OBJECT_PRIVATE_H
-#define GIT_OBJECT_PRIVATE_H
+#pragma once
 
 #include "libGitWrap/Private/RepoObjectPrivate.hpp"
 
@@ -55,5 +54,3 @@ namespace Git
     }
 
 }
-
-#endif

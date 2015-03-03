@@ -14,8 +14,7 @@
  *
  */
 
-#ifndef GIT_REPOSITORY_H
-#define GIT_REPOSITORY_H
+#pragma once
 
 #include "libGitWrap/Base.hpp"
 #include "libGitWrap/Remote.hpp"
@@ -230,5 +229,3 @@ namespace Git
 }
 
 Q_DECLARE_METATYPE( Git::Repository )
-
-#endif

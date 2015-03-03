@@ -14,8 +14,7 @@
  *
  */
 
-#ifndef GITWRAP_GITWRAP_H
-#define GITWRAP_GITWRAP_H
+#pragma once
 
 #include <QStringList>
 #include <QDateTime>
@@ -350,5 +349,3 @@ namespace Git
 
 #define GW_PRIVATE_DECL(CLASS, BASE, SCOPE) \
     GW_PRIVATE_DECL_EX(CLASS, CLASS, BASE, SCOPE)
-
-#endif

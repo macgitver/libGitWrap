@@ -16,8 +16,7 @@
  *
  */
 
-#ifndef GIT_INDEX_ENTRY_PRIVATE_HPP
-#define GIT_INDEX_ENTRY_PRIVATE_HPP
+#pragma once
 
 #include "libGitWrap/Private/BasePrivate.hpp"
 
@@ -43,5 +42,3 @@ namespace Git
 
     }
 }
-
-#endif

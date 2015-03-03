@@ -17,8 +17,6 @@
  *
  */
 
-#ifndef GIT_REF_NAME_PRIVATE_HPP
-#define GIT_REF_NAME_PRIVATE_HPP
 #pragma once
 
 #include <QStringList>
@@ -130,5 +128,3 @@ namespace Git
     }
 
 }
-
-#endif

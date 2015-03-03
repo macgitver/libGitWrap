@@ -16,8 +16,7 @@
  *
  */
 
-#ifndef GITWRAP_REMOTE_OPERATIONS_PRIVATE_HPP
-#define GITWRAP_REMOTE_OPERATIONS_PRIVATE_HPP
+#pragma once
 
 #include "libGitWrap/Operations/Private/BaseOperationPrivate.hpp"
 
@@ -86,6 +85,4 @@ namespace Git
     }
 
 }
-
-#endif
 

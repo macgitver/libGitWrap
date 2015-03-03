@@ -14,8 +14,6 @@
  *
  */
 
-#ifndef GITWRAP_CHECKOUT_OPERATION_HPP
-#define GITWRAP_CHECKOUT_OPERATION_HPP
 #pragma once
 
 #include "libGitWrap/Events/IGitEvents.hpp"
@@ -143,5 +141,3 @@ namespace Git
     };
 
 }
-
-#endif

@@ -14,8 +14,6 @@
  *
  */
 
-#ifndef GITWRAP_IGIT_EVENTS_HPP
-#define GITWRAP_IGIT_EVENTS_HPP
 #pragma once
 
 #include "libGitWrap/GitWrap.hpp"
@@ -74,5 +72,3 @@ namespace Git
 //        virtual void diffNotify();
     };
 }
-
-#endif

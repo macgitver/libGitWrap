@@ -14,8 +14,7 @@
  *
  */
 
-#ifndef GIT_TREE_ENTRY_PRIVATE_H
-#define GIT_TREE_ENTRY_PRIVATE_H
+#pragma once
 
 #include "libGitWrap/Private/BasePrivate.hpp"
 
@@ -44,5 +43,3 @@ namespace Git
     }
 
 }
-
-#endif

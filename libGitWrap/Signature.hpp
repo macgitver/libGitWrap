@@ -14,8 +14,7 @@
  *
  */
 
-#ifndef GIT_SIGNATURE_H
-#define GIT_SIGNATURE_H
+#pragma once
 
 #include "libGitWrap/GitWrap.hpp"
 
@@ -121,5 +120,3 @@ namespace Git
 }
 
 GITWRAP_API QDebug operator<<( QDebug debug, const Git::Signature& sig );
-
-#endif

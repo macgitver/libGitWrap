@@ -14,8 +14,7 @@
  *
  */
 
-#ifndef GIT_REFERENCE_H
-#define GIT_REFERENCE_H
+#pragma once
 
 #include "libGitWrap/RepoObject.hpp"
 #include "libGitWrap/Object.hpp"
@@ -167,5 +166,3 @@ namespace Git
 }
 
 Q_DECLARE_METATYPE(Git::Reference)
-
-#endif

@@ -17,8 +17,7 @@
  *
  */
 
-#ifndef GIT_REF_LOG_PRIVATE_HPP
-#define GIT_REF_LOG_PRIVATE_HPP
+#pragma once
 
 #include "libGitWrap/Private/RepoObjectPrivate.hpp"
 
@@ -42,5 +41,3 @@ namespace Git
     }
 
 }
-
-#endif

@@ -14,8 +14,6 @@
  *
  */
 
-#ifndef GITWRAP_GIT_EVENT_CALLBACKS_HPP
-#define GITWRAP_GIT_EVENT_CALLBACKS_HPP
 #pragma once
 
 #include "libGitWrap/Private/GitWrapPrivate.hpp"
@@ -100,5 +98,3 @@ namespace Git
     }
 
 }
-
-#endif

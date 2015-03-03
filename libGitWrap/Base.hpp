@@ -17,8 +17,7 @@
  *
  */
 
-#ifndef GITWRAP_BASE_HPP
-#define GITWRAP_BASE_HPP
+#pragma once
 
 #include <QSharedData>
 
@@ -68,5 +67,3 @@ namespace Git
     };
 
 }
-
-#endif

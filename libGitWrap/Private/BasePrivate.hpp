@@ -14,8 +14,7 @@
  *
  */
 
-#ifndef GIT_BASIC_OBJECT_H
-#define GIT_BASIC_OBJECT_H
+#pragma once
 
 #include <QSharedData>
 
@@ -83,6 +82,3 @@ namespace Git
     }
 
 }
-
-#endif
-

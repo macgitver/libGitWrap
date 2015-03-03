@@ -14,8 +14,7 @@
  *
  */
 
-#ifndef GIT_OBJECT_H
-#define GIT_OBJECT_H
+#pragma once
 
 #include "libGitWrap/RepoObject.hpp"
 
@@ -121,5 +120,3 @@ namespace Git
 }
 
 Q_DECLARE_METATYPE( Git::Object )
-
-#endif

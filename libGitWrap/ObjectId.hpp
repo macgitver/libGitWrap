@@ -14,8 +14,7 @@
  *
  */
 
-#ifndef GIT_OBJECT_ID_H
-#define GIT_OBJECT_ID_H
+#pragma once
 
 #include "libGitWrap/GitWrap.hpp"
 
@@ -78,5 +77,3 @@ namespace Git
 GITWRAP_API QDebug operator<<( QDebug debug, const Git::ObjectId& id );
 
 Q_DECLARE_METATYPE( Git::ObjectId )
-
-#endif

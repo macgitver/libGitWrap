@@ -14,8 +14,6 @@
  *
  */
 
-#ifndef GITWRAP_CLONE_OPERATION_HPP
-#define GITWRAP_CLONE_OPERATION_HPP
 #pragma once
 
 #include "libGitWrap/Events/IGitEvents.hpp"
@@ -57,7 +55,6 @@ namespace Git
         QString reference() const;
 
     signals:
-        // realization of ICheckoutEvents
         void checkoutNotify( const CheckoutNotify& why,
                              const QString& path,
                              const DiffFile& baseline,
@@ -70,5 +67,3 @@ namespace Git
     };
 
 }
-
-#endif

@@ -14,8 +14,7 @@
  *
  */
 
-#ifndef GIT_REFSPEC_H
-#define GIT_REFSPEC_H
+#pragma once
 
 #include "libGitWrap/GitWrap.hpp"
 
@@ -57,5 +56,3 @@ namespace Git
 }
 
 Q_DECLARE_METATYPE( Git::RefSpec )
-
-#endif

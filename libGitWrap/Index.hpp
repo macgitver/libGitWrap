@@ -16,8 +16,7 @@
  *
  */
 
-#ifndef GIT_INDEX_H
-#define GIT_INDEX_H
+#pragma once
 
 #include "libGitWrap/RepoObject.hpp"
 #include "libGitWrap/Operations/Providers.hpp"
@@ -90,9 +89,6 @@ namespace Git
         IndexTreeProvider( const Index& index );
 
     public:
-
-        // INTERFACE REALIZATION
-
         Tree tree(Result &result);
 
         Repository repository() const;
@@ -104,5 +100,3 @@ namespace Git
 }
 
 Q_DECLARE_METATYPE( Git::Index )
-
-#endif

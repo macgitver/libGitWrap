@@ -16,8 +16,7 @@
  *
  */
 
-#ifndef GIT_INDEX_PRIVATE_H
-#define GIT_INDEX_PRIVATE_H
+#pragma once
 
 #include "libGitWrap/IndexConflict.hpp"
 
@@ -58,5 +57,3 @@ namespace Git
     }
 
 }
-
-#endif

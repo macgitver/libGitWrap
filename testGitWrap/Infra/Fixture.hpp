@@ -17,8 +17,7 @@
  *
  */
 
-#ifndef TEST_GW_FIXTURE_HPP
-#define TEST_GW_FIXTURE_HPP
+#pragma once
 
 #include <QString>
 #include <QObject>
@@ -48,5 +47,3 @@ public:
 protected:
     QString dataDir() const;
 };
-
-#endif

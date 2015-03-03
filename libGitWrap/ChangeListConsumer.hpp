@@ -14,8 +14,7 @@
  *
  */
 
-#ifndef GIT_CHANGELIST_CONSUMER_H
-#define GIT_CHANGELIST_CONSUMER_H
+#pragma once
 
 #include "libGitWrap/GitWrap.hpp"
 
@@ -68,5 +67,3 @@ namespace Git
     };
 
 }
-
-#endif

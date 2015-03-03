@@ -16,15 +16,11 @@
  *
  */
 
-#ifndef GITWRAP_REMOTE_OPERATIONS_HPP
-#define GITWRAP_REMOTE_OPERATIONS_HPP
-
+#pragma once
 
 #include "libGitWrap/Operations/BaseOperation.hpp"
 
 #include "libGitWrap/Events/IGitEvents.hpp"
-
-
 
 namespace Git
 {
@@ -49,7 +45,6 @@ namespace Git
         virtual ~BaseRemoteOperation();
 
     signals:
-        // IRemoteEvents interface
         void askCredentials(CredentialRequest& request);
         void transportProgress(quint32 totalObjects, quint32 indexedObjects, quint32 receivedObjects, quint64 receivedBytes);
         void doneDownloading();
@@ -105,5 +100,3 @@ namespace Git
         void setPBParallelism(unsigned int maxThreads);
     };
 }
-
-#endif

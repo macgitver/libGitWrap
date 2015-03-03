@@ -14,8 +14,7 @@
  *
  */
 
-#ifndef GIT_OBJECT_TAG_H
-#define GIT_OBJECT_TAG_H
+#pragma once
 
 #include "libGitWrap/GitWrap.hpp"
 #include "libGitWrap/ObjectId.hpp"
@@ -65,5 +64,3 @@ namespace Git
 }
 
 Q_DECLARE_METATYPE(Git::Tag)
-
-#endif

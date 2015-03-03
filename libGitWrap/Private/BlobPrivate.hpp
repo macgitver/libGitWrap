@@ -17,8 +17,6 @@
  *
  */
 
-#ifndef GITWRAP_BLOB_PRIVATE_HPP
-#define GITWRAP_BLOB_PRIVATE_HPP
 #pragma once
 
 #include "libGitWrap/Private/ObjectPrivate.hpp"
@@ -46,5 +44,3 @@ namespace Git
     }
 
 }
-
-#endif

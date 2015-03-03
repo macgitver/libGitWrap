@@ -14,8 +14,7 @@
  *
  */
 
-#ifndef GIT_REVISION_WALKER_H
-#define GIT_REVISION_WALKER_H
+#pragma once
 
 #include "libGitWrap/RepoObject.hpp"
 
@@ -61,5 +60,3 @@ namespace Git
 }
 
 Q_DECLARE_METATYPE(Git::RevisionWalker)
-
-#endif

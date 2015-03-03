@@ -14,8 +14,7 @@
  *
  */
 
-#ifndef GITWRAP_WORKER_THREAD_HPP
-#define GITWRAP_WORKER_THREAD_HPP
+#pragma once
 
 #include <QSharedData>
 #include <QThread>
@@ -54,4 +53,3 @@ namespace Git
 
 }
 
-#endif

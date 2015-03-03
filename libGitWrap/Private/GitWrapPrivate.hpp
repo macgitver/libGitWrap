@@ -14,8 +14,7 @@
  *
  */
 
-#ifndef GIT_P_H
-#define GIT_P_H
+#pragma once
 
 #include <QDebug>
 #include <QSharedData>
@@ -452,5 +451,3 @@ namespace Git
     GW_CD(CLASS); \
     GW__CHECK_VOID(result)
 
-
-#endif
