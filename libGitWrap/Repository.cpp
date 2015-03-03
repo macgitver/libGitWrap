@@ -598,7 +598,7 @@ namespace Git
 
         QFileInfo fi( path );
 
-        if( fi.suffix() == QLatin1String( "git" ) )
+        if( fi.suffix() == QStringLiteral( "git" ) )
         {
             return fi.completeBaseName();
         }

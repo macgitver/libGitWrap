@@ -23,8 +23,7 @@
 #include "libGitWrap/RefName.hpp"
 
 TEST(RefName, AnalyzeLocalBranch) {
-    const char* sz = "refs/heads/master";
-    Git::RefName rn = Git::RefName(QLatin1String(sz));
+    Git::RefName rn = Git::RefName(QStringLiteral("refs/heads/master"));
     EXPECT_TRUE (rn.isValid());
 
     EXPECT_TRUE (rn.isBranch());
@@ -52,8 +51,7 @@ TEST(RefName, AnalyzeLocalBranch) {
 }
 
 TEST(RefName, Namespaces) {
-    const char* sz = "refs/namespaces/foo/refs/heads/master";
-    Git::RefName rn = Git::RefName(QLatin1String(sz));
+    Git::RefName rn = Git::RefName(QStringLiteral("refs/namespaces/foo/refs/heads/master"));
     EXPECT_TRUE (rn.isValid());
 
     EXPECT_TRUE (rn.isBranch());
@@ -84,8 +82,8 @@ TEST(RefName, Namespaces) {
 }
 
 TEST(RefName, NestedNamespaces) {
-    const char* sz = "refs/namespaces/bar/refs/namespaces/foo/refs/heads/master";
-    Git::RefName rn = Git::RefName(QLatin1String(sz));
+    Git::RefName rn = Git::RefName(QStringLiteral(
+        "refs/namespaces/bar/refs/namespaces/foo/refs/heads/master"));
     EXPECT_TRUE (rn.isValid());
 
     EXPECT_TRUE (rn.isBranch());
@@ -118,8 +116,7 @@ TEST(RefName, NestedNamespaces) {
 
 
 TEST(RefName, LocalScopedBranch) {
-    const char* sz = "refs/heads/feature/cool";
-    Git::RefName rn = Git::RefName(QLatin1String(sz));
+    Git::RefName rn = Git::RefName(QStringLiteral("refs/heads/feature/cool"));
     EXPECT_TRUE (rn.isValid());
 
     EXPECT_TRUE (rn.isBranch());
@@ -149,8 +146,7 @@ TEST(RefName, LocalScopedBranch) {
 }
 
 TEST(RefName, LocalNestedScopedBranch) {
-    const char* sz = "refs/heads/feature/new/cool";
-    Git::RefName rn = Git::RefName(QLatin1String(sz));
+    Git::RefName rn = Git::RefName(QStringLiteral("refs/heads/feature/new/cool"));
     EXPECT_TRUE (rn.isValid());
 
     EXPECT_TRUE (rn.isBranch());
@@ -181,8 +177,7 @@ TEST(RefName, LocalNestedScopedBranch) {
 }
 
 TEST(RefName, ScopedTag) {
-    const char* sz = "refs/tags/feature/cool";
-    Git::RefName rn = Git::RefName(QLatin1String(sz));
+    Git::RefName rn = Git::RefName(QStringLiteral("refs/tags/feature/cool"));
     EXPECT_TRUE (rn.isValid());
 
     EXPECT_FALSE(rn.isBranch());
@@ -213,8 +208,7 @@ TEST(RefName, ScopedTag) {
 }
 
 TEST(RefName, NestedScopedTag) {
-    const char* sz = "refs/tags/feature/new/cool";
-    Git::RefName rn = Git::RefName(QLatin1String(sz));
+    Git::RefName rn = Git::RefName(QStringLiteral("refs/tags/feature/new/cool"));
     EXPECT_TRUE (rn.isValid());
 
     EXPECT_FALSE(rn.isBranch());
@@ -246,9 +240,7 @@ TEST(RefName, NestedScopedTag) {
 }
 
 TEST(RefName, Specials_Stage) {
-    const char* sz = "refs/stage";
-
-    Git::RefName rn = Git::RefName(QLatin1String(sz));
+    Git::RefName rn = Git::RefName(QStringLiteral("refs/stage"));
     EXPECT_TRUE (rn.isValid());
 
     EXPECT_FALSE(rn.isBranch());
@@ -278,9 +270,7 @@ TEST(RefName, Specials_Stage) {
 }
 
 TEST(RefName, Specials_Head) {
-    const char* sz = "HEAD";
-
-    Git::RefName rn = Git::RefName(QLatin1String(sz));
+    Git::RefName rn = Git::RefName(QStringLiteral("HEAD"));
     EXPECT_TRUE (rn.isValid());
 
     EXPECT_FALSE(rn.isBranch());
@@ -310,9 +300,7 @@ TEST(RefName, Specials_Head) {
 }
 
 TEST(RefName, Specials_MergeHead) {
-    const char* sz = "MERGE_HEAD";
-
-    Git::RefName rn = Git::RefName(QLatin1String(sz));
+    Git::RefName rn = Git::RefName(QStringLiteral("MERGE_HEAD"));
     EXPECT_TRUE (rn.isValid());
 
     EXPECT_FALSE(rn.isBranch());
@@ -342,9 +330,7 @@ TEST(RefName, Specials_MergeHead) {
 }
 
 TEST(RefName, Specials_CommitNotes) {
-    const char* sz = "refs/notes/commit";
-
-    Git::RefName rn = Git::RefName(QLatin1String(sz));
+    Git::RefName rn = Git::RefName(QStringLiteral("refs/notes/commit"));
     EXPECT_TRUE (rn.isValid());
 
     EXPECT_FALSE(rn.isBranch());
@@ -375,9 +361,7 @@ TEST(RefName, Specials_CommitNotes) {
 
 
 TEST(RefName, Peculiars) {
-    const char* sz = "refs/foobar/commit";
-
-    Git::RefName rn = Git::RefName(QLatin1String(sz));
+    Git::RefName rn = Git::RefName(QStringLiteral("refs/foobar/commit"));
     EXPECT_TRUE (rn.isValid());
 
     EXPECT_FALSE(rn.isBranch());
@@ -407,9 +391,7 @@ TEST(RefName, Peculiars) {
 }
 
 TEST(RefName, RemoteBranch) {
-    const char* sz = "refs/remotes/home/new/branch";
-
-    Git::RefName rn = Git::RefName(QLatin1String(sz));
+    Git::RefName rn = Git::RefName(QStringLiteral("refs/remotes/home/new/branch"));
     EXPECT_TRUE (rn.isValid());
 
     EXPECT_TRUE (rn.isBranch());
@@ -440,9 +422,7 @@ TEST(RefName, RemoteBranch) {
 }
 
 TEST(RefName, RemoteHead) {
-    const char* sz = "refs/remotes/home/HEAD";
-
-    Git::RefName rn = Git::RefName(QLatin1String(sz));
+    Git::RefName rn = Git::RefName(QStringLiteral("refs/remotes/home/HEAD"));
     EXPECT_TRUE (rn.isValid());
 
     EXPECT_FALSE(rn.isBranch());
@@ -472,13 +452,10 @@ TEST(RefName, RemoteHead) {
 }
 
 TEST(RefName, CustomRule) {
-    const char* sz = "refs/pull/550/head";
-    const char* szNeg = "refs/heads/master";
-
-    QRegExp re(QLatin1String("^refs\\/pull\\/([1-9][0-9]*)\\/head$"));
+    QRegExp re(QStringLiteral("^refs\\/pull\\/([1-9][0-9]*)\\/head$"));
     int id = Git::RefName::registerExpression((void*)0xAABBCCDD, re);
 
-    Git::RefName rn = Git::RefName(QLatin1String(sz));
+    Git::RefName rn = Git::RefName(QStringLiteral("refs/pull/550/head"));
     EXPECT_TRUE (rn.isValid());
 
     EXPECT_FALSE(rn.isBranch());
@@ -508,7 +485,7 @@ TEST(RefName, CustomRule) {
     ASSERT_EQ(0, rn.scopes().count());
     EXPECT_EQ(0, rn.namespaces().count());
 
-    rn = Git::RefName(QLatin1String(szNeg));
+    rn = Git::RefName(QStringLiteral("refs/heads/master"));
     EXPECT_TRUE (rn.isValid());
     EXPECT_FALSE(rn.isCustom());
     EXPECT_FALSE(rn.matchesCustomRule(id));

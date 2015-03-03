@@ -14,8 +14,6 @@
  *
  */
 
-#include <QScopedPointer>
-
 #include "libGitWrap/Commit.hpp"
 #include "libGitWrap/Tree.hpp"
 #include "libGitWrap/ObjectId.hpp"

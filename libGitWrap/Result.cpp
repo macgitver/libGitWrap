@@ -44,7 +44,7 @@ namespace Git
 
         mCode = -255;
         mClass = -1;
-        mText = QLatin1String( "An invalid GitWrap object was used." );
+        mText = QStringLiteral( "An invalid GitWrap object was used." );
     }
 
     /**
