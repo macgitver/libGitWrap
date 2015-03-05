@@ -29,11 +29,6 @@ namespace Git
 
     namespace Internal
     {
-        class DiffBasePrivate;
-        class DiffIndexPrivate;
-        class DiffTreePrivate;
-        class DiffRepoPrivate;
-
         class DiffOptions;
     }
 
