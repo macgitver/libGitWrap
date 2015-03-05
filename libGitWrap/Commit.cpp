@@ -399,6 +399,18 @@ namespace Git
         return dl;
     }
 
+    /**
+     * @brief           Diff this commit to one of its direct parent commits.
+     *
+     * @param[in,out]   result      A Result object; see @ref GitWrapErrorHandling
+     *
+     * @param[in]       index       the parent commit's index
+     *
+     * @return          the resulting @ref DiffList object
+     *
+     * This commit object must be a valid object and is considered
+     * chronologically newer, than any of its parent commits.
+     */
     DiffList Commit::diffFromParent(Result &result, unsigned int index) const
     {
         GW_CD_CHECKED(Commit, DiffList(), result);
@@ -432,8 +444,11 @@ namespace Git
      *
      * @return          the resulting @ref DiffList object
      *
-     * This commit object must be a valid object and is considered
-     * chronologically newer, than any of its parent commits.
+     * @note            If @p oldCommit is newer than this commit,
+     *                  the result will be reversed.
+     *
+     * This commit object is considered chronologically newer,
+     * than any of its parent commits.
      */
     DiffList Commit::diffFrom(Result& result, const Commit& oldCommit) const
     {
@@ -452,6 +467,9 @@ namespace Git
      *
      * @note            If @p oldCommit is newer than this commit,
      *                  the result will be reversed.
+     *
+     * This commit object is considered chronologically older,
+     * than any of its parent commits.
      */
     DiffList Commit::diffTo(Result& result, const Commit& oldCommit) const
     {
