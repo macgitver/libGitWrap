@@ -219,7 +219,7 @@ namespace Git
         result = git_commit_parent(&gitparent, d->o(), index);
         GW_CHECK_RESULT( result, Commit() );
 
-        return PrivatePtr(new Private(d->repo(), gitparent));
+        return new Private(d->repo(), gitparent);
     }
 
     ObjectId Commit::parentCommitId(Result& result, unsigned int index) const
@@ -244,11 +244,8 @@ namespace Git
         for( unsigned int i = 0; i < numParentCommits(); i++ )
         {
             git_commit* parent = NULL;
-
             result = git_commit_parent(&parent, d->o(), i);
-            if (!result) {
-                return CommitList();
-            }
+            GW_CHECK_RESULT(result, CommitList());
 
             objs.append(PrivatePtr(new Private(d->repo(), parent)));
         }
