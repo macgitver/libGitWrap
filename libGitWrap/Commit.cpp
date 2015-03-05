@@ -356,10 +356,16 @@ namespace Git
     {
         GW_CD_CHECKED(Commit, DiffList(), result);
 
-        DiffList dl = diffFromParent( result, 0 );
+        Diff diff( result );
+        Tree myTree( tree( result ) );
 
+        if ( !numParentCommits() ) {
+            return diff.treeToTree( result, Tree(), myTree );
+        }
+
+        DiffList dl = diff.treeToTree( result, parentCommit(result, 0).tree(result), myTree );
         for (unsigned int i = 1; i < numParentCommits(); i++) {
-            DiffList dl2 = diffFromParent( result, i);
+            DiffList dl2 = diff.treeToTree( result, parentCommit(result, i).tree(result), myTree );
             dl2.mergeOnto( result, dl );
         }
 
@@ -377,10 +383,16 @@ namespace Git
     {
         GW_CD_CHECKED(Commit, DiffList(), result);
 
-        DiffList dl = diffToParent( result, 0 );
+        Diff diff(result);
+        const Tree myTree(tree(result));
 
+        if ( !numParentCommits() ) {
+            return diff.treeToTree( result, myTree, Tree() );
+        }
+
+        DiffList dl = diff.treeToTree( result, myTree, parentCommit(result, 0).tree(result) );
         for (unsigned int i = 1; i < numParentCommits(); i++) {
-            DiffList dl2 = diffToParent(result, i);
+            DiffList dl2 = diff.treeToTree( result, myTree, parentCommit(result, i).tree(result) );
             dl2.mergeOnto( result, dl );
         }
 
@@ -425,7 +437,7 @@ namespace Git
      */
     DiffList Commit::diffFrom(Result& result, const Commit& oldCommit) const
     {
-        Tree oldTree = oldCommit.isValid() ? oldCommit.tree( result ) : Tree();
+        Tree oldTree = oldCommit.isValid() ? oldCommit.tree( result ) : NULL;
         return Diff( result ).treeToTree( result, oldTree, tree( result ) );
     }
 
@@ -443,10 +455,8 @@ namespace Git
      */
     DiffList Commit::diffTo(Result& result, const Commit& oldCommit) const
     {
-        Tree oldTree = oldCommit.isValid() ? oldCommit.tree( result ) : Tree();
-        Diff differ( result );
-        differ.setFlags( GIT_DIFF_REVERSE );
-        return differ.treeToTree( result, oldTree, tree( result ) );
+        Tree oldTree = oldCommit.isValid() ? oldCommit.tree( result ) : NULL;
+        return Diff(result).treeToTree( result, tree( result ), oldTree );
     }
 
 
