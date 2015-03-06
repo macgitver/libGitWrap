@@ -119,7 +119,7 @@ To compile GitWrap, you need the following install:
 * RAD-Tools (read "Install the RAD-Tools" below)
   * You get them [here](https://github.com/Cunz-RAD/RAD-Tools)!
 * CMake ( >= 2.8.12 )
-* Qt >= 5.3 (Qt4 might work, but you're on your own!)
+* Qt >= 5.3 (Qt4 will not work!)
 * The C++ compiler of your choice! We recommend clang/llvm.
 
 ## Got it! Now how do I compile it?
