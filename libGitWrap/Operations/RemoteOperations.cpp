@@ -100,7 +100,9 @@ namespace Git
         {
             GW_CHECK_RESULT(mResult, void());
 
-            git_signature* sig = signature2git(mResult, mSignature);
+            git_signature* sig = mSignature.isEmpty()
+                                 ? NULL
+                                 : signature2git(mResult, mSignature);
 
             Repository::Private* rp = Repository::Private::dataOf<Repository>( mRepo );
             Remote::PrivatePtr remote = lookupRemote( mResult, rp, mRemoteAlias );
@@ -129,7 +131,9 @@ namespace Git
         {
             GW_CHECK_RESULT(mResult, void());
 
-            git_signature* sig = signature2git( mResult, mSignature );
+            git_signature* sig = mSignature.isEmpty()
+                                 ? NULL
+                                 : signature2git(mResult, mSignature);
 
             Repository::Private* rp = Repository::Private::dataOf<Repository>( mRepo );
             Remote::PrivatePtr remote = lookupRemote( mResult, rp, mRemoteAlias );
