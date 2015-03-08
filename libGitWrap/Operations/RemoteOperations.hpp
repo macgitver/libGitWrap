@@ -61,6 +61,9 @@ namespace Git
     public:
         const Repository& repository() const;
 
+        QString remoteAlias() const;
+        void setRemoteAlias(const QString& alias);
+
         const QStringList& refSpecs() const;
         void setRefSpecs(const QStringList& refSprecs);
 

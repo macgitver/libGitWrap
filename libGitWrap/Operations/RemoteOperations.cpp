@@ -164,6 +164,36 @@ namespace Git
         return d->mRepo;
     }
 
+    /**
+     * @brief       The remote alias represents the URI to a remote
+     *              repository.
+     *
+     * @return      the remote alias (e.g. "origin")
+     *
+     * The alias can be an empty string, if the repository has only a single
+     * remote. Most commonly, this is called "origin".
+     */
+    QString BaseRemoteOperation::remoteAlias() const
+    {
+        GW_CD(BaseRemoteOperation);
+        return d->mRemoteAlias;
+    }
+
+    /**
+     * @brief       Sets the alias for the URI to fetch the repository from.
+     *
+     * @param       alias   the alias represents a remote's URI
+     *
+     * The remote alias represents the URI to a remote repository. It must be
+     * defined, if the repository has configured more than one remotes.
+     */
+    void BaseRemoteOperation::setRemoteAlias(const QString& alias)
+    {
+        Q_ASSERT( !isRunning() );
+        GW_D(BaseRemoteOperation);
+        d->mRemoteAlias = alias;
+    }
+
     const QStringList& BaseRemoteOperation::refSpecs() const
     {
         GW_CD( BaseRemoteOperation );
