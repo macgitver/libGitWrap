@@ -98,20 +98,18 @@ namespace Git
 
         void FetchOperationPrivate::run()
         {
-            GW_CHECK_RESULT( mResult, void() );
+            GW_CHECK_RESULT(mResult, void());
 
             git_signature* sig = signature2git(mResult, mSignature);
 
             Repository::Private* rp = Repository::Private::dataOf<Repository>( mRepo );
             Remote::PrivatePtr remote = lookupRemote( mResult, rp, mRemoteAlias );
 
-            if ( mResult )
-            {
+            if ( mResult ) {
                 mResult = git_remote_set_callbacks( remote->mRemote, &mRemoteCallbacks );
             }
 
-            if ( mResult )
-            {
+            if ( mResult ) {
                 mResult = git_remote_fetch( remote->mRemote, StrArray(mRefSpecs), sig, GW_StringFromQt( mRefLogMsg ) );
             }
 
@@ -129,15 +127,14 @@ namespace Git
 
         void PushOperationPrivate::run()
         {
-            GW_CHECK_RESULT( mResult, void() );
+            GW_CHECK_RESULT(mResult, void());
 
             git_signature* sig = signature2git( mResult, mSignature );
 
             Repository::Private* rp = Repository::Private::dataOf<Repository>( mRepo );
             Remote::PrivatePtr remote = lookupRemote( mResult, rp, mRemoteAlias );
 
-            if ( mResult )
-            {
+            if ( mResult ) {
                 mResult = git_remote_push( remote->mRemote, StrArray(mRefSpecs), &mOpts, sig, GW_StringFromQt( mRefLogMsg ) );
             }
 
