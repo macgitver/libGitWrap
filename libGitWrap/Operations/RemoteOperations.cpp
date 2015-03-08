@@ -202,8 +202,8 @@ namespace Git
 
     void BaseRemoteOperation::setRefSpecs(const QStringList& refSprecs)
     {
-        GW_D( BaseRemoteOperation );
         Q_ASSERT( !isRunning() );
+        GW_D( BaseRemoteOperation );
         d->mRefSpecs = refSprecs;
     }
 
@@ -215,8 +215,8 @@ namespace Git
 
     void BaseRemoteOperation::setSignature(const Signature& sig)
     {
-        GW_D( BaseRemoteOperation );
         Q_ASSERT( !isRunning() );
+        GW_D( BaseRemoteOperation );
         d->mSignature = sig;
     }
 
@@ -228,8 +228,8 @@ namespace Git
 
     void BaseRemoteOperation::setRefLogMessage(const QString& msg)
     {
-        GW_D( BaseRemoteOperation );
         Q_ASSERT( !isRunning() );
+        GW_D( BaseRemoteOperation );
         d->mRefLogMsg = msg;
     }
 
