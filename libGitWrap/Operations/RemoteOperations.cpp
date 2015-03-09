@@ -200,11 +200,11 @@ namespace Git
         return d->mRefSpecs;
     }
 
-    void BaseRemoteOperation::setRefSpecs(const QStringList& refSprecs)
+    void BaseRemoteOperation::setRefSpecs(const QStringList& refSpecs)
     {
         Q_ASSERT( !isRunning() );
         GW_D( BaseRemoteOperation );
-        d->mRefSpecs = refSprecs;
+        d->mRefSpecs = refSpecs;
     }
 
     const Signature& BaseRemoteOperation::signature() const

@@ -65,7 +65,7 @@ namespace Git
         void setRemoteAlias(const QString& alias);
 
         const QStringList& refSpecs() const;
-        void setRefSpecs(const QStringList& refSprecs);
+        void setRefSpecs(const QStringList& refSpecs);
 
         const Signature& signature() const;
         void setSignature(const Signature& sig);
