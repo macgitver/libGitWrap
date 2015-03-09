@@ -113,13 +113,6 @@ namespace Git
         d->mCloneOpts.setCheckoutBranch( refName );
     }
 
-    void CloneOperation::setRemoteAlias(const QString& alias)
-    {
-        GW_D( CloneOperation );
-        Q_ASSERT( !isRunning() );
-        d->mRemoteAlias = alias;
-    }
-
     QString CloneOperation::url() const
     {
         GW_CD(CloneOperation);
@@ -147,12 +140,6 @@ namespace Git
     {
         GW_CD( CloneOperation );
         return d->mCloneOpts.checkoutBranch();
-    }
-
-    QString CloneOperation::remoteAlias() const
-    {
-        GW_CD( CloneOperation );
-        return d->mRemoteAlias;
     }
 
 }
