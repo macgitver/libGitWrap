@@ -48,7 +48,6 @@ namespace Git
         void setBare(bool bare);
         void setDepth(uint depth);
         void setReference(const QString& refName);
-        void setRemoteAlias(const QString& alias);
 
     public:
         QString url() const;
@@ -56,7 +55,6 @@ namespace Git
         bool bare() const;
         uint depth() const;
         QString reference() const;
-        QString remoteAlias() const;
 
     signals:
         // realization of ICheckoutEvents
