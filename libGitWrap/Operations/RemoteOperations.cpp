@@ -194,12 +194,31 @@ namespace Git
         d->mRemoteAlias = alias;
     }
 
+    /**
+     * @brief       The refspecs set to this remote operation.
+     *
+     * @return      the defined refspecs
+     *
+     * @see         setRefSpecs()
+     */
     const QStringList& BaseRemoteOperation::refSpecs() const
     {
         GW_CD( BaseRemoteOperation );
         return d->mRefSpecs;
     }
 
+    /**
+     * @brief       Set the refspecs for a remote operation.
+     *
+     * @param       refSpecs    the full refspecs to Git references
+     *
+     * @see         refSpecs()
+     *
+     * A refspec defines the full path to a Git reference. This can be e.g. a
+     * branch or tag. If no refspecs are defined, behaviour of the remote
+     * operation falls back to the specific default. On a push operation, this
+     * means for example, that only the current branch will be pushed.
+     */
     void BaseRemoteOperation::setRefSpecs(const QStringList& refSpecs)
     {
         Q_ASSERT( !isRunning() );
@@ -207,12 +226,32 @@ namespace Git
         d->mRefSpecs = refSpecs;
     }
 
+    /**
+     * @brief       The signature used for fetch & push operations.
+     *
+     * @return      the defined signature
+     *
+     * @see         setSignature()
+     *
+     * Defaults to an empty signature.
+     */
     const Signature& BaseRemoteOperation::signature() const
     {
         GW_CD( BaseRemoteOperation );
         return d->mSignature;
     }
 
+    /**
+     * @brief       Set the signature, used for the remote operation.
+     *
+     * @param       sig     the signature
+     *
+     * @see         signature()
+     *
+     * If no signature is set, the signature will be determined from the
+     * Git configuration. The operation will return an invalid
+     * @ref Git::Result, if no signature is found.
+     */
     void BaseRemoteOperation::setSignature(const Signature& sig)
     {
         Q_ASSERT( !isRunning() );
@@ -220,12 +259,28 @@ namespace Git
         d->mSignature = sig;
     }
 
+    /**
+     * @brief           The defined reflog message; empty by default.
+     *
+     * @return          the reflog message for this remote operation
+     *
+     * @see             setRefLogMessage()
+     */
     QString BaseRemoteOperation::refLogMessage() const
     {
         GW_CD( BaseRemoteOperation );
         return d->mRefLogMsg;
     }
 
+    /**
+     * @brief           Set the reflog message for this remote operation.
+     *
+     * @param           msg     the reflog message
+     *
+     * @see             refLogMessage()
+     *
+     * @note            The message will be always written to the local reflog.
+     */
     void BaseRemoteOperation::setRefLogMessage(const QString& msg)
     {
         Q_ASSERT( !isRunning() );
@@ -262,12 +317,30 @@ namespace Git
         setRepository( repo );
     }
 
+    /**
+     * @brief       The maximum number of worker threads used by the packbuilder.
+     *
+     * @return      the configured maximum
+     *
+     * @see         setPBParallelism()
+     *
+     * A value of 0 means "auto-detect".
+     */
     unsigned int PushOperation::pbParallellism() const
     {
         GW_CD( PushOperation );
         return d->mOpts.pb_parallelism;
     }
 
+    /**
+     * @brief       Set the maximum number of worker threads used by the packbuilder.
+     *
+     * @param       maxThreads  the maximum number of threads
+     *
+     * @see         pbParallelism()
+     *
+     * The libgit2 default is 1. A value of 0 means "auto-detect".
+     */
     void PushOperation::setPBParallelism(unsigned int maxThreads)
     {
         GW_D( PushOperation );
