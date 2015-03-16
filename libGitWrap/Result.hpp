@@ -154,7 +154,9 @@ namespace Git
 
 /**
   * @ingroup    GitWrap
-  * @def        Check, if a given @ref Git::Result object is valid.
+  * @def        GW_CHECK_RESULT
+  * @brief      Check, if a given @ref Git::Result object is valid.
+  *
   *             The current function will exit with the defined return value,
   *             when the result is invalid.
   */

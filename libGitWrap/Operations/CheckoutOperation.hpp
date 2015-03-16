@@ -68,7 +68,6 @@ namespace Git
         Tree baseline() const;
 
     signals:
-        // ICheckoutEvents interface
         void checkoutNotify( const CheckoutNotify& why,
                              const QString& path,
                              const DiffFile& baseline,
