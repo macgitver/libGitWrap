@@ -322,15 +322,6 @@ namespace Git
             : BASE(other) \
             {} \
         \
-        CLASS& operator=(const CLASS& other) \
-            { return static_cast<CLASS&>(BASE::operator=(other)); } \
-        \
-        bool operator==(const CLASS& other) const \
-            { return BASE::operator==(other); } \
-        \
-        bool operator!=(const CLASS& other) const \
-            { return BASE::operator!=(other); } \
-        \
     public: \
         ~CLASS() \
             {}
