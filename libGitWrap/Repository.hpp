@@ -101,6 +101,7 @@ namespace Git
 
         Reference HEAD( Result& result ) const;
         BranchRef headBranch( Result& result ) const;
+        QString headBranchName(Result& result) const;
 
         ObjectId resolveRef(Result& result, const QString& refName);
 
