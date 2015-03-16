@@ -48,6 +48,8 @@ namespace Git
         bool operator==(const Base& other) const;
         bool operator!=(const Base& other) const;
 
+        bool operator!() const;
+
     public:
         bool isValid() const;
 
@@ -65,5 +67,11 @@ namespace Git
             // correctness.
         }
     };
+
+
+    inline bool Base::operator!() const
+    {
+        return !isValid();
+    }
 
 }
