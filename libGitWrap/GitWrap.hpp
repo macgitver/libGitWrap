@@ -349,3 +349,8 @@ namespace Git
 
 #define GW_PRIVATE_DECL(CLASS, BASE, SCOPE) \
     GW_PRIVATE_DECL_EX(CLASS, CLASS, BASE, SCOPE)
+
+#define GW_PRIVATE_OBJECT_DECL(CLASS, BASE, SCOPE) \
+    GW_PRIVATE_DECL(CLASS, BASE, SCOPE) \
+public: \
+    enum { ObjectTypeId = ot##CLASS };

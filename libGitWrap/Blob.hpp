@@ -38,8 +38,7 @@ namespace Git
     class GITWRAP_API Blob : public Object
     {
     public:
-        GW_PRIVATE_DECL(Blob, Object, public);
-        enum { ObjectTypeId = otBlob };
+        GW_PRIVATE_OBJECT_DECL(Blob, Object, public)
     };
 
     template<>

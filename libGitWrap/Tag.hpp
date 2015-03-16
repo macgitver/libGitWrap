@@ -35,9 +35,7 @@ namespace Git
      */
     class GITWRAP_API Tag : public Object
     {
-        GW_PRIVATE_DECL(Tag, Object, public)
-    public:
-        enum { ObjectTypeId = otTag };
+        GW_PRIVATE_OBJECT_DECL(Tag, Object, public)
 
     public:
         static ObjectId create(Result& result,
