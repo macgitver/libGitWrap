@@ -77,7 +77,7 @@ namespace Git
             return Tree();
         }
 
-        return PrivatePtr(new Tree::Private(d->repo(), subObject));
+        return new Tree::Private(d->repo(), subObject);
     }
 
     size_t Tree::entryCount() const
@@ -94,7 +94,7 @@ namespace Git
             return TreeEntry();
         }
         const git_tree_entry* entry = git_tree_entry_byindex(d->o(), index);
-        return TreeEntry::PrivatePtr(new TreeEntry::Private(entry));
+        return new TreeEntry::Private(entry);
     }
 
     TreeEntry Tree::entry(const QString& fileName) const
@@ -106,7 +106,7 @@ namespace Git
         }
 
         const git_tree_entry* entry = git_tree_entry_byname(d->o(), GW_StringFromQt(fileName));
-        return TreeEntry::PrivatePtr(new TreeEntry::Private(entry));
+        return new TreeEntry::Private(entry);
     }
 
     TreeEntry Tree::operator[](const QString& fileName) const

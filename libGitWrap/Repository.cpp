@@ -158,7 +158,7 @@ namespace Git
         result = git_repository_init( &repo, GW_StringFromQt(path), bare );
         GW_CHECK_RESULT( result, Repository() );
 
-        return PrivatePtr(new Private(repo));
+        return new Private(repo);
     }
 
     /**
@@ -237,7 +237,7 @@ namespace Git
         result = git_repository_open( &repo, GW_StringFromQt( path ) );
         GW_CHECK_RESULT( result, Repository() );
 
-        return PrivatePtr(new Private(repo));
+        return new Private(repo);
     }
 
     /**
@@ -614,7 +614,7 @@ namespace Git
         result = git_repository_head( &refHead, d->mRepo );
         GW_CHECK_RESULT( result, Reference() );
 
-        return Reference::PrivatePtr(new Reference::Private(PrivatePtr(d), refHead));
+        return new Reference::Private(PrivatePtr(d), refHead);
     }
 
     /**

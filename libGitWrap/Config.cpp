@@ -76,7 +76,7 @@ namespace Git
         result = git_config_open_ondisk( &cfg, path );
         GW_CHECK_RESULT( result, Config() );
 
-        return PrivatePtr(new Private(cfg));
+        return new Private(cfg);
     }
 
     Config Config::user(Result &result)
@@ -92,7 +92,7 @@ namespace Git
         result = git_config_open_ondisk( &cfg, path );
         GW_CHECK_RESULT( result, Config() );
 
-        return PrivatePtr(new Private(cfg));
+        return new Private(cfg);
     }
 
     Config Config::file( Result& result, const QString& fileName )
@@ -103,7 +103,7 @@ namespace Git
         result = git_config_open_ondisk( &cfg, fileName.toLocal8Bit().constData() );
         GW_CHECK_RESULT( result, Config() );
 
-        return PrivatePtr(new Private(cfg));
+        return new Private(cfg);
     }
 
     Config Config::create(Result& result)
@@ -114,7 +114,7 @@ namespace Git
         result = git_config_new( &cfg );
         GW_CHECK_RESULT( result, Config() );
 
-        return PrivatePtr(new Private(cfg));
+        return new Private(cfg);
     }
 
     bool Config::addFile(Result& result, const QString& fileName, int priority)

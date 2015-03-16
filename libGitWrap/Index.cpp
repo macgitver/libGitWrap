@@ -135,7 +135,7 @@ namespace Git
         // Out-Of-Memory case.
         git_index_new(&index);
 
-        return PrivatePtr(new Private(Repository::PrivatePtr(), index));
+        return new Private(Repository::PrivatePtr(), index);
     }
 
     /**
@@ -162,7 +162,7 @@ namespace Git
             return Index();
         }
 
-        return PrivatePtr(new Private(Repository::PrivatePtr(), index));
+        return new Private(Repository::PrivatePtr(), index);
     }
 
     Index::operator TreeProviderPtr() const
@@ -223,7 +223,7 @@ namespace Git
             result.setError(GIT_ENOTFOUND);
         }
 
-        return IndexEntry::PrivatePtr(new IndexEntry::Private(entry));
+        return new IndexEntry::Private(entry);
     }
 
     /**
@@ -254,7 +254,7 @@ namespace Git
             result.setError(GIT_ENOTFOUND);
         }
 
-        return IndexEntry::PrivatePtr(new IndexEntry::Private(entry));
+        return new IndexEntry::Private(entry);
     }
 
     /**

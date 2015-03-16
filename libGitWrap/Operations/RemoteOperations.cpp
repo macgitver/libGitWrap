@@ -75,7 +75,7 @@ namespace Git
             result = git_remote_lookup( &remote, repo->mRepo, GW_StringFromQt(remoteName) );
             GW_CHECK_RESULT( result, Remote::PrivatePtr() );
 
-            return Remote::PrivatePtr( new RemotePrivate( repo, remote ) );
+            return Remote::PrivatePtr(new RemotePrivate(repo, remote));
         }
 
         BaseRemoteOperationPrivate::BaseRemoteOperationPrivate(BaseRemoteOperation *owner)

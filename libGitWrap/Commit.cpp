@@ -247,7 +247,7 @@ namespace Git
             result = git_commit_parent(&parent, d->o(), i);
             GW_CHECK_RESULT(result, CommitList());
 
-            objs.append(PrivatePtr(new Private(d->repo(), parent)));
+            objs.append(new Private(d->repo(), parent));
         }
 
         return objs;

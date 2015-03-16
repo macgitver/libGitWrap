@@ -335,7 +335,7 @@ namespace Git
         result = git_reference_resolve(&ref, d->reference);
         GW_CHECK_RESULT( result, Reference() );
 
-        return PrivatePtr(new Private(d->repo(), ref));
+        return new Private(d->repo(), ref);
     }
 
     ObjectId Reference::resolveToObjectId( Result& result ) const

@@ -106,7 +106,7 @@ namespace Git
             return TreeEntry();
         }
 
-        return TreeEntry::PrivatePtr(new TreeEntry::Private(entry, true));
+        return new TreeEntry::Private(entry, true);
     }
 
 

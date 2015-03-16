@@ -56,7 +56,7 @@ namespace Git
         result = git_tree_entry_dup( &entry, d->mEntry );
         Q_ASSERT(result && entry);
 
-        return PrivatePtr(new Private(entry));
+        return new Private(entry);
     }
 
     ObjectId TreeEntry::sha1() const
