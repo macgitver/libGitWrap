@@ -65,6 +65,7 @@ namespace Git
 
         bool isBare() const;
         bool isHeadDetached() const;
+        bool isHeadUnborn() const;
 
         bool detachHead(Result& result);
         void setDetachedHEAD(Result& result, const ObjectId& sha);

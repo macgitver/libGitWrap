@@ -304,11 +304,25 @@ namespace Git
      * @return      @c true if this Repository is valid and its HEAD branch points to a commit
      *              rather than to another reference. @c false if the Repository is either invalid
      *              or its HEAD points to another reference.
+     *
      */
     bool Repository::isHeadDetached() const
     {
         GW_CD(Repository);
         return d && git_repository_head_detached(d->mRepo);
+    }
+
+    /**
+     * @brief       Check whether the repository's HEAD is detached
+     *
+     * @return      @c true if this Repository is valid and its HEAD branch points to branch that
+     *              does not yet exist. @c false in any other case.
+     *
+     */
+    bool Repository::isHeadUnborn() const
+    {
+        GW_CD(Repository);
+        return d && git_repository_head_unborn(d->mRepo);
     }
 
     /**
