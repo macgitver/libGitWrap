@@ -35,10 +35,10 @@ namespace Git
         public:
             ReferencePrivate(git_reference* ref, const RefNamePrivate* refName);
         public:
-            ReferencePrivate(const RepositoryPrivate::Ptr& repo,
+            ReferencePrivate(RepositoryPrivate* repo,
                              const QString& name,
                              git_reference* ref);
-            ReferencePrivate(const RepositoryPrivate::Ptr& repo, git_reference* ref);
+            ReferencePrivate(RepositoryPrivate* repo, git_reference* ref);
             ~ReferencePrivate();
 
         public:

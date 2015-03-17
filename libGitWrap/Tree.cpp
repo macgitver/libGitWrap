@@ -30,13 +30,13 @@ namespace Git
 
     namespace Internal {
 
-        TreePrivate::TreePrivate(const RepositoryPrivate::Ptr& repo, git_tree* o)
+        TreePrivate::TreePrivate(RepositoryPrivate* repo, git_tree* o)
             : ObjectPrivate(repo, reinterpret_cast<git_object*>(o))
         {
             Q_ASSERT(o);
         }
 
-        TreePrivate::TreePrivate(const RepositoryPrivate::Ptr& repo, git_object* o)
+        TreePrivate::TreePrivate(RepositoryPrivate* repo, git_object* o)
             : ObjectPrivate(repo, o)
         {
             Q_ASSERT(o);

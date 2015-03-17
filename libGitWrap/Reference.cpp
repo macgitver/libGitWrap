@@ -45,8 +45,8 @@ namespace Git
     namespace Internal
     {
 
-        ReferencePrivate::ReferencePrivate(const RepositoryPrivate::Ptr& repo, git_reference* ref)
-            : RefNamePrivate(repo.data())
+        ReferencePrivate::ReferencePrivate(RepositoryPrivate* repo, git_reference* ref)
+            : RefNamePrivate(repo)
             , wasDeleted(false)
             , reference(ref)
         {
@@ -54,9 +54,9 @@ namespace Git
             fqrn = GW_StringToQt(git_reference_name(reference));
         }
 
-        ReferencePrivate::ReferencePrivate(const RepositoryPrivate::Ptr& repo, const QString& name,
+        ReferencePrivate::ReferencePrivate(RepositoryPrivate* repo, const QString& name,
                                            git_reference* ref)
-            : RefNamePrivate(repo.data(), name)
+            : RefNamePrivate(repo, name)
             , wasDeleted(false)
             , reference(ref)
         {

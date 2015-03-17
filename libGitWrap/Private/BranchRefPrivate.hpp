@@ -31,7 +31,7 @@ namespace Git
         class BranchRefPrivate : public ReferencePrivate
         {
         public:
-            BranchRefPrivate(const RepositoryPrivate::Ptr& repo, git_reference* reference);
+            BranchRefPrivate(RepositoryPrivate* repo, git_reference* reference);
             BranchRefPrivate(git_reference* reference, const RefNamePrivate* refName);
 
         public:

@@ -30,8 +30,8 @@ namespace Git
         class BlobPrivate : public ObjectPrivate
         {
         public:
-            BlobPrivate(const RepositoryPrivate::Ptr& repo, git_object* o);
-            BlobPrivate(const RepositoryPrivate::Ptr& repo, git_blob* o);
+            BlobPrivate(RepositoryPrivate* repo, git_object* o);
+            BlobPrivate(RepositoryPrivate* repo, git_blob* o);
 
         public:
             git_blob* o()               { return reinterpret_cast<git_blob*>(mObj); }

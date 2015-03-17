@@ -49,12 +49,6 @@ namespace Git
         {
         }
 
-        RefLogPrivate::RefLogPrivate( const RepositoryPrivate::Ptr& repo, git_reflog* _reflog )
-            : RepoObjectPrivate(repo)
-            , reflog( _reflog )
-        {
-        }
-
         RefLogPrivate::~RefLogPrivate()
         {
             git_reflog_free(reflog);

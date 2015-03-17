@@ -36,7 +36,7 @@ namespace Git
     namespace Internal
     {
 
-        BranchRefPrivate::BranchRefPrivate(const RepositoryPrivate::Ptr& repo,
+        BranchRefPrivate::BranchRefPrivate(RepositoryPrivate *repo,
                                            git_reference* reference)
             : ReferencePrivate(repo, reference)
         {

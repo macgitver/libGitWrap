@@ -25,13 +25,13 @@ namespace Git
     namespace Internal
     {
 
-        TagPrivate::TagPrivate(const RepositoryPrivate::Ptr& repo, git_tag* o)
+        TagPrivate::TagPrivate(RepositoryPrivate* repo, git_tag* o)
             : ObjectPrivate(repo, reinterpret_cast<git_object*>(o))
         {
             Q_ASSERT(o);
         }
 
-        TagPrivate::TagPrivate(const RepositoryPrivate::Ptr& repo, git_object* o)
+        TagPrivate::TagPrivate(RepositoryPrivate* repo, git_object* o)
             : ObjectPrivate(repo, o)
         {
             Q_ASSERT(o);
@@ -152,7 +152,7 @@ namespace Git
         git_tag_lookup( &out, rp->mRepo, Internal::ObjectId2git(tagId) );
         GW_CHECK_RESULT( result, Tag() );
 
-        return new Internal::TagPrivate( Repository::PrivatePtr(rp), out );
+        return new Internal::TagPrivate(rp, out );
     }
 
     GW_PRIVATE_IMPL(Tag, Object)

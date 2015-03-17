@@ -84,7 +84,7 @@ namespace Git
         git_diff* diff = NULL;
         result = git_diff_index_to_workdir( &diff, rp->mRepo, NULL, *mOpts );
 
-        return new Internal::DiffListPrivate( Internal::RepositoryPrivate::Ptr( rp ), diff);
+        return new Internal::DiffListPrivate(rp, diff);
     }
 
     /**
@@ -120,7 +120,7 @@ namespace Git
         git_diff* diff = NULL;
         result = git_diff_index_to_workdir( &diff, rp->mRepo, ip->index, *mOpts );
 
-        return new Internal::DiffListPrivate( Internal::RepositoryPrivate::Ptr( rp ), diff);
+        return new Internal::DiffListPrivate(rp, diff);
     }
 
     /**
@@ -167,7 +167,7 @@ namespace Git
         result = git_diff_tree_to_tree( &diff, rp->mRepo, gitOldTree, gitNewTree, *mOpts );
         GW_CHECK_RESULT( result, NULL );
 
-        return new Internal::DiffListPrivate( Internal::RepositoryPrivate::Ptr( rp ), diff );
+        return new Internal::DiffListPrivate(rp, diff);
     }
 
     /**
@@ -198,7 +198,7 @@ namespace Git
         result = git_diff_tree_to_index( &diff, rp->mRepo, tp->o(), NULL, *mOpts );
         GW_CHECK_RESULT( result, NULL );
 
-        return new Internal::DiffListPrivate( Internal::RepositoryPrivate::Ptr( rp ), diff );
+        return new Internal::DiffListPrivate(rp, diff);
     }
 
     /**
@@ -225,7 +225,7 @@ namespace Git
         result = git_diff_tree_to_index( &diff, rp->mRepo, NULL, NULL, *mOpts );
         GW_CHECK_RESULT( result, NULL );
 
-        return new DiffList::Private( Internal::RepositoryPrivate::Ptr( rp ), diff );
+        return new Internal::DiffListPrivate(rp, diff);
     }
 
     /**
@@ -258,7 +258,7 @@ namespace Git
                                            tp->o(), *mOpts );
         GW_CHECK_RESULT( result, NULL );
 
-        return new DiffList::Private( Internal::RepositoryPrivate::Ptr( rp ), diff);
+        return new Internal::DiffListPrivate(rp, diff);
     }
 
     /**
@@ -283,7 +283,7 @@ namespace Git
         result = git_diff_tree_to_workdir( &diff, rp->mRepo, NULL, *mOpts );
         GW_CHECK_RESULT( result, NULL );
 
-        return new Internal::DiffListPrivate( Internal::RepositoryPrivate::Ptr( rp ), diff);
+        return new Internal::DiffListPrivate(rp, diff);
     }
 
     /**
@@ -316,7 +316,7 @@ namespace Git
                                                       tp->o(), *mOpts );
         GW_CHECK_RESULT( result, NULL );
 
-        return new Internal::DiffListPrivate( Internal::RepositoryPrivate::Ptr( rp ), diff );
+        return new Internal::DiffListPrivate(rp, diff);
     }
 
     /**
@@ -347,7 +347,7 @@ namespace Git
                                                       NULL, *mOpts );
         GW_CHECK_RESULT( result, NULL );
 
-        return new Internal::DiffListPrivate( Internal::RepositoryPrivate::Ptr( rp ), diff );
+        return new Internal::DiffListPrivate(rp, diff);
     }
 
     /**

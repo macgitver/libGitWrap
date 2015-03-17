@@ -39,7 +39,7 @@ namespace Git
     namespace Internal
     {
 
-        IndexPrivate::IndexPrivate(const RepositoryPrivate::Ptr& repo, git_index* index)
+        IndexPrivate::IndexPrivate(RepositoryPrivate* repo, git_index* index)
             : RepoObjectPrivate(repo)
             , index(index)
             , conflictsLoaded(false)
@@ -49,9 +49,8 @@ namespace Git
 
         IndexPrivate::~IndexPrivate()
         {
-            Q_ASSERT( mRepo );
-            if( mRepo->mIndex == this )
-            {
+            Q_ASSERT(mRepo);
+            if (mRepo->mIndex == this) {
                 mRepo->mIndex = NULL;
             }
 
@@ -135,7 +134,7 @@ namespace Git
         // Out-Of-Memory case.
         git_index_new(&index);
 
-        return new Private(Repository::PrivatePtr(), index);
+        return new Private(GW_NULLPTR, index);
     }
 
     /**
@@ -162,7 +161,7 @@ namespace Git
             return Index();
         }
 
-        return new Private(Repository::PrivatePtr(), index);
+        return new Private(GW_NULLPTR, index);
     }
 
     Index::operator TreeProviderPtr() const

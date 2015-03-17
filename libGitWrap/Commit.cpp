@@ -33,13 +33,13 @@ namespace Git
 
     namespace Internal {
 
-        CommitPrivate::CommitPrivate(const RepositoryPrivate::Ptr& repo, git_commit *o)
+        CommitPrivate::CommitPrivate(RepositoryPrivate* repo, git_commit *o)
             : ObjectPrivate(repo, reinterpret_cast<git_object*>(o))
         {
             Q_ASSERT(o);
         }
 
-        CommitPrivate::CommitPrivate(const RepositoryPrivate::Ptr& repo, git_object *o)
+        CommitPrivate::CommitPrivate(RepositoryPrivate* repo, git_object *o)
             : ObjectPrivate(repo, o)
         {
             Q_ASSERT(o);
@@ -189,7 +189,7 @@ namespace Git
         result = git_commit_tree(&tree, d->o());
         GW_CHECK_RESULT( result, Tree() );
 
-        return new Tree::Private( d->repo(), tree );
+        return new Tree::Private(d->repo(), tree);
     }
 
     ObjectId Commit::treeId( Result& result ) const

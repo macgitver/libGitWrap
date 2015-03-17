@@ -54,7 +54,7 @@ namespace Git
 
         //-- DiffListPrivate -->8
 
-        DiffListPrivate::DiffListPrivate(const RepositoryPrivate::Ptr& repo, git_diff* diff)
+        DiffListPrivate::DiffListPrivate(RepositoryPrivate* repo, git_diff* diff)
             : RepoObjectPrivate( repo )
             , mDiff( diff )
         {

@@ -32,7 +32,7 @@ namespace Git
         class ObjectPrivate : public RepoObjectPrivate
         {
         protected:
-            ObjectPrivate(const RepositoryPrivate::Ptr& repo, git_object* o);
+            ObjectPrivate(RepositoryPrivate* repo, git_object* o);
 
         public:
             ~ObjectPrivate();

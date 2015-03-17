@@ -34,7 +34,7 @@ namespace Git
         class RemotePrivate : public RepoObjectPrivate
         {
         public:
-            RemotePrivate(Repository::Private* repo, git_remote* remote);
+            RemotePrivate(RepositoryPrivate* repo, git_remote* remote);
             ~RemotePrivate();
 
         public:

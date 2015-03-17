@@ -61,7 +61,7 @@ namespace Git
             return s;
         }
 
-        SubmodulePrivate::SubmodulePrivate(const Repository::PrivatePtr& repo, const QString& name)
+        SubmodulePrivate::SubmodulePrivate(RepositoryPrivate* repo, const QString& name)
             : RepoObjectPrivate(repo)
             , mName(name)
             , mSubRepo(NULL)

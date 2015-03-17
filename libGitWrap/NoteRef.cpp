@@ -27,8 +27,8 @@ namespace Git
     namespace Internal
     {
 
-        NoteRefPrivate::NoteRefPrivate(const RepositoryPrivate::Ptr& repo,
-                                           git_reference* reference)
+        NoteRefPrivate::NoteRefPrivate(RepositoryPrivate* repo,
+                                       git_reference* reference)
             : ReferencePrivate(repo, reference)
         {
             #ifdef QT_DEBUG

@@ -30,7 +30,7 @@ namespace Git
         class SubmodulePrivate : public RepoObjectPrivate
         {
         public:
-            SubmodulePrivate(const Repository::PrivatePtr& repo, const QString& name);
+            SubmodulePrivate(RepositoryPrivate* repo, const QString& name);
 
         public:
             git_submodule* getSM( Result& rc ) const;

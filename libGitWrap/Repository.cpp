@@ -318,10 +318,10 @@ namespace Git
                 return Index();
             }
 
-            d->mIndex = new Index::Private(PrivatePtr(d), index);
+            d->mIndex = new Index::Private(d, index);
         }
 
-        return Index::PrivatePtr(d->mIndex);
+        return d->mIndex;
     }
 
     /**
@@ -387,7 +387,6 @@ namespace Git
     ReferenceList Repository::allReferences(Result &result)
     {
         GW_D_CHECKED(Repository, ReferenceList(), result);
-
         Internal::cb_append_reference_data data( result, d );
         result = git_reference_foreach( d->mRepo,
                                         &Internal::cb_append_reference,
@@ -780,7 +779,7 @@ namespace Git
             return Remote();
         }
 
-        return new Remote::Private(d.data(), remote);
+        return new Remote::Private(const_cast<Private*>(d), remote);
     }
 
     namespace Internal
@@ -797,8 +796,7 @@ namespace Git
             cb_enum_submodules_t* d = static_cast<cb_enum_submodules_t*>(payload);
             Q_ASSERT(d && name);
 
-            Repository::PrivatePtr repo(d->repo);
-            d->subs.append(new SubmodulePrivate(repo, GW_StringToQt(name)));
+            d->subs.append(new SubmodulePrivate(d->repo, GW_StringToQt(name)));
             return 0;
         }
 

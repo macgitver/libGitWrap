@@ -34,7 +34,7 @@ namespace Git
     namespace Internal
     {
 
-        ObjectPrivate::ObjectPrivate(const RepositoryPrivate::Ptr& repo, git_object* o)
+        ObjectPrivate::ObjectPrivate(RepositoryPrivate* repo, git_object* o)
             : RepoObjectPrivate(repo)
             , mObj(o)
         {

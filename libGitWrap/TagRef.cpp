@@ -27,7 +27,7 @@ namespace Git
     namespace Internal
     {
 
-        TagRefPrivate::TagRefPrivate(const RepositoryPrivate::Ptr& repo,
+        TagRefPrivate::TagRefPrivate(RepositoryPrivate* repo,
                                      git_reference* reference)
             : ReferencePrivate(repo, reference)
         {

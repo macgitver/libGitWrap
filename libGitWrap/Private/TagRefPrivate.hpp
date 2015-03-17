@@ -31,7 +31,7 @@ namespace Git
         class TagRefPrivate : public ReferencePrivate
         {
         public:
-            TagRefPrivate(const RepositoryPrivate::Ptr& repo, git_reference* reference);
+            TagRefPrivate(RepositoryPrivate* repo, git_reference* reference);
             TagRefPrivate(git_reference* reference, const RefNamePrivate* refName);
 
         public:

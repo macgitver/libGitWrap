@@ -48,7 +48,7 @@ namespace Git
         class DiffListPrivate : public RepoObjectPrivate
         {
         public:
-            DiffListPrivate(const RepositoryPrivate::Ptr& repo, git_diff* diff);
+            DiffListPrivate(RepositoryPrivate* repo, git_diff* diff);
             ~DiffListPrivate();
 
         public:

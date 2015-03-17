@@ -33,8 +33,8 @@ namespace Git
             typedef QExplicitlySharedDataPointer<TreePrivate> Ptr;
 
         public:
-            TreePrivate(const RepositoryPrivate::Ptr& repo, git_object* o);
-            TreePrivate(const RepositoryPrivate::Ptr& repo, git_tree* o);
+            TreePrivate(RepositoryPrivate* repo, git_object* o);
+            TreePrivate(RepositoryPrivate* repo, git_tree* o);
 
         public:
             git_tree* o()               { return reinterpret_cast<git_tree*>(mObj); }

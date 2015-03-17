@@ -33,7 +33,7 @@ namespace Git
         class TreeBuilderPrivate : public RepoObjectPrivate
         {
         public:
-            TreeBuilderPrivate(const RepositoryPrivate::Ptr& repo, git_treebuilder* builder);
+            TreeBuilderPrivate(RepositoryPrivate* repo, git_treebuilder* builder);
             ~TreeBuilderPrivate();
 
         public:

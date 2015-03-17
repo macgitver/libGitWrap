@@ -29,7 +29,7 @@ namespace Git
     namespace Internal
     {
 
-        TreeBuilderPrivate::TreeBuilderPrivate(const RepositoryPrivate::Ptr& repo, git_treebuilder* builder )
+        TreeBuilderPrivate::TreeBuilderPrivate(RepositoryPrivate* repo, git_treebuilder* builder )
             : RepoObjectPrivate( repo )
             , mBuilder( builder )
         {
