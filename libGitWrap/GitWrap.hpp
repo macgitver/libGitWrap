@@ -40,6 +40,12 @@
 #   define GW_DEPRECATED
 #endif
 
+#if QT_VERSION < 0x050400
+// Apparently, this has to be public :-(
+// GW_ macros use it
+#define qUtf8Printable qPrintable
+#endif
+
 namespace Git
 {
 
