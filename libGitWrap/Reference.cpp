@@ -256,8 +256,8 @@ namespace Git
      */
     RefName Reference::nameAnalyzer() const
     {
-        GW_CD_EX(Reference);
-        return RefName(d);
+        GW_CD(Reference);
+        return const_cast<Internal::ReferencePrivate*>(d);
     }
 
     /**

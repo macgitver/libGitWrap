@@ -607,13 +607,13 @@ namespace Git
 
     Reference Repository::HEAD( Result& result ) const
     {
-        GW_CD_EX_CHECKED(Repository, Reference(), result);
+        GW_CD_CHECKED(Repository, Reference(), result);
 
         git_reference* refHead = NULL;
         result = git_repository_head( &refHead, d->mRepo );
         GW_CHECK_RESULT( result, Reference() );
 
-        return new Reference::Private(PrivatePtr(d), refHead);
+        return new Reference::Private(const_cast<Private*>(d), refHead);
     }
 
     /**
@@ -632,7 +632,7 @@ namespace Git
 
     Object Repository::lookup( Result& result, const ObjectId& id, ObjectType ot )
     {
-        GW_D_EX_CHECKED(Repository, Object(), result);
+        GW_D_CHECKED(Repository, Object(), result);
 
         git_object* obj = NULL;
         git_otype gitObjType = Internal::objectType2git(ot);
@@ -713,7 +713,7 @@ namespace Git
      */
     Remote::List Repository::allRemotes(Result& result) const
     {
-        GW_CD_EX_CHECKED(Repository, Remote::List(), result);
+        GW_CD_CHECKED(Repository, Remote::List(), result);
 
         git_strarray arr;
         result = git_remote_list( &arr, d->mRepo );
@@ -729,7 +729,7 @@ namespace Git
                 git_strarray_free(&arr);
                 return Remote::List();
             }
-            Remote rm = new Remote::Private(d.data(), remote);
+            Remote rm = new Remote::Private(const_cast<Private*>(d), remote);
             remotes.append(rm);
         }
 
@@ -769,7 +769,7 @@ namespace Git
      */
     Remote Repository::remote(Result& result, const QString& remoteName) const
     {
-        GW_CD_EX_CHECKED(Repository, Remote(), result);
+        GW_CD_CHECKED(Repository, Remote(), result);
 
         git_remote* remote = NULL;
         result = git_remote_lookup( &remote, d->mRepo, GW_StringFromQt(remoteName) );
@@ -835,10 +835,10 @@ namespace Git
 
     Submodule Repository::submodule(Result& result, const QString& name) const
     {
-        GW_CD_EX_CHECKED(Repository, Submodule(), result);
+        GW_CD_CHECKED(Repository, Submodule(), result);
 
         if (submoduleNames(result).contains(name)) {
-            return new Submodule::Private(d, name);
+            return new Submodule::Private(const_cast<Private*>(d), name);
         }
 
         return Submodule();
