@@ -41,7 +41,7 @@ namespace Git
             const git_object* o() const { return mObj; }
 
         public:
-            static Object::PrivatePtr create(const RepositoryPrivate::Ptr& repo, git_object* o);
+            static ObjectPrivate* create(RepositoryPrivate* repo, git_object* o);
 
         public:
             virtual git_otype otype() const = 0;
