@@ -45,6 +45,30 @@
 #define qUtf8Printable qPrintable
 #endif
 
+#ifndef GW_CPP11
+#  ifdef _MSC_VER
+#    define     GW_CPP11        1
+#  else
+#    if __cplusplus < 201103L
+#      define   GW_CPP11        0
+#    else
+#      define   GW_CPP11        1
+#    endif
+#  endif
+#endif
+
+#if GW_CPP11
+#  ifndef _MSC_VER
+#    define     GW_CONSTEXPR    constexpr
+#  else
+#    define     GW_CONSTEXPR
+#  endif
+#  define       GW_NULLPTR      nullptr
+#else
+#  define       GW_CONSTEXPR
+#  define       GW_NULLPTR      NULL
+#endif
+
 namespace Git
 {
 
