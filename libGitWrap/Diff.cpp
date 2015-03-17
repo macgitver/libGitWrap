@@ -191,7 +191,7 @@ namespace Git
 
         Internal::TreePrivate* tp = Internal::BasePrivate::dataOf<Tree>( tree );
         Q_ASSERT( tp );
-        Internal::RepositoryPrivate* rp = tp->repo().data();
+        Internal::RepositoryPrivate* rp = tp->repo();
         Q_ASSERT( rp );
 
         git_diff* diff = NULL;
@@ -249,7 +249,7 @@ namespace Git
 
         Internal::TreePrivate* tp = Internal::BasePrivate::dataOf<Tree>( tree );
         Q_ASSERT( tp );
-        Internal::RepositoryPrivate* rp = tp->repo().data();
+        Internal::RepositoryPrivate* rp = tp->repo();
         Q_ASSERT( rp );
 
         git_diff* diff= NULL;
@@ -307,7 +307,7 @@ namespace Git
 
         Internal::TreePrivate* tp = Internal::BasePrivate::dataOf<Tree>( tree );
         Q_ASSERT( tp );
-        Internal::RepositoryPrivate* rp = tp->repo().data();
+        Internal::RepositoryPrivate* rp = tp->repo();
         Q_ASSERT( rp );
 
         git_diff* diff= NULL;

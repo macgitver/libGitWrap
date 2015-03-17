@@ -178,7 +178,7 @@ namespace Git
     bool Index::isBare() const
     {
         GW_CD(Index);
-        return d->repo().data() == NULL;
+        return d->repo() == GW_NULLPTR;
     }
 
     /**

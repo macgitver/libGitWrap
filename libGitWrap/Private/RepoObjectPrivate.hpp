@@ -36,7 +36,7 @@ namespace Git
             RepoObjectPrivate(RepositoryPrivate* repo);
 
         public:
-            RepositoryPrivate::Ptr repo() const;
+            RepositoryPrivate* repo() const;
 
         protected:
             RepositoryPrivate::Ptr mRepo;
