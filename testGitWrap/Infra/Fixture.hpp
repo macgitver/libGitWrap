@@ -25,6 +25,10 @@
 
 #include "gtest/gtest.h"
 
+#if QT_VERSION < 0x050400
+#define qUtf8Printable qPrintable
+#endif
+
 #define CHECK_GIT_RESULT(r) ASSERT_TRUE((r)) << "Git::Result failed: " << qPrintable((r).errorText())
 
 class Fixture : public QObject, public ::testing::Test

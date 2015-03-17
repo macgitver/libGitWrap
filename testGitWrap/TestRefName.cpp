@@ -19,6 +19,7 @@
 
 #include "gtest/gtest.h"
 
+#include "Infra/Fixture.hpp"
 #include "libGitWrap/RefName.hpp"
 
 TEST(RefName, AnalyzeLocalBranch) {

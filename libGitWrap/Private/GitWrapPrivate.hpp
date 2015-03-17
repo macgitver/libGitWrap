@@ -28,6 +28,9 @@
 #include "libGitWrap/Result.hpp"
 #include "libGitWrap/ObjectId.hpp"
 
+#if QT_VERSION < 0x050400
+#define qUtf8Printable qPrintable
+#endif
 
 namespace Git
 {
