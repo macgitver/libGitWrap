@@ -379,7 +379,7 @@ namespace Git
             delete mOpts;
         }
 
-        const DiffOptions::operator git_diff_options*() const
+        DiffOptions::operator const git_diff_options*() const
         {
             return mOpts;
         }

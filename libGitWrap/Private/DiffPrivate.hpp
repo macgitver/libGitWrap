@@ -38,7 +38,7 @@ namespace Git
             ~DiffOptions();
 
         public:
-            const operator git_diff_options*() const;
+            operator const git_diff_options*() const;
             git_diff_options& operator *();
 
         public:
