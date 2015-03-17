@@ -160,7 +160,7 @@ namespace Git
 
     const Repository& BaseRemoteOperation::repository() const
     {
-        GW_CD( BaseRemoteOperation );
+        GW_OP_CD( BaseRemoteOperation );
         return d->mRepo;
     }
 
@@ -175,7 +175,7 @@ namespace Git
      */
     QString BaseRemoteOperation::remoteAlias() const
     {
-        GW_CD(BaseRemoteOperation);
+        GW_OP_CD(BaseRemoteOperation);
         return d->mRemoteAlias;
     }
 
@@ -190,7 +190,7 @@ namespace Git
     void BaseRemoteOperation::setRemoteAlias(const QString& alias)
     {
         Q_ASSERT( !isRunning() );
-        GW_D(BaseRemoteOperation);
+        GW_OP_D(BaseRemoteOperation);
         d->mRemoteAlias = alias;
     }
 
@@ -203,7 +203,7 @@ namespace Git
      */
     const QStringList& BaseRemoteOperation::refSpecs() const
     {
-        GW_CD( BaseRemoteOperation );
+        GW_OP_CD( BaseRemoteOperation );
         return d->mRefSpecs;
     }
 
@@ -222,7 +222,7 @@ namespace Git
     void BaseRemoteOperation::setRefSpecs(const QStringList& refSpecs)
     {
         Q_ASSERT( !isRunning() );
-        GW_D( BaseRemoteOperation );
+        GW_OP_D( BaseRemoteOperation );
         d->mRefSpecs = refSpecs;
     }
 
@@ -237,7 +237,7 @@ namespace Git
      */
     const Signature& BaseRemoteOperation::signature() const
     {
-        GW_CD( BaseRemoteOperation );
+        GW_OP_CD( BaseRemoteOperation );
         return d->mSignature;
     }
 
@@ -255,7 +255,7 @@ namespace Git
     void BaseRemoteOperation::setSignature(const Signature& sig)
     {
         Q_ASSERT( !isRunning() );
-        GW_D( BaseRemoteOperation );
+        GW_OP_D( BaseRemoteOperation );
         d->mSignature = sig;
     }
 
@@ -268,7 +268,7 @@ namespace Git
      */
     QString BaseRemoteOperation::refLogMessage() const
     {
-        GW_CD( BaseRemoteOperation );
+        GW_OP_CD( BaseRemoteOperation );
         return d->mRefLogMsg;
     }
 
@@ -284,7 +284,7 @@ namespace Git
     void BaseRemoteOperation::setRefLogMessage(const QString& msg)
     {
         Q_ASSERT( !isRunning() );
-        GW_D( BaseRemoteOperation );
+        GW_OP_D( BaseRemoteOperation );
         d->mRefLogMsg = msg;
     }
 
@@ -295,7 +295,7 @@ namespace Git
      */
     void BaseRemoteOperation::setRepository(const Repository& repo)
     {
-        GW_D( BaseRemoteOperation );
+        GW_OP_D( BaseRemoteOperation );
         d->mRepo = repo;
     }
 
@@ -328,7 +328,7 @@ namespace Git
      */
     unsigned int PushOperation::pbParallellism() const
     {
-        GW_CD( PushOperation );
+        GW_OP_CD( PushOperation );
         return d->mOpts.pb_parallelism;
     }
 
@@ -343,7 +343,7 @@ namespace Git
      */
     void PushOperation::setPBParallelism(unsigned int maxThreads)
     {
-        GW_D( PushOperation );
+        GW_OP_D( PushOperation );
         d->mOpts.pb_parallelism = maxThreads;
     }
 

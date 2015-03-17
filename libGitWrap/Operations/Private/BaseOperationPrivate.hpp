@@ -55,3 +55,10 @@ namespace Git
 
 #define GW_OP_OWNER(CLS) \
     CLS* owner = static_cast<CLS*>(mOwner)
+
+#define GW_OP_D(CLASS) \
+    Private* d = static_cast<Private*>(mData.data()); \
+    ensureThisIsNotConst()
+
+#define GW_OP_CD(CLASS) \
+    const CLASS::Private* d = static_cast<const CLASS::Private*>(mData.constData())
