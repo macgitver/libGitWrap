@@ -72,6 +72,13 @@
 namespace Git
 {
 
+    namespace Internal
+    {
+        // For compat reasons
+        template<typename T> class GitPtr;
+
+    }
+
     class ChangeListConsumer;
     class DiffList;
     class Index;
@@ -332,31 +339,22 @@ namespace Git
 #define GW_PRIVATE_DECL_EX(SHARE, CLASS, BASE, SCOPE) \
     public: \
         typedef Internal::SHARE##Private Private; \
-        typedef QExplicitlySharedDataPointer<Private> PrivatePtr; \
+        typedef Internal::GitPtr<Private> PrivatePtr; \
     \
     SCOPE: \
-        CLASS() \
-            : BASE() \
+        CLASS(Private* _d = GW_NULLPTR) \
+            : BASE((BASE::Private*)(_d)) \
             {} \
         \
-        CLASS(Private* _d); \
         CLASS(const PrivatePtr& _d); \
         \
         CLASS(const CLASS& other) \
             : BASE(other) \
-            {} \
-        \
-    public: \
-        ~CLASS() \
             {}
 
 #define GW_PRIVATE_IMPL(CLASS, BASE) \
-    CLASS::CLASS(Private* _d) \
-        : BASE(PrivatePtr(_d)) \
-        {} \
-    \
-    CLASS::CLASS(const PrivatePtr& _d) \
-        : BASE(_d) \
+    CLASS::CLASS(const PrivatePtr& d) \
+        : BASE(d.data()) \
         {}
 
 #define GW_PRIVATE_DECL(CLASS, BASE, SCOPE) \

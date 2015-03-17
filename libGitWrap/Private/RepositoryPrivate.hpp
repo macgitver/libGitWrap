@@ -37,7 +37,7 @@ namespace Git
         class RepositoryPrivate : public BasePrivate
         {
         public:
-            typedef QExplicitlySharedDataPointer<RepositoryPrivate> Ptr;
+            typedef GitPtr<RepositoryPrivate> Ptr;
 
         public:
             RepositoryPrivate( git_repository* repo );

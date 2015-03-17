@@ -19,9 +19,7 @@
 
 #pragma once
 
-#include <QSharedData>
-
-#include "libGitWrap/GitWrap.hpp"   // for convenience
+#include "libGitWrap/GitWrap.hpp"
 
 namespace Git
 {
@@ -41,37 +39,82 @@ namespace Git
         typedef Internal::BasePrivate Private;
 
     public:
-        Base();
-        Base(const Base& other);
-        virtual ~Base();
-        Base& operator=(const Base& other);
-        bool operator==(const Base& other) const;
-        bool operator!=(const Base& other) const;
+        Base(Internal::BasePrivate* bp = GW_NULLPTR)
+            : mData(bp)
+        {
+            addRef();
+        }
 
-        bool operator!() const;
+        Base(const Base& other)
+            : mData(other.mData)
+        {
+            addRef();
+        }
 
-    public:
-        bool isValid() const;
+        virtual ~Base()
+        {
+            delRef();
+        }
+
+        bool isValid() const
+        {
+            return !!mData;
+        }
+
+        Base& operator=(const Base& other)
+        {
+            if (mData != other.mData) {
+                other.addRef();
+                delRef();
+                mData = other.mData;
+            }
+            return *this;
+        }
+
+        bool operator==(const Base& other) const
+        {
+            return mData == other.mData;
+        }
+
+        bool operator!=(const Base& other) const
+        {
+            return mData != other.mData;
+        }
+
+        bool operator!() const
+        {
+            return !mData;
+        }
+
+        #if GW_CPP11
+        Base(Base&& other) : mData(other.mData)
+        {
+            other.mData = GW_NULLPTR;
+        }
+
+        Base& operator=(Base&& o)
+        {
+            std::swap(mData, o.mData);
+            return * this;
+        }
+        #endif
 
     protected:
-        typedef QExplicitlySharedDataPointer<Internal::BasePrivate> PrivatePtr;
-        Base(const PrivatePtr& _d);
-        PrivatePtr mData;
+        typedef Internal::GitPtr<Internal::BasePrivate> PrivatePtr;
+        Private* mData;
+
+    private:
+        void addRef() const;
+        void delRef() const;
 
     protected:
         inline void ensureThisIsNotConst()
         {
             // This method is invoked from the GW_D macro. Its only purpose is to error out at
             // compile time, if we casted from a const outer object. This is actually neccessary
-            // because QExplicitlySharedDataPointer seems to give a shit about const
+            // because QExplicitlySharedDataPointer and GitPtr actually do give a shit about const
             // correctness.
         }
     };
-
-
-    inline bool Base::operator!() const
-    {
-        return !isValid();
-    }
 
 }

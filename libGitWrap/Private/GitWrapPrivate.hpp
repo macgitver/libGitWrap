@@ -48,6 +48,50 @@ namespace Git
         QStringList slFromStrArray( git_strarray* arry );
         FileInfo mkFileInfo(const git_diff_file* df);
 
+        template<typename T>
+        class GitPtr
+        {
+        public:
+            GitPtr()                        : d(GW_NULLPTR)     {}
+
+            #if GW_CPP11
+            GitPtr(const GitPtr& o)         : GitPtr(o.d)       {}
+            GitPtr(T* o)                    : d(o)              { addRef(); }
+            GitPtr(GitPtr&& o)              : d(o.d)            { o.d = GW_NULLPTR; }
+            GitPtr& operator=(GitPtr&& o)                       { std::swap(d, o.d); return *this; }
+            #else
+            GitPtr(const GitPtr& o)         : d(o.d)            { addRef(); }
+            GitPtr(T* o)                    : d(o  )            { addRef(); }
+            #endif
+
+            ~GitPtr()                                           { delRef(); }
+            GitPtr& operator=(const GitPtr& o)                  { if (o.d != d) {
+                                                                    if (o.d) o.d->addRef();
+                                                                    if (d)     d->delRef();
+                                                                    d = o.d;
+                                                                  }
+                                                                  return *this;
+                                                                }
+
+        public:
+                  T* data()       const { return d; }
+
+            const T* operator->() const { return d; }
+                  T* operator->()       { return d; }
+
+            const T* operator*() const  { return d; }
+                  T* operator*()        { return d; }
+
+            operator bool() const       { return !!d; }
+
+        private:
+            void delRef() { if (d) d->delRef(); }
+            void addRef() { if (d) d->addRef(); }
+
+        private:
+            T* d;
+        };
+
         /**
          * @internal
          * @ingroup     GitWrap
@@ -404,27 +448,22 @@ namespace Git
         if (!Internal::BasePrivate::isValid(result, d)) { return returns; } \
     } while (0)
 
-#define GW__EX_CHECK(returns, result) \
-    do { \
-        if (!Internal::BasePrivate::isValid(result, d.constData())) { return returns; } \
-    } while (0)
-
 #define GW__CHECK_VOID(result) \
     if (!Internal::BasePrivate::isValid(result, d)) { return; }
 
 #define GW_D(CLASS) \
-    Private* d = static_cast<Private*>(mData.data()); \
+    Private* d = static_cast<Private*>(mData); \
     ensureThisIsNotConst()
 
 #define GW_D_EX(CLASS) \
-    PrivatePtr d(static_cast<Private*>(mData.data())); \
+    PrivatePtr d(static_cast<Private*>(mData)); \
     ensureThisIsNotConst()
 
 #define GW_CD(CLASS) \
-    const CLASS::Private* d = static_cast<const CLASS::Private*>(mData.constData())
+    const CLASS::Private* d = static_cast<const CLASS::Private*>(mData)
 
 #define GW_CD_EX(CLASS) \
-    const CLASS::PrivatePtr d(static_cast<CLASS::Private*>(mData.data()))
+    const CLASS::PrivatePtr d(const_cast<CLASS::Private*>(static_cast<const CLASS::Private*>(mData)))
 
 
 #define GW_CD_CHECKED(CLASS, returns, result) \
@@ -433,7 +472,7 @@ namespace Git
 
 #define GW_CD_EX_CHECKED(CLASS, returns, result) \
     GW_CD_EX(CLASS); \
-    GW__EX_CHECK(returns, result)
+    GW__CHECK(returns, result)
 
 #define GW_D_CHECKED(CLASS, returns, result) \
     GW_D(CLASS); \

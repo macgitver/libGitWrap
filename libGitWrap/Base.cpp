@@ -98,45 +98,32 @@ namespace Git
             return r;
         }
 
+        void BasePrivate::addRef() const
+        {
+            mRef.ref();
+        }
+
+        void BasePrivate::delRef() const
+        {
+            if (!mRef.deref()) {
+                delete this;
+            }
+        }
+
     }
 
-    Base::Base()
+    void Base::addRef() const
     {
+        if (mData) {
+            mData->addRef();
+        }
     }
 
-    Base::Base(const PrivatePtr& _d)
-        : mData(_d)
+    void Base::delRef() const
     {
-    }
-
-    Base::Base(const Base& other)
-        : mData(other.mData)
-    {
-    }
-
-    Base::~Base()
-    {
-    }
-
-    Base& Base::operator=(const Base& other)
-    {
-        mData = other.mData;
-        return * this;
-    }
-
-    bool Base::operator==(const Base& other) const
-    {
-        return mData == other.mData;
-    }
-
-    bool Base::operator!=(const Base& other) const
-    {
-        return mData != other.mData;
-    }
-
-    bool Base::isValid() const
-    {
-        return mData;
+        if (mData) {
+            mData->delRef();
+        }
     }
 
 }
