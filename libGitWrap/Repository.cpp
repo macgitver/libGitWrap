@@ -102,7 +102,7 @@ namespace Git
             GW_CHECK_RESULT( result, Reference() );
 
             RepositoryPrivate* me = const_cast<RepositoryPrivate*>(this);
-            return new Reference::Private(Repository::PrivatePtr(me), refHead);
+            return new Reference::Private(me, refHead);
         }
 
         static int statusHashCB( const char* fn, unsigned int status, void* rawSH )
@@ -667,7 +667,7 @@ namespace Git
 
     QString Repository::headBranchName(Result& result) const
     {
-        GW_CD_EX_CHECKED(Repository, QString(), result);
+        GW_CD_CHECKED(Repository, QString(), result);
 
         Reference refHead = d->getHead(result);
 
