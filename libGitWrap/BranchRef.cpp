@@ -93,8 +93,9 @@ namespace Git
 
         Internal::CommitPrivate* cp = Internal::BasePrivate::dataOf<Commit>( commit );
 
-        git_reference* ref = NULL;
-        result = git_branch_create( &ref, cp->repo()->mRepo, GW_StringFromQt(name), cp->o(), force, NULL, NULL );
+        git_reference* ref = nullptr;
+        result = git_branch_create(&ref, cp->repo()->mRepo, GW_StringFromQt(name), cp->o(), force,
+                                   nullptr, nullptr);
         GW_CHECK_RESULT( result, BranchRef() );
 
         return new Internal::BranchRefPrivate(cp->repo(), ref);
@@ -133,7 +134,7 @@ namespace Git
 
     Reference BranchRef::upstreamReference(Result& result) const
     {
-        git_reference* ref = NULL;
+        git_reference* ref = nullptr;
 
         GW_CD_CHECKED(BranchRef, Reference(), result);
 

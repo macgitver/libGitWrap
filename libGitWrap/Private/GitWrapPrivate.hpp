@@ -353,7 +353,9 @@ namespace Git
 
         inline const git_oid** ObjectIdList2git(Result& result, const ObjectIdList &list)
         {
-            if (!result) return NULL;
+            if (!result) {
+                return nullptr;
+            }
 
             const git_oid** ret = new const git_oid *[list.count()];
             for ( int i=0; i < list.count(); ++i )

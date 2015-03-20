@@ -148,7 +148,7 @@ namespace Git
         }
 
         Internal::RepositoryPrivate* rp = Internal::BasePrivate::dataOf<Repository>( repo );
-        git_tag* out = NULL;
+        git_tag* out = nullptr;
         git_tag_lookup( &out, rp->mRepo, Internal::ObjectId2git(tagId) );
         GW_CHECK_RESULT( result, Tag() );
 

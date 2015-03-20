@@ -203,7 +203,7 @@ namespace Git
     namespace Internal
     {
 
-        RefNameMatches* RefNameMatches::sSelf = NULL;
+        RefNameMatches* RefNameMatches::sSelf = nullptr;
 
         RefNameMatches& RefNameMatches::self()
         {
@@ -388,8 +388,8 @@ namespace Git
          * @param[in]   name    A fully qualified reference name.
          *
          * @param[in]   lgo     The libgit2 git_reference object. This is optional and defaults to
-         *                      `NULL`. If given, the new ReferencePrivate will point to it. If not
-         *                      given, we have to look it up first.
+         *                      `nullptr`. If given, the new ReferencePrivate will point to it. If
+         *                      not given, we have to look it up first.
          *
          * @return      A new ReferencePrivate object capable of holding a reference type that
          *              matches @a name.
@@ -401,7 +401,7 @@ namespace Git
          * The cloning mechanism will then move over all the (already) analyzed data from the stack
          * based RefNamePrivate.
          *
-         * If no @a lgo is given and it cannot be looked up in @a repo under the @a name, `NULL`
+         * If no @a lgo is given and it cannot be looked up in @a repo under the @a name, `nullptr`
          * will be returned, as the resulting ReferencePrivate would be invalid and we cannot
          * express that state in the private object.
          *
@@ -409,12 +409,12 @@ namespace Git
         ReferencePrivate* RefNamePrivate::createRefObject(Result& result, Repository::Private* repo,
                                                           const QString& name, git_reference* lgo)
         {
-            GW_CHECK_RESULT( result, NULL );
+            GW_CHECK_RESULT(result, nullptr);
             Q_ASSERT( repo );
 
-            if ( !lgo ) {
+            if (!lgo) {
                 result = git_reference_lookup(&lgo, repo->mRepo, GW_StringFromQt(name));
-                GW_CHECK_RESULT( result, NULL );
+                GW_CHECK_RESULT(result, nullptr);
             }
 
             return RefNamePrivate(repo, name).cloned(lgo);
@@ -749,7 +749,7 @@ namespace Git
      *
      * @param[in]   id      The id of the expression as returned by registerExpression().
      *
-     * @return      Either `NULL` if @a id is not a valid expression or the payload that was
+     * @return      Either `nullptr` if @a id is not a valid expression or the payload that was
      *              registered with the expression.
      *
      */
@@ -761,7 +761,7 @@ namespace Git
             }
         }
 
-        return NULL;
+        return nullptr;
     }
 
     /**

@@ -263,8 +263,8 @@ namespace Git
 
         result = git_diff_foreach(d->mDiff,
                                   &Internal::changeListCallBack,
-                                  NULL,
-                                  NULL,
+                                  nullptr,
+                                  nullptr,
                                   consumer );
     }
 

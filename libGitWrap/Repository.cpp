@@ -54,8 +54,8 @@ namespace Git
     {
 
         RepositoryPrivate::RepositoryPrivate( git_repository* repo )
-            : mRepo( repo )
-            , mIndex( NULL )
+            : mRepo(repo)
+            , mIndex(nullptr)
         {
         }
 
@@ -66,7 +66,7 @@ namespace Git
             if (openedFrom.isValid()) {
                 Submodule::Private* smp = dataOf<Submodule>(openedFrom);
                 Q_ASSERT(smp);
-                smp->mSubRepo = NULL;
+                smp->mSubRepo = nullptr;
             }
 
             // This assert may not look right in the first place, but it IS:
@@ -74,7 +74,7 @@ namespace Git
             // is called for the first time. IndexPrivate is a RepoObject and as such it increases
             // the reference counter on the Repository object. In fact, this means the Repository
             // will never be deleted unless the Index has gone _before_ - When the Index is deleted
-            // (due to the refCount dropping to zero) it will set mIndex to NULL.
+            // (due to the refCount dropping to zero) it will set mIndex to nullptr.
             //
             // I'm documenting this mainly for one reason: Last week I spent 3 hours trying to fix
             // a race-condition in libgit2, which - as I later understood - is not at all there
@@ -154,7 +154,7 @@ namespace Git
     {
         GW_CHECK_RESULT( result, Repository() );
 
-        git_repository* repo = NULL;
+        git_repository* repo = nullptr;
         result = git_repository_init( &repo, GW_StringFromQt(path), bare );
         GW_CHECK_RESULT( result, Repository() );
 
@@ -232,7 +232,7 @@ namespace Git
     {
         GW_CHECK_RESULT( result, Repository() );
 
-        git_repository* repo = NULL;
+        git_repository* repo = nullptr;
 
         result = git_repository_open( &repo, GW_StringFromQt( path ) );
         GW_CHECK_RESULT( result, Repository() );
@@ -310,7 +310,7 @@ namespace Git
         }
 
         if (!d->mIndex) {
-            git_index* index = NULL;
+            git_index* index = nullptr;
 
             result = git_repository_index(&index, d->mRepo);
 
@@ -470,7 +470,7 @@ namespace Git
 
         QStringList sl;
 
-        git_branch_iterator* it = NULL;
+        git_branch_iterator* it = nullptr;
         git_branch_t type;
         int types = 0;
 
@@ -496,7 +496,7 @@ namespace Git
             sl << name;
 
             git_reference_free(ref);
-            ref = NULL;
+            ref = nullptr;
         }
 
         if (err != GIT_ITEROVER) {
@@ -511,7 +511,7 @@ namespace Git
     {
         GW_CD_CHECKED(Repository, false, result);
 
-        git_reference* ref = NULL;
+        git_reference* ref = nullptr;
 
         result = git_branch_lookup( &ref, d->mRepo, GW_StringFromQt(oldName),
                                     GIT_BRANCH_LOCAL );
@@ -527,8 +527,8 @@ namespace Git
             return false;
         }
 
-        git_reference* refOut = NULL;
-        result = git_branch_move( &refOut, ref, GW_StringFromQt(newName), force, NULL, NULL );
+        git_reference* refOut = nullptr;
+        result = git_branch_move(&refOut, ref, GW_StringFromQt(newName), force, nullptr, nullptr);
 
         if( result )
         {
@@ -609,7 +609,7 @@ namespace Git
     {
         GW_CD_CHECKED(Repository, Reference(), result);
 
-        git_reference* refHead = NULL;
+        git_reference* refHead = nullptr;
         result = git_repository_head( &refHead, d->mRepo );
         GW_CHECK_RESULT( result, Reference() );
 
@@ -634,7 +634,7 @@ namespace Git
     {
         GW_D_CHECKED(Repository, Object(), result);
 
-        git_object* obj = NULL;
+        git_object* obj = nullptr;
         git_otype gitObjType = Internal::objectType2git(ot);
 
         result = git_object_lookup(&obj, d->mRepo, Private::sha(id), gitObjType);
@@ -723,7 +723,7 @@ namespace Git
 
         Remote::List remotes;
         for (size_t i = 0; i < arr.count; i++) {
-            git_remote* remote = NULL;
+            git_remote* remote = nullptr;
             result = git_remote_lookup(&remote, d->mRepo, arr.strings[i]);
             if (!result) {
                 git_strarray_free(&arr);
@@ -771,7 +771,7 @@ namespace Git
     {
         GW_CD_CHECKED(Repository, Remote(), result);
 
-        git_remote* remote = NULL;
+        git_remote* remote = nullptr;
         result = git_remote_lookup( &remote, d->mRepo, GW_StringFromQt(remoteName) );
 
         if( !result )
@@ -866,7 +866,7 @@ namespace Git
     {
         GW_D_CHECKED(Repository, false, result);
 
-        result = git_repository_detach_head( d->mRepo, NULL, NULL );
+        result = git_repository_detach_head(d->mRepo, nullptr, nullptr);
         return result;
     }
 
@@ -885,7 +885,7 @@ namespace Git
     {
         GW_D_CHECKED(Repository, void(), result);
 
-        result = git_repository_set_head( d->mRepo, GW_StringFromQt(branchName), NULL, NULL );
+        result = git_repository_set_head(d->mRepo, GW_StringFromQt(branchName), nullptr, nullptr);
     }
 
     /**
@@ -920,7 +920,7 @@ namespace Git
     void Repository::setDetachedHEAD(Result& result, const ObjectId& sha)
     {
         GW_D_CHECKED(Repository, void(), result);
-        result = git_repository_set_head_detached( d->mRepo, Private::sha(sha), NULL, NULL);
+        result = git_repository_set_head_detached(d->mRepo, Private::sha(sha), nullptr, nullptr);
     }
 
     /**
@@ -965,7 +965,7 @@ namespace Git
 
         QString name = refName;
 
-        git_reference* ref = NULL;
+        git_reference* ref = nullptr;
         if (dwim) {
             result = git_reference_dwim(&ref, d->mRepo, GW_StringFromQt(refName));
 

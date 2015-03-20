@@ -28,7 +28,7 @@ namespace Git
             : mOwner( owner )
         {
             mBackgroundMode = false;
-            mThread = NULL;
+            mThread = nullptr;
         }
 
         BaseOperationPrivate::~BaseOperationPrivate()
@@ -82,7 +82,7 @@ namespace Git
     void BaseOperation::workerFinished()
     {
         delete mData->mThread;
-        mData->mThread = NULL;
+        mData->mThread = nullptr;
         emit finished();
     }
 

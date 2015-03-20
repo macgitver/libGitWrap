@@ -61,7 +61,7 @@ namespace Git
             (*mCloneOpts).remote_cb = CB_CreateRemote;
             (*mCloneOpts).remote_cb_payload = this;
 
-            git_repository* clone = NULL;
+            git_repository* clone = nullptr;
             mResult = git_clone(&clone, GW_StringFromQt(mUrl), GW_StringFromQt(mPath), mCloneOpts);
             GW_CHECK_RESULT( mResult, void() );
             mRepo = new RepositoryPrivate( clone );

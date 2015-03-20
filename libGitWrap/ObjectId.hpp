@@ -41,10 +41,10 @@ namespace Git
 
     public:
         static ObjectId fromString( const QString& oid, int max = SHA1_LengthHex,
-                                    bool *success = NULL );
+                                    bool *success = nullptr);
 
         static ObjectId fromAscii( const QByteArray& oid, int max = SHA1_LengthHex,
-                                   bool *success = NULL );
+                                   bool *success = nullptr);
 
         static ObjectId fromRaw( const unsigned char* raw, int n = SHA1_Length );
 

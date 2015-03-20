@@ -39,17 +39,17 @@ namespace Git
 
         git_repository* CheckoutBaseOperationPrivate::gitPtr( const Repository& obj )
         {
-            return obj.isValid() ? BasePrivate::dataOf<Repository>( obj )->mRepo : NULL;
+            return obj.isValid() ? BasePrivate::dataOf<Repository>( obj )->mRepo : nullptr;
         }
 
         git_index* CheckoutBaseOperationPrivate::gitPtr( const Index& obj )
         {
-            return obj.isValid() ? (BasePrivate::dataOf<Index>( obj )->index) : NULL;
+            return obj.isValid() ? (BasePrivate::dataOf<Index>( obj )->index) : nullptr;
         }
 
         git_object* CheckoutBaseOperationPrivate::gitObjectPtr( const Tree& obj )
         {
-            return obj.isValid() ? BasePrivate::dataOf<Tree>( obj )->mObj : NULL;
+            return obj.isValid() ? BasePrivate::dataOf<Tree>( obj )->mObj : nullptr;
         }
 
         CheckoutBaseOperationPrivate::CheckoutBaseOperationPrivate(CheckoutBaseOperation* owner)
@@ -137,7 +137,8 @@ namespace Git
 
         void CheckoutTreeOperationPrivate::runCheckout(git_repository* repo)
         {
-            git_object* tree = mTreeProvider ? gitObjectPtr( mTreeProvider->tree(mResult) ) : NULL;
+            git_object* tree = mTreeProvider ? gitObjectPtr( mTreeProvider->tree(mResult) )
+                                             : nullptr;
             GW_CHECK_RESULT( mResult, void() );
 
             mResult = git_checkout_tree(repo, tree, mOpts);
@@ -206,7 +207,7 @@ namespace Git
             {
                 mResult = git_repository_set_head( repo,
                                                    git_reference_name( p->reference ),
-                                                   NULL, NULL);
+                                                   nullptr, nullptr);
             }
         }
 

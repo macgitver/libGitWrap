@@ -57,7 +57,7 @@ namespace Git
         Q_UNUSED( treeProvider )
         Q_UNUSED( msg )
 
-        return NULL;
+        return nullptr;
     }
 
 }

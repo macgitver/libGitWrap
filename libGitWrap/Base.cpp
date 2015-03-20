@@ -42,7 +42,7 @@ namespace Git
             Object::Private* op = dataOf<Object>(o);
 
             if (!op) {
-                return NULL;
+                return nullptr;
             }
 
             return op->o();
@@ -63,8 +63,8 @@ namespace Git
          * This is esp. useful since Reference objects can become invalid (when destroy() is used)
          * and we cannot warrant that this will be checked in all methods of Reference derivates.
          *
-         * @param[in,out]   r   A Result that will be set to invalid if @a d is `NULL` and can be
-         *                      set to anything, if @a d is not `NULL`.
+         * @param[in,out]   r   A Result that will be set to invalid if @a d is `nullptr` and can be
+         *                      set to anything, if @a d is not `nullptr`.
          *
          * @param[in]       d   The BasePrivate to check.
          *

@@ -57,7 +57,7 @@ namespace Git
             default:             break;
             }
 
-            return GW_NULLPTR;
+            return nullptr;
         }
 
     }

@@ -57,16 +57,10 @@
 #  endif
 #endif
 
-#if GW_CPP11
-#  ifndef _MSC_VER
-#    define     GW_CONSTEXPR    constexpr
-#  else
-#    define     GW_CONSTEXPR
-#  endif
-#  define       GW_NULLPTR      nullptr
+#ifndef _MSC_VER
+#  define     GW_CONSTEXPR    constexpr
 #else
-#  define       GW_CONSTEXPR
-#  define       GW_NULLPTR      NULL
+#  define     GW_CONSTEXPR
 #endif
 
 namespace Git
@@ -342,7 +336,7 @@ namespace Git
         typedef Internal::GitPtr<Private> PrivatePtr; \
     \
     SCOPE: \
-        CLASS(Private* _d = GW_NULLPTR) \
+        CLASS(Private* _d = nullptr) \
             : BASE((BASE::Private*)(_d)) \
             {} \
         \

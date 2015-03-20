@@ -70,7 +70,7 @@ namespace Git
     {
         GW_D_CHECKED(TreeBuilder, false, result);
 
-        const git_tree_entry* te = NULL;
+        const git_tree_entry* te = nullptr;
         git_filemode_t fm = Internal::teattr2filemode( type );
 
         result = git_treebuilder_insert( &te, d->mBuilder, GW_StringFromQt(fileName),

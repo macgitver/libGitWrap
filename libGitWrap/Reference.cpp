@@ -163,11 +163,11 @@ namespace Git
 
         Repository::Private* repop = Private::dataOf<Repository>(repo);
 
-        git_reference* ref = NULL;
+        git_reference* ref = nullptr;
         QByteArray utf8Name = GW_EncodeQString(name);
 
-        result = git_reference_create( &ref, repop->mRepo, utf8Name.constData(),
-                                       Private::sha(sha), false, NULL, NULL);
+        result = git_reference_create(&ref, repop->mRepo, utf8Name.constData(),
+                                      Private::sha(sha), false, nullptr, nullptr);
         GW_CHECK_RESULT( result, Reference() );
 
         return Private::createRefObject( result, repop, name, ref );
@@ -331,7 +331,7 @@ namespace Git
     {
         GW_CD_CHECKED(Reference, Reference(), result);
 
-        git_reference* ref = NULL;
+        git_reference* ref = nullptr;
         result = git_reference_resolve(&ref, d->reference);
         GW_CHECK_RESULT( result, Reference() );
 
@@ -386,7 +386,7 @@ namespace Git
     {
         GW_CD_CHECKED(Reference, Object(), result);
 
-        git_object* o = NULL;
+        git_object* o = nullptr;
         result = git_reference_peel(&o, d->reference, Internal::objectType2git(ot));
         GW_CHECK_RESULT( result, Object() );
 
@@ -429,8 +429,9 @@ namespace Git
             return;
         }
 
-        git_reference* newRef = NULL;
-        result = git_reference_set_target(&newRef, d->reference, Private::sha(targetId), NULL, NULL);
+        git_reference* newRef = nullptr;
+        result = git_reference_set_target(&newRef, d->reference, Private::sha(targetId),
+                                          nullptr, nullptr);
 
         if (result && (newRef != d->reference)) {
             // even though we have a nre d->reference now, the name did not change. So nothing to
@@ -444,8 +445,9 @@ namespace Git
     {
         GW_D_CHECKED(Reference, void(), result);
 
-        git_reference* newRef = NULL;
-        result = git_reference_rename(&newRef, d->reference, GW_StringFromQt(newName), force, NULL, NULL);
+        git_reference* newRef = nullptr;
+        result = git_reference_rename(&newRef, d->reference, GW_StringFromQt(newName), force,
+                                      nullptr, nullptr);
 
         if (result && (newRef != d->reference)) {
             git_reference_free(d->reference);
@@ -477,13 +479,15 @@ namespace Git
 
         if (git_reference_is_branch(d->reference)) {
             // reference is a local branch
-            result = git_repository_set_head( d->repo()->mRepo,
-                                              git_reference_name(d->reference), NULL, NULL);
+            result = git_repository_set_head(d->repo()->mRepo,
+                                             git_reference_name(d->reference),
+                                             nullptr, nullptr);
         }
         else {
             // reference is detached
-            result = git_repository_set_head_detached( d->repo()->mRepo,
-                                                       git_reference_target(d->reference), NULL, NULL );
+            result = git_repository_set_head_detached(d->repo()->mRepo,
+                                                      git_reference_target(d->reference),
+                                                      nullptr, nullptr);
         }
     }
 
@@ -496,7 +500,7 @@ namespace Git
      */
     CommitOperation* Reference::commitOperation(Result& result, const TreeProviderPtr& treeProvider, const QString& msg) const
     {
-        GW_CD_CHECKED( Reference, NULL, result );
+        GW_CD_CHECKED( Reference, nullptr, result );
         return new CommitOperation( *this, treeProvider, msg );
     }
 

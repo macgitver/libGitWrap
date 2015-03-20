@@ -51,7 +51,7 @@ namespace Git
         {
             Q_ASSERT(mRepo);
             if (mRepo->mIndex == this) {
-                mRepo->mIndex = NULL;
+                mRepo->mIndex = nullptr;
             }
 
             if( index )
@@ -128,13 +128,13 @@ namespace Git
      */
     Index Index::createInMemory()
     {
-        git_index* index = NULL;
+        git_index* index = nullptr;
 
         // We can't do anything with a potential error; anyway: it can only error out in
         // Out-Of-Memory case.
         git_index_new(&index);
 
-        return new Private(GW_NULLPTR, index);
+        return new Private(nullptr, index);
     }
 
     /**
@@ -154,14 +154,14 @@ namespace Git
     {
         GW_CHECK_RESULT( result, Index() );
 
-        git_index* index = NULL;
+        git_index* index = nullptr;
         result = git_index_open( &index, GW_StringFromQt(path) );
 
         if (!result) {
             return Index();
         }
 
-        return new Private(GW_NULLPTR, index);
+        return new Private(nullptr, index);
     }
 
     Index::operator TreeProviderPtr() const
@@ -178,7 +178,7 @@ namespace Git
     bool Index::isBare() const
     {
         GW_CD(Index);
-        return d->repo() == GW_NULLPTR;
+        return d->repo() == nullptr;
     }
 
     /**
@@ -217,9 +217,9 @@ namespace Git
     {
         GW_CD_CHECKED(Index, IndexEntry(), result);
         const git_index_entry *entry = git_index_get_byindex(d->index, n);
-        if(entry == NULL)
-        {
+        if (entry == nullptr) {
             result.setError(GIT_ENOTFOUND);
+            return nullptr;
         }
 
         return new IndexEntry::Private(entry);
@@ -248,9 +248,9 @@ namespace Git
         GW_CD_CHECKED(Index, IndexEntry(), result);
         const git_index_entry *entry = git_index_get_bypath(d->index, GW_StringFromQt(path),
                                                             int(stage));
-        if(entry == NULL)
-        {
+        if (entry == nullptr) {
             result.setError(GIT_ENOTFOUND);
+            return nullptr;
         }
 
         return new IndexEntry::Private(entry);
@@ -377,11 +377,11 @@ namespace Git
     {
         GW_D_CHECKED(Index, void(), result);
 
-        git_reference *ref = NULL;
+        git_reference *ref = nullptr;
         result = git_repository_head( &ref, d->repo()->mRepo );
         GW_CHECK_RESULT( result, void() );
 
-        git_object *o = NULL;
+        git_object *o = nullptr;
         result = git_reference_peel( &o, ref, GIT_OBJ_COMMIT );
         git_reference_free( ref );
         GW_CHECK_RESULT( result, void() );

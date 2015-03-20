@@ -72,17 +72,17 @@ namespace Git
      */
     DiffList Diff::indexToWorkDir(Result& result, const Repository& repo) const
     {
-        GW_CHECK_RESULT( result, NULL );
+        GW_CHECK_RESULT(result, nullptr);
         if ( !repo.isValid() ) {
             result.setInvalidObject();
-            return NULL;
+            return nullptr;
         }
 
         Repository::Private* rp = Internal::BasePrivate::dataOf<Repository>( repo );
         Q_ASSERT( rp );
 
-        git_diff* diff = NULL;
-        result = git_diff_index_to_workdir( &diff, rp->mRepo, NULL, *mOpts );
+        git_diff* diff = nullptr;
+        result = git_diff_index_to_workdir(&diff, rp->mRepo, nullptr, *mOpts);
 
         return new Internal::DiffListPrivate(rp, diff);
     }
@@ -105,11 +105,11 @@ namespace Git
      */
     DiffList Diff::indexToWorkDir(Result& result, const Repository& repo, const Index& index) const
     {
-        GW_CHECK_RESULT( result, NULL );
+        GW_CHECK_RESULT(result, nullptr);
 
         if ( !(repo.isValid() && index.isValid()) ) {
             result.setInvalidObject();
-            return NULL;
+            return nullptr;
         }
 
         Repository::Private* rp = Internal::BasePrivate::dataOf<Repository>( repo );
@@ -117,7 +117,7 @@ namespace Git
         Index::Private* ip = Internal::BasePrivate::dataOf<Index>( index );
         Q_ASSERT( ip );
 
-        git_diff* diff = NULL;
+        git_diff* diff = nullptr;
         result = git_diff_index_to_workdir( &diff, rp->mRepo, ip->index, *mOpts );
 
         return new Internal::DiffListPrivate(rp, diff);
@@ -138,34 +138,34 @@ namespace Git
      */
     DiffList Diff::treeToTree(Result& result, const Tree& oldTree, const Tree& newTree) const
     {
-        GW_CHECK_RESULT( result, NULL );
+        GW_CHECK_RESULT( result, nullptr );
 
         const bool otValid = oldTree.isValid();
         Repository::Private* otRepo = otValid
                                       ? Internal::BasePrivate::dataOf<Repository>( oldTree.repository() )
-                                      : NULL;
+                                      : nullptr;
 
         const bool ntValid = newTree.isValid();
         Repository::Private* ntRepo = ntValid
                                       ? Internal::BasePrivate::dataOf<Repository>( newTree.repository() )
-                                      : NULL;
+                                      : nullptr;
 
         if ( otRepo && ntRepo && (otRepo != ntRepo) )
         {
-            // repo must be the same or NULL
+            // repo must be the same or nullptr
             result.setInvalidObject();
-            return NULL;
+            return nullptr;
         }
 
         Repository::Private* rp = otRepo ? otRepo : ntRepo;
         Q_ASSERT(rp);
 
-        git_tree* gitOldTree = otValid ? Internal::BasePrivate::dataOf<Tree>(oldTree)->o() : NULL;
-        git_tree* gitNewTree = ntValid ? Internal::BasePrivate::dataOf<Tree>(newTree)->o() : NULL;
+        git_tree* gitOldTree = otValid ? Internal::BasePrivate::dataOf<Tree>(oldTree)->o() : nullptr;
+        git_tree* gitNewTree = ntValid ? Internal::BasePrivate::dataOf<Tree>(newTree)->o() : nullptr;
 
-        git_diff* diff = NULL;
+        git_diff* diff = nullptr;
         result = git_diff_tree_to_tree( &diff, rp->mRepo, gitOldTree, gitNewTree, *mOpts );
-        GW_CHECK_RESULT( result, NULL );
+        GW_CHECK_RESULT(result, nullptr);
 
         return new Internal::DiffListPrivate(rp, diff);
     }
@@ -183,10 +183,10 @@ namespace Git
      */
     DiffList Diff::treeToIndex(Result& result, const Tree& tree) const
     {
-        GW_CHECK_RESULT( result, NULL );
+        GW_CHECK_RESULT(result, nullptr);
         if ( !tree.isValid() ) {
             result.setInvalidObject();
-            return NULL;
+            return nullptr;
         }
 
         Internal::TreePrivate* tp = Internal::BasePrivate::dataOf<Tree>( tree );
@@ -194,9 +194,9 @@ namespace Git
         Internal::RepositoryPrivate* rp = tp->repo();
         Q_ASSERT( rp );
 
-        git_diff* diff = NULL;
-        result = git_diff_tree_to_index( &diff, rp->mRepo, tp->o(), NULL, *mOpts );
-        GW_CHECK_RESULT( result, NULL );
+        git_diff* diff = nullptr;
+        result = git_diff_tree_to_index( &diff, rp->mRepo, tp->o(), nullptr, *mOpts );
+        GW_CHECK_RESULT(result, nullptr);
 
         return new Internal::DiffListPrivate(rp, diff);
     }
@@ -212,18 +212,18 @@ namespace Git
      */
     DiffList Diff::treeToIndex(Result& result, const Repository& repo) const
     {
-        GW_CHECK_RESULT( result, NULL );
+        GW_CHECK_RESULT(result, nullptr);
         if ( !repo.isValid() ) {
             result.setInvalidObject();
-            return NULL;
+            return nullptr;
         }
 
         Internal::RepositoryPrivate* rp = Internal::BasePrivate::dataOf<Repository>( repo );
         Q_ASSERT( rp );
 
-        git_diff* diff= NULL;
-        result = git_diff_tree_to_index( &diff, rp->mRepo, NULL, NULL, *mOpts );
-        GW_CHECK_RESULT( result, NULL );
+        git_diff* diff= nullptr;
+        result = git_diff_tree_to_index( &diff, rp->mRepo, nullptr, nullptr, *mOpts );
+        GW_CHECK_RESULT(result, nullptr);
 
         return new Internal::DiffListPrivate(rp, diff);
     }
@@ -241,10 +241,10 @@ namespace Git
      */
     DiffList Diff::treeToWorkDir(Result& result, const Tree& tree) const
     {
-        GW_CHECK_RESULT( result, NULL );
+        GW_CHECK_RESULT(result, nullptr);
         if ( !tree.isValid() ) {
             result.setInvalidObject();
-            return NULL;
+            return nullptr;
         }
 
         Internal::TreePrivate* tp = Internal::BasePrivate::dataOf<Tree>( tree );
@@ -252,11 +252,11 @@ namespace Git
         Internal::RepositoryPrivate* rp = tp->repo();
         Q_ASSERT( rp );
 
-        git_diff* diff= NULL;
+        git_diff* diff= nullptr;
         result = git_diff_tree_to_workdir( &diff,
                                            rp->mRepo,
                                            tp->o(), *mOpts );
-        GW_CHECK_RESULT( result, NULL );
+        GW_CHECK_RESULT(result, nullptr);
 
         return new Internal::DiffListPrivate(rp, diff);
     }
@@ -270,18 +270,18 @@ namespace Git
      */
     DiffList Diff::treeToWorkDir(Result& result, const Repository& repo) const
     {
-        GW_CHECK_RESULT( result, NULL );
+        GW_CHECK_RESULT(result, nullptr);
         if ( !repo.isValid() ) {
             result.setInvalidObject();
-            return NULL;
+            return nullptr;
         }
 
         Internal::RepositoryPrivate* rp = Internal::BasePrivate::dataOf<Repository>( repo );
         Q_ASSERT( rp );
 
-        git_diff* diff= NULL;
-        result = git_diff_tree_to_workdir( &diff, rp->mRepo, NULL, *mOpts );
-        GW_CHECK_RESULT( result, NULL );
+        git_diff* diff= nullptr;
+        result = git_diff_tree_to_workdir( &diff, rp->mRepo, nullptr, *mOpts );
+        GW_CHECK_RESULT(result, nullptr);
 
         return new Internal::DiffListPrivate(rp, diff);
     }
@@ -299,10 +299,10 @@ namespace Git
      */
     DiffList Diff::treeToWorkDirWithIndex(Result& result, const Tree& tree) const
     {
-        GW_CHECK_RESULT( result, NULL );
+        GW_CHECK_RESULT(result, nullptr);
         if ( !tree.isValid() ) {
             result.setInvalidObject();
-            return NULL;
+            return nullptr;
         }
 
         Internal::TreePrivate* tp = Internal::BasePrivate::dataOf<Tree>( tree );
@@ -310,11 +310,11 @@ namespace Git
         Internal::RepositoryPrivate* rp = tp->repo();
         Q_ASSERT( rp );
 
-        git_diff* diff= NULL;
+        git_diff* diff= nullptr;
         result = git_diff_tree_to_workdir_with_index( &diff,
                                                       rp->mRepo,
                                                       tp->o(), *mOpts );
-        GW_CHECK_RESULT( result, NULL );
+        GW_CHECK_RESULT(result, nullptr);
 
         return new Internal::DiffListPrivate(rp, diff);
     }
@@ -331,21 +331,21 @@ namespace Git
      */
     DiffList Diff::treeToWorkDirWithIndex(Result& result, const Repository& repo) const
     {
-        GW_CHECK_RESULT( result, NULL );
+        GW_CHECK_RESULT(result, nullptr);
         if ( !repo.isValid() )
         {
             result.setInvalidObject();
-            return NULL;
+            return nullptr;
         }
 
         Internal::RepositoryPrivate* rp = Internal::BasePrivate::dataOf<Repository>( repo );
         Q_ASSERT( rp );
 
-        git_diff* diff= NULL;
+        git_diff* diff= nullptr;
         result = git_diff_tree_to_workdir_with_index( &diff,
                                                       rp->mRepo,
-                                                      NULL, *mOpts );
-        GW_CHECK_RESULT( result, NULL );
+                                                      nullptr, *mOpts );
+        GW_CHECK_RESULT(result, nullptr);
 
         return new Internal::DiffListPrivate(rp, diff);
     }

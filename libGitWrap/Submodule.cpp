@@ -64,18 +64,18 @@ namespace Git
         SubmodulePrivate::SubmodulePrivate(RepositoryPrivate* repo, const QString& name)
             : RepoObjectPrivate(repo)
             , mName(name)
-            , mSubRepo(NULL)
+            , mSubRepo(nullptr)
         {
         }
 
         git_submodule* SubmodulePrivate::getSM(Result& rc) const
         {
-            git_submodule* sm = NULL;
+            git_submodule* sm = nullptr;
 
             if (rc && repo() && !mName.isEmpty()) {
                 rc = git_submodule_lookup(&sm, repo()->mRepo, GW_StringFromQt(mName));
                 if (!rc) {
-                    return NULL;
+                    return nullptr;
                 }
             }
 
@@ -93,7 +93,7 @@ namespace Git
                 return true;
             }
 
-            git_repository* submodule_repo = NULL;
+            git_repository* submodule_repo = nullptr;
             result = git_submodule_open(&submodule_repo, getSM(result));
             if (!result) {
                 return false;
@@ -117,7 +117,7 @@ namespace Git
     QString Submodule::path( Result& r ) const
     {
         GW_CD(Submodule);
-        git_submodule* sm = d ? d->getSM( r ) : NULL;
+        git_submodule* sm = d ? d->getSM( r ) : nullptr;
 
         if( !r || !sm )
         {
@@ -131,7 +131,7 @@ namespace Git
     QString Submodule::url( Result& r ) const
     {
         GW_CD(Submodule);
-        git_submodule* sm = d ? d->getSM( r ) : NULL;
+        git_submodule* sm = d ? d->getSM( r ) : nullptr;
 
         if( !r || !sm )
         {
@@ -146,7 +146,7 @@ namespace Git
     {
         GW_CD(Submodule);
         Result r;
-        git_submodule* sm = d ? d->getSM( r ) : NULL;
+        git_submodule* sm = d ? d->getSM( r ) : nullptr;
 
         if( !r || !sm )
         {
@@ -160,7 +160,7 @@ namespace Git
     {
         GW_CD(Submodule);
         Result r;
-        git_submodule* sm = d ? d->getSM( r ) : NULL;
+        git_submodule* sm = d ? d->getSM( r ) : nullptr;
 
         if( !r || !sm )
         {
@@ -181,7 +181,7 @@ namespace Git
     {
         GW_CD(Submodule);
         Result r;
-        git_submodule* sm = d ? d->getSM( r ) : NULL;
+        git_submodule* sm = d ? d->getSM( r ) : nullptr;
 
         if( !r || !sm )
         {
@@ -205,7 +205,7 @@ namespace Git
     {
         GW_CD(Submodule);
         Result r;
-        git_submodule* sm = d ? d->getSM( r ) : NULL;
+        git_submodule* sm = d ? d->getSM( r ) : nullptr;
 
         if( !r || !sm )
         {
@@ -225,7 +225,7 @@ namespace Git
     {
         GW_CD(Submodule);
         Result r;
-        git_submodule* sm = d ? d->getSM( r ) : NULL;
+        git_submodule* sm = d ? d->getSM( r ) : nullptr;
 
         if( !r || !sm )
         {
@@ -245,7 +245,7 @@ namespace Git
     {
         GW_CD(Submodule);
         Result r;
-        git_submodule* sm = d ? d->getSM( r ) : NULL;
+        git_submodule* sm = d ? d->getSM( r ) : nullptr;
 
         if( !r || !sm )
         {

@@ -58,7 +58,9 @@ namespace Git
 
         const git_commit** CommitPrivate::commitList2git(Result& result, const CommitList &list)
         {
-            if (!result) return NULL;
+            if (!result) {
+                return nullptr;
+            }
 
             const git_commit** ret = new const git_commit *[list.count()];
             for ( int i=0; i < list.count(); ++i )
@@ -114,8 +116,8 @@ namespace Git
 
         git_oid commitId;
         result = git_commit_create( &commitId, rp->mRepo, GW_StringFromQt(branchName),
-                                    gitAuthor, gitCommitter,
-                                    NULL, GW_StringFromQt(message), Private::dataOf<Tree>(tree)->o(),
+                                    gitAuthor, gitCommitter, nullptr,
+                                    GW_StringFromQt(message), Private::dataOf<Tree>(tree)->o(),
                                     parents.count(), constParents.data() );
 
         return repo.lookupCommit( result, ObjectId::fromRaw(commitId.id) );
@@ -164,7 +166,7 @@ namespace Git
         git_oid commitId;
         result = git_commit_create_from_ids( &commitId, rp->mRepo, GW_StringFromQt(branchName),
                                              gitAuthor, gitCommitter,
-                                             NULL, GW_StringFromQt(message),
+                                             nullptr, GW_StringFromQt(message),
                                              Internal::ObjectId2git(tree.id()),
                                              parents.count(), constParents.data() );
 
@@ -185,7 +187,7 @@ namespace Git
     {
         GW_CD_CHECKED(Commit, Tree(), result);
 
-        git_tree* tree = NULL;
+        git_tree* tree = nullptr;
         result = git_commit_tree(&tree, d->o());
         GW_CHECK_RESULT( result, Tree() );
 
@@ -215,7 +217,7 @@ namespace Git
     {
         GW_CD_CHECKED(Commit, Commit(), result);
 
-        git_commit* gitparent = NULL;
+        git_commit* gitparent = nullptr;
         result = git_commit_parent(&gitparent, d->o(), index);
         GW_CHECK_RESULT( result, Commit() );
 
@@ -243,7 +245,7 @@ namespace Git
 
         for( unsigned int i = 0; i < numParentCommits(); i++ )
         {
-            git_commit* parent = NULL;
+            git_commit* parent = nullptr;
             result = git_commit_parent(&parent, d->o(), i);
             GW_CHECK_RESULT(result, CommitList());
 
@@ -452,7 +454,7 @@ namespace Git
      */
     DiffList Commit::diffFrom(Result& result, const Commit& oldCommit) const
     {
-        Tree oldTree = oldCommit.isValid() ? oldCommit.tree( result ) : NULL;
+        Tree oldTree = oldCommit.isValid() ? oldCommit.tree( result ) : nullptr;
         return Diff( result ).treeToTree( result, oldTree, tree( result ) );
     }
 
@@ -473,7 +475,7 @@ namespace Git
      */
     DiffList Commit::diffTo(Result& result, const Commit& oldCommit) const
     {
-        Tree oldTree = oldCommit.isValid() ? oldCommit.tree( result ) : NULL;
+        Tree oldTree = oldCommit.isValid() ? oldCommit.tree( result ) : nullptr;
         return Diff(result).treeToTree( result, tree( result ), oldTree );
     }
 

@@ -37,7 +37,7 @@ namespace Git
         public:
             CustomMatches()
                 : id(-1)
-                , payload(NULL)
+                , payload(nullptr)
             {
             }
 

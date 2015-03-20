@@ -39,7 +39,7 @@ namespace Git
         typedef Internal::BasePrivate Private;
 
     public:
-        Base(Internal::BasePrivate* bp = GW_NULLPTR)
+        Base(Internal::BasePrivate* bp = nullptr)
             : mData(bp)
         {
             addRef();
@@ -86,10 +86,9 @@ namespace Git
             return !mData;
         }
 
-        #if GW_CPP11
         Base(Base&& other) : mData(other.mData)
         {
-            other.mData = GW_NULLPTR;
+            other.mData = nullptr;
         }
 
         Base& operator=(Base&& o)
@@ -97,7 +96,6 @@ namespace Git
             std::swap(mData, o.mData);
             return * this;
         }
-        #endif
 
     protected:
         typedef Internal::GitPtr<Internal::BasePrivate> PrivatePtr;

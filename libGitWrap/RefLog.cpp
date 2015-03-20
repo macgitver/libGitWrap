@@ -135,7 +135,7 @@ namespace Git
 
         Repository::Private* rp = Private::dataOf<Repository>( repo );
 
-        git_reflog *out = NULL;
+        git_reflog *out = nullptr;
         result = git_reflog_read( &out, rp->mRepo, GW_StringFromQt(refName) );
         GW_CHECK_RESULT( result, RefLog() );
 
