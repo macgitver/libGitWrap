@@ -78,8 +78,8 @@ namespace Git
             operator bool() const       { return !!d; }
 
         private:
-            void delRef() { if (d) d->delRef(); }
-            void addRef() { if (d) d->addRef(); }
+            void delRef() const { if (d) d->delRef(); }
+            void addRef() const { if (d) d->addRef(); }
 
         private:
             T* d;
