@@ -52,26 +52,19 @@ namespace Git
         class GitPtr
         {
         public:
-            GitPtr()                        : d(GW_NULLPTR)     {}
-
-            #if GW_CPP11
-            GitPtr(const GitPtr& o)         : GitPtr(o.d)       {}
-            GitPtr(T* o)                    : d(o)              { addRef(); }
-            GitPtr(GitPtr&& o)              : d(o.d)            { o.d = GW_NULLPTR; }
-            GitPtr& operator=(GitPtr&& o)                       { std::swap(d, o.d); return *this; }
-            #else
-            GitPtr(const GitPtr& o)         : d(o.d)            { addRef(); }
-            GitPtr(T* o)                    : d(o  )            { addRef(); }
-            #endif
-
-            ~GitPtr()                                           { delRef(); }
-            GitPtr& operator=(const GitPtr& o)                  { if (o.d != d) {
-                                                                    if (o.d) o.d->addRef();
-                                                                    if (d)     d->delRef();
-                                                                    d = o.d;
-                                                                  }
-                                                                  return *this;
-                                                                }
+            GitPtr()                        : d(nullptr)    {}
+            GitPtr(const GitPtr& o)         : GitPtr(o.d)   {}
+            GitPtr(T* o)                    : d(o)          { addRef(); }
+            GitPtr(GitPtr&& o)              : d(o.d)        { o.d = nullptr; }
+            GitPtr& operator=(GitPtr&& o)                   { std::swap(d, o.d); return *this; }
+            ~GitPtr()                                       { delRef(); }
+            GitPtr& operator=(const GitPtr& o)              { if (o.d != d) {
+                                                                if (o.d) o.d->addRef();
+                                                                if (d)     d->delRef();
+                                                                d = o.d;
+                                                              }
+                                                              return *this;
+                                                            }
 
         public:
                   T* data()       const { return d; }
