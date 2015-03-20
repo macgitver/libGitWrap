@@ -17,6 +17,7 @@
  *
  */
 
+#include <QString>
 #include <QStringBuilder>
 #include <QDir>
 
@@ -92,10 +93,11 @@ bool copyDir(const QString& src, const QString& dest)
 
 QString Fixture::prepareRepo(const char* name)
 {
-    QString sourceDir = dataDir() % QChar(L'/') % QLatin1String(name);
-    QString destDir = TempDirProvider::get() % QChar(L'/') % QLatin1String(name);
+    QString strName = QString::fromUtf8(name);
+    QString sourceDir = dataDir() % QChar(L'/') % strName;
+    QString destDir = TempDirProvider::get() % QChar(L'/') % strName;
 
-    QDir(TempDirProvider::get()).mkpath(QLatin1String(name));
+    QDir(TempDirProvider::get()).mkpath(strName);
 
     if ( !copyDir(sourceDir, destDir) )
         qCritical( "copyDir() failed: src=%s -> dest=%s", qPrintable(sourceDir), qPrintable(destDir) );

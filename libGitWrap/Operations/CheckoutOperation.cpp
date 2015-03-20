@@ -39,17 +39,17 @@ namespace Git
 
         git_repository* CheckoutBaseOperationPrivate::gitPtr( const Repository& obj )
         {
-            return obj.isValid() ? BasePrivate::dataOf<Repository>( obj )->mRepo : NULL;
+            return obj.isValid() ? BasePrivate::dataOf<Repository>( obj )->mRepo : nullptr;
         }
 
         git_index* CheckoutBaseOperationPrivate::gitPtr( const Index& obj )
         {
-            return obj.isValid() ? (BasePrivate::dataOf<Index>( obj )->index) : NULL;
+            return obj.isValid() ? (BasePrivate::dataOf<Index>( obj )->index) : nullptr;
         }
 
         git_object* CheckoutBaseOperationPrivate::gitObjectPtr( const Tree& obj )
         {
-            return obj.isValid() ? BasePrivate::dataOf<Tree>( obj )->mObj : NULL;
+            return obj.isValid() ? BasePrivate::dataOf<Tree>( obj )->mObj : nullptr;
         }
 
         CheckoutBaseOperationPrivate::CheckoutBaseOperationPrivate(CheckoutBaseOperation* owner)
@@ -137,7 +137,8 @@ namespace Git
 
         void CheckoutTreeOperationPrivate::runCheckout(git_repository* repo)
         {
-            git_object* tree = mTreeProvider ? gitObjectPtr( mTreeProvider->tree(mResult) ) : NULL;
+            git_object* tree = mTreeProvider ? gitObjectPtr( mTreeProvider->tree(mResult) )
+                                             : nullptr;
             GW_CHECK_RESULT( mResult, void() );
 
             mResult = git_checkout_tree(repo, tree, mOpts);
@@ -206,7 +207,7 @@ namespace Git
             {
                 mResult = git_repository_set_head( repo,
                                                    git_reference_name( p->reference ),
-                                                   NULL, NULL);
+                                                   nullptr, nullptr);
             }
         }
 
@@ -225,85 +226,85 @@ namespace Git
 
     void CheckoutBaseOperation::setRepository(const Repository& repo)
     {
-        GW_D(CheckoutBaseOperation);
+        GW_OP_D(CheckoutBaseOperation);
         Q_ASSERT(!isRunning());
         d->mRepo = repo;
     }
 
     void CheckoutBaseOperation::setMode(CheckoutMode mode)
     {
-        GW_D(CheckoutBaseOperation);
+        GW_OP_D(CheckoutBaseOperation);
         Q_ASSERT(!isRunning());
         d->mMode = mode;
     }
 
     void CheckoutBaseOperation::setStrategy(unsigned int strategy)
     {
-        GW_D(CheckoutBaseOperation);
+        GW_OP_D(CheckoutBaseOperation);
         Q_ASSERT(!isRunning());
         d->mStrategy = static_cast<CheckoutFlags>(strategy);
     }
 
     void CheckoutBaseOperation::setTargetDirectory(const QString& path)
     {
-        GW_D(CheckoutBaseOperation);
+        GW_OP_D(CheckoutBaseOperation);
         Q_ASSERT(!isRunning());
         d->mOpts.setTargetDirectory( path );
     }
 
     void CheckoutBaseOperation::setCheckoutPaths(const QStringList& paths)
     {
-        GW_D(CheckoutBaseOperation);
+        GW_OP_D(CheckoutBaseOperation);
         Q_ASSERT(!isRunning());
         d->mOpts.setPaths( paths );
     }
 
     void CheckoutBaseOperation::setBaseline(const Tree& baseline)
     {
-        GW_D(CheckoutBaseOperation);
+        GW_OP_D(CheckoutBaseOperation);
         Q_ASSERT(!isRunning());
         d->mBaseline = baseline;
     }
 
     Repository CheckoutBaseOperation::repository() const
     {
-        GW_CD(CheckoutBaseOperation);
+        GW_OP_CD(CheckoutBaseOperation);
         return d->mRepo;
     }
 
     CheckoutMode CheckoutBaseOperation::mode() const
     {
-        GW_CD(CheckoutBaseOperation);
+        GW_OP_CD(CheckoutBaseOperation);
         return d->mMode;
     }
 
     CheckoutFlags CheckoutBaseOperation::strategy() const
     {
-        GW_CD(CheckoutBaseOperation);
+        GW_OP_CD(CheckoutBaseOperation);
         return d->mStrategy;
     }
 
     QString CheckoutBaseOperation::targetDirectory() const
     {
-        GW_CD(CheckoutBaseOperation);
+        GW_OP_CD(CheckoutBaseOperation);
         return d->mOpts.targetDirectory();
     }
 
     QStringList CheckoutBaseOperation::checkoutPaths() const
     {
-        GW_CD(CheckoutBaseOperation);
+        GW_OP_CD(CheckoutBaseOperation);
         return d->mOpts.paths();
     }
 
     Tree CheckoutBaseOperation::baseline() const
     {
-        GW_CD(CheckoutBaseOperation);
+        GW_OP_CD(CheckoutBaseOperation);
         return d->mBaseline;
     }
 
     void CheckoutBaseOperation::setCancel(bool cancel)
     {
-        GW_D(CheckoutBaseOperation);
+        GW_OP_D(CheckoutBaseOperation);
         Q_ASSERT(isRunning());
         d->mCancel = cancel;
     }
@@ -331,7 +332,7 @@ namespace Git
     void CheckoutIndexOperation::setIndex(const Index& index)
     {
         Q_ASSERT(!isRunning());
-        GW_D(CheckoutIndexOperation);
+        GW_OP_D(CheckoutIndexOperation);
         d->mIndex = index;
     }
 
@@ -351,7 +352,7 @@ namespace Git
     CheckoutTreeOperation::CheckoutTreeOperation(TreeProviderPtr tp, QObject* parent)
         : CheckoutBaseOperation( *new Private(this), parent )
     {
-        GW_D( CheckoutTreeOperation );
+        GW_OP_D( CheckoutTreeOperation );
         d->mTreeProvider = tp;
     }
 
@@ -359,7 +360,7 @@ namespace Git
                                                  TreeProviderPtr tp, QObject* parent)
         : CheckoutBaseOperation( _d, parent )
     {
-        GW_D( CheckoutTreeOperation );
+        GW_OP_D( CheckoutTreeOperation );
         d->mTreeProvider = tp;
         if ( tp ) {
             d->mRepo = tp->repository();
@@ -369,13 +370,13 @@ namespace Git
     void CheckoutTreeOperation::setTreeProvider(TreeProviderPtr tp)
     {
         Q_ASSERT(!isRunning());
-        GW_D( CheckoutTreeOperation );
+        GW_OP_D( CheckoutTreeOperation );
         d->mTreeProvider = tp;
     }
 
     TreeProviderPtr CheckoutTreeOperation::treeProvider() const
     {
-        GW_CD( CheckoutTreeOperation );
+        GW_OP_CD( CheckoutTreeOperation );
         return d->mTreeProvider;
     }
 
@@ -384,13 +385,13 @@ namespace Git
     CheckoutCommitOperation::CheckoutCommitOperation(const Commit& commit, QObject* parent)
         : CheckoutTreeOperation( *new Private(this), commit, parent)
     {
-        GW_D( CheckoutCommitOperation );
+        GW_OP_D( CheckoutCommitOperation );
         d->mCommit = commit;
     }
 
     Commit CheckoutCommitOperation::commit()
     {
-        GW_CD( CheckoutCommitOperation );
+        GW_OP_CD( CheckoutCommitOperation );
         return d ? d->mCommit : Commit();
     }
 
@@ -405,13 +406,13 @@ namespace Git
 
     void CheckoutReferenceOperation::setBranch(const Reference& ref)
     {
-        GW_D( CheckoutReferenceOperation );
+        GW_OP_D( CheckoutReferenceOperation );
         d->mBranch = ref;
     }
 
     Reference CheckoutReferenceOperation::branch() const
     {
-        GW_CD( CheckoutReferenceOperation );
+        GW_OP_CD( CheckoutReferenceOperation );
         return d ? d->mBranch : Reference();
     }
 

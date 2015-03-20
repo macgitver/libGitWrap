@@ -14,8 +14,7 @@
  *
  */
 
-#ifndef GIT_P_H
-#define GIT_P_H
+#pragma once
 
 #include <QDebug>
 #include <QSharedData>
@@ -48,6 +47,43 @@ namespace Git
         RefSpec mkRefSpec( const git_refspec* refspec );
         QStringList slFromStrArray( git_strarray* arry );
         FileInfo mkFileInfo(const git_diff_file* df);
+
+        template<typename T>
+        class GitPtr
+        {
+        public:
+            GitPtr()                        : d(nullptr)    {}
+            GitPtr(const GitPtr& o)         : GitPtr(o.d)   {}
+            GitPtr(T* o)                    : d(o)          { addRef(); }
+            GitPtr(GitPtr&& o)              : d(o.d)        { o.d = nullptr; }
+            GitPtr& operator=(GitPtr&& o)                   { std::swap(d, o.d); return *this; }
+            ~GitPtr()                                       { delRef(); }
+            GitPtr& operator=(const GitPtr& o)              { if (o.d != d) {
+                                                                if (o.d) o.d->addRef();
+                                                                if (d)     d->delRef();
+                                                                d = o.d;
+                                                              }
+                                                              return *this;
+                                                            }
+
+        public:
+                  T* data()       const { return d; }
+
+            const T* operator->() const { return d; }
+                  T* operator->()       { return d; }
+
+            const T* operator*() const  { return d; }
+                  T* operator*()        { return d; }
+
+            operator bool() const       { return !!d; }
+
+        private:
+            void delRef() const { if (d) d->delRef(); }
+            void addRef() const { if (d) d->addRef(); }
+
+        private:
+            T* d;
+        };
 
         /**
          * @internal
@@ -317,7 +353,9 @@ namespace Git
 
         inline const git_oid** ObjectIdList2git(Result& result, const ObjectIdList &list)
         {
-            if (!result) return NULL;
+            if (!result) {
+                return nullptr;
+            }
 
             const git_oid** ret = new const git_oid *[list.count()];
             for ( int i=0; i < list.count(); ++i )
@@ -405,27 +443,22 @@ namespace Git
         if (!Internal::BasePrivate::isValid(result, d)) { return returns; } \
     } while (0)
 
-#define GW__EX_CHECK(returns, result) \
-    do { \
-        if (!Internal::BasePrivate::isValid(result, d.constData())) { return returns; } \
-    } while (0)
-
 #define GW__CHECK_VOID(result) \
     if (!Internal::BasePrivate::isValid(result, d)) { return; }
 
 #define GW_D(CLASS) \
-    Private* d = static_cast<Private*>(mData.data()); \
+    Private* d = static_cast<Private*>(mData); \
     ensureThisIsNotConst()
 
 #define GW_D_EX(CLASS) \
-    PrivatePtr d(static_cast<Private*>(mData.data())); \
+    PrivatePtr d(static_cast<Private*>(mData)); \
     ensureThisIsNotConst()
 
 #define GW_CD(CLASS) \
-    const CLASS::Private* d = static_cast<const CLASS::Private*>(mData.constData())
+    const CLASS::Private* d = static_cast<const CLASS::Private*>(mData)
 
 #define GW_CD_EX(CLASS) \
-    const CLASS::PrivatePtr d(static_cast<CLASS::Private*>(mData.data()))
+    const CLASS::PrivatePtr d(const_cast<CLASS::Private*>(static_cast<const CLASS::Private*>(mData)))
 
 
 #define GW_CD_CHECKED(CLASS, returns, result) \
@@ -434,7 +467,7 @@ namespace Git
 
 #define GW_CD_EX_CHECKED(CLASS, returns, result) \
     GW_CD_EX(CLASS); \
-    GW__EX_CHECK(returns, result)
+    GW__CHECK(returns, result)
 
 #define GW_D_CHECKED(CLASS, returns, result) \
     GW_D(CLASS); \
@@ -452,5 +485,3 @@ namespace Git
     GW_CD(CLASS); \
     GW__CHECK_VOID(result)
 
-
-#endif

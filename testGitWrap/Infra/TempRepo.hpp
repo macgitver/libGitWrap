@@ -17,8 +17,7 @@
  *
  */
 
-#ifndef TEST_GW_TEMP_REPO_HPP
-#define TEST_GW_TEMP_REPO_HPP
+#pragma once
 
 #include <QString>
 
@@ -65,5 +64,3 @@ private:
     TempRepo mTempRepo;
     Git::Repository mRepo;
 };
-
-#endif

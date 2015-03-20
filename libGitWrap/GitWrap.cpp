@@ -26,7 +26,7 @@ namespace Git
     namespace Internal
     {
 
-        GitWrapPrivate* GitWrapPrivate::self = NULL;
+        GitWrapPrivate* GitWrapPrivate::self = nullptr;
 
         /**
          * @internal
@@ -278,7 +278,7 @@ namespace Git
         {
             if ( init ) {
                 mEncoded.count = 0;
-                mEncoded.strings = NULL;
+                mEncoded.strings = nullptr;
             }
         }
 
@@ -354,8 +354,8 @@ namespace Git
 
             mEncoded.count = strings.count();
             if ( strings.isEmpty() ) {
-                // The strings pointer must be NULL in this case.
-                mEncoded.strings = NULL;
+                // The strings pointer must be nullptr in this case.
+                mEncoded.strings = nullptr;
                 return;
             }
 
@@ -413,22 +413,22 @@ namespace Git
     {
         git_libgit2_init();
 
-        Q_ASSERT( Internal::GitWrapPrivate::self == NULL );
+        Q_ASSERT( Internal::GitWrapPrivate::self == nullptr );
         Internal::GitWrapPrivate::self = new Internal::GitWrapPrivate;
     }
 
     GitWrap::~GitWrap()
     {
-        Q_ASSERT( Internal::GitWrapPrivate::self != NULL );
+        Q_ASSERT( Internal::GitWrapPrivate::self != nullptr );
         delete Internal::GitWrapPrivate::self;
-        Internal::GitWrapPrivate::self = NULL;
+        Internal::GitWrapPrivate::self = nullptr;
 
         git_libgit2_shutdown();
     }
 
     Result& GitWrap::lastResult()
     {
-        Q_ASSERT( Internal::GitWrapPrivate::self != NULL );
+        Q_ASSERT( Internal::GitWrapPrivate::self != nullptr );
 
         if( !Internal::GitWrapPrivate::self->mTLStore.hasLocalData() )
         {

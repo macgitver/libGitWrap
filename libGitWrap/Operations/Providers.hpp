@@ -16,8 +16,7 @@
  *
  */
 
-#ifndef GITWRAP_OPERATION_PROVIDERS_HPP
-#define GITWRAP_OPERATION_PROVIDERS_HPP
+#pragma once
 
 #include "libGitWrap/GitWrap.hpp"
 
@@ -54,10 +53,7 @@ namespace Git
         virtual ObjectIdList parents(Result &result) const = 0;
     };
 
-    // typedefs for shared pointers
     typedef QExplicitlySharedDataPointer<TreeProvider>      TreeProviderPtr;
     typedef QExplicitlySharedDataPointer<ParentProvider>    ParentProviderPtr;
 
 }
-
-#endif

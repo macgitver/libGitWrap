@@ -16,8 +16,7 @@
  *
  */
 
-#ifndef GIT_INDEX_CONFLICT_PRIVATE_HPP
-#define GIT_INDEX_CONFLICT_PRIVATE_HPP
+#pragma once
 
 #include "libGitWrap/Private/GitWrapPrivate.hpp"
 
@@ -49,5 +48,3 @@ namespace Git
     }
 
 }
-
-#endif

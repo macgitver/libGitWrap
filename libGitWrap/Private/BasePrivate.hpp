@@ -14,10 +14,9 @@
  *
  */
 
-#ifndef GIT_BASIC_OBJECT_H
-#define GIT_BASIC_OBJECT_H
+#pragma once
 
-#include <QSharedData>
+#include <QAtomicInt>
 
 #include "libGitWrap/Private/GitWrapPrivate.hpp"
 
@@ -35,7 +34,7 @@ namespace Git
          * @brief The BaseObject class
          *
          */
-        class BasePrivate : public QSharedData
+        class BasePrivate
         {
         public:
             BasePrivate();
@@ -55,7 +54,7 @@ namespace Git
             template< class T>
             static typename T::Private* dataOf(const T& o)
             {
-                return static_cast<typename T::Private*>(o.mData.data());
+                return static_cast<typename T::Private*>(o.mData);
             }
 
             static inline const git_oid* sha(const ObjectId& id)
@@ -78,11 +77,14 @@ namespace Git
                 return T(tpp);
             }
 
+        public:
+            void addRef() const;
+            void delRef() const;
+
+        private:
+            mutable QAtomicInt mRef;
         };
 
     }
 
 }
-
-#endif
-

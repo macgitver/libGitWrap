@@ -14,8 +14,7 @@
  *
  */
 
-#ifndef GITWRAP_GITWRAP_H
-#define GITWRAP_GITWRAP_H
+#pragma once
 
 #include <QStringList>
 #include <QDateTime>
@@ -46,8 +45,33 @@
 #define qUtf8Printable qPrintable
 #endif
 
+#ifndef GW_CPP11
+#  ifdef _MSC_VER
+#    define     GW_CPP11        1
+#  else
+#    if __cplusplus < 201103L
+#      define   GW_CPP11        0
+#    else
+#      define   GW_CPP11        1
+#    endif
+#  endif
+#endif
+
+#ifndef _MSC_VER
+#  define     GW_CONSTEXPR    constexpr
+#else
+#  define     GW_CONSTEXPR
+#endif
+
 namespace Git
 {
+
+    namespace Internal
+    {
+        // For compat reasons
+        template<typename T> class GitPtr;
+
+    }
 
     class ChangeListConsumer;
     class DiffList;
@@ -309,46 +333,28 @@ namespace Git
 #define GW_PRIVATE_DECL_EX(SHARE, CLASS, BASE, SCOPE) \
     public: \
         typedef Internal::SHARE##Private Private; \
-        typedef QExplicitlySharedDataPointer<Private> PrivatePtr; \
+        typedef Internal::GitPtr<Private> PrivatePtr; \
     \
     SCOPE: \
-        CLASS() \
-            : BASE() \
+        CLASS(Private* _d = nullptr) \
+            : BASE((BASE::Private*)(_d)) \
             {} \
         \
-        CLASS(Private* _d); \
         CLASS(const PrivatePtr& _d); \
         \
         CLASS(const CLASS& other) \
             : BASE(other) \
-            {} \
-        \
-        CLASS& operator=(const CLASS& other) \
-            { return static_cast<CLASS&>(BASE::operator=(other)); } \
-        \
-        bool operator==(const CLASS& other) const \
-            { return BASE::operator==(other); } \
-        \
-        bool operator!=(const CLASS& other) const \
-            { return BASE::operator!=(other); } \
-        \
-        bool operator!() const \
-            { return !isValid(); } \
-        \
-    public: \
-        ~CLASS() \
             {}
 
 #define GW_PRIVATE_IMPL(CLASS, BASE) \
-    CLASS::CLASS(Private* _d) \
-        : BASE(PrivatePtr(_d)) \
-        {} \
-    \
-    CLASS::CLASS(const PrivatePtr& _d) \
-        : BASE(_d) \
+    CLASS::CLASS(const PrivatePtr& d) \
+        : BASE(d.data()) \
         {}
 
 #define GW_PRIVATE_DECL(CLASS, BASE, SCOPE) \
     GW_PRIVATE_DECL_EX(CLASS, CLASS, BASE, SCOPE)
 
-#endif
+#define GW_PRIVATE_OBJECT_DECL(CLASS, BASE, SCOPE) \
+    GW_PRIVATE_DECL(CLASS, BASE, SCOPE) \
+public: \
+    enum { ObjectTypeId = ot##CLASS };

@@ -29,7 +29,7 @@ namespace Git
     namespace Internal
     {
 
-        TreeBuilderPrivate::TreeBuilderPrivate(const RepositoryPrivate::Ptr& repo, git_treebuilder* builder )
+        TreeBuilderPrivate::TreeBuilderPrivate(RepositoryPrivate* repo, git_treebuilder* builder )
             : RepoObjectPrivate( repo )
             , mBuilder( builder )
         {
@@ -70,7 +70,7 @@ namespace Git
     {
         GW_D_CHECKED(TreeBuilder, false, result);
 
-        const git_tree_entry* te = NULL;
+        const git_tree_entry* te = nullptr;
         git_filemode_t fm = Internal::teattr2filemode( type );
 
         result = git_treebuilder_insert( &te, d->mBuilder, GW_StringFromQt(fileName),
@@ -106,7 +106,7 @@ namespace Git
             return TreeEntry();
         }
 
-        return TreeEntry::PrivatePtr(new TreeEntry::Private(entry, true));
+        return new TreeEntry::Private(entry, true);
     }
 
 

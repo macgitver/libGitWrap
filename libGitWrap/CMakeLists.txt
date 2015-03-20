@@ -184,11 +184,7 @@ SET( PUB_HDR_FILES
     IndexEntry.hpp
     NoteRef.hpp
     Object.hpp
-    ObjectBlob.hpp
-    ObjectCommit.hpp
     ObjectId.hpp
-    ObjectTag.hpp
-    ObjectTree.hpp
     PatchConsumer.hpp
     RefLog.hpp
     RefName.hpp

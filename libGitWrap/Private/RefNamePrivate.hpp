@@ -17,8 +17,6 @@
  *
  */
 
-#ifndef GIT_REF_NAME_PRIVATE_HPP
-#define GIT_REF_NAME_PRIVATE_HPP
 #pragma once
 
 #include <QStringList>
@@ -39,7 +37,7 @@ namespace Git
         public:
             CustomMatches()
                 : id(-1)
-                , payload(NULL)
+                , payload(nullptr)
             {
             }
 
@@ -130,5 +128,3 @@ namespace Git
     }
 
 }
-
-#endif

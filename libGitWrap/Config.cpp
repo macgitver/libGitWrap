@@ -68,7 +68,7 @@ namespace Git
         GW_CHECK_RESULT( result, Config() );
 
         Internal::Buffer path;
-        git_config* cfg = NULL;
+        git_config* cfg = nullptr;
 
         result = git_config_find_system( path );
         GW_CHECK_RESULT( result, Config() );
@@ -76,7 +76,7 @@ namespace Git
         result = git_config_open_ondisk( &cfg, path );
         GW_CHECK_RESULT( result, Config() );
 
-        return PrivatePtr(new Private(cfg));
+        return new Private(cfg);
     }
 
     Config Config::user(Result &result)
@@ -84,7 +84,7 @@ namespace Git
         GW_CHECK_RESULT( result, Config() );
 
         Internal::Buffer path;
-        git_config* cfg = NULL;
+        git_config* cfg = nullptr;
 
         result = git_config_find_global( path );
         GW_CHECK_RESULT( result, Config() );
@@ -92,29 +92,29 @@ namespace Git
         result = git_config_open_ondisk( &cfg, path );
         GW_CHECK_RESULT( result, Config() );
 
-        return PrivatePtr(new Private(cfg));
+        return new Private(cfg);
     }
 
     Config Config::file( Result& result, const QString& fileName )
     {
         GW_CHECK_RESULT( result, Config() );
-        git_config* cfg = NULL;
+        git_config* cfg = nullptr;
 
         result = git_config_open_ondisk( &cfg, fileName.toLocal8Bit().constData() );
         GW_CHECK_RESULT( result, Config() );
 
-        return PrivatePtr(new Private(cfg));
+        return new Private(cfg);
     }
 
     Config Config::create(Result& result)
     {
         GW_CHECK_RESULT( result, Config() );
 
-        git_config* cfg = NULL;
+        git_config* cfg = nullptr;
         result = git_config_new( &cfg );
         GW_CHECK_RESULT( result, Config() );
 
-        return PrivatePtr(new Private(cfg));
+        return new Private(cfg);
     }
 
     bool Config::addFile(Result& result, const QString& fileName, int priority)

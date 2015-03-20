@@ -15,8 +15,8 @@
  * not, see <http://www.gnu.org/licenses/>.
  *
  */
-#ifndef GITWRAP_COMMIT_OPERATION_HPP
-#define GITWRAP_COMMIT_OPERATION_HPP
+
+#pragma once
 
 #include "libGitWrap/Operations/BaseOperation.hpp"
 #include "libGitWrap/Operations/Providers.hpp"
@@ -63,5 +63,3 @@ namespace Git
         void setCommitter(const Signature &value);
     };
 }
-
-#endif

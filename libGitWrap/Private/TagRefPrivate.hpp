@@ -18,8 +18,6 @@
  *
  */
 
-#ifndef GITWRAP_TAG_REF_PRIVATE_HPP
-#define GITWRAP_TAG_REF_PRIVATE_HPP
 #pragma once
 
 #include "libGitWrap/Private/ReferencePrivate.hpp"
@@ -33,7 +31,7 @@ namespace Git
         class TagRefPrivate : public ReferencePrivate
         {
         public:
-            TagRefPrivate(const RepositoryPrivate::Ptr& repo, git_reference* reference);
+            TagRefPrivate(RepositoryPrivate* repo, git_reference* reference);
             TagRefPrivate(git_reference* reference, const RefNamePrivate* refName);
 
         public:
@@ -43,5 +41,3 @@ namespace Git
     }
 
 }
-
-#endif

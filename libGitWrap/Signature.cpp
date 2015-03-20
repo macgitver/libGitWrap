@@ -42,7 +42,7 @@ namespace Git
         {
             if( !result )
             {
-                return NULL;
+                return nullptr;
             }
 
             git_signature* gitsig = 0;

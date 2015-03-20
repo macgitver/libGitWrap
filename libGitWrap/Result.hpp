@@ -14,8 +14,7 @@
  *
  */
 
-#ifndef GIT_ERROR_H
-#define GIT_ERROR_H
+#pragma once
 
 #include "libGitWrap/GitWrap.hpp"
 
@@ -153,14 +152,11 @@ namespace Git
 
 }
 
-#endif
-
-
-//-- public macro definitions --8>
-
 /**
   * @ingroup    GitWrap
-  * @def        Check, if a given @ref Git::Result object is valid.
+  * @def        GW_CHECK_RESULT
+  * @brief      Check, if a given @ref Git::Result object is valid.
+  *
   *             The current function will exit with the defined return value,
   *             when the result is invalid.
   */

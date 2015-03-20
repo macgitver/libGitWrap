@@ -61,7 +61,7 @@ namespace Git
             (*mCloneOpts).remote_cb = CB_CreateRemote;
             (*mCloneOpts).remote_cb_payload = this;
 
-            git_repository* clone = NULL;
+            git_repository* clone = nullptr;
             mResult = git_clone(&clone, GW_StringFromQt(mUrl), GW_StringFromQt(mPath), mCloneOpts);
             GW_CHECK_RESULT( mResult, void() );
             mRepo = new RepositoryPrivate( clone );
@@ -76,28 +76,28 @@ namespace Git
 
     void CloneOperation::setUrl(const QString& url)
     {
-        GW_D(CloneOperation);
+        GW_OP_D(CloneOperation);
         Q_ASSERT(!isRunning());
         d->mUrl = url;
     }
 
     void CloneOperation::setPath( const QString& path )
     {
-        GW_D(CloneOperation);
+        GW_OP_D(CloneOperation);
         Q_ASSERT(!isRunning());
         d->mPath = path;
     }
 
     void CloneOperation::setBare(bool bare)
     {
-        GW_D(CloneOperation);
+        GW_OP_D(CloneOperation);
         Q_ASSERT(!isRunning());
         (*(d->mCloneOpts)).bare = bare;
     }
 
     void CloneOperation::setDepth(uint depth)
     {
-        GW_D(CloneOperation);
+        GW_OP_D(CloneOperation);
         Q_ASSERT( !isRunning() );
         if ( depth ) {
             // TODO: not implemented in libgit2 api
@@ -108,26 +108,26 @@ namespace Git
 
     void CloneOperation::setReference(const QString& refName)
     {
-        GW_D( CloneOperation );
+        GW_OP_D( CloneOperation );
         Q_ASSERT( !isRunning() );
         d->mCloneOpts.setCheckoutBranch( refName );
     }
 
     QString CloneOperation::url() const
     {
-        GW_CD(CloneOperation);
+        GW_OP_CD(CloneOperation);
         return d->mUrl;
     }
 
     QString CloneOperation::path() const
     {
-        GW_CD(CloneOperation);
+        GW_OP_CD(CloneOperation);
         return d->mPath;
     }
 
     bool CloneOperation::bare() const
     {
-        GW_CD(CloneOperation);
+        GW_OP_CD(CloneOperation);
         return (*(d->mCloneOpts)).bare;
     }
 
@@ -138,7 +138,7 @@ namespace Git
 
     QString CloneOperation::reference() const
     {
-        GW_CD( CloneOperation );
+        GW_OP_CD( CloneOperation );
         return d->mCloneOpts.checkoutBranch();
     }
 

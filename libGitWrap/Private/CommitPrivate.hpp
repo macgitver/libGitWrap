@@ -17,8 +17,6 @@
  *
  */
 
-#ifndef GITWRAP_COMMIT_PRIVATE_HPP
-#define GITWRAP_COMMIT_PRIVATE_HPP
 #pragma once
 
 #include "libGitWrap/Private/ObjectPrivate.hpp"
@@ -32,8 +30,8 @@ namespace Git
         class CommitPrivate : public ObjectPrivate
         {
         public:
-            CommitPrivate(const RepositoryPrivate::Ptr& repo, git_object* o);
-            CommitPrivate(const RepositoryPrivate::Ptr& repo, git_commit* o);
+            CommitPrivate(RepositoryPrivate* repo, git_object* o);
+            CommitPrivate(RepositoryPrivate* repo, git_commit* o);
 
         public:
             git_commit* o()             { return reinterpret_cast<git_commit*>(mObj); }
@@ -49,5 +47,3 @@ namespace Git
     }
 
 }
-
-#endif

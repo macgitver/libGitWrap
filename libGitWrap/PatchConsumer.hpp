@@ -1,4 +1,4 @@
-   /*
+/*
  * MacGitver
  * Copyright (C) 2012-2013 Sascha Cunz <sascha@babbelbox.org>
  *
@@ -14,8 +14,7 @@
  *
  */
 
-#ifndef GITWRAP_PATCH_CONSUMER_H
-#define GITWRAP_PATCH_CONSUMER_H
+#pragma once
 
 #include "libGitWrap/GitWrap.hpp"
 #include "libGitWrap/ChangeListConsumer.hpp"
@@ -44,5 +43,3 @@ namespace Git
     };
 
 }
-
-#endif

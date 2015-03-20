@@ -16,8 +16,7 @@
  *
  */
 
-#ifndef GITWRAP_REFLOGENTRY_HPP
-#define GITWRAP_REFLOGENTRY_HPP
+#pragma once
 
 #include "libGitWrap/Private/BasePrivate.hpp"
 
@@ -43,6 +42,3 @@ namespace Git
         };
     }
 }
-
-#endif // REFLOGENTRY_HPP
-

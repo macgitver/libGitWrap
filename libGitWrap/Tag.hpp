@@ -14,8 +14,7 @@
  *
  */
 
-#ifndef GIT_OBJECT_TAG_H
-#define GIT_OBJECT_TAG_H
+#pragma once
 
 #include "libGitWrap/GitWrap.hpp"
 #include "libGitWrap/ObjectId.hpp"
@@ -36,9 +35,7 @@ namespace Git
      */
     class GITWRAP_API Tag : public Object
     {
-        GW_PRIVATE_DECL(Tag, Object, public)
-    public:
-        enum { ObjectTypeId = otTag };
+        GW_PRIVATE_OBJECT_DECL(Tag, Object, public)
 
     public:
         static ObjectId create(Result& result,
@@ -65,5 +62,3 @@ namespace Git
 }
 
 Q_DECLARE_METATYPE(Git::Tag)
-
-#endif

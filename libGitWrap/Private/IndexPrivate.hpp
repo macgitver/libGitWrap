@@ -16,8 +16,7 @@
  *
  */
 
-#ifndef GIT_INDEX_PRIVATE_H
-#define GIT_INDEX_PRIVATE_H
+#pragma once
 
 #include "libGitWrap/IndexConflict.hpp"
 
@@ -41,7 +40,7 @@ namespace Git
             typedef QExplicitlySharedDataPointer<IndexPrivate> Ptr;
 
         public:
-            IndexPrivate(const RepositoryPrivate::Ptr& repo, git_index* index);
+            IndexPrivate(RepositoryPrivate* repo, git_index* index);
             ~IndexPrivate();
 
         public:
@@ -58,5 +57,3 @@ namespace Git
     }
 
 }
-
-#endif

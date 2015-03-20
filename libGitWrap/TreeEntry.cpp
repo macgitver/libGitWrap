@@ -52,11 +52,11 @@ namespace Git
         }
 
         Result result;
-        git_tree_entry* entry = NULL;
+        git_tree_entry* entry = nullptr;
         result = git_tree_entry_dup( &entry, d->mEntry );
         Q_ASSERT(result && entry);
 
-        return PrivatePtr(new Private(entry));
+        return new Private(entry);
     }
 
     ObjectId TreeEntry::sha1() const

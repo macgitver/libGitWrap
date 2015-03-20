@@ -14,8 +14,7 @@
  *
  */
 
-#ifndef GIT_REPOSITORY_PRIVATE_H
-#define GIT_REPOSITORY_PRIVATE_H
+#pragma once
 
 #include "libGitWrap/Private/BasePrivate.hpp"
 #include "libGitWrap/Private/GitWrapPrivate.hpp"
@@ -38,7 +37,7 @@ namespace Git
         class RepositoryPrivate : public BasePrivate
         {
         public:
-            typedef QExplicitlySharedDataPointer<RepositoryPrivate> Ptr;
+            typedef GitPtr<RepositoryPrivate> Ptr;
 
         public:
             RepositoryPrivate( git_repository* repo );
@@ -53,5 +52,3 @@ namespace Git
     }
 
 }
-
-#endif

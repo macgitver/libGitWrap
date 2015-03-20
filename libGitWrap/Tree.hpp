@@ -16,15 +16,11 @@
  *
  */
 
-#ifndef GIT_OBJECT_TREE_H
-#define GIT_OBJECT_TREE_H
+#pragma once
 
 #include "libGitWrap/Object.hpp"
-
-// -- DEPRECATED INCLUDES BEGIN --8>
 #include "libGitWrap/Diff.hpp"
 #include "libGitWrap/DiffList.hpp"
-// <8-- DEPRECATED INCLUDES END --
 
 namespace Git
 {
@@ -44,9 +40,7 @@ namespace Git
      */
     class GITWRAP_API Tree : public Object
     {
-        GW_PRIVATE_DECL(Tree, Object, public)
-    public:
-        enum { ObjectTypeId = otTree };
+        GW_PRIVATE_OBJECT_DECL(Tree, Object, public)
 
     public:
         Tree subPath(Result& result, const QString& pathName) const;
@@ -113,5 +107,3 @@ namespace Git
 }
 
 Q_DECLARE_METATYPE(Git::Tree)
-
-#endif

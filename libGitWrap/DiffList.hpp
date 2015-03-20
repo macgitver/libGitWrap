@@ -14,8 +14,7 @@
  *
  */
 
-#ifndef GIT_DIFFLIST_H
-#define GIT_DIFFLIST_H
+#pragma once
 
 #include "libGitWrap/RepoObject.hpp"
 
@@ -64,5 +63,3 @@ namespace Git
 }
 
 Q_DECLARE_METATYPE(Git::DiffList)
-
-#endif

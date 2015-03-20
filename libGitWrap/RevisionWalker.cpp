@@ -52,7 +52,7 @@ namespace Git
         }
 
         Repository::Private* rp = Private::dataOf<Repository>(repository);
-        git_revwalk* walker = NULL;
+        git_revwalk* walker = nullptr;
 
         result = git_revwalk_new(&walker, rp->mRepo);
         GW_CHECK_RESULT( result, RevisionWalker() );

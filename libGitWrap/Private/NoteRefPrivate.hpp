@@ -18,8 +18,6 @@
  *
  */
 
-#ifndef GITWRAP_NOTE_REF_PRIVATE_HPP
-#define GITWRAP_NOTE_REF_PRIVATE_HPP
 #pragma once
 
 #include "libGitWrap/Private/ReferencePrivate.hpp"
@@ -33,7 +31,7 @@ namespace Git
         class NoteRefPrivate : public ReferencePrivate
         {
         public:
-            NoteRefPrivate(const RepositoryPrivate::Ptr& repo, git_reference* reference);
+            NoteRefPrivate(RepositoryPrivate* repo, git_reference* reference);
             NoteRefPrivate(git_reference* reference, const RefNamePrivate* refName);
 
         public:
@@ -43,5 +41,3 @@ namespace Git
     }
 
 }
-
-#endif

@@ -17,8 +17,7 @@
  *
  */
 
-#ifndef TEST_TEMP_DIR_PROVIDER_HPP
-#define TEST_TEMP_DIR_PROVIDER_HPP
+#pragma once
 
 #include <QString>
 
@@ -40,5 +39,3 @@ private:
     QString tempPath;
     QString tempDir;
 };
-
-#endif

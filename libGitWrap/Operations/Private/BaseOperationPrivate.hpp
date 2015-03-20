@@ -14,8 +14,6 @@
  *
  */
 
-#ifndef GITWRAP_OPS_BASEOP_PRIVATE_HPP
-#define GITWRAP_OPS_BASEOP_PRIVATE_HPP
 #pragma once
 
 #include "libGitWrap/Result.hpp"
@@ -58,4 +56,9 @@ namespace Git
 #define GW_OP_OWNER(CLS) \
     CLS* owner = static_cast<CLS*>(mOwner)
 
-#endif
+#define GW_OP_D(CLASS) \
+    Private* d = static_cast<Private*>(mData.data()); \
+    ensureThisIsNotConst()
+
+#define GW_OP_CD(CLASS) \
+    const CLASS::Private* d = static_cast<const CLASS::Private*>(mData.constData())

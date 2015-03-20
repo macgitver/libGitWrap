@@ -49,12 +49,6 @@ namespace Git
         {
         }
 
-        RefLogPrivate::RefLogPrivate( const RepositoryPrivate::Ptr& repo, git_reflog* _reflog )
-            : RepoObjectPrivate(repo)
-            , reflog( _reflog )
-        {
-        }
-
         RefLogPrivate::~RefLogPrivate()
         {
             git_reflog_free(reflog);
@@ -141,7 +135,7 @@ namespace Git
 
         Repository::Private* rp = Private::dataOf<Repository>( repo );
 
-        git_reflog *out = NULL;
+        git_reflog *out = nullptr;
         result = git_reflog_read( &out, rp->mRepo, GW_StringFromQt(refName) );
         GW_CHECK_RESULT( result, RefLog() );
 

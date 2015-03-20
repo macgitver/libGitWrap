@@ -14,8 +14,6 @@
  *
  */
 
-#ifndef GW_FILEINFO_HPP
-#define GW_FILEINFO_HPP
 #pragma once
 
 #include <QString>
@@ -77,5 +75,3 @@ namespace Git
     };
 
 }
-
-#endif

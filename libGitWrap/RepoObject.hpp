@@ -17,8 +17,7 @@
  *
  */
 
-#ifndef GITWRAP_REPO_OBJECT_HPP
-#define GITWRAP_REPO_OBJECT_HPP
+#pragma once
 
 #include "libGitWrap/Base.hpp"
 
@@ -40,5 +39,3 @@ namespace Git
     };
 
 }
-
-#endif

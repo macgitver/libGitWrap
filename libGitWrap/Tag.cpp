@@ -25,13 +25,13 @@ namespace Git
     namespace Internal
     {
 
-        TagPrivate::TagPrivate(const RepositoryPrivate::Ptr& repo, git_tag* o)
+        TagPrivate::TagPrivate(RepositoryPrivate* repo, git_tag* o)
             : ObjectPrivate(repo, reinterpret_cast<git_object*>(o))
         {
             Q_ASSERT(o);
         }
 
-        TagPrivate::TagPrivate(const RepositoryPrivate::Ptr& repo, git_object* o)
+        TagPrivate::TagPrivate(RepositoryPrivate* repo, git_object* o)
             : ObjectPrivate(repo, o)
         {
             Q_ASSERT(o);
@@ -50,12 +50,7 @@ namespace Git
 
     }
 
-
-    // -- static methods -->8
-
     /**
-     * @ingroup         GitWrap
-     *
      * @brief           Create a tag object in the database.
      *
      *                  The created tag can be looked up by the tag´s ObjectId.
@@ -95,8 +90,6 @@ namespace Git
     }
 
     /**
-     * @ingroup         GitWrap
-     *
      * @brief           Create a lightweight tag object in the Git database.
      *
      *                  Unlike normal tags, lightweight tags don't have
@@ -107,11 +100,10 @@ namespace Git
      * @param[in,out]   result  a result object; see @ref GitWrapErrorHandling
      * @param[in]       name    the tag name
      * @param[in]       target  the target object, the tag points to
-     * @param[in]       tagger  the signature of the tag author
      * @param[in]       message the message is assigned to the tag
      * @param[in]       force   If true, an existing tag matching the @a name will be replaced.
      *
-     * @return              The @ref ObjectId of the created tag or an invalid object,
+     * @return              The ObjectId of the created tag or an invalid object,
      *                      if creation failed.
      */
     ObjectId Tag::createLight(Result& result, const QString& name, const Object& target, bool force)
@@ -136,8 +128,6 @@ namespace Git
     }
 
     /**
-     * @ingroup                 GitWrap
-     *
      * @brief                   Lookup an existing tag by the tag´s @ref ObjectId.
      *
      * @param[in,out]           result  a result object; see @ref GitWrapErrorHandling
@@ -158,11 +148,11 @@ namespace Git
         }
 
         Internal::RepositoryPrivate* rp = Internal::BasePrivate::dataOf<Repository>( repo );
-        git_tag* out = NULL;
+        git_tag* out = nullptr;
         git_tag_lookup( &out, rp->mRepo, Internal::ObjectId2git(tagId) );
         GW_CHECK_RESULT( result, Tag() );
 
-        return new Internal::TagPrivate( Repository::PrivatePtr(rp), out );
+        return new Internal::TagPrivate(rp, out );
     }
 
     GW_PRIVATE_IMPL(Tag, Object)

@@ -34,7 +34,7 @@ namespace Git
     namespace Internal
     {
 
-        ObjectPrivate::ObjectPrivate(const RepositoryPrivate::Ptr& repo, git_object* o)
+        ObjectPrivate::ObjectPrivate(RepositoryPrivate* repo, git_object* o)
             : RepoObjectPrivate(repo)
             , mObj(o)
         {
@@ -46,20 +46,18 @@ namespace Git
             git_object_free(mObj);
         }
 
-        Object::PrivatePtr ObjectPrivate::create(const RepositoryPrivate::Ptr& repo, git_object* o)
+        ObjectPrivate* ObjectPrivate::create(RepositoryPrivate* repo, git_object* o)
         {
             Q_ASSERT(o);
-            ObjectPrivate* op = NULL;
-
             switch (git_object_type(o)) {
-            case GIT_OBJ_TAG:    op = new TagPrivate(   repo, reinterpret_cast<git_tag*   >(o)); break;
-            case GIT_OBJ_COMMIT: op = new CommitPrivate(repo, reinterpret_cast<git_commit*>(o)); break;
-            case GIT_OBJ_TREE:   op = new TreePrivate(  repo, reinterpret_cast<git_tree*  >(o)); break;
-            case GIT_OBJ_BLOB:   op = new BlobPrivate(  repo, reinterpret_cast<git_blob*  >(o)); break;
+            case GIT_OBJ_TAG:    return new TagPrivate(   repo, reinterpret_cast<git_tag*   >(o));
+            case GIT_OBJ_COMMIT: return new CommitPrivate(repo, reinterpret_cast<git_commit*>(o));
+            case GIT_OBJ_TREE:   return new TreePrivate(  repo, reinterpret_cast<git_tree*  >(o));
+            case GIT_OBJ_BLOB:   return new BlobPrivate(  repo, reinterpret_cast<git_blob*  >(o));
             default:             break;
             }
 
-            return Object::PrivatePtr(op);
+            return nullptr;
         }
 
     }

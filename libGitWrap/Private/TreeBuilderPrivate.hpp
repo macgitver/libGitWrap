@@ -14,8 +14,7 @@
  *
  */
 
-#ifndef GIT_TREEBUILDER_PRIVATE_H
-#define GIT_TREEBUILDER_PRIVATE_H
+#pragma once
 
 #include "libGitWrap/Private/GitWrapPrivate.hpp"
 #include "libGitWrap/Private/RepoObjectPrivate.hpp"
@@ -34,7 +33,7 @@ namespace Git
         class TreeBuilderPrivate : public RepoObjectPrivate
         {
         public:
-            TreeBuilderPrivate(const RepositoryPrivate::Ptr& repo, git_treebuilder* builder);
+            TreeBuilderPrivate(RepositoryPrivate* repo, git_treebuilder* builder);
             ~TreeBuilderPrivate();
 
         public:
@@ -44,5 +43,3 @@ namespace Git
     }
 
 }
-
-#endif

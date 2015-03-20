@@ -16,8 +16,7 @@
  *
  */
 
-#ifndef GIT_INDEX_ENTRY_H
-#define GIT_INDEX_ENTRY_H
+#pragma once
 
 #include "libGitWrap/Base.hpp"
 
@@ -46,5 +45,3 @@ namespace Git
     };
 
 }
-
-#endif

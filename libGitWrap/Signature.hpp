@@ -14,8 +14,7 @@
  *
  */
 
-#ifndef GIT_SIGNATURE_H
-#define GIT_SIGNATURE_H
+#pragma once
 
 #include "libGitWrap/GitWrap.hpp"
 
@@ -94,14 +93,14 @@ namespace Git
 
         QString fullName() const
         {
-            return QString( QLatin1String( "%1 <%2>" ) )
+            return QString( QStringLiteral( "%1 <%2>" ) )
                     .arg( mName )
                     .arg( mEMail );
         }
 
         QString toNaturalString() const
         {
-            return QString( QLatin1String( "%1 <%2> %3" ) )
+            return QString( QStringLiteral( "%1 <%2> %3" ) )
                     .arg( mName )
                     .arg( mEMail )
                     .arg( mWhen.toString( Qt::ISODate ) );
@@ -121,5 +120,3 @@ namespace Git
 }
 
 GITWRAP_API QDebug operator<<( QDebug debug, const Git::Signature& sig );
-
-#endif

@@ -16,8 +16,7 @@
  *
  */
 
-#ifndef GIT_INDEX_CONFLICTS_HPP
-#define GIT_INDEX_CONFLICTS_HPP
+#pragma once
 
 #include "libGitWrap/Index.hpp"
 
@@ -48,5 +47,3 @@ namespace Git
     };
 
 }
-
-#endif

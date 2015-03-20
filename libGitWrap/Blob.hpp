@@ -14,8 +14,7 @@
  *
  */
 
-#ifndef GIT_OBJECT_BLOB_H
-#define GIT_OBJECT_BLOB_H
+#pragma once
 
 #include "libGitWrap/GitWrap.hpp"
 #include "libGitWrap/ObjectId.hpp"
@@ -39,8 +38,7 @@ namespace Git
     class GITWRAP_API Blob : public Object
     {
     public:
-        GW_PRIVATE_DECL(Blob, Object, public);
-        enum { ObjectTypeId = otBlob };
+        GW_PRIVATE_OBJECT_DECL(Blob, Object, public)
     };
 
     template<>
@@ -52,5 +50,3 @@ namespace Git
 }
 
 Q_DECLARE_METATYPE(Git::Blob)
-
-#endif

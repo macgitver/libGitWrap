@@ -114,7 +114,7 @@ namespace Git
     CommitOperation::CommitOperation(ParentProviderPtr pp, TreeProviderPtr tp, const QString& msg, QObject* parent)
         : BaseOperation(*new Private(this), parent)
     {
-        GW_D(CommitOperation);
+        GW_OP_D(CommitOperation);
         d->mParentProvider = pp;
         d->mTreeProvider = tp;
         d->mMessage = msg;
@@ -127,65 +127,65 @@ namespace Git
 
     TreeProviderPtr CommitOperation::treeProvider() const
     {
-        GW_CD(CommitOperation);
+        GW_OP_CD(CommitOperation);
         return d->mTreeProvider;
     }
 
     void CommitOperation::setTreeProvider(const TreeProviderPtr& p)
     {
-        GW_D(CommitOperation);
+        GW_OP_D(CommitOperation);
         Q_ASSERT(!isRunning());
         d->mTreeProvider = p;
     }
 
     ParentProviderPtr CommitOperation::parentProvider() const
     {
-        GW_CD(CommitOperation);
+        GW_OP_CD(CommitOperation);
         return d->mParentProvider;
     }
 
     void CommitOperation::setParentProvider(const ParentProviderPtr& p)
     {
-        GW_D(CommitOperation);
+        GW_OP_D(CommitOperation);
         Q_ASSERT(!isRunning());
         d->mParentProvider = p;
     }
 
     QString CommitOperation::message() const
     {
-        GW_CD(CommitOperation);
+        GW_OP_CD(CommitOperation);
         return d->mMessage;
     }
 
     void CommitOperation::setMessage(const QString &message)
     {
-        GW_D(CommitOperation);
+        GW_OP_D(CommitOperation);
         Q_ASSERT(!isRunning());
         d->mMessage = message;
     }
 
     Signature CommitOperation::committer() const
     {
-        GW_CD(CommitOperation);
+        GW_OP_CD(CommitOperation);
         return d->mCommitter;
     }
 
     void CommitOperation::setCommitter(const Signature &value)
     {
-        GW_D(CommitOperation);
+        GW_OP_D(CommitOperation);
         Q_ASSERT(!isRunning());
         d->mCommitter = value;
     }
 
     Signature CommitOperation::author() const
     {
-        GW_CD(CommitOperation);
+        GW_OP_CD(CommitOperation);
         return d->mAuthor;
     }
 
     void CommitOperation::setAuthor(const Signature &value)
     {
-        GW_D(CommitOperation);
+        GW_OP_D(CommitOperation);
         Q_ASSERT(!isRunning());
         d->mAuthor = value;
     }

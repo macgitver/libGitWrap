@@ -14,8 +14,7 @@
  *
  */
 
-#ifndef GIT_SUBMODULE_H
-#define GIT_SUBMODULE_H
+#pragma once
 
 #include "libGitWrap/Base.hpp"
 #include "libGitWrap/Repository.hpp"
@@ -106,5 +105,3 @@ namespace Git
 }
 
 Q_DECLARE_METATYPE(Git::Submodule)
-
-#endif

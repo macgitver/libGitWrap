@@ -42,7 +42,7 @@ namespace Git
             Object::Private* op = dataOf<Object>(o);
 
             if (!op) {
-                return NULL;
+                return nullptr;
             }
 
             return op->o();
@@ -63,8 +63,8 @@ namespace Git
          * This is esp. useful since Reference objects can become invalid (when destroy() is used)
          * and we cannot warrant that this will be checked in all methods of Reference derivates.
          *
-         * @param[in,out]   r   A Result that will be set to invalid if @a d is `NULL` and can be
-         *                      set to anything, if @a d is not `NULL`.
+         * @param[in,out]   r   A Result that will be set to invalid if @a d is `nullptr` and can be
+         *                      set to anything, if @a d is not `nullptr`.
          *
          * @param[in]       d   The BasePrivate to check.
          *
@@ -98,45 +98,32 @@ namespace Git
             return r;
         }
 
+        void BasePrivate::addRef() const
+        {
+            mRef.ref();
+        }
+
+        void BasePrivate::delRef() const
+        {
+            if (!mRef.deref()) {
+                delete this;
+            }
+        }
+
     }
 
-    Base::Base()
+    void Base::addRef() const
     {
+        if (mData) {
+            mData->addRef();
+        }
     }
 
-    Base::Base(const PrivatePtr& _d)
-        : mData(_d)
+    void Base::delRef() const
     {
-    }
-
-    Base::Base(const Base& other)
-        : mData(other.mData)
-    {
-    }
-
-    Base::~Base()
-    {
-    }
-
-    Base& Base::operator=(const Base& other)
-    {
-        mData = other.mData;
-        return * this;
-    }
-
-    bool Base::operator==(const Base& other) const
-    {
-        return mData == other.mData;
-    }
-
-    bool Base::operator!=(const Base& other) const
-    {
-        return mData != other.mData;
-    }
-
-    bool Base::isValid() const
-    {
-        return mData;
+        if (mData) {
+            mData->delRef();
+        }
     }
 
 }

@@ -14,8 +14,7 @@
  *
  */
 
-#ifndef GIT_REMOTE_PRIVATE_H
-#define GIT_REMOTE_PRIVATE_H
+#pragma once
 
 #include "libGitWrap/Private/GitWrapPrivate.hpp"
 #include "libGitWrap/Private/RepoObjectPrivate.hpp"
@@ -35,7 +34,7 @@ namespace Git
         class RemotePrivate : public RepoObjectPrivate
         {
         public:
-            RemotePrivate(Repository::Private* repo, git_remote* remote);
+            RemotePrivate(RepositoryPrivate* repo, git_remote* remote);
             ~RemotePrivate();
 
         public:
@@ -47,5 +46,3 @@ namespace Git
     }
 
 }
-
-#endif

@@ -17,8 +17,7 @@
  *
  */
 
-#ifndef GIT_REF_LOG_PRIVATE_HPP
-#define GIT_REF_LOG_PRIVATE_HPP
+#pragma once
 
 #include "libGitWrap/Private/RepoObjectPrivate.hpp"
 
@@ -32,7 +31,6 @@ namespace Git
         {
         public:
             RefLogPrivate( RepositoryPrivate* repo, git_reflog* _reflog );
-            RefLogPrivate( const RepositoryPrivate::Ptr& repo, git_reflog* _reflog );
             ~RefLogPrivate();
 
         public:
@@ -42,5 +40,3 @@ namespace Git
     }
 
 }
-
-#endif

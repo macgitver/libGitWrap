@@ -28,7 +28,7 @@ namespace Git
     namespace Internal
     {
 
-        RemotePrivate::RemotePrivate(Repository::Private* repo, git_remote* remote)
+        RemotePrivate::RemotePrivate(RepositoryPrivate* repo, git_remote* remote)
             : RepoObjectPrivate(repo)
             , mRemote(remote)
         {
@@ -56,7 +56,7 @@ namespace Git
 
         Repository::Private* rp = Private::dataOf<Repository>(repository);
 
-        git_remote* remote = NULL;
+        git_remote* remote = nullptr;
         result = git_remote_create(&remote, rp->mRepo, GW_StringFromQt(name),
                                    GW_StringFromQt(url) );
         if (!result) {
@@ -183,7 +183,7 @@ namespace Git
     bool Remote::updateTips( Result& result )
     {
         GW_D_CHECKED(Remote, false, result);
-        result = git_remote_update_tips( d->mRemote, NULL, NULL );
+        result = git_remote_update_tips(d->mRemote, nullptr, nullptr);
         return result;
     }
 

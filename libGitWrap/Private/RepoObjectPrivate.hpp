@@ -14,8 +14,7 @@
  *
  */
 
-#ifndef GIT_REPO_OBJECT_H
-#define GIT_REPO_OBJECT_H
+#pragma once
 
 #include "libGitWrap/Private/RepositoryPrivate.hpp"
 
@@ -34,11 +33,10 @@ namespace Git
         {
         protected:
             RepoObjectPrivate();
-            RepoObjectPrivate(const RepositoryPrivate::Ptr& repo);
             RepoObjectPrivate(RepositoryPrivate* repo);
 
         public:
-            RepositoryPrivate::Ptr repo() const;
+            RepositoryPrivate* repo() const;
 
         protected:
             RepositoryPrivate::Ptr mRepo;
@@ -47,6 +45,4 @@ namespace Git
     }
 
 }
-
-#endif
 
