@@ -161,7 +161,7 @@ namespace Git
                     --len;
                 }
 
-                ct = GW_StringToQt(line->content);
+                ct = GW_StringToQt(line->content, len);
             }
 
             switch(line->origin) {
