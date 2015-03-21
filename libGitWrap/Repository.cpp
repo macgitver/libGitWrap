@@ -84,6 +84,27 @@ namespace Git
             git_repository_free( mRepo );
         }
 
+        /**
+         * @internal
+         * @brief           Load the HEAD reference and return it
+         *
+         * @param[in,out]   result  A result object; see @ref GitWrapErrorHandling
+         *
+         * This method deliberately doesn't use `git_repository_head`, because that will try to
+         * resolve the symbolic link and _always_ return a OID based reference.
+         */
+        Reference RepositoryPrivate::getHead(Result& result) const
+        {
+            GW_CHECK_RESULT( result, Reference() );
+
+            git_reference* refHead = NULL;
+            result = git_reference_lookup(&refHead, mRepo, "HEAD");
+            GW_CHECK_RESULT( result, Reference() );
+
+            RepositoryPrivate* me = const_cast<RepositoryPrivate*>(this);
+            return new Reference::Private(me, refHead);
+        }
+
         static int statusHashCB( const char* fn, unsigned int status, void* rawSH )
         {
             #if 0
@@ -283,11 +304,25 @@ namespace Git
      * @return      @c true if this Repository is valid and its HEAD branch points to a commit
      *              rather than to another reference. @c false if the Repository is either invalid
      *              or its HEAD points to another reference.
+     *
      */
     bool Repository::isHeadDetached() const
     {
         GW_CD(Repository);
         return d && git_repository_head_detached(d->mRepo);
+    }
+
+    /**
+     * @brief       Check whether the repository's HEAD is detached
+     *
+     * @return      @c true if this Repository is valid and its HEAD branch points to branch that
+     *              does not yet exist. @c false in any other case.
+     *
+     */
+    bool Repository::isHeadUnborn() const
+    {
+        GW_CD(Repository);
+        return d && git_repository_head_unborn(d->mRepo);
     }
 
     /**
@@ -628,6 +663,23 @@ namespace Git
     BranchRef Repository::headBranch(Result& result) const
     {
         return HEAD(result).resolved(result).asBranch();
+    }
+
+    QString Repository::headBranchName(Result& result) const
+    {
+        GW_CD_CHECKED(Repository, QString(), result);
+
+        Reference refHead = d->getHead(result);
+
+        if (!result) {
+            return QString();
+        }
+
+        if (refHead.type() != ReferenceSymbolic) {
+            return QString();
+        }
+
+        return refHead.target();
     }
 
     Object Repository::lookup( Result& result, const ObjectId& id, ObjectType ot )

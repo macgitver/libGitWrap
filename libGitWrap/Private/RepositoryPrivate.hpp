@@ -44,6 +44,9 @@ namespace Git
             ~RepositoryPrivate();
 
         public:
+            Reference getHead(Result& result) const;
+
+        public:
             git_repository* mRepo;
             IndexPrivate*   mIndex;
             Submodule       openedFrom;

@@ -65,6 +65,7 @@ namespace Git
 
         bool isBare() const;
         bool isHeadDetached() const;
+        bool isHeadUnborn() const;
 
         bool detachHead(Result& result);
         void setDetachedHEAD(Result& result, const ObjectId& sha);
@@ -101,6 +102,7 @@ namespace Git
 
         Reference HEAD( Result& result ) const;
         BranchRef headBranch( Result& result ) const;
+        QString headBranchName(Result& result) const;
 
         ObjectId resolveRef(Result& result, const QString& refName);
 
