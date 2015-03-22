@@ -73,8 +73,8 @@ namespace Git
         void setHEAD(Result& result, const BranchRef& branch);
         void setHEAD(Result& result, const QString& branchName);
 
-        QString basePath() const;
-        QString gitPath() const;
+        QString workdir() const;
+        QString path() const;
 
         QString name() const;
 
@@ -153,6 +153,26 @@ namespace Git
         CommitOperation* commitOperation(Result& result, const QString& msg);
 
     public:
+        /**
+         * @brief       Deprecated: Repository::gitPath
+         * @deprecated  Use @ref Repository::path() instead
+         */
+        GW_DEPRECATED
+        inline QString gitPath() const
+        {
+            return path();
+        }
+
+        /**
+         * @brief       Deprecated: Repository::basePath
+         * @deprecated  Use @ref Repository::workDir() instead
+         */
+        GW_DEPRECATED
+        inline QString basePath() const
+        {
+            return workdir();
+        }
+
         /**
          * @brief       Deprecated: Repository::diffIndexToWorkingDir
          * @deprecated  Use @ref Diff::indexToWorkDir(Result& result, const Repository& repo) instead.

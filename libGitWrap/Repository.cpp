@@ -262,7 +262,7 @@ namespace Git
     }
 
     /**
-     * @brief           Open a independant instance of this repository
+     * @brief           Open a independent instance of this repository
      *
      * @param[in,out]   result  A result object; see @ref GitWrapErrorHandling
      *
@@ -273,7 +273,7 @@ namespace Git
      */
     Repository Repository::reopen(Result& result) const
     {
-        return open( result, basePath() );
+        return open( result, workdir() );
     }
 
     /**
@@ -590,7 +590,16 @@ namespace Git
         return Internal::slFromStrArray( &arr );
     }
 
-    QString Repository::basePath() const
+    /**
+     * @brief       Get the repository's workdir.
+     *
+     * @return      the path to the repository's working directory
+     *
+     * @see         Repository::path()
+     *
+     * If the repository is bare, the returned path is empty.
+     */
+    QString Repository::workdir() const
     {
         GW_CD(Repository);
         if( !d )
@@ -602,7 +611,17 @@ namespace Git
         return GW_StringToQt( git_repository_workdir( d->mRepo ) );
     }
 
-    QString Repository::gitPath() const
+    /**
+     * @brief       Get the path to the repository.
+     *
+     * @return      the path to the repository
+     *
+     * @see         Repository::workdir()
+     *
+     * If the repository is bare, returns the path to the repository folder;
+     * otherwise returns the path to the ".git" folder.
+     */
+    QString Repository::path() const
     {
         GW_CD(Repository);
         if( !d )
@@ -624,13 +643,13 @@ namespace Git
      */
     QString Repository::name() const
     {
-        QString path( isBare() ? gitPath() : basePath() );
-        if( path.endsWith( QChar( L'/') ) )
+        QString repoPath( isBare() ? path() : workdir() );
+        if( repoPath.endsWith( QChar( L'/') ) )
         {
-            path = path.left( path.length() - 1 );
+            repoPath = repoPath.left( repoPath.length() - 1 );
         }
 
-        QFileInfo fi( path );
+        QFileInfo fi( repoPath );
 
         if( fi.suffix() == QStringLiteral( "git" ) )
         {
