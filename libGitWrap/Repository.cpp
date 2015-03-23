@@ -618,8 +618,21 @@ namespace Git
      *
      * @see         Repository::workdir()
      *
-     * If the repository is bare, returns the path to the repository folder;
-     * otherwise returns the path to the ".git" folder.
+     * The path returned is the resolved absolute path to the repository folder.
+     *
+     * For example, if the repository is linked via a .git file, the path
+     * returned will be resolved to the location of the .git folder.
+     * .git folder. This is commonly used in submodules.
+     *
+     * For example, assume a common non-bare repository. The repository's
+     * ".git" folder and worktree both live in "/repositories/my-repo".
+     * The repository contains a submodule with a .git file in subfolder
+     * "my-module-4711".
+     *
+     * This example results in the following pathes:
+     * - Repository path: "/repositories/my-repo/.git"
+     * - Submodule path : "/repositories/my-repo/.git/modules/my-module-4711/.git"
+     * .
      */
     QString Repository::path() const
     {
