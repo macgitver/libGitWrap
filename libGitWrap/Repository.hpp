@@ -73,7 +73,7 @@ namespace Git
         void setHEAD(Result& result, const BranchRef& branch);
         void setHEAD(Result& result, const QString& branchName);
 
-        QString workdir() const;
+        QString workTreePath() const;
         QString path() const;
 
         QString name() const;
@@ -165,12 +165,12 @@ namespace Git
 
         /**
          * @brief       Deprecated: Repository::basePath
-         * @deprecated  Use @ref Repository::workDir() instead
+         * @deprecated  Use @ref Repository::workTreePath() instead
          */
         GW_DEPRECATED
         inline QString basePath() const
         {
-            return workdir();
+            return workTreePath();
         }
 
         /**

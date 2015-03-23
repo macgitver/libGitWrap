@@ -273,7 +273,7 @@ namespace Git
      */
     Repository Repository::reopen(Result& result) const
     {
-        return open( result, workdir() );
+        return open( result, workTreePath() );
     }
 
     /**
@@ -591,7 +591,7 @@ namespace Git
     }
 
     /**
-     * @brief       Get the repository's workdir.
+     * @brief       Get the path to the repository's worktree.
      *
      * @return      the path to the repository's working directory
      *
@@ -599,7 +599,7 @@ namespace Git
      *
      * If the repository is bare, the returned path is empty.
      */
-    QString Repository::workdir() const
+    QString Repository::workTreePath() const
     {
         GW_CD(Repository);
         if( !d ) {
@@ -611,9 +611,9 @@ namespace Git
     }
 
     /**
-     * @brief       Get the path to the repository.
+     * @brief       Get the path to the repository database.
      *
-     * @return      the path to the repository
+     * @return      the path to the repository folder
      *
      * @see         Repository::workdir()
      *
@@ -655,7 +655,7 @@ namespace Git
      */
     QString Repository::name() const
     {
-        QString repoPath( isBare() ? path() : workdir() );
+        QString repoPath( isBare() ? path() : workTreePath() );
         if( repoPath.endsWith( QChar( L'/') ) )
         {
             repoPath = repoPath.left( repoPath.length() - 1 );
