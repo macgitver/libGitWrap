@@ -602,8 +602,7 @@ namespace Git
     QString Repository::workdir() const
     {
         GW_CD(Repository);
-        if( !d )
-        {
+        if( !d ) {
             GitWrap::lastResult().setInvalidObject();
             return QString();
         }
