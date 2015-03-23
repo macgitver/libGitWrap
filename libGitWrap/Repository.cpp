@@ -630,7 +630,7 @@ namespace Git
      *
      * This example results in the following pathes:
      * - Repository path: "/repositories/my-repo/.git"
-     * - Submodule path : "/repositories/my-repo/.git/modules/my-module-4711/.git"
+     * - Submodule path : "/repositories/my-repo/.git/modules/my-module-4711"
      * .
      */
     QString Repository::path() const
