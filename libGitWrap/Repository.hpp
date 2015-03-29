@@ -49,6 +49,10 @@ namespace Git
     {
         GW_PRIVATE_DECL(Repository, Base, public)
 
+    private:
+        typedef DPtrT<      Repository>     DPtr;
+        typedef DPtrT<const Repository>     ConstDPtr;
+
     public:
         static Repository create(Result& result,
                                  const QString& path,
@@ -81,11 +85,11 @@ namespace Git
         QStringList allReferenceNames( Result& result );
         ReferenceList allReferences( Result& result );
 
-        QStringList allBranchNames( Result& result );
-        QStringList branchNames( Result& result, bool local, bool remote );
-        QString currentBranch( Result& result );
+        QStringList allBranchNames( Result& result ) const;
+        QStringList branchNames( Result& result, bool local, bool remote ) const;
+        QString currentBranch( Result& result ) const;
 
-        QStringList allTagNames( Result& result );
+        QStringList allTagNames( Result& result ) const;
 
         ResolvedRefs allResolvedRefs( Result& result );
 
