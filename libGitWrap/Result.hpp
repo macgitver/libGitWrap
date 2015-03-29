@@ -18,7 +18,6 @@
 
 #include "libGitWrap/GitWrap.hpp"
 
-
 namespace Git
 {
 

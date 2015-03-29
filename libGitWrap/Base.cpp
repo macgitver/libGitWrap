@@ -73,8 +73,8 @@ namespace Git
          */
         bool BasePrivate::isValid(Result& r, const BasePrivate* d)
         {
-            if ( Q_LIKELY(d) ) {
-                return d->isValidObject( r );
+            if (Q_LIKELY(d)) {
+                return d->isValidObject(r);
             }
             r.setInvalidObject();
             return false;

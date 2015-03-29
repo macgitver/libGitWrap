@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "libGitWrap/GitWrap.hpp"
+#include "libGitWrap/Result.hpp"
 
 namespace Git
 {
@@ -113,6 +113,71 @@ namespace Git
             // because QExplicitlySharedDataPointer and GitPtr actually do give a shit about const
             // correctness.
         }
+
+        template<typename T>
+        struct DPtrT
+        {
+            typedef typename T::Private DPtr;
+
+            DPtrT(T* that)
+                : d(static_cast<DPtr*>(that->mData))
+            {
+            }
+
+            DPtrT(T* that, Result& r)
+                : d(static_cast<DPtr*>(that->mData))
+            {
+                if (Q_LIKELY(d)) {
+                    if (d->isValidObject(r)) {
+                        return;
+                    }
+                }
+                r.setInvalidObject();
+                d = nullptr;
+            }
+
+                  DPtr* operator->()            { return d; }
+            const DPtr* operator->() const      { return d; }
+            operator DPtr*()                    { return d; }
+            operator const DPtr*() const        { return d; }
+
+        private:
+            DPtr* d;
+        };
+
+        template<typename T>
+        struct DPtrT<const T>
+        {
+            typedef typename T::Private DPtr;
+
+            DPtrT(const T* that)
+                : d(static_cast<const DPtr*>(that->mData))
+            {
+            }
+
+            DPtrT(const T* that, Result& r)
+                : d(static_cast<const DPtr*>(that->mData))
+            {
+                if (Q_LIKELY(d)) {
+                    if (d->isValidObject(r)) {
+                        return;
+                    }
+                }
+                r.setInvalidObject();
+                d = nullptr;
+            }
+
+            const DPtr* operator->() const      { return d; }
+            operator const DPtr*() const        { return d; }
+
+            DPtr* unConst() const {
+                return const_cast<DPtr*>(d);
+            }
+
+        private:
+            const DPtr* d;
+        };
+
     };
 
 }
