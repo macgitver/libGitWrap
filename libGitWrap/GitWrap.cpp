@@ -266,7 +266,9 @@ namespace Git
         void CloneOptions::setCheckoutBranch(const QString& branch)
         {
             delete[] mOptions.checkout_branch;
-            mOptions.checkout_branch = qstrdup( GW_StringFromQt(branch) );
+            mOptions.checkout_branch = branch.isEmpty()
+                                       ? NULL
+                                       : qstrdup(GW_StringFromQt(branch));
         }
 
 
