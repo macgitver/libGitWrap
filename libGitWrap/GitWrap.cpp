@@ -414,32 +414,11 @@ namespace Git
     GitWrap::GitWrap()
     {
         git_libgit2_init();
-
-        Q_ASSERT( Internal::GitWrapPrivate::self == nullptr );
-        Internal::GitWrapPrivate::self = new Internal::GitWrapPrivate;
     }
 
     GitWrap::~GitWrap()
     {
-        Q_ASSERT( Internal::GitWrapPrivate::self != nullptr );
-        delete Internal::GitWrapPrivate::self;
-        Internal::GitWrapPrivate::self = nullptr;
-
         git_libgit2_shutdown();
-    }
-
-    Result& GitWrap::lastResult()
-    {
-        Q_ASSERT( Internal::GitWrapPrivate::self != nullptr );
-
-        if( !Internal::GitWrapPrivate::self->mTLStore.hasLocalData() )
-        {
-            Internal::GitWrapTLS* tls = new Internal::GitWrapTLS;
-            Internal::GitWrapPrivate::self->mTLStore.setLocalData( tls );
-        }
-
-        Internal::GitWrapTLS* tls = Internal::GitWrapPrivate::self->mTLStore.localData();
-        return tls->mLastResult;
     }
 
 }

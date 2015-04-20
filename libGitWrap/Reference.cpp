@@ -241,7 +241,6 @@ namespace Git
         GW_CD(Reference);
 
         if (!d || d->wasDeleted) {
-            GitWrap::lastResult().setInvalidObject();
             return QString();
         }
 
@@ -276,7 +275,6 @@ namespace Git
         GW_CD(Reference);
 
         if (!d || d->wasDeleted) {
-            GitWrap::lastResult().setInvalidObject();
             return QString();
         }
 
@@ -287,7 +285,6 @@ namespace Git
     {
         GW_CD(Reference);
         if (!d || d->wasDeleted) {
-            GitWrap::lastResult().setInvalidObject();
             return ReferenceInvalid;
         }
 
@@ -363,7 +360,6 @@ namespace Git
         GW_CD(Reference);
 
         if (!d || d->wasDeleted) {
-            GitWrap::lastResult().setInvalidObject();
             return false;
         }
 
@@ -375,7 +371,6 @@ namespace Git
         GW_CD(Reference);
 
         if (!d || d->wasDeleted) {
-            GitWrap::lastResult().setInvalidObject();
             return false;
         }
 

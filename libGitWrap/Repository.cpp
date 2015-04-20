@@ -293,7 +293,6 @@ namespace Git
         }
         else
         {
-            GitWrap::lastResult().setInvalidObject();
             return true;
         }
     }
@@ -602,8 +601,7 @@ namespace Git
     QString Repository::workTreePath() const
     {
         GW_CD(Repository);
-        if( !d ) {
-            GitWrap::lastResult().setInvalidObject();
+        if (!d) {
             return QString();
         }
 
@@ -636,9 +634,7 @@ namespace Git
     QString Repository::path() const
     {
         GW_CD(Repository);
-        if( !d )
-        {
-            GitWrap::lastResult().setInvalidObject();
+        if (!d) {
             return QString();
         }
 
@@ -1030,12 +1026,10 @@ namespace Git
     {
         GW_CD(Repository);
         if (!d) {
-            GitWrap::lastResult().setInvalidObject();
             return Submodule();
         }
 
         if (!d->openedFrom.isValid()) {
-            GitWrap::lastResult().setInvalidObject();
             return Submodule();
         }
 

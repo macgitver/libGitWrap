@@ -320,9 +320,6 @@ namespace Git
     public:
         GitWrap();
         ~GitWrap();
-
-    public:
-        static Result& lastResult();
     };
 
 }

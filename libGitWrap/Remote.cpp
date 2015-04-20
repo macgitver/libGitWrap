@@ -86,7 +86,6 @@ namespace Git
     {
         GW_CD(Remote);
         if (!d) {
-            GitWrap::lastResult().setInvalidObject();
             return QString();
         }
 
@@ -98,7 +97,6 @@ namespace Git
         GW_CD(Remote);
 
         if(!d) {
-            GitWrap::lastResult().setInvalidObject();
             return QString();
         }
 
@@ -125,7 +123,6 @@ namespace Git
     {
         GW_CD(Remote);
         if (!d) {
-            GitWrap::lastResult().setInvalidObject();
             return QVector<RefSpec>();
         }
 
@@ -144,7 +141,6 @@ namespace Git
     {
         GW_CD(Remote);
         if (!d) {
-            GitWrap::lastResult().setInvalidObject();
             return QVector<RefSpec>();
         }
 
