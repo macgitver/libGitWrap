@@ -411,14 +411,32 @@ namespace Git
 
     }
 
-    GitWrap::GitWrap()
+    GitWrap::GitWrap(bool autoInit)
+        : mInitialised(false)
     {
-        git_libgit2_init();
+        if (autoInit) {
+            init();
+        }
     }
 
     GitWrap::~GitWrap()
     {
-        git_libgit2_shutdown();
+        shutDown();
     }
 
+    void GitWrap::init()
+    {
+        if (!mInitialised) {
+            git_libgit2_init();
+        }
+        mInitialised = true;
+    }
+
+    void GitWrap::shutDown()
+    {
+        if (mInitialised) {
+            git_libgit2_shutdown();
+        }
+        mInitialised = false;
+    }
 }

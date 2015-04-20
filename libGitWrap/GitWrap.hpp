@@ -318,8 +318,15 @@ namespace Git
     class GITWRAP_API GitWrap
     {
     public:
-        GitWrap();
+        GitWrap(bool autoInit = true);
         ~GitWrap();
+
+    public:
+        void init();
+        void shutDown();
+
+    private:
+        bool mInitialised;
     };
 
 }
