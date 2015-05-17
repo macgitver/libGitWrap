@@ -26,12 +26,7 @@ namespace Git
 
     namespace Internal
     {
-        /**
-         * @internal
-         * @ingroup GitWrap
-         * @brief The RepositoryPrivate class
-         *
-         */
+
         class RepositoryPrivate : public BasePrivate
         {
         public:

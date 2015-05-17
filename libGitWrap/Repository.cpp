@@ -52,7 +52,21 @@ namespace Git
 
     namespace Internal
     {
+        /**
+         * @internal
+         *
+         * @ingroup     GitWrap
+         *
+         * @class       RepositoryPrivate
+         *
+         * @brief       Private implementation of the Repository class.
+         */
 
+        /**
+         * @brief       Constructor
+         *
+         * @param[in]   repo    the libgit2 repository
+         */
         RepositoryPrivate::RepositoryPrivate( git_repository* repo )
             : mRepo(repo)
             , mIndex(nullptr)
