@@ -172,6 +172,30 @@ namespace Git
      */
 
     /**
+     * @brief           Clone a Git repository.
+     *
+     * @param[in,out]	result  A Result object; see @ref GitWrapErrorHandling
+     *
+     * @param[in]       from    the URL to clone from
+     *
+     * @param[in]       to      the path to clone to
+     *
+     * @return          the cloned repository
+     */
+    Repository Repository::clone(Result& result, const QString& from, const QString& to)
+    {
+        GW_CHECK_RESULT(result, nullptr);
+
+        // TODO: setup clone options and callbacks
+
+        git_repository* clonedRepo = nullptr;
+        result = git_clone(&clonedRepo, GW_StringFromQt(from), GW_StringFromQt(to), nullptr /*TODO: clone options*/);
+        GW_CHECK_RESULT(result, nullptr);
+
+        return new Private(clonedRepo);
+    }
+
+    /**
      * @brief       Create a new repository
      *
      * A new git repository will be created in @a path. The path pointed to by @a path must either

@@ -43,6 +43,11 @@ namespace Git
         GW_PRIVATE_DECL(Repository, Base, public)
 
     public:
+        static Repository clone(Result& result,
+                                const QString& from,
+                                const QString& to
+                                /*TODO: options*/);
+
         static Repository create(Result& result,
                                  const QString& path,
                                  bool bare);
