@@ -164,6 +164,14 @@ namespace Git
     GW_PRIVATE_IMPL(Repository, Base)
 
     /**
+     * @ingroup     GitWrap
+     *
+     * class        Repository
+     *
+     * @brief       Represents a Git repository.
+     */
+
+    /**
      * @brief       Create a new repository
      *
      * A new git repository will be created in @a path. The path pointed to by @a path must either

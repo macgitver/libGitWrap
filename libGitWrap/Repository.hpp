@@ -38,11 +38,6 @@ namespace Git
 
     typedef QHash< QString, ObjectId > ResolvedRefs;
 
-    /**
-     * @ingroup     GitWrap
-     * @brief       A git repository
-     *
-     */
     class GITWRAP_API Repository : public Base
     {
         GW_PRIVATE_DECL(Repository, Base, public)
