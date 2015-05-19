@@ -17,15 +17,13 @@
 #pragma once
 
 #include "libGitWrap/Base.hpp"
-#include "libGitWrap/Remote.hpp"
-#include "libGitWrap/Object.hpp"
-
-
 #include "libGitWrap/Commit.hpp"
 #include "libGitWrap/Diff.hpp"
 #include "libGitWrap/DiffList.hpp"
-#include "libGitWrap/RevisionWalker.hpp"
+#include "libGitWrap/Object.hpp"
 #include "libGitWrap/Reference.hpp"
+#include "libGitWrap/Remote.hpp"
+#include "libGitWrap/RevisionWalker.hpp"
 #include "libGitWrap/Tree.hpp"
 
 namespace Git
