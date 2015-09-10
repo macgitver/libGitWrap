@@ -166,7 +166,7 @@ namespace Git
     /**
      * @ingroup     GitWrap
      *
-     * class        Repository
+     * @class       Repository
      *
      * @brief       Represents a Git repository.
      */
